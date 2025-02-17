@@ -45,7 +45,7 @@
                                 <select id="role" name="role" class="form-control @error('role') is-invalid @enderror" required>
                                     <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
                                     <option value="mahasiswa" {{ old('role') == 'mahasiswa' ? 'selected' : '' }}>Mahasiswa</option>
-                                    <option value="manajerproyek" {{ old('role') == 'manajerproyek' ? 'selected' : '' }}>Manajer Proyek</option>
+                                    <option value="manajerproyek" {{ old('role') == 'dosen' ? 'selected' : '' }}>dosen</option>
                                 </select>
                                 @error('role')
                                     <span class="invalid-feedback" role="alert">

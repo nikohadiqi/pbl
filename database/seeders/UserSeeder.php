@@ -8,30 +8,27 @@ use App\Models\User;
 
 class UserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run()
     {
         // Seeder untuk role admin
         User::create([
-            'nim' => '12345601',
-            'password' => Hash::make('admin123'), // Password di-hash
+            'nim' => '111111',
+            'password' => Hash::make('11111'),  // Password yang di-hash
             'role' => 'admin',
         ]);
 
         // Seeder untuk role mahasiswa
         User::create([
-            'nim' => '12345602',
-            'password' => Hash::make('mahasiswa123'), // Password di-hash
+            'nim' => '22222',
+            'password' => Hash::make('22222'),  // Password yang di-hash
             'role' => 'mahasiswa',
         ]);
 
-        // Seeder untuk role manajer proyek
+        // Seeder untuk role dosen
         User::create([
-            'nim' => '12345603',
-            'password' => Hash::make('manajer123'), // Password di-hash
-            'role' => 'manajerproyek',
+            'nim' => '33333',
+            'password' => Hash::make('33333'),  // Password yang di-hash
+            'role' => 'dosen',
         ]);
     }
 }

@@ -1,51 +1,86 @@
 <?php
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class LoginController extends Controller
 {
-    use AuthenticatesUsers;
+    public function showLoginForm()
+    {
+        return view('auth.login'); // Halaman Login
+    }
 
-    // Metode login tetap digunakan seperti sebelumnya
     public function login(Request $request)
     {
-        // Validasi nim, password, dan role
+        // Validasi input
         $validated = $request->validate([
             'nim' => 'required|string',
             'password' => 'required|string',
-            'role' => 'required|string|in:admin,mahasiswa,manajerproyek', // Validasi role
+            'role' => 'required|string|in:admin,mahasiswa,dosen',
         ]);
 
-        // Autentikasi menggunakan nim dan password
-        if (Auth::attempt([
-            'nim' => $validated['nim'],
-            'password' => $validated['password'],
-        ])) {
-            // Cek role pengguna
-            $user = Auth::user();
+        // Cek user berdasarkan NIM
+        $user = User::where('nim', $validated['nim'])->first();
+
+        // Cek apakah user ditemukan dan password valid
+        if ($user && Hash::check($validated['password'], $user->password)) {
+            // Pastikan role sesuai dengan yang dimasukkan
             if ($user->role === $validated['role']) {
-                // Pengalihan berdasarkan role
+                // Generate token untuk user
+                $token = $user->createToken('YourAppName')->plainTextToken;
+
+                // Set token ke dalam session atau response JSON
+                $request->session()->put('token', $token);
+
+                // Arahkan pengguna ke dashboard sesuai dengan role
                 switch ($user->role) {
                     case 'admin':
                         return redirect()->route('admin.dashboard');
                     case 'mahasiswa':
                         return redirect()->route('mahasiswa.dashboard');
-                    case 'manajerproyek':
-                        return redirect()->route('manajerproyek..dashboard');
+                    case 'dosen':
+                        return redirect()->route('dosen.dashboard');
                     default:
-                        Auth::logout(); // Jika role tidak sesuai, logout
-                        return back()->withErrors(['role' => 'Role tidak sesuai!']);
+                        return back()->withErrors(['role' => 'Role tidak sesuai']);
                 }
-            } else {
-                Auth::logout(); // Jika role tidak sesuai, logout
-                return back()->withErrors(['role' => 'Role tidak sesuai!']);
             }
+
+            return back()->withErrors(['role' => 'Role tidak sesuai dengan akun ini!']);
         }
 
+        // Jika login gagal
         return back()->withErrors(['nim' => 'NIM atau password salah!']);
+    }
+
+    // Admin Dashboard
+    public function adminDashboard()
+    {
+        return view('dashboard.admin'); // Halaman Dashboard Admin
+    }
+
+    // Mahasiswa Dashboard
+    public function mahasiswaDashboard()
+    {
+        return view('dashboard.mahasiswa'); // Halaman Dashboard Mahasiswa
+    }
+
+    // Dosen Dashboard
+    public function dosenDashboard()
+    {
+        return view('dashboard.dosen'); // Halaman Dashboard Dosen
+    }
+
+    // Logout Method
+    public function logout(Request $request)
+    {
+        // Hapus token dan logout
+        Auth::logout();
+        $request->session()->flush(); // Hapus session
+        return redirect('/login'); // Redirect ke halaman login
     }
 }

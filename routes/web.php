@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Auth\LoginController;
+// use App\Http\Controllers\Auth\DashboardController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -21,15 +22,19 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('login', [LoginController::class, 'login']); // Route untuk proses login
 
-Route::middleware(['auth'])->group(function () {
-    // Dashboard untuk admin
-    Route::get('/admin/dashboard', [DashboardController::class, 'adminDashboard'])->name('admin.dashboard');
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/dashboard/admin', function () {
+        return view('dashboard.admin');
+    })->name('admin.dashboard');
 
-    // Dashboard untuk mahasiswa
-    Route::get('/mahasiswa/dashboard', [DashboardController::class, 'mahasiswaDashboard'])->name('mahasiswa.dashboard');
+    Route::get('/dashboard/mahasiswa', function () {
+        return view('dashboard.mahasiswa');
+    })->name('mahasiswa.dashboard');
 
-    // Dashboard untuk manajer proyek
-    Route::get('/manajerproyek/dashboard', [DashboardController::class, 'manajerProyekDashboard'])->name('manajerproyek.dashboard');
+    Route::get('/dashboard/dosen', function () {
+        return view('dashboard.dosen');
+    })->name('dosen.dashboard');
 });
-
