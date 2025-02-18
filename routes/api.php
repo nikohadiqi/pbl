@@ -6,7 +6,8 @@ use App\Http\Controllers\Admin\MahasiswaController;
 use App\Http\Controllers\Admin\PeriodePBLController;
 use App\Http\Controllers\Admin\TimPBLController;
 use App\Http\Controllers\Auth\LoginController;
-
+use App\Http\Controllers\Admin\TahapanPelaksanaanProyekController;
+use App\Http\Controllers\Admin\MataKuliahController;
 
 Route::post('/login', [LoginController::class, 'login']);
 
@@ -43,4 +44,20 @@ Route::prefix('admin')->middleware(['auth:sanctum'])->group(function () {
     Route::put('tim-pbl/{id}', [TimPBLController::class, 'update']); // Update Tim PBL
     Route::delete('tim-pbl/{id}', [TimPBLController::class, 'delete']); // Hapus Tim PBL
     Route::delete('tim-pbl/bulk-delete', [TimPBLController::class, 'bulkDelete']); // Bulk Hapus Tim PBL
+
+    // tahapan pelaksaan proyek
+    Route::get('/tahapan-proyek', [TahapanPelaksanaanProyekController::class, 'index']);
+    Route::post('/tahapan-proyek', [TahapanPelaksanaanProyekController::class, 'store']);
+    Route::get('/tahapan-proyek/{id}', [TahapanPelaksanaanProyekController::class, 'show']);
+    Route::put('/tahapan-proyek/{id}', [TahapanPelaksanaanProyekController::class, 'update']);
+    Route::delete('/tahapan-proyek/{id}', [TahapanPelaksanaanProyekController::class, 'destroy']);
+    Route::post('/tahapan-proyek/bulk-delete', [TahapanPelaksanaanProyekController::class, 'bulkDelete']);
+
+    // data matakuliah
+    Route::get('/mata-kuliah', [MataKuliahController::class, 'index']);
+    Route::post('/mata-kuliah', [MataKuliahController::class, 'store']);
+    Route::get('/mata-kuliah/{id}', [MataKuliahController::class, 'show']);
+    Route::put('/mata-kuliah/{id}', [MataKuliahController::class, 'update']);
+    Route::delete('/mata-kuliah/{id}', [MataKuliahController::class, 'destroy']);
+    Route::post('/mata-kuliah/bulk-delete', [MataKuliahController::class, 'bulkDelete']);
 });
