@@ -8,6 +8,8 @@ use App\Http\Controllers\Admin\TimPBLController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\TahapanPelaksanaanProyekController;
 use App\Http\Controllers\Admin\MataKuliahController;
+use App\Http\Controllers\Mahasiswa\RencanaProyekController;
+use App\Http\Controllers\Mahasiswa\TahapanPelaksaanController;
 
 Route::post('/login', [LoginController::class, 'login']);
 
@@ -60,4 +62,20 @@ Route::prefix('admin')->middleware(['auth:sanctum'])->group(function () {
     Route::put('/mata-kuliah/{id}', [MataKuliahController::class, 'update']);
     Route::delete('/mata-kuliah/{id}', [MataKuliahController::class, 'destroy']);
     Route::post('/mata-kuliah/bulk-delete', [MataKuliahController::class, 'bulkDelete']);
+
+    //RPP 
+    Route::get('/rencana-proyek', [RencanaProyekController::class, 'index']);
+    Route::post('/rencana-proyek', [RencanaProyekController::class, 'store']);
+    Route::get('/rencana-proyek/{id}', [RencanaProyekController::class, 'show']);
+    Route::put('/rencana-proyek/{id}', [RencanaProyekController::class, 'update']);
+    Route::delete('/rencana-proyek/{id}', [RencanaProyekController::class, 'destroy']);
+    Route::post('/rencana-proyek/bulk-delete', [RencanaProyekController::class, 'bulkDelete']);
+
+    //tahapan pelaksaan mahasiswa
+    Route::get('/tahapan-pelaksaan', [TahapanPelaksaanController::class, 'index']);
+    Route::post('/tahapan-pelaksaan', [TahapanPelaksaanController::class, 'store']);
+    Route::get('/tahapan-pelaksaan/{id}', [TahapanPelaksaanController::class, 'show']);
+    Route::put('/tahapan-pelaksaan/{id}', [TahapanPelaksaanController::class, 'update']);
+    Route::delete('/tahapan-pelaksaan/{id}', [TahapanPelaksaanController::class, 'destroy']);
+    Route::post('/tahapan-pelaksaan/bulk-delete', [TahapanPelaksaanController::class, 'bulkDelete']);
 });
