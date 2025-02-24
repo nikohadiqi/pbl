@@ -10,6 +10,13 @@ use App\Http\Controllers\Admin\TahapanPelaksanaanProyekController;
 use App\Http\Controllers\Admin\MataKuliahController;
 use App\Http\Controllers\Mahasiswa\RencanaProyekController;
 use App\Http\Controllers\Mahasiswa\TahapanPelaksaanController;
+use App\Http\Controllers\Mahasiswa\KebutuhanPeralatanController;
+use App\Http\Controllers\Mahasiswa\TantanganController;
+use App\Http\Controllers\Mahasiswa\EstimasiWaktuController;
+use App\Http\Controllers\Mahasiswa\BiayaProyekController;
+use App\Http\Controllers\Mahasiswa\TimProyekController;
+use App\Http\Controllers\Mahasiswa\CapaianPembelajaranController;
+use App\Http\Controllers\Mahasiswa\LogbookController;
 
 Route::post('/login', [LoginController::class, 'login']);
 
@@ -62,7 +69,9 @@ Route::prefix('admin')->middleware(['auth:sanctum'])->group(function () {
     Route::put('/mata-kuliah/{id}', [MataKuliahController::class, 'update']);
     Route::delete('/mata-kuliah/{id}', [MataKuliahController::class, 'destroy']);
     Route::post('/mata-kuliah/bulk-delete', [MataKuliahController::class, 'bulkDelete']);
+});
 
+    Route::prefix('mahasiswa')->group(function () {
     //RPP 
     Route::get('/rencana-proyek', [RencanaProyekController::class, 'index']);
     Route::post('/rencana-proyek', [RencanaProyekController::class, 'store']);
@@ -78,4 +87,59 @@ Route::prefix('admin')->middleware(['auth:sanctum'])->group(function () {
     Route::put('/tahapan-pelaksaan/{id}', [TahapanPelaksaanController::class, 'update']);
     Route::delete('/tahapan-pelaksaan/{id}', [TahapanPelaksaanController::class, 'destroy']);
     Route::post('/tahapan-pelaksaan/bulk-delete', [TahapanPelaksaanController::class, 'bulkDelete']);
+
+    // Kebutuhan Peralatan
+    Route::get('/kebutuhan-peralatan', [KebutuhanPeralatanController::class, 'index']);
+    Route::post('/kebutuhan-peralatan', [KebutuhanPeralatanController::class, 'store']);
+    Route::get('/kebutuhan-peralatan/{id}', [KebutuhanPeralatanController::class, 'show']);
+    Route::put('/kebutuhan-peralatan/{id}', [KebutuhanPeralatanController::class, 'update']);
+    Route::delete('/kebutuhan-peralatan/{id}', [KebutuhanPeralatanController::class, 'destroy']);
+    Route::post('/kebutuhan-peralatan/bulk-delete', [KebutuhanPeralatanController::class, 'bulkDelete']);
+
+    // Tantangan
+    Route::get('/tantangan', [TantanganController::class, 'index']);
+    Route::post('/tantangan', [TantanganController::class, 'store']);
+    Route::get('/tantangan/{id}', [TantanganController::class, 'show']);
+    Route::put('/tantangan/{id}', [TantanganController::class, 'update']);
+    Route::delete('/tantangan/{id}', [TantanganController::class, 'destroy']);
+    Route::post('/tantangan/bulk-delete', [TantanganController::class, 'bulkDelete']);
+
+    // Estimasi Waktu
+    Route::get('/estimasi-waktu', [EstimasiWaktuController::class, 'index']);
+    Route::post('/estimasi-waktu', [EstimasiWaktuController::class, 'store']);
+    Route::get('/estimasi-waktu/{id}', [EstimasiWaktuController::class, 'show']);
+    Route::put('/estimasi-waktu/{id}', [EstimasiWaktuController::class, 'update']);
+    Route::delete('/estimasi-waktu/{id}', [EstimasiWaktuController::class, 'destroy']);
+    Route::post('/estimasi-waktu/bulk-delete', [EstimasiWaktuController::class, 'bulkDelete']);
+
+    // Biaya Proyek
+    Route::get('/biaya-proyek', [BiayaProyekController::class, 'index']);
+    Route::post('/biaya-proyek', [BiayaProyekController::class, 'store']);
+    Route::get('/biaya-proyek/{id}', [BiayaProyekController::class, 'show']);
+    Route::put('/biaya-proyek/{id}', [BiayaProyekController::class, 'update']);
+    Route::delete('/biaya-proyek/{id}', [BiayaProyekController::class, 'destroy']);
+    Route::post('/biaya-proyek/bulk-delete', [BiayaProyekController::class, 'bulkDelete']);
+
+    // Tim Proyek
+    Route::get('/tim-proyek', [TimProyekController::class, 'index']);
+    Route::post('/tim-proyek', [TimProyekController::class, 'store']);
+    Route::get('/tim-proyek/{id}', [TimProyekController::class, 'show']);
+    Route::put('/tim-proyek/{id}', [TimProyekController::class, 'update']);
+    Route::delete('/tim-proyek/{id}', [TimProyekController::class, 'destroy']);
+    Route::post('/tim-proyek/bulk-delete', [TimProyekController::class, 'bulkDelete']);
+
+    // Capaian Pembelajaran
+    Route::get('/capaian-pembelajaran', [CapaianPembelajaranController::class, 'index']);
+    Route::post('/capaian-pembelajaran', [CapaianPembelajaranController::class, 'store']);
+    Route::get('/capaian-pembelajaran/{id}', [CapaianPembelajaranController::class, 'show']);
+    Route::put('/capaian-pembelajaran/{id}', [CapaianPembelajaranController::class, 'update']);
+    Route::delete('/capaian-pembelajaran/{id}', [CapaianPembelajaranController::class, 'destroy']);
+    Route::post('/capaian-pembelajaran/bulk-delete', [CapaianPembelajaranController::class, 'bulkDelete']);
+
+    Route::get('/logbook', [LogbookController::class, 'index']);
+    Route::post('/logbook', [LogbookController::class, 'store']);
+    Route::get('/logbook/{id}', [LogbookController::class, 'show']);
+    Route::put('/logbook/{id}', [LogbookController::class, 'update']);
+    Route::delete('/logbook/{id}', [LogbookController::class, 'destroy']);
+    Route::post('/logbook/bulk-delete', [LogbookController::class, 'bulkDelete']);
 });
