@@ -28,7 +28,7 @@ Route::prefix('admin')->middleware(['auth:sanctum'])->group(function () {
     Route::get('dosen/{id}', [DosenController::class, 'show']); // Ambil Detail Dosen
     Route::put('dosen/{id}', [DosenController::class, 'update']); // Update Dosen
     Route::delete('dosen/{id}', [DosenController::class, 'delete']); // Hapus Dosen
-    Route::delete('dosen/bulk-delete', [DosenController::class, 'bulkDelete']); // Bulk Hapus Dosen
+    Route::post('dosen/bulk-delete', [DosenController::class, 'bulkDelete']); // Bulk Hapus Dosen
 
     // 🔹 Rute Mahasiswa
     Route::post('mahasiswa', [MahasiswaController::class, 'create']); 
@@ -71,7 +71,7 @@ Route::prefix('admin')->middleware(['auth:sanctum'])->group(function () {
     Route::post('/mata-kuliah/bulk-delete', [MataKuliahController::class, 'bulkDelete']);
 });
 
-    Route::prefix('rpp')->group(function () {
+Route::prefix('mhs')->middleware(['auth:sanctum'])->group(function () {
     //RPP 
     Route::get('/rencana-proyek', [RencanaProyekController::class, 'index']);
     Route::post('/rencana-proyek', [RencanaProyekController::class, 'store']);
@@ -136,15 +136,14 @@ Route::prefix('admin')->middleware(['auth:sanctum'])->group(function () {
     Route::delete('/capaian-pembelajaran/{id}', [CapaianPembelajaranController::class, 'destroy']);
     Route::post('/capaian-pembelajaran/bulk-delete', [CapaianPembelajaranController::class, 'bulkDelete']);
 
+    //logbook
     Route::get('/logbook', [LogbookController::class, 'index']);
     Route::post('/logbook', [LogbookController::class, 'store']);
     Route::get('/logbook/{id}', [LogbookController::class, 'show']);
     Route::put('/logbook/{id}', [LogbookController::class, 'update']);
     Route::delete('/logbook/{id}', [LogbookController::class, 'destroy']);
     Route::post('/logbook/bulk-delete', [LogbookController::class, 'bulkDelete']);
-});
 
-Route::prefix('pelaporan')->group(function () {
     // Route untuk Pelaporan UTS
     Route::get('/uts', [PelaporanUTSController::class, 'index']);
     Route::post('/uts', [PelaporanUTSController::class, 'store']);

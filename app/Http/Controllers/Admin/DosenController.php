@@ -4,89 +4,94 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\MataKuliah;
+use App\Models\Dosen;
+use Illuminate\Support\Facades\Validator;
 
-class MataKuliahController extends Controller
+class DosenController extends Controller
 {
-    // Tampilkan semua data Mata Kuliah dengan relasi dosen
+    /**
+     * Ambil semua data dosen
+     */
     public function index()
     {
-        $data = MataKuliah::with('dosen')->get();
-        return response()->json($data);
+        $dosens = Dosen::all();
+        return response()->json(['success' => true, 'message' => 'List of Dosen', 'data' => $dosens], 200);
     }
 
-    // Tambah data Mata Kuliah baru
-    public function store(Request $request)
+    /**
+     * Tambah dosen baru
+     */
+    public function create(Request $request)
     {
-        $request->validate([
-            'matakuliah' => 'required|string|max:255',
-            'capaian'    => 'required|string',
-            'tujuan'     => 'required|string',
-            'dosen_id'   => 'required|exists:dosen,id', // Validasi dosen_id
+        $validator = Validator::make($request->all(), [
+            'nip' => 'required|string|unique:dosen,nip',
+            'nama' => 'required|string',
         ]);
 
-        $data = MataKuliah::create($request->all());
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'message' => 'Validation Error', 'errors' => $validator->errors()], 400);
+        }
 
-        return response()->json([
-            'message' => 'Mata Kuliah berhasil ditambahkan',
-            'data'    => $data
-        ], 201);
+        $dosen = Dosen::create($request->all());
+
+        return response()->json(['success' => true, 'message' => 'Dosen berhasil ditambahkan!', 'data' => $dosen], 201);
     }
 
-    // Tampilkan data Mata Kuliah berdasarkan ID
+    /**
+     * Ambil detail dosen
+     */
     public function show($id)
     {
-        $data = MataKuliah::with('dosen')->find($id);
-        if (!$data) {
-            return response()->json(['message' => 'Mata Kuliah tidak ditemukan'], 404);
+        $dosen = Dosen::find($id);
+        if (!$dosen) {
+            return response()->json(['success' => false, 'message' => 'Dosen tidak ditemukan'], 404);
         }
-        return response()->json($data);
+        return response()->json(['success' => true, 'data' => $dosen], 200);
     }
 
-    // Update data Mata Kuliah berdasarkan ID
+    /**
+     * Update data dosen
+     */
     public function update(Request $request, $id)
     {
-        $data = MataKuliah::find($id);
-        if (!$data) {
-            return response()->json(['message' => 'Mata Kuliah tidak ditemukan'], 404);
+        $dosen = Dosen::find($id);
+        if (!$dosen) {
+            return response()->json(['success' => false, 'message' => 'Dosen tidak ditemukan'], 404);
         }
 
-        $request->validate([
-            'matakuliah' => 'string|max:255',
-            'capaian'    => 'string',
-            'tujuan'     => 'string',
-            'dosen_id'   => 'exists:dosen,id', // Pastikan dosen_id valid jika diupdate
+        $validator = Validator::make($request->all(), [
+            'nip' => 'sometimes|string|unique:dosen,nip,' . $id,
+            'nama' => 'sometimes|string',
         ]);
 
-        $data->update($request->all());
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'message' => 'Validation Error', 'errors' => $validator->errors()], 400);
+        }
 
-        return response()->json([
-            'message' => 'Mata Kuliah berhasil diperbarui',
-            'data'    => $data
-        ]);
+        $dosen->update($request->all());
+        return response()->json(['success' => true, 'message' => 'Dosen berhasil diperbarui!', 'data' => $dosen], 200);
     }
 
-    // Hapus data Mata Kuliah berdasarkan ID
-    public function destroy($id)
+    /**
+     * Hapus dosen
+     */
+    public function delete($id)
     {
-        $data = MataKuliah::find($id);
-        if (!$data) {
-            return response()->json(['message' => 'Mata Kuliah tidak ditemukan'], 404);
+        $dosen = Dosen::find($id);
+        if (!$dosen) {
+            return response()->json(['success' => false, 'message' => 'Dosen tidak ditemukan'], 404);
         }
-
-        $data->delete();
-        return response()->json(['message' => 'Mata Kuliah berhasil dihapus']);
+        $dosen->delete();
+        return response()->json(['success' => true, 'message' => 'Dosen berhasil dihapus!'], 200);
     }
 
-    // Bulk delete (hapus banyak data)
+    /**
+     * Bulk delete dosen
+     */
     public function bulkDelete(Request $request)
     {
-        $request->validate([
-            'ids'   => 'required|array',
-            'ids.*' => 'integer|exists:mata_kuliah,id',
-        ]);
-
-        MataKuliah::whereIn('id', $request->ids)->delete();
-        return response()->json(['message' => 'Data berhasil dihapus secara massal']);
+        $ids = $request->input('ids');
+        Dosen::whereIn('id', $ids)->delete();
+        return response()->json(['success' => true, 'message' => 'Dosen berhasil dihapus secara massal!'], 200);
     }
 }
