@@ -71,7 +71,7 @@ Route::prefix('admin')->middleware(['auth:sanctum'])->group(function () {
     Route::post('/mata-kuliah/bulk-delete', [MataKuliahController::class, 'bulkDelete']);
 });
 
-    Route::prefix('mahasiswa')->group(function () {
+    Route::prefix('rpp')->group(function () {
     //RPP 
     Route::get('/rencana-proyek', [RencanaProyekController::class, 'index']);
     Route::post('/rencana-proyek', [RencanaProyekController::class, 'store']);
@@ -142,4 +142,22 @@ Route::prefix('admin')->middleware(['auth:sanctum'])->group(function () {
     Route::put('/logbook/{id}', [LogbookController::class, 'update']);
     Route::delete('/logbook/{id}', [LogbookController::class, 'destroy']);
     Route::post('/logbook/bulk-delete', [LogbookController::class, 'bulkDelete']);
+});
+
+Route::prefix('pelaporan')->group(function () {
+    // Route untuk Pelaporan UTS
+    Route::get('/uts', [PelaporanUTSController::class, 'index']);
+    Route::post('/uts', [PelaporanUTSController::class, 'store']);
+    Route::get('/uts/{id}', [PelaporanUTSController::class, 'show']);
+    Route::put('/uts/{id}', [PelaporanUTSController::class, 'update']);
+    Route::delete('/uts/{id}', [PelaporanUTSController::class, 'destroy']);
+    Route::post('/uts/bulk-delete', [PelaporanUTSController::class, 'bulkDelete']);
+
+    // Route untuk Pelaporan UAS
+    Route::get('/uas', [PelaporanUASController::class, 'index']);
+    Route::post('/uas', [PelaporanUASController::class, 'store']);
+    Route::get('/uas/{id}', [PelaporanUASController::class, 'show']);
+    Route::put('/uas/{id}', [PelaporanUASController::class, 'update']);
+    Route::delete('/uas/{id}', [PelaporanUASController::class, 'destroy']);
+    Route::post('/uas/bulk-delete', [PelaporanUASController::class, 'bulkDelete']);
 });
