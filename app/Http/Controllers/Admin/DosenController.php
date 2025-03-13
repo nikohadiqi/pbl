@@ -29,12 +29,18 @@ class DosenController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['success' => false, 'message' => 'Validation Error', 'errors' => $validator->errors()], 400);
+            return response()->json([
+                'success' => false, 
+                'message' => 'Validation Error', 
+                'errors' => $validator->errors()], 400);
         }
 
         $dosen = Dosen::create($request->all());
 
-        return response()->json(['success' => true, 'message' => 'Dosen berhasil ditambahkan!', 'data' => $dosen], 201);
+        return response()->json([
+        'success' => true, 
+        'message' => 'Dosen berhasil ditambahkan!', 
+        'data' => $dosen], 201);
     }
 
     /**

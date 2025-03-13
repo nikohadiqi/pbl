@@ -20,7 +20,7 @@ use App\Http\Controllers\Mahasiswa\LogbookController;
 
 Route::post('/login', [LoginController::class, 'login']);
 
-Route::prefix('admin')->middleware(['auth:sanctum'])->group(function () {
+Route::prefix('admin')->middleware(['auth:sanctum', 'admin'])->group(function () {
 
     // 🔹 Rute Dosen
     Route::post('dosen', [DosenController::class, 'create']); // Tambah Dosen
@@ -71,7 +71,7 @@ Route::prefix('admin')->middleware(['auth:sanctum'])->group(function () {
     Route::post('/mata-kuliah/bulk-delete', [MataKuliahController::class, 'bulkDelete']);
 });
 
-Route::prefix('mhs')->middleware(['auth:sanctum'])->group(function () {
+Route::prefix('mahasiswa')->middleware(['auth:sanctum', 'mahasiswa'])->group(function () {
     //RPP 
     Route::get('/rencana-proyek', [RencanaProyekController::class, 'index']);
     Route::post('/rencana-proyek', [RencanaProyekController::class, 'store']);
