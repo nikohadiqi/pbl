@@ -1,22 +1,23 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\DosenController;
-use App\Http\Controllers\Admin\MahasiswaController;
-use App\Http\Controllers\Admin\PeriodePBLController;
-use App\Http\Controllers\Admin\TimPBLController;
+use App\Http\Controllers\API\Admin\DosenController;
+use App\Http\Controllers\API\Admin\MahasiswaController;
+use App\Http\Controllers\API\Admin\PeriodePBLController;
+use App\Http\Controllers\API\Admin\TimPBLController;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Admin\TahapanPelaksanaanProyekController;
-use App\Http\Controllers\Admin\MataKuliahController;
-use App\Http\Controllers\Mahasiswa\RencanaProyekController;
-use App\Http\Controllers\Mahasiswa\TahapanPelaksaanController;
-use App\Http\Controllers\Mahasiswa\KebutuhanPeralatanController;
-use App\Http\Controllers\Mahasiswa\TantanganController;
-use App\Http\Controllers\Mahasiswa\EstimasiWaktuController;
-use App\Http\Controllers\Mahasiswa\BiayaProyekController;
-use App\Http\Controllers\Mahasiswa\TimProyekController;
-use App\Http\Controllers\Mahasiswa\CapaianPembelajaranController;
-use App\Http\Controllers\Mahasiswa\LogbookController;
+use App\Http\Controllers\API\Admin\TahapanPelaksanaanProyekController;
+use App\Http\Controllers\API\Admin\MataKuliahController;
+use App\Http\Controllers\API\Mahasiswa\RencanaProyekController;
+use App\Http\Controllers\API\Mahasiswa\TahapanPelaksaanController;
+use App\Http\Controllers\API\Mahasiswa\KebutuhanPeralatanController;
+use App\Http\Controllers\API\Mahasiswa\TantanganController;
+use App\Http\Controllers\API\Mahasiswa\EstimasiWaktuController;
+use App\Http\Controllers\API\Mahasiswa\BiayaProyekController;
+use App\Http\Controllers\API\Mahasiswa\TimProyekController;
+use App\Http\Controllers\API\Mahasiswa\CapaianPembelajaranController;
+use App\Http\Controllers\API\Mahasiswa\LogbookController;
+
 
 Route::post('/login', [LoginController::class, 'login']);
 
