@@ -14,7 +14,7 @@ class DosenController extends Controller
      */
     public function index()
     {
-        $dosens = Dosen::all();
+        $dosens = Dosen::all(); //dosenn
         return response()->json(['success' => true, 'message' => 'List of Dosen', 'data' => $dosens], 200);
     }
 
