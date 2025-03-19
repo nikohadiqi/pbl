@@ -1,72 +1,75 @@
-<!-- resources/views/auth/login.blade.php -->
-@extends('layouts.app')
+@extends('layouts.login-template')
 
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Login') }}</div>
+@section('title','Login | Sistem Informasi dan Monitoring Project Based Learning')
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
-                        @csrf
-
-                        <!-- NIM Input -->
-                        <div class="row mb-3">
-                            <label for="nim" class="col-md-4 col-form-label text-md-end">{{ __('NIM') }}</label>
-                            <div class="col-md-6">
-                                <input id="nim" type="text" class="form-control @error('nim') is-invalid @enderror" name="nim" value="{{ old('nim') }}" required autofocus>
-                                @error('nim')
+@section('main-content')
+<section>
+    <div class="page-header min-vh-100">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column mx-lg-0 mx-auto">
+                    <div class="card card-plain">
+                        <div class="card-header pb-0 text-start">
+                            <img src="../assets/img/login-logo.png" alt="logo" width="50%" class="mb-3">
+                            <h4 class="font-weight-bolder">Login</h4>
+                            <p class="mb-0">Masukan NIM/NIP dan Password untuk Login!</p>
+                        </div>
+                        <div class="card-body">
+                            <form role="form" method="POST" action="{{ route('login.post') }}">
+                                @csrf
+                                <div class="mb-3 position-relative">
+                                    <select id="role" name="role" class="form-control form-control-lg @error('role') is-invalid @enderror" required>
+                                        <option value="" disabled selected>Pilih Jenis User</option>
+                                        <option value="admin" {{ old('role')=='admin' ? 'selected' : '' }}>Admin</option>
+                                        <option value="mahasiswa" {{ old('role')=='mahasiswa' ? 'selected' : '' }}>Mahasiswa</option>
+                                        <option value="dosen" {{ old('role')=='dosen' ? 'selected' : '' }}>Dosen</option>
+                                    </select>
+                                    @error('role')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <!-- Password Input -->
-                        <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required>
-                                @error('password')
+                                    @enderror
+                                </div>
+                                <div class="mb-3">
+                                    <input id="nim" type="text" class="form-control form-control-lg @error('nim') is-invalid @enderror" name="nim" value="{{ old('nim') }}" placeholder="NIM/NIP/NIK" aria-label="Nim" required autofocus>
+                                    @error('nim')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <!-- Role Input -->
-                        <div class="row mb-3">
-                            <label for="role" class="col-md-4 col-form-label text-md-end">{{ __('Role') }}</label>
-                            <div class="col-md-6">
-                                <select id="role" name="role" class="form-control @error('role') is-invalid @enderror" required>
-                                    <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
-                                    <option value="mahasiswa" {{ old('role') == 'mahasiswa' ? 'selected' : '' }}>Mahasiswa</option>
-                                    <option value="manajerproyek" {{ old('role') == 'dosen' ? 'selected' : '' }}>dosen</option>
-                                </select>
-                                @error('role')
+                                    @enderror
+                                </div>
+                                <div class="mb-3">
+                                    <input id="password" type="password" class="form-control form-control-lg @error('password') is-invalid @enderror" name="password" required placeholder="Password" aria-label="Password">
+                                    @error('password')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
-                                @enderror
-                            </div>
+                                    @enderror
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="rememberMe">
+                                    <label class="form-check-label" for="rememberMe">Remember me</label>
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-lg btn-primary w-100 mt-4 mb-0">Login</button>
+                                </div>
+                            </form>
                         </div>
-
-                        <!-- Login Button -->
-                        <div class="row mb-0">
-                            <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Login') }}
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                    </div>
+                </div>
+                <div
+                    class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 text-center justify-content-center flex-column">
+                    <div class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden" style="background-image: url('../assets/img/login-image.png'); background-size: unset;">
+                        <span class="mask bg-gradient-primary opacity-6"></span>
+                        <h4 class="mt-5 text-white font-weight-bolder position-relative bold">Sistem Informasi dan Monitoring
+                        </h4>
+                        <h4 class="text-white font-weight-bolder position-relative bold">Project Based Learning
+                        </h4>
+                        <p class="text-white position-relative">Program Studi Teknologi Rekayasa Perangkat Lunak</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 @endsection
