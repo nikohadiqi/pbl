@@ -1,12 +1,31 @@
 @php
     $routes = [
-        'dashboard' => 'Dashboard',
-        'tim-pbl' => 'Tim PBL',
-        'periode-pbl' => 'Periode PBL',
-        'tahapan-proyek' => 'Tahapan Pelaksanaan Proyek',
-        'mata-kuliah' => 'Mata Kuliah',
-        'akun-mahasiswa' => 'Akun Mahasiswa',
-        'akun-dosen' => 'Akun Dosen',
+        // Dashboard
+        'admin.dashboard' => 'Dashboard',
+        // Tim PBL
+        'admin.timpbl' => 'Tim PBL',
+        'admin.tambah-timpbl' => 'Tim PBL',
+        'admin.edit-timpbl' => 'Tim PBL',
+        // Periode PBL
+        'admin.periodepbl' => 'Periode PBL',
+        'admin.tambah-periodepbl' => 'Periode PBL',
+        'admin.edit-periodepbl' => 'Periode PBL',
+        // TPR
+        'admin.tahapanpelaksanaan' => 'Tahapan Pelaksanaan Proyek',
+        'admin.tambah-tahapanpelaksanaan' => 'Tahapan Pelaksanaan Proyek',
+        'admin.edit-tahapanpelaksanaan' => 'Tahapan Pelaksanaan Proyek',
+        // Mata Kuliah
+        'admin.matkul' => 'Mata Kuliah',
+        'admin.tambah-matkul' => 'Mata Kuliah',
+        'admin.edit-matkul' => 'Mata Kuliah',
+        // Mahasiswa
+        'admin.mahasiswa' => 'Akun Mahasiswa',
+        'admin.tambah-mahasiswa' => 'Akun Mahasiswa',
+        'admin.edit-mahasiswa' => 'Akun Mahasiswa',
+        // Dosen
+        'admin.dosen' => 'Akun Dosen',
+        'admin.tambah-dosen' => 'Akun Dosen',
+        'admin.edit-dosen' => 'Akun Dosen',
     ];
 
     $currentRoute = Route::currentRouteName();
@@ -43,7 +62,7 @@
                 <!-- User Profile Dropdown -->
                 <li class="nav-item dropdown">
                     <a class="nav-link text-dark d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="../assets/img/logo-poliwangi.png" alt="User Avatar" class="rounded-circle me-2" width="40" height="40">
+                        <img src="{{ asset('assets/img/team-3.jpg') }}" alt="User Avatar" class="rounded-circle me-2" width="40" height="40">
                         <span class="fw-bold">Admin</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">

@@ -83,11 +83,11 @@
             <table class="table align-items-center mb-0">
                 <thead>
                     <tr>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Tim</th>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Judul Proyek PBL
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nama Tim</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Judul Proyek PBL
                         </th>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Kelas</th>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Progres Proyek
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Kelas</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Progres Proyek
                         </th>
                         <th></th>
                     </tr>
@@ -201,12 +201,12 @@
             <table class="table align-items-center mb-0">
                 <thead>
                     <tr>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Dosen</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nama Dosen</th>
                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Mengampu
                             Mata Kuliah</th>
-                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                             NIP/NIK</th>
-                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">No
                             Telp</th>
                     </tr>
                 </thead>
@@ -214,32 +214,32 @@
                     <tr>
                         <td class="text-x font-weight-bold">Mohamad Dimyati Ayatullah, S.T., M.Kom.</td>
                         <td class="text-x">Proyek Aplikasi Dasar</td>
-                        <td class="text-center text-x">197601222021211000</td>
-                        <td class="text-center text-x">08123399184</td>
+                        <td class="text-x">197601222021211000</td>
+                        <td class="text-x">08123399184</td>
                     </tr>
                     <tr>
                         <td class="text-x font-weight-bold">Dianni Yusuf, S.Kom., M.Kom.</td>
                         <td class="text-x">Basis Data</td>
-                        <td class="text-center text-x">198403052021212000</td>
-                        <td class="text-center text-x">082328333999</td>
+                        <td class="text-x">198403052021212000</td>
+                        <td class="text-x">082328333999</td>
                     </tr>
                     <tr>
                         <td class="text-x font-weight-bold">I Wayan Suardinata, S.Kom., M.T.</td>
                         <td class="text-x">ADPL</td>
-                        <td class="text-center text-x">198010222015041000</td>
-                        <td class="text-center text-x">085736577864</td>
+                        <td class="text-x">198010222015041000</td>
+                        <td class="text-x">085736577864</td>
                     </tr>
                     <tr>
                         <td class="text-x font-weight-bold">Eka Mistiko Rini, S.Kom, M.Kom.</td>
                         <td class="text-x">Basis Data</td>
-                        <td class="text-center text-x">198310202014042001</td>
-                        <td class="text-center text-x">081913922224</td>
+                        <td class="text-x">198310202014042001</td>
+                        <td class="text-x">081913922224</td>
                     </tr>
                     <tr>
                         <td class="text-x font-weight-bold">Ruth Ema Febrita, S.Pd., M.Kom.</td>
                         <td class="text-x">Proyek Aplikasi Dasar</td>
-                        <td class="text-center text-x">199202272020122000</td>
-                        <td class="text-center text-x">085259082627</td>
+                        <td class="text-x">199202272020122000</td>
+                        <td class="text-x">085259082627</td>
                     </tr>
                 </tbody>
             </table>
