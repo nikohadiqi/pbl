@@ -5,28 +5,28 @@
 @section('content')
 <div class="container-fluid py-4">
     <div class="card p-4">
-        <div class="d-flex justify-content-between align-items-center">
-            <h5 class="fw-bold">Edit Data Mata Kuliah</h5>
-        </div>
+        <h5 class="fw-bold">Edit Data Mata Kuliah</h5>
         <p class="text-muted">Sistem Informasi dan Monitoring Project Based Learning - TRPL Poliwangi</p>
-        <form class="mt-1">
-            <div class="form-group">
-                <label for="mata_kuliah" class="form-control-label">Mata Kuliah</label>
-                <input class="form-control" type="text" value="Proyek Aplikasi Dasar" id="mata_kuliah">
-            </div>
-            <div class="form-group">
-                <label for="capaian" class="form-control-label">Capaian</label>
-                <textarea class="form-control" id="capaian" rows="5">Capaian PAD</textarea>
-            </div>
-            <div class="form-group">
-                <label for="tujuan" class="form-control-label">Tujuan</label>
-                <textarea class="form-control" id="tujuan" rows="5">Tujuan PAD</textarea>
-            </div>
-            <div class="form-group mt-4">
-                <button type="submit" class="btn btn-primary me-2">Simpan Data</button>
-                <button type="reset" class="btn btn-danger">Reset Data</button>
-            </div>
-        </form>
+        <form action="{{ route('admin.update-matkul', $matkul->id) }}" method="POST">
+    @csrf
+    @method('PATCH')  {{-- Gantilah PUT dengan PATCH --}}
+    
+    <div class="form-group">
+        <label for="matakuliah">Mata Kuliah</label>
+        <textarea class="form-control" name="matakuliah" rows="5" required>{{ $matkul->matakuliah }}</textarea>
+        </div>
+    <div class="form-group">
+        <label for="capaian">Capaian</label>
+        <textarea class="form-control" name="capaian" rows="5" required>{{ $matkul->capaian }}</textarea>
+    </div>
+    <div class="form-group">
+        <label for="tujuan">Tujuan</label>
+        <textarea class="form-control" name="tujuan" rows="5" required>{{ $matkul->tujuan }}</textarea>
+    </div>
+    <div class="form-group mt-4">
+        <button type="submit" class="btn btn-primary">Perbarui Data</button>
+    </div>
+</form>
     </div>
 </div>
 @endsection

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Website\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -8,14 +8,20 @@ use App\Models\MataKuliah;
 
 class MataKuliahController extends Controller
 {
-    // **Tampilkan Semua Data**
+    // **Tampilkan Semua Data Mata Kuliah**
     public function index()
     {
         $data = MataKuliah::all();
-        return response()->json($data);
+        return view('admin.mata-kuliah.matkul', compact('data'));
     }
 
-    // **Tambah Data Baru**
+    // **Tampilkan Form Tambah Mata Kuliah**
+    public function create()
+    {
+        return view('admin.mata-kuliah.tambah-matkul');
+    }
+
+    // **Simpan Mata Kuliah Baru**
     public function store(Request $request)
     {
         $request->validate([
@@ -24,62 +30,47 @@ class MataKuliahController extends Controller
             'tujuan' => 'required|string',
         ]);
 
-        $data = MataKuliah::create($request->all());
+        MataKuliah::create([
+            'matakuliah' => $request->matakuliah,
+            'capaian' => $request->capaian,
+            'tujuan' => $request->tujuan,
+        ]);
 
-        return response()->json(['message' => 'Mata Kuliah berhasil ditambahkan', 'data' => $data], 201);
+        return redirect()->route('admin.matkul')->with('success', 'Mata Kuliah berhasil ditambahkan.');
     }
 
-    // **Tampilkan Data Berdasarkan ID**
-    public function show($id)
+    // **Tampilkan Form Edit**
+    public function edit($id)
     {
-        $data = MataKuliah::find($id);
-        if (!$data) {
-            return response()->json(['message' => 'Mata Kuliah tidak ditemukan'], 404);
-        }
-        return response()->json($data);
+        $matkul = MataKuliah::findOrFail($id);
+        return view('admin.mata-kuliah.edit-matkul', compact('matkul'));
     }
 
-    // **Update Data Berdasarkan ID**
+    // **Update Mata Kuliah**
     public function update(Request $request, $id)
     {
-        $data = MataKuliah::find($id);
-        if (!$data) {
-            return response()->json(['message' => 'Mata Kuliah tidak ditemukan'], 404);
-        }
-
         $request->validate([
-            'matakuliah' => 'string|max:255',
-            'capaian' => 'string',
-            'tujuan' => 'string',
+            'matakuliah' => 'required|string|max:255',
+            'capaian' => 'required|string',
+            'tujuan' => 'required|string',
         ]);
 
-        $data->update($request->all());
+        $matkul = MataKuliah::findOrFail($id);
+        $matkul->update([
+            'matakuliah' => $request->matakuliah,
+            'capaian' => $request->capaian,
+            'tujuan' => $request->tujuan,
+        ]);
 
-        return response()->json(['message' => 'Mata Kuliah berhasil diperbarui', 'data' => $data]);
+        return redirect()->route('admin.matkul')->with('success', 'Mata Kuliah berhasil diperbarui!');
     }
 
-    // **Hapus Data Berdasarkan ID**
+    // **Hapus Mata Kuliah**
     public function destroy($id)
     {
-        $data = MataKuliah::find($id);
-        if (!$data) {
-            return response()->json(['message' => 'Mata Kuliah tidak ditemukan'], 404);
-        }
+        $matkul = MataKuliah::findOrFail($id);
+        $matkul->delete();
 
-        $data->delete();
-        return response()->json(['message' => 'Mata Kuliah berhasil dihapus']);
-    }
-
-    // **Bulk Delete (Hapus Banyak Data)**
-    public function bulkDelete(Request $request)
-    {
-        $request->validate([
-            'ids' => 'required|array',
-            'ids.*' => 'integer|exists:mata_kuliah,id',
-        ]);
-
-        MataKuliah::whereIn('id', $request->ids)->delete();
-
-        return response()->json(['message' => 'Data berhasil dihapus']);
+        return redirect()->route('admin.matkul')->with('success', 'Mata Kuliah berhasil dihapus!');
     }
 }

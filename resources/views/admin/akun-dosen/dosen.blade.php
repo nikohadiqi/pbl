@@ -17,11 +17,17 @@
             </div>
         </div>
         <p class="text-muted">Akun Dosen yang digunakan dalam sistem</p>
+
+        {{-- Menampilkan pesan sukses --}}
+        @if(session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
+
         <div class="table-responsive mt-3">
             <table class="table table-hover" id="datatable">
                 <thead class="table-light">
                     <tr>
-                        <th>Nomor</th>
+                        <th>No</th>
                         <th>Nama Dosen</th>
                         <th>NIP/NIK/NIPPPK</th>
                         <th>No Telp</th>
@@ -29,54 +35,29 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @forelse($dosen as $index => $data)
                     <tr>
-                        <td>1</td>
-                        <td>Mohamad Dimyati Ayatullah, S.T., M.Kom.</td>
-                        <td>197601222021211000</td>
-                        <td>081234567890</td>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $data->nama }}</td>
+                        <td>{{ $data->nip }}</td>
+                        <td>{{ $data->no_telp}}</td>
                         <td>
-                            <a href="{{ route('admin.edit-dosen') }}">
+                            <a href="{{ route('admin.edit-dosen', $data->id) }}">
                                 <button class="btn btn-sm btn-info text-white"><i class="bi bi-pencil-square"></i></button>
                             </a>
-                            <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                            <form action="{{ route('admin.dosen.delete', $data->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus data ini?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                        </form>
+
                         </td>
                     </tr>
+                    @empty
                     <tr>
-                        <td>2</td>
-                        <td>Dianni Yusuf, S.Kom., M.Kom.</td>
-                        <td>198403052021212004</td>
-                        <td>081234567890</td>
-                        <td>
-                            <a href="{{ route('admin.edit-dosen') }}">
-                                <button class="btn btn-sm btn-info text-white"><i class="bi bi-pencil-square"></i></button>
-                            </a>
-                            <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
-                        </td>
+                        <td colspan="5" class="text-center">Tidak ada data dosen</td>
                     </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>I Wayan Suardinata, S.Kom., M.T.</td>
-                        <td>198010222015041000</td>
-                        <td>081234567890</td>
-                        <td>
-                            <a href="{{ route('admin.edit-dosen') }}">
-                                <button class="btn btn-sm btn-info text-white"><i class="bi bi-pencil-square"></i></button>
-                            </a>
-                            <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>Ruth Ema Febrita, S.Pd., M.Kom.</td>
-                        <td>199202272020122000</td>
-                        <td>081234567890</td>
-                        <td>
-                            <a href="{{ route('admin.edit-dosen') }}">
-                                <button class="btn btn-sm btn-info text-white"><i class="bi bi-pencil-square"></i></button>
-                            </a>
-                            <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
-                        </td>
-                    </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

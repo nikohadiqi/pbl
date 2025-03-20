@@ -8,20 +8,21 @@
         <div class="d-flex justify-content-between align-items-center">
             <h4 class="fw-bold">Akun Mahasiswa</h4>
             <div class="d-flex gap-2">
-                <a href="{{ route('admin.tambah-mahasiswa') }}">
-                    <button class="btn btn-primary text-white fw-bold"><i class="bi bi-plus me-2"></i>Tambah Data</button>
+                <a href="{{ route('admin.tambah-mahasiswa') }}" class="btn btn-primary text-white fw-bold">
+                    <i class="bi bi-plus me-2"></i>Tambah Data
                 </a>
-                <a href="#">
-                    <button class="btn btn-primary text-white fw-bold"><i class="bi bi-upload me-2"></i>Impor Data</button>
+                <a href="#" class="btn btn-primary text-white fw-bold">
+                    <i class="bi bi-upload me-2"></i>Impor Data
                 </a>
             </div>
         </div>
         <p class="text-muted">Akun Mahasiswa yang digunakan dalam sistem ke proyek PBL masing-masing</p>
+        
         <div class="table-responsive mt-3">
             <table class="table table-hover" id="datatable">
                 <thead class="table-light">
                     <tr>
-                        <th>Nomor</th>
+                        <th>#</th>
                         <th>Nama Mahasiswa</th>
                         <th>NIM</th>
                         <th>Kelas</th>
@@ -29,57 +30,39 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach ($mahasiswa as $index => $mhs)
                     <tr>
-                        <td>1</td>
-                        <td>Achmad Nico Wildhan</td>
-                        <td>362355401017</td>
-                        <td>3A</td>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $mhs->nama }}</td>
+                        <td>{{ $mhs->nim }}</td>
+                        <td>{{ $mhs->kelas }}</td>
                         <td>
-                            <a href="{{ route('admin.edit-mahasiswa') }}">
-                                <button class="btn btn-sm btn-info text-white"><i class="bi bi-pencil-square"></i></button>
+                            <a href="{{ route('admin.edit-mahasiswa', $mhs->id) }}" class="btn btn-sm btn-info text-white">
+                                <i class="bi bi-pencil-square"></i>
                             </a>
-                            <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                            <button class="btn btn-sm btn-danger" onclick="confirmDelete({{ $mhs->id }})">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                            <form id="delete-form-{{ $mhs->id }}" action="{{ route('admin.delete-mahasiswa', ['id' => $mhs->id]) }}" method="POST" style="display: none;">
+                            @csrf
+                            @method('DELETE')
+                        </form>
+
                         </td>
                     </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Rio Adjie Wiguna</td>
-                        <td>362355401085</td>
-                        <td>3A</td>
-                        <td>
-                            <a href="{{ route('admin.edit-mahasiswa') }}">
-                                <button class="btn btn-sm btn-info text-white"><i class="bi bi-pencil-square"></i></button>
-                            </a>
-                            <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Wahyu Eka</td>
-                        <td>362355401025</td>
-                        <td>3A</td>
-                        <td>
-                            <a href="{{ route('admin.edit-mahasiswa') }}">
-                                <button class="btn btn-sm btn-info text-white"><i class="bi bi-pencil-square"></i></button>
-                            </a>
-                            <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>Ken Affila</td>
-                        <td>362355401030</td>
-                        <td>3A</td>
-                        <td>
-                            <a href="{{ route('admin.edit-mahasiswa') }}">
-                                <button class="btn btn-sm btn-info text-white"><i class="bi bi-pencil-square"></i></button>
-                            </a>
-                            <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
-                        </td>
-                    </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+
+<script>
+    function confirmDelete(id) {
+        if (confirm("Apakah Anda yakin ingin menghapus mahasiswa ini?")) {
+            document.getElementById('delete-form-' + id).submit();
+        }
+    }
+</script>
+
 @endsection

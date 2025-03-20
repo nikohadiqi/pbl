@@ -1,6 +1,6 @@
 @extends('layouts.dashboardadmin-template')
 
-@section('title','Tambah Akun Mahasiswa | Sistem Informasi dan Monitoring Project Based Learning')
+@section('title', 'Tambah Akun Mahasiswa | Sistem Informasi dan Monitoring Project Based Learning')
 
 @section('content')
 <div class="container-fluid py-4">
@@ -9,20 +9,42 @@
             <h5 class="fw-bold">Tambah Akun Mahasiswa</h5>
         </div>
         <p class="text-muted">Sistem Informasi dan Monitoring Project Based Learning - TRPL Poliwangi</p>
-       <form class="mt-1">
+
+        {{-- Menampilkan pesan sukses --}}
+        @if(session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
+
+        {{-- Menampilkan error validasi --}}
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        {{-- Form Tambah Mahasiswa --}}
+        <form class="mt-1" method="POST" action="{{ route('admin.mahasiswa.store') }}">
+            @csrf
             <div class="form-group">
                 <label for="nim" class="form-control-label">NIM</label>
-                <input class="form-control" placeholder="Masukan NIM" type="text">
+                <input id="nim" class="form-control" name="nim" placeholder="Masukkan NIM" type="text" required value="{{ old('nim') }}">
             </div>
+
             <div class="form-group">
                 <label for="nama" class="form-control-label">Nama Mahasiswa</label>
-                <input class="form-control" placeholder="Masukan Nama Mahasiswa" type="text">
+                <input id="nama" class="form-control" name="nama" placeholder="Masukkan Nama Mahasiswa" type="text" required value="{{ old('nama') }}">
             </div>
+
             <div class="form-group">
                 <label for="kelas" class="form-control-label">Kelas</label>
-                <input class="form-control" placeholder="Masukan Kelas" type="text">
+                <input id="kelas" class="form-control" name="kelas" placeholder="Masukkan Kelas" type="text" required value="{{ old('kelas') }}">
             </div>
-            <div class="form-grou mt-4">
+
+            <div class="form-group mt-4">
                 <button type="submit" class="btn btn-primary me-2">Simpan Data</button>
                 <button type="reset" class="btn btn-danger">Reset Data</button>
             </div>

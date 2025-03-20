@@ -11,6 +11,15 @@
                 <button class="btn btn-primary text-white fw-bold"><i class="bi bi-plus me-2"></i>Tambah Data</button>
             </a>
         </div>
+
+        <!-- Notifikasi -->
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
         <p class="text-muted">Data Mata Kuliah Prodi TRPL</p>
         <div class="table-responsive mt-3">
             <table class="table table-hover" id="datatable">
@@ -24,48 +33,26 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach($data as $index => $matkul)
                     <tr>
-                        <td>1</td>
-                        <td>Proyek Aplikasi Dasar</td>
-                        <td>Capaian PAD</td>
-                        <td>Tujuan PAD</td>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $matkul->matakuliah }}</td>
+                        <td>{{ $matkul->capaian }}</td>
+                        <td>{{ $matkul->tujuan }}</td>
                         <td>
-                            <a href="{{ route('admin.edit-matkul') }}">
+                            <a href="{{ route('admin.edit-matkul', $matkul->id) }}">
                                 <button class="btn btn-sm btn-info text-white"><i class="bi bi-pencil-square"></i></button>
                             </a>
-                            <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                            <form action="{{ route('admin.hapus-matkul', $matkul->id) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus?')">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
                         </td>
                     </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Basis Data</td>
-                        <td>Capaian BD</td>
-                        <td>Tujuan BD</td>
-                        <td>
-                            <button class="btn btn-sm btn-info text-white"><i class="bi bi-pencil-square"></i></button>
-                            <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Analisis Desain Perangkat Lunak</td>
-                        <td>Capaian ADPL</td>
-                        <td>Tujuan ADPL</td>
-                        <td>
-                            <button class="btn btn-sm btn-info text-white"><i class="bi bi-pencil-square"></i></button>
-                            <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>Desain Pengalaman Pengguna</td>
-                        <td>Capaian DPP</td>
-                        <td>Tujuan DPP</td>
-                        <td>
-                            <button class="btn btn-sm btn-info text-white"><i class="bi bi-pencil-square"></i></button>
-                            <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
-                        </td>
-                    </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>

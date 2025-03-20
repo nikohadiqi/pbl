@@ -12,8 +12,6 @@ return new class extends Migration {
             $table->string('matakuliah');
             $table->text('capaian');
             $table->text('tujuan');
-            // Field dosen yang berelasi dengan tabel dosen
-            $table->foreignId('dosen_id')->constrained('dosen')->onDelete('cascade');
             $table->timestamps();
         });
     }

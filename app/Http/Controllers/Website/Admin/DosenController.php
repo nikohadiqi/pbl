@@ -1,103 +1,69 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Website\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Dosen;
-use Illuminate\Support\Facades\Validator;
 
 class DosenController extends Controller
 {
-    /**
-     * Ambil semua data dosen
-     */
+    // Menampilkan daftar dosen
     public function index()
     {
-        $dosens = Dosen::all();
-        return response()->json(['success' => true, 'message' => 'List of Dosen', 'data' => $dosens], 200);
+        $dosen = Dosen::all();
+        return view('admin.akun-dosen.dosen', compact('dosen'));
     }
 
-    /**
-     * Tambah dosen baru
-     */
-    public function create(Request $request)
+    // Menampilkan form tambah dosen
+    public function create()
     {
-        $validator = Validator::make($request->all(), [
-            'nip' => 'required|string|unique:dosen,nip',
-            'nama' => 'required|string',
+        return view('admin.akun-dosen.tambah-dosen');
+    }
+
+    // Menyimpan data dosen
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nip' => 'required|unique:dosen,nip|max:20',
+            'nama' => 'required|string|max:100',
+            'no_telp' => 'nullable|string|max:15'
         ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false, 
-                'message' => 'Validation Error', 
-                'errors' => $validator->errors()], 400);
-        }
+        Dosen::create($request->all());
 
-        $dosen = Dosen::create($request->all());
-
-        return response()->json([
-        'success' => true, 
-        'message' => 'Dosen berhasil ditambahkan!', 
-        'data' => $dosen], 201);
+        return redirect()->route('admin.dosen')->with('success', 'Dosen berhasil ditambahkan.');
     }
 
-    /**
-     * Ambil detail dosen
-     */
-    public function show($id)
+    public function edit($id)
+{
+    $dosen = Dosen::findOrFail($id);
+    return view('admin.akun-dosen.edit-dosen', compact('dosen')); // Perbaiki path view
+}
+
+public function update(Request $request, $id)
+{
+    $request->validate([
+        'nip' => 'required|string|max:255',
+        'nama' => 'required|string|max:255',
+        'no_telp' => 'nullable|string|max:15',
+    ]);
+
+    $dosen = Dosen::findOrFail($id);
+    $dosen->update([
+        'nip' => $request->nip,
+        'nama' => $request->nama,
+        'no_telp' => $request->no_telp,
+    ]);
+
+    return redirect()->route('admin.dosen')->with('success', 'Data Dosen berhasil diperbarui!');
+}
+    // Menghapus data dosen
+    public function destroy($id)
     {
-        $dosen = Dosen::find($id);
-        if (!$dosen) {
-            return response()->json(['success' => false, 'message' => 'Dosen tidak ditemukan'], 404);
-        }
-        return response()->json(['success' => true, 'data' => $dosen], 200);
-    }
-
-    /**
-     * Update data dosen
-     */
-    public function update(Request $request, $id)
-    {
-        $dosen = Dosen::find($id);
-        if (!$dosen) {
-            return response()->json(['success' => false, 'message' => 'Dosen tidak ditemukan'], 404);
-        }
-
-        $validator = Validator::make($request->all(), [
-            'nip' => 'sometimes|string|unique:dosen,nip,' . $id,
-            'nama' => 'sometimes|string',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['success' => false, 'message' => 'Validation Error', 'errors' => $validator->errors()], 400);
-        }
-
-        $dosen->update($request->all());
-        return response()->json(['success' => true, 'message' => 'Dosen berhasil diperbarui!', 'data' => $dosen], 200);
-    }
-
-    /**
-     * Hapus dosen
-     */
-    public function delete($id)
-    {
-        $dosen = Dosen::find($id);
-        if (!$dosen) {
-            return response()->json(['success' => false, 'message' => 'Dosen tidak ditemukan'], 404);
-        }
+        $dosen = Dosen::findOrFail($id);
         $dosen->delete();
-        return response()->json(['success' => true, 'message' => 'Dosen berhasil dihapus!'], 200);
-    }
 
-    /**
-     * Bulk delete dosen
-     */
-    public function bulkDelete(Request $request)
-    {
-        $ids = $request->input('ids');
-        Dosen::whereIn('id', $ids)->delete();
-        return response()->json(['success' => true, 'message' => 'Dosen berhasil dihapus secara massal!'], 200);
+        return redirect()->route('admin.dosen')->with('success', 'Dosen berhasil dihapus.');
     }
 }

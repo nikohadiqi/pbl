@@ -1,7 +1,12 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Website\Admin\DosenController;
+use App\Http\Controllers\Website\Admin\MahasiswaController;
+use App\Http\Controllers\Website\Admin\MataKuliahController;
+
+
 // use App\Http\Controllers\Auth\DashboardController;
 /*
 |--------------------------------------------------------------------------
@@ -21,76 +26,60 @@ Route::post('login', [LoginController::class, 'login'])->name('login.post'); // 
 Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
 
 
-Route::middleware(['auth:sanctum'])->group(function () {
-    // Admin
-    // Dashboard
-    Route::get('admin/dashboard', function () {
+// Middleware untuk admin
+Route::prefix('admin')->middleware(['auth:sanctum', 'admin'])->group(function () {
+    
+    // Dashboard Admin
+    Route::get('dashboard', function () {
         return view('admin.dashboard-admin');
     })->name('admin.dashboard');
 
     // Tim PBL
-    Route::get('admin/menu/tim-pbl', function () {
-        return view('admin.tim-pbl.timpbl');
-    })->name('admin.timpbl');
-    Route::get('admin/menu/tim-pbl/tambah', function () {
-        return view('admin.tim-pbl.tambah-timpbl');
-    })->name('admin.tambah-timpbl');
-    Route::get('admin/menu/tim-pbl/edit', function () {
-        return view('admin.tim-pbl.edit-timpbl');
-    })->name('admin.edit-timpbl');
+    Route::prefix('menu/tim-pbl')->group(function () {
+        Route::view('/', 'admin.tim-pbl.timpbl')->name('admin.timpbl');
+        Route::view('/tambah', 'admin.tim-pbl.tambah-timpbl')->name('admin.tambah-timpbl');
+        Route::view('/edit', 'admin.tim-pbl.edit-timpbl')->name('admin.edit-timpbl');
+    });
 
     // Periode PBL
-    Route::get('admin/menu/periode-pbl', function () {
-        return view('admin.periode-pbl.periodepbl');
-    })->name('admin.periodepbl');
-    Route::get('admin/menu/periode-pbl/tambah', function () {
-        return view('admin.periode-pbl.tambah-periodepbl');
-    })->name('admin.tambah-periodepbl');
-    Route::get('admin/menu/periode-pbl/edit', function () {
-        return view('admin.periode-pbl.edit-periodepbl');
-    })->name('admin.edit-periodepbl');
+    Route::prefix('menu/periode-pbl')->group(function () {
+        Route::view('/', 'admin.periode-pbl.periodepbl')->name('admin.periodepbl');
+        Route::view('/tambah', 'admin.periode-pbl.tambah-periodepbl')->name('admin.tambah-periodepbl');
+        Route::view('/edit', 'admin.periode-pbl.edit-periodepbl')->name('admin.edit-periodepbl');
+    });
 
     // Tahapan Pelaksanaan Proyek
-    Route::get('admin/menu/tahapan-pelaksanaan-proyek', function () {
-        return view('admin.tahapan-pelaksanaan.tahapan-pelaksanaan');
-    })->name('admin.tahapanpelaksanaan');
-    Route::get('admin/menu/tahapan-pelaksanaan-proyek/tambah', function () {
-        return view('admin.tahapan-pelaksanaan.tambah-tahapan-pelaksanaan');
-    })->name('admin.tambah-tahapanpelaksanaan');
-    Route::get('admin/menu/tahapan-pelaksanaan-proyek/edit', function () {
-        return view('admin.tahapan-pelaksanaan.edit-tahapan-pelaksanaan');
-    })->name('admin.edit-tahapanpelaksanaan');
+    Route::prefix('menu/tahapan-pelaksanaan-proyek')->group(function () {
+        Route::view('/', 'admin.tahapan-pelaksanaan.tahapan-pelaksanaan')->name('admin.tahapanpelaksanaan');
+        Route::view('/tambah', 'admin.tahapan-pelaksanaan.tambah-tahapan-pelaksanaan')->name('admin.tambah-tahapanpelaksanaan');
+        Route::view('/edit', 'admin.tahapan-pelaksanaan.edit-tahapan-pelaksanaan')->name('admin.edit-tahapanpelaksanaan');
+    });
 
-    // Matkul
-    Route::get('admin/menu/master-data/mata-kuliah', function () {
-        return view('admin.mata-kuliah.matkul');
-    })->name('admin.matkul');
-    Route::get('admin/menu/master-data/mata-kuliah/tambah', function () {
-        return view('admin.mata-kuliah.tambah-matkul');
-    })->name('admin.tambah-matkul');
-    Route::get('admin/menu/master-data/mata-kuliah/edit', function () {
-        return view('admin.mata-kuliah.edit-matkul');
-    })->name('admin.edit-matkul');
+Route::prefix('menu/master-data/mata-kuliah')->middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::get('/', [MataKuliahController::class, 'index'])->name('admin.matkul');
+    Route::get('/tambah', [MataKuliahController::class, 'create'])->name('admin.tambah-matkul');
+    Route::post('/simpan', [MataKuliahController::class, 'store'])->name('admin.matkul.store');  
+    Route::get('/edit/{id}', [MataKuliahController::class, 'edit'])->name('admin.edit-matkul');
+    Route::patch('/update/{id}', [MataKuliahController::class, 'update'])->name('admin.update-matkul');
+    Route::delete('/hapus/{id}', [MataKuliahController::class, 'destroy'])->name('admin.hapus-matkul');
+});
+ // Akun Mahasiswa
+ Route::prefix('menu/master-data/akun-mahasiswa')->middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::get('/', [MahasiswaController::class, 'index'])->name('admin.mahasiswa');
+    Route::get('/tambah', [MahasiswaController::class, 'create'])->name('admin.tambah-mahasiswa');
+    Route::post('/simpan', [MahasiswaController::class, 'store'])->name('admin.mahasiswa.store');  // ✅ Route untuk simpan
+    Route::get('/edit/{id}', [MahasiswaController::class, 'edit'])->name('admin.edit-mahasiswa');
+    Route::patch('/update/{id}', [MahasiswaController::class, 'update'])->name('admin.update-mahasiswa');
+    Route::delete('/hapus/{id}', [MahasiswaController::class, 'destroy'])->name('admin.delete-mahasiswa'); 
+    });
 
-    // Mahasiswa
-    Route::get('admin/menu/master-data/akun-mahasiswa', function () {
-        return view('admin.akun-mahasiswa.mahasiswa');
-    })->name('admin.mahasiswa');
-    Route::get('admin/menu/master-data/akun-mahasiswa/tambah', function () {
-        return view('admin.akun-mahasiswa.tambah-mahasiswa');
-    })->name('admin.tambah-mahasiswa');
-    Route::get('admin/menu/master-data/akun-mahasiswa/edit', function () {
-        return view('admin.akun-mahasiswa.edit-mahasiswa');
-    })->name('admin.edit-mahasiswa');
+    Route::prefix('menu/master-data/akun-dosen')->middleware(['auth:sanctum', 'admin'])->group(function () {
+        Route::get('/', [DosenController::class, 'index'])->name('admin.dosen'); // Tampilkan daftar dosen
+        Route::get('/tambah', [DosenController::class, 'create'])->name('admin.tambah-dosen'); // Form tambah dosen
+        Route::post('/store', [DosenController::class, 'store'])->name('admin.dosen.store'); // Simpan data dosen
+        Route::get('/edit/{id}', [DosenController::class, 'edit'])->name('admin.edit-dosen');
+        Route::put('/update/{id}', [DosenController::class, 'update'])->name('admin.dosen.update');        
+        Route::delete('/delete/{id}', [DosenController::class, 'destroy'])->name('admin.dosen.delete'); // Hapus dosen
+    });
 
-    // Dosen
-    Route::get('admin/menu/master-data/akun-dosen', function () {
-        return view('admin.akun-dosen.dosen');
-    })->name('admin.dosen');
-    Route::get('admin/menu/master-data/akun-dosen/tambah', function () {
-        return view('admin.akun-dosen.tambah-dosen');
-    })->name('admin.tambah-dosen');
-    Route::get('admin/menu/master-data/akun-dosen/edit', function () {
-        return view('admin.akun-dosen.edit-dosen');
-    })->name('admin.edit-dosen');
 });

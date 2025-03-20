@@ -17,5 +17,6 @@ class Mahasiswa extends Model
         'id_tahun',
         'nim',
         'nama',
+        'kelas',
     ];
 }

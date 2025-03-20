@@ -9,8 +9,8 @@ return new class extends Migration {
     {
         Schema::create('tahapan_pelaksanaan_proyek', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('semester_id')->constrained('periodepbl')->onDelete('cascade'); // Relasi ke PeriodePBL
             $table->string('tahapan');
+            $table->integer('pic');
             $table->integer('score');
             $table->timestamps();
         });

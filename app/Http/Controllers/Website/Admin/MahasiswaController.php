@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Website\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -8,47 +8,62 @@ use App\Models\Mahasiswa;
 
 class MahasiswaController extends Controller
 {
-    public function create(Request $request)
+    // Menampilkan daftar mahasiswa
+    public function index()
+    {
+        $mahasiswa = Mahasiswa::all();
+        return view('admin.akun-mahasiswa.mahasiswa', compact('mahasiswa'));
+    }
+
+    // Menampilkan form tambah mahasiswa
+    public function create()
+    {
+        return view('admin.akun-mahasiswa.tambah-mahasiswa');
+    }
+
+    // Menyimpan data mahasiswa baru
+    public function store(Request $request)
     {
         $request->validate([
-            'id_tahun' => 'required|string',
-            'nim' => 'required|string|unique:mahasiswa,nim',
-            'nama' => 'required|string',
+            'nim' => 'required|string|max:15|unique:mahasiswa,nim',
+            'nama' => 'required|string|max:100',
+            'kelas' => 'required|string|max:10',
         ]);
 
-        $mahasiswa = Mahasiswa::create($request->all());
+        Mahasiswa::create($request->all());
 
-        return response()->json([
-            'message' => 'Mahasiswa berhasil ditambahkan!',
-            'data' => $mahasiswa
-        ], 201);
+        return redirect()->route('admin.mahasiswa')->with('success', 'Mahasiswa berhasil ditambahkan!');
     }
 
-    public function get()
+    // Menampilkan form edit mahasiswa
+    public function edit($id)
     {
-        return response()->json(Mahasiswa::all());
+        $mahasiswa = Mahasiswa::findOrFail($id);
+        return view('admin.akun-mahasiswa.edit-mahasiswa', compact('mahasiswa'));
     }
 
+    // Memperbarui data mahasiswa
     public function update(Request $request, $id)
     {
         $mahasiswa = Mahasiswa::findOrFail($id);
+
+        $request->validate([
+            'nim' => 'required|string|max:15|unique:mahasiswa,nim,' . $id,
+            'nama' => 'required|string|max:100',
+            'kelas' => 'required|string|max:10',
+        ]);
+
         $mahasiswa->update($request->all());
 
-        return response()->json([
-            'message' => 'Mahasiswa berhasil diperbarui!',
-            'data' => $mahasiswa
-        ]);
+        return redirect()->route('admin.mahasiswa')->with('success', 'Data mahasiswa berhasil diperbarui!');
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
-        Mahasiswa::destroy($id);
-        return response()->json(['message' => 'Mahasiswa berhasil dihapus!']);
+        $mahasiswa = Mahasiswa::findOrFail($id);
+        $mahasiswa->delete();
+    
+        return redirect()->route('admin.mahasiswa')->with('success', 'Mahasiswa berhasil dihapus!');
     }
-
-    public function bulkDelete(Request $request)
-    {
-        Mahasiswa::whereIn('id', $request->ids)->delete();
-        return response()->json(['message' => 'Mahasiswa berhasil dihapus secara massal!']);
-    }
+    
 }
