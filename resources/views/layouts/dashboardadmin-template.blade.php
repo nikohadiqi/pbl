@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/datatables.css') }}">
 </head>
 
-<body class="g-sidenav-show bg-gray-100">
+<body class="g-sidenav-show bg-body-custom">
     <div class="min-height-300 bg-primary position-absolute w-100"></div>
     <!-- sidebar menu -->
     @include('admin.components.sidebar')
@@ -198,8 +198,10 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
     <script src="{{ asset('assets/js/argon-dashboard.min.js?v=2.1.0') }}"></script>
+    {{-- Sweet Alert --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    {{-- Logout Allert --}}
+    @include('sweetalert::alert')
+    {{-- Logout Alert --}}
     <script>
         document.getElementById('logout-btn').addEventListener('click', function (event) {
         event.preventDefault();
