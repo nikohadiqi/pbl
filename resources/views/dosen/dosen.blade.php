@@ -5,12 +5,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Mahasiswa</title>
+    <title>Dashboard Dosen</title>
 </head>
 
 <body>
     <h1>Welcome, {{ Auth::user()-> name }}</h1>
-    <p>Ini adalah halaman dashboard khusus untuk Mahasiswa.</p>
+    <p>Ini adalah halaman dashboard khusus untuk Dosen.</p>
     <button id="logout-btn" class="btn btn-danger">Logout</button>
 
     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

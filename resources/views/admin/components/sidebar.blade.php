@@ -19,7 +19,7 @@
                     href="{{ route('admin.dashboard') }}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="bi bi-cast text-dark text-sm opacity-10"></i>
+                        <i class="bi bi-cast text-primary text-sm opacity-10"></i>
                     </div>
                     <span class="nav-link-text ms-1">Dashboard</span>
                 </a>
@@ -33,7 +33,7 @@
                 <a class="nav-link {{ request()->routeIs('admin.timpbl') ? 'active' : '' }}" href="{{ route('admin.timpbl') }}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="bi bi-people-fill text-dark text-sm opacity-10"></i>
+                        <i class="bi bi-people-fill text-danger text-sm opacity-10"></i>
                     </div>
                     <span class="nav-link-text ms-1">Tim PBL</span>
                 </a>
@@ -43,7 +43,7 @@
                 <a class="nav-link {{ request()->routeIs('admin.periodepbl') ? 'active' : '' }}" href="{{ route('admin.periodepbl') }}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="bi bi-calendar-fill text-dark text-sm opacity-10"></i>
+                        <i class="bi bi-calendar-fill text-warning text-sm opacity-10"></i>
                     </div>
                     <span class="nav-link-text ms-1">Periode PBL</span>
                 </a>
@@ -52,7 +52,7 @@
             <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('admin.tahapanpelaksanaan') ? 'active' : '' }}" href="{{ route('admin.tahapanpelaksanaan') }}">
                     <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-app text-dark text-sm opacity-10"></i>
+                        <i class="ni ni-app text-info text-sm opacity-10"></i>
                     </div>
                     <span class="nav-link-text ms-1">Tahapan Pelaksanaan Proyek</span>
                 </a>
@@ -66,7 +66,7 @@
                     aria-controls="masterData">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-single-copy-04 text-dark text-sm opacity-10"></i>
+                        <i class="ni ni-single-copy-04 text-success text-sm opacity-10"></i>
                     </div>
                     <span class="nav-link-text ms-1">Master Data</span>
                 </a>

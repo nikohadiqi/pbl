@@ -26,11 +26,10 @@ Route::post('login', [LoginController::class, 'login'])->name('login.post'); // 
 Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
 
 
-// Middleware untuk admin
-Route::prefix('admin')->middleware(['auth:sanctum', 'admin'])->group(function () {
-    
-    // Dashboard Admin
-    Route::get('dashboard', function () {
+// Route Akun Admin
+Route::middleware(['auth:sanctum'])->group(function () {
+    // Dashboard
+    Route::get('admin/dashboard', function () {
         return view('admin.dashboard-admin');
     })->name('admin.dashboard');
 
@@ -82,4 +81,17 @@ Route::prefix('menu/master-data/mata-kuliah')->middleware(['auth:sanctum', 'admi
         Route::delete('/delete/{id}', [DosenController::class, 'destroy'])->name('admin.dosen.delete'); // Hapus dosen
     });
 
+});
+
+// Route Akun Mahasiswa
+Route::prefix('mahasiswa')->middleware(['auth:sanctum'])->group(function () {
+    // Dashboard
+    Route::get('/dashboard', function () {
+        return view('mahasiswa.dashboard-mahasiswa');
+    })->name('mahasiswa.dashboard');
+
+    // RPP
+    Route::get('/menu/rencana-pelaksanaan-proyek', function () {
+        return view('mahasiswa.rpp.rencana-proyek');
+    })->name('mahasiswa.rpp');
 });
