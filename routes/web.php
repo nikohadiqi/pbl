@@ -20,9 +20,8 @@ Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login'])->name('login.post'); // Route untuk proses login
 Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
 
-
+// Route Akun Admin
 Route::middleware(['auth:sanctum'])->group(function () {
-    // Admin
     // Dashboard
     Route::get('admin/dashboard', function () {
         return view('admin.dashboard-admin');
@@ -93,4 +92,17 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('admin/menu/master-data/akun-dosen/edit', function () {
         return view('admin.akun-dosen.edit-dosen');
     })->name('admin.edit-dosen');
+});
+
+// Route Akun Mahasiswa
+Route::prefix('mahasiswa')->middleware(['auth:sanctum'])->group(function () {
+    // Dashboard
+    Route::get('/dashboard', function () {
+        return view('mahasiswa.dashboard-mahasiswa');
+    })->name('mahasiswa.dashboard');
+
+    // RPP
+    Route::get('/menu/rencana-pelaksanaan-proyek', function () {
+        return view('mahasiswa.rpp.rencana-proyek');
+    })->name('mahasiswa.rpp');
 });

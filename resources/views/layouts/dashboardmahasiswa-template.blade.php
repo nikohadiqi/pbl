@@ -9,7 +9,7 @@
     <title>
         @yield('title')
     </title>
-    <!--     Fonts and icons     -->
+    <!-- Fonts and icons -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
     <!-- Nucleo Icons -->
     <link href="https://demos.creative-tim.com/argon-dashboard-pro/assets/css/nucleo-icons.css" rel="stylesheet" />
@@ -28,18 +28,18 @@
 <body class="g-sidenav-show bg-body-custom">
     <div class="min-height-300 bg-primary position-absolute w-100"></div>
     <!-- sidebar menu -->
-    @include('admin.components.sidebar')
+    @include('mahasiswa.components.sidebar')
     <!-- end of sidebar menu -->
     <main class="main-content position-relative border-radius-lg ">
         <!-- Navbar -->
-        @include('admin.components.navbar')
+        @include('mahasiswa.components.navbar')
         <!-- Main Content -->
         @yield('content')
         <!-- Footer -->
-        @include('admin.components.footer')
+        @include('mahasiswa.components.footer')
     </main>
     <!-- Konfigurasi Style -->
-    @include('admin.components.configuration-style')
+    @include('mahasiswa.components.configuration-style')
     <!-- End of Konfigurasi Style -->
 
     <!--   Core JS Files   -->
