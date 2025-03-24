@@ -16,20 +16,20 @@
                 </a>
             </div>
         </div>
-        <p class="text-muted">Akun Mahasiswa yang digunakan dalam sistem ke proyek PBL masing-masing</p>
-        
-        <div class="table-responsive mt-3">
-            <table class="table table-hover" id="datatable">
-                <thead class="table-light">
+        <p class="text-sm">Akun Mahasiswa yang digunakan dalam sistem ke proyek PBL masing-masing</p>
+
+        <div class="table-responsive mt-2">
+            <table class="table table-hover" id="datatable-search">
+                <thead class="table-light font-weight-bold">
                     <tr>
-                        <th>#</th>
+                        <th>Nomor</th>
                         <th>Nama Mahasiswa</th>
                         <th>NIM</th>
                         <th>Kelas</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="text-sm font-weight-normal">
                     @foreach ($mahasiswa as $index => $mhs)
                     <tr>
                         <td>{{ $index + 1 }}</td>
@@ -47,7 +47,6 @@
                             @csrf
                             @method('DELETE')
                         </form>
-
                         </td>
                     </tr>
                     @endforeach

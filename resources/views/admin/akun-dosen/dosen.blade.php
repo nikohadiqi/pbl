@@ -23,18 +23,18 @@
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
 
-        <div class="table-responsive mt-3">
-            <table class="table table-hover" id="datatable">
-                <thead class="table-light">
+        <div class="table-responsive mt-2">
+            <table class="table table-hover" id="datatable-search">
+                <thead class="table-light font-weight-bold">
                     <tr>
-                        <th>No</th>
+                        <th>Nomor</th>
                         <th>Nama Dosen</th>
                         <th>NIP/NIK/NIPPPK</th>
                         <th>No Telp</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="text-sm font-weight-normal">
                     @forelse($dosen as $index => $data)
                     <tr>
                         <td>{{ $index + 1 }}</td>

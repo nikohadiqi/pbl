@@ -6,15 +6,15 @@
 <div class="container-fluid py-4">
     <div class="card p-4">
         <div class="d-flex justify-content-between align-items-center">
-            <h4 class="fw-bold">Data Tim PBL Mahasiswa</h4>
+            <h4 class="mb-0 fw-bold">Data Tim PBL Mahasiswa</h4>
             <a href="{{ route('admin.tambah-timpbl') }}">
                 <button class="btn btn-primary text-white fw-bold"><i class="bi bi-plus me-2"></i>Tambah Data</button>
             </a>
         </div>
-        <p class="text-muted">Tim proyek PBL mahasiswa dengan id proyek, judul dan ketua tim PBL Program Studi TRPL</p>
-        <div class="table-responsive mt-3">
-            <table class="table table-hover" id="datatable">
-                <thead class="table-light">
+        <p class="text-sm mb-0">Tim proyek PBL mahasiswa dengan id proyek, judul dan ketua tim PBL Program Studi TRPL</p>
+        <div class="table-responsive mt-2">
+            <table class="table table-hover" id="datatable-search">
+                <thead class="table-light font-weight-bold">
                     <tr>
                         <th>ID Proyek</th>
                         <th>Judul PBL</th>
@@ -22,7 +22,7 @@
                         <th>Aksi</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="text-sm font-weight-normal">
                     <tr>
                         <td>3A_1</td>
                         <td>Sistem Monitoring Laboratorium</td>
