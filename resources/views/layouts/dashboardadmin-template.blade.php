@@ -94,7 +94,19 @@
         const dataTableSearch = new simpleDatatables.DataTable("#datatable-search", {
             searchable: true,
             fixedHeight: true,
-    });
+        });
+    </script>
+    <script>
+        const dataTableBasic = new simpleDatatables.DataTable("#datatable-basic", {
+            searchable: false,
+            fixedHeight: true
+        });
+    </script>
+    <script>
+        const dataTableNormal = new simpleDatatables.DataTable("#datatable-normal", {
+            searchable: false,
+            fixedHeight: true
+        });
     </script>
     <!-- Github buttons -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
