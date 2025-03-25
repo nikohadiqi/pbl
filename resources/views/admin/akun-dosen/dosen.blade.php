@@ -16,7 +16,7 @@
                 </a>
             </div>
         </div>
-        <p class="text-muted">Akun Dosen yang digunakan dalam sistem</p>
+        <p class="text-sm">Akun Dosen yang digunakan dalam sistem</p>
 
         {{-- Menampilkan pesan sukses --}}
         @if(session('success'))

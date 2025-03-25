@@ -6,9 +6,9 @@
 <div class="container-fluid py-4">
     <div class="card p-4">
         <div class="d-flex justify-content-between align-items-center">
-            <h5 class="fw-bold">Tambah Data Tahapan Pelaksanaan Proyek</h5>
+            <h5 class="fw-bold">Tambah Data Tahapan Pelaksanaan Proyek - Semester 5</h5>
         </div>
-        <p class="text-muted">Sistem Informasi dan Monitoring Project Based Learning - TRPL Poliwangi</p>
+        <p class="text-sm">Sistem Informasi dan Monitoring Project Based Learning - TRPL Poliwangi</p>
        <form class="mt-1">
             <div class="form-group">
                 <label for="minggu" class="form-control-label">Minggu Ke-</label>
@@ -43,6 +43,10 @@
                     <option>[perwakilan tim]</option>
                     <option>[manajer proyek]</option>
                 </select>
+            </div>
+            <div class="form-group">
+                <label for="bobot-progress" class="form-control-label">Bobot Progres Proyek</label>
+                <input class="form-control" type="number" id="bobot-progress" max="10" min="5">
             </div>
             <div class="form-grou mt-4">
                 <button type="submit" class="btn btn-primary me-2">Simpan Data</button>

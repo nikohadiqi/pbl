@@ -6,7 +6,7 @@
 <div class="container-fluid py-4">
     <div class="card p-4">
         <h5 class="fw-bold">Edit Data Mata Kuliah</h5>
-        <p class="text-muted">Sistem Informasi dan Monitoring Project Based Learning - TRPL Poliwangi</p>
+        <p class="text-sm">Sistem Informasi dan Monitoring Project Based Learning - TRPL Poliwangi</p>
         <form action="{{ route('admin.update-matkul', $matkul->id) }}" method="POST">
     @csrf
     @method('PATCH')  {{-- Gantilah PUT dengan PATCH --}}

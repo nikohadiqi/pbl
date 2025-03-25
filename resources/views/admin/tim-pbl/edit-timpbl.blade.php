@@ -8,7 +8,7 @@
         <div class="d-flex justify-content-between align-items-center">
             <h5 class="fw-bold">Edit Data Tim PBL</h5>
         </div>
-        <p class="text-muted">Sistem Informasi dan Monitoring Project Based Learning - TRPL Poliwangi</p>
+        <p class="text-sm">Sistem Informasi dan Monitoring Project Based Learning - TRPL Poliwangi</p>
        <form class="mt-1">
             <div class="row">
                 <label for="id_pbl" class="form-control-label">ID Proyek PBL</label>

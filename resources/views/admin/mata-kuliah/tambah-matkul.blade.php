@@ -6,7 +6,7 @@
 <div class="container-fluid py-4">
     <div class="card p-4">
         <h5 class="fw-bold">Tambah Data Mata Kuliah</h5>
-        <p class="text-muted">Sistem Informasi dan Monitoring Project Based Learning - TRPL Poliwangi</p>
+        <p class="text-sm">Sistem Informasi dan Monitoring Project Based Learning - TRPL Poliwangi</p>
     </div> <!-- ✅ Menutup div card yang terbuka -->
 
     <div class="card p-4 mt-3"> <!-- ✅ Menambah card untuk form agar rapi -->

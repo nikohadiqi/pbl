@@ -13,7 +13,7 @@
                 </button>
             </a>
         </div>
-        <p class="text-muted">Periode Pengerjaan Proyek PBL Mahasiswa Prodi TRPL</p>
+        <p class="text-sm">Periode Pengerjaan Proyek PBL Mahasiswa Prodi TRPL</p>
 
         <!-- Flash Message -->
         @if(session('success'))

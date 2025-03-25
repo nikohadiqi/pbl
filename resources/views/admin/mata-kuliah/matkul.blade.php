@@ -20,7 +20,7 @@
             </div>
         @endif
 
-        <p class="text-muted">Data Mata Kuliah Prodi TRPL</p>
+        <p class="text-sm">Data Mata Kuliah Prodi TRPL</p>
         <div class="table-responsive mt-2">
             <table class="table table-hover" id="datatable-search">
                 <thead class="table-light font-weight-bold">

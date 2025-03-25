@@ -8,7 +8,7 @@
         <div class="d-flex justify-content-between align-items-center">
             <h5 class="fw-bold">Tambah Akun Mahasiswa</h5>
         </div>
-        <p class="text-muted">Sistem Informasi dan Monitoring Project Based Learning - TRPL Poliwangi</p>
+        <p class="text-sm">Sistem Informasi dan Monitoring Project Based Learning - TRPL Poliwangi</p>
 
         {{-- Menampilkan pesan sukses --}}
         @if(session('success'))
