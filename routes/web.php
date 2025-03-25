@@ -53,15 +53,20 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // Tahapan Pelaksanaan Proyek
     Route::prefix('menu/tahapan-pelaksanaan-proyek')->group(function () {
-        Route::view('/', 'admin.tahapan-pelaksanaan.tahapan-pelaksanaan')->name('admin.tahapanpelaksanaan');
-        Route::view('/tambah', 'admin.tahapan-pelaksanaan.tambah-tahapan-pelaksanaan')->name('admin.tambah-tahapanpelaksanaan');
-        Route::view('/edit', 'admin.tahapan-pelaksanaan.edit-tahapan-pelaksanaan')->name('admin.edit-tahapanpelaksanaan');
+        // Semester 4
+        Route::view('/semester-4', 'admin.tahapan-pelaksanaan.semester4.tahapan-pelaksanaan')->name('admin.tahapanpelaksanaan-sem4');
+        Route::view('semester-4/tambah', 'admin.tahapan-pelaksanaan.semester4.tambah-tahapan-pelaksanaan')->name('admin.tambah-tahapanpelaksanaan-sem4');
+        Route::view('semester-4/edit', 'admin.tahapan-pelaksanaan.semester4.edit-tahapan-pelaksanaan')->name('admin.edit-tahapanpelaksanaan-sem4');
+        // Semester 5
+        Route::view('/semester-5', 'admin.tahapan-pelaksanaan.semester5.tahapan-pelaksanaan')->name('admin.tahapanpelaksanaan-sem5');
+        Route::view('semester-5/tambah', 'admin.tahapan-pelaksanaan.semester5.tambah-tahapan-pelaksanaan')->name('admin.tambah-tahapanpelaksanaan-sem5');
+        Route::view('semester-5/edit', 'admin.tahapan-pelaksanaan.semester5.edit-tahapan-pelaksanaan')->name('admin.edit-tahapanpelaksanaan-sem5');
     });
 
 Route::prefix('menu/master-data/mata-kuliah')->middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::get('/', [MataKuliahController::class, 'index'])->name('admin.matkul');
     Route::get('/tambah', [MataKuliahController::class, 'create'])->name('admin.tambah-matkul');
-    Route::post('/simpan', [MataKuliahController::class, 'store'])->name('admin.matkul.store');  
+    Route::post('/simpan', [MataKuliahController::class, 'store'])->name('admin.matkul.store');
     Route::get('/edit/{id}', [MataKuliahController::class, 'edit'])->name('admin.edit-matkul');
     Route::patch('/update/{id}', [MataKuliahController::class, 'update'])->name('admin.update-matkul');
     Route::delete('/hapus/{id}', [MataKuliahController::class, 'destroy'])->name('admin.hapus-matkul');
@@ -73,7 +78,7 @@ Route::prefix('menu/master-data/mata-kuliah')->middleware(['auth:sanctum', 'admi
     Route::post('/simpan', [MahasiswaController::class, 'store'])->name('admin.mahasiswa.store');  // ✅ Route untuk simpan
     Route::get('/edit/{id}', [MahasiswaController::class, 'edit'])->name('admin.edit-mahasiswa');
     Route::patch('/update/{id}', [MahasiswaController::class, 'update'])->name('admin.update-mahasiswa');
-    Route::delete('/hapus/{id}', [MahasiswaController::class, 'destroy'])->name('admin.delete-mahasiswa'); 
+    Route::delete('/hapus/{id}', [MahasiswaController::class, 'destroy'])->name('admin.delete-mahasiswa');
     });
 
     Route::prefix('menu/master-data/akun-dosen')->middleware(['auth:sanctum', 'admin'])->group(function () {
@@ -81,7 +86,7 @@ Route::prefix('menu/master-data/mata-kuliah')->middleware(['auth:sanctum', 'admi
         Route::get('/tambah', [DosenController::class, 'create'])->name('admin.tambah-dosen'); // Form tambah dosen
         Route::post('/store', [DosenController::class, 'store'])->name('admin.dosen.store'); // Simpan data dosen
         Route::get('/edit/{id}', [DosenController::class, 'edit'])->name('admin.edit-dosen');
-        Route::put('/update/{id}', [DosenController::class, 'update'])->name('admin.dosen.update');        
+        Route::put('/update/{id}', [DosenController::class, 'update'])->name('admin.dosen.update');
         Route::delete('/delete/{id}', [DosenController::class, 'destroy'])->name('admin.dosen.delete'); // Hapus dosen
     });
 

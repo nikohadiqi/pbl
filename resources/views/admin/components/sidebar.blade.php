@@ -1,5 +1,4 @@
-<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-white box-shadow-none"
-    id="sidenav-main">
+<aside class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4" id="sidenav-main">
     <div class="sidenav-header d-md-flex align-items-center px-2">
         <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-3 d-none d-xl-none"
             aria-hidden="true" id="iconSidenav"></i>
@@ -49,13 +48,34 @@
                 </a>
             </li>
 
+            <!-- Tahapan Pelaksanaan Proyek -->
             <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.tahapanpelaksanaan') ? 'active' : '' }}" href="{{ route('admin.tahapanpelaksanaan') }}">
-                    <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                <a class="nav-link {{ request()->routeIs('admin.tahapanpelaksanaan-sem4') || request()->routeIs('admin.tahapanpelaksanaan-sem5') ? 'active' : '' }}"
+                    data-bs-toggle="collapse" href="#tahapanPelaksanaan" role="button"
+                    aria-expanded="{{ request()->routeIs('admin.tahapanpelaksanaan-sem4') || request()->routeIs('admin.tahapanpelaksanaan-sem5') ? 'true' : 'false' }}"
+                    aria-controls="tahapanPelaksanaan">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="ni ni-app text-info text-sm opacity-10"></i>
                     </div>
                     <span class="nav-link-text ms-1">Tahapan Pelaksanaan Proyek</span>
                 </a>
+                <div class="collapse {{ request()->routeIs('admin.tahapanpelaksanaan-sem4') || request()->routeIs('admin.tahapanpelaksanaan-sem5') ? 'show' : '' }}"
+                    id="tahapanPelaksanaan">
+                    <ul class="nav flex-column ms-4">
+                        <li class="nav-item mt-2">
+                            <a class="nav-link {{ request()->routeIs('admin.tahapanpelaksanaan-sem4') ? 'active' : '' }}"
+                                href="{{ route('admin.tahapanpelaksanaan-sem4') }}">
+                                Semester 4
+                            </a>
+                        </li>
+                        <li class="nav-item mt-2">
+                            <a class="nav-link {{ request()->routeIs('admin.tahapanpelaksanaan-sem5') ? 'active' : '' }}" href="{{ route('admin.tahapanpelaksanaan-sem5') }}">
+                                Semester 5
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </li>
 
             <!-- Master Data -->

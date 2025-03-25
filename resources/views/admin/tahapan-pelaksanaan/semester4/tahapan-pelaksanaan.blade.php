@@ -7,7 +7,7 @@
     <div class="card p-4">
         <div class="d-flex justify-content-between align-items-center">
             <h4 class="fw-bold">Tahapan Pelaksanaan Proyek</h4>
-            <a href="{{ route('admin.tambah-tahapanpelaksanaan') }}">
+            <a href="{{ route('admin.tambah-tahapanpelaksanaan-sem4') }}">
                 <button class="btn btn-primary text-white fw-bold"><i class="bi bi-plus me-2"></i>Tambah Data</button>
             </a>
         </div>
@@ -28,7 +28,7 @@
                         <td class="text-wrap">Mengidentifikasi fitur tambahan yang akan dikembangkan dalam waktu pelaksanaan proyek</td>
                         <td>[perwakilan tim]</td>
                         <td>
-                            <a href="{{ route('admin.edit-tahapanpelaksanaan') }}">
+                            <a href="{{ route('admin.edit-tahapanpelaksanaan-sem4') }}">
                                 <button class="btn btn-sm btn-info text-white"><i class="bi bi-pencil-square"></i></button>
                             </a>
                             <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
@@ -39,7 +39,7 @@
                         <td class="text-wrap">Melakukan verifikasi fitur tambahan dan penyusunan Rencana Pelaksanaan Proyek bersama Manajer Proyek</td>
                         <td>[manajer proyek]</td>
                         <td>
-                            <a href="{{ route('admin.edit-tahapanpelaksanaan') }}">
+                            <a href="{{ route('admin.edit-tahapanpelaksanaan-sem4') }}">
                                 <button class="btn btn-sm btn-info text-white"><i class="bi bi-pencil-square"></i></button>
                             </a>
                             <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
@@ -50,7 +50,7 @@
                         <td class="text-wrap">Melakukan update spesifikasi dan desain perangkat lunak menyesuaikan kebutuhan terbaru</td>
                         <td>[perwakilan tim]</td>
                         <td>
-                            <a href="{{ route('admin.edit-tahapanpelaksanaan') }}">
+                            <a href="{{ route('admin.edit-tahapanpelaksanaan-sem4') }}">
                                 <button class="btn btn-sm btn-info text-white"><i class="bi bi-pencil-square"></i></button>
                             </a>
                             <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
@@ -61,7 +61,7 @@
                         <td class="text-wrap">Pengembangan Fitur Tambahan 1</td>
                         <td>[perwakilan tim]</td>
                         <td>
-                            <a href="{{ route('admin.edit-tahapanpelaksanaan') }}">
+                            <a href="{{ route('admin.edit-tahapanpelaksanaan-sem4') }}">
                                 <button class="btn btn-sm btn-info text-white"><i class="bi bi-pencil-square"></i></button>
                             </a>
                             <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>

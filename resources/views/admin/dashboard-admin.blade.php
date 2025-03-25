@@ -80,23 +80,23 @@
             </div>
         </div>
         <div class="table-responsive">
-            <table class="table align-items-center mb-0">
-                <thead>
+            <table class="table table-hover" id="datatable-normal">
+                <thead class="table-light font-weight-bold">
                     <tr>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nama Tim</th>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Judul Proyek PBL
+                        <th>Nama Tim</th>
+                        <th>Judul Proyek PBL
                         </th>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Kelas</th>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Progres Proyek
+                        <th>Kelas</th>
+                        <th>Progres Proyek
                         </th>
                         <th></th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="text-xs font-weight-bold">
                     <tr>
-                        <td class="text-xs font-weight-bold">3A_1</td>
-                        <td class="text-xs font-weight-bold">Aplikasi 1</td>
-                        <td class="text-xs font-weight-bold">3A</td>
+                        <td>3A_1</td>
+                        <td>Aplikasi 1</td>
+                        <td>3A</td>
                         <td class="align-middle text-center">
                             <div class="d-flex align-items-center">
                                 <span class="me-2 text-xs">60%</span>
@@ -112,9 +112,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="text-xs font-weight-bold">3A_2</td>
-                        <td class="text-xs font-weight-bold">Aplikasi 2</td>
-                        <td class="text-xs font-weight-bold">3A</td>
+                        <td>3A_2</td>
+                        <td>Aplikasi 2</td>
+                        <td>3A</td>
                         <td class="align-middle text-center">
                             <div class="d-flex align-items-center">
                                 <span class="me-2 text-xs">80%</span>
@@ -130,9 +130,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="text-xs font-weight-bold">3A_3</td>
-                        <td class="text-xs font-weight-bold">Web apps</td>
-                        <td class="text-xs font-weight-bold">3A</td>
+                        <td>3A_3</td>
+                        <td>Web apps</td>
+                        <td>3A</td>
                         <td class="align-middle text-center">
                             <div class="d-flex align-items-center">
                                 <span class="me-2 text-xs">50%</span>
@@ -148,9 +148,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="text-xs font-weight-bold">3A_4</td>
-                        <td class="text-xs font-weight-bold">Web App</td>
-                        <td class="text-xs font-weight-bold">3A</td>
+                        <td>3A_4</td>
+                        <td>Web App</td>
+                        <td>3A</td>
                         <td class="align-middle text-center">
                             <div class="d-flex align-items-center">
                                 <span class="me-2 text-xs">40%</span>
@@ -166,9 +166,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="text-xs font-weight-bold">3A_5</td>
-                        <td class="text-xs font-weight-bold">Web Apps</td>
-                        <td class="text-xs font-weight-bold">3A</td>
+                        <td>3A_5</td>
+                        <td>Web Apps</td>
+                        <td>3A</td>
                         <td class="align-middle text-center">
                             <div class="d-flex align-items-center">
                                 <span class="me-2 text-xs">70%</span>
@@ -198,48 +198,48 @@
             </div>
         </div>
         <div class="table-responsive">
-            <table class="table align-items-center mb-0">
-                <thead>
+            <table class="table table-hover" id="datatable-basic">
+                <thead class="table-light font-weight-bold">
                     <tr>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nama Dosen</th>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Mengampu
+                        <th>Nama Dosen</th>
+                        <th>Mengampu
                             Mata Kuliah</th>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                        <th>
                             NIP/NIK</th>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">No
+                        <th>No
                             Telp</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="text-sm font-weight-normal">
                     <tr>
-                        <td class="text-x font-weight-bold">Mohamad Dimyati Ayatullah, S.T., M.Kom.</td>
-                        <td class="text-x">Proyek Aplikasi Dasar</td>
-                        <td class="text-x">197601222021211000</td>
-                        <td class="text-x">08123399184</td>
+                        <td>Mohamad Dimyati Ayatullah, S.T., M.Kom.</td>
+                        <td>Proyek Aplikasi Dasar</td>
+                        <td>197601222021211000</td>
+                        <td>08123399184</td>
                     </tr>
                     <tr>
-                        <td class="text-x font-weight-bold">Dianni Yusuf, S.Kom., M.Kom.</td>
-                        <td class="text-x">Basis Data</td>
-                        <td class="text-x">198403052021212000</td>
-                        <td class="text-x">082328333999</td>
+                        <td>Dianni Yusuf, S.Kom., M.Kom.</td>
+                        <td>Basis Data</td>
+                        <td>198403052021212000</td>
+                        <td>082328333999</td>
                     </tr>
                     <tr>
-                        <td class="text-x font-weight-bold">I Wayan Suardinata, S.Kom., M.T.</td>
-                        <td class="text-x">ADPL</td>
-                        <td class="text-x">198010222015041000</td>
-                        <td class="text-x">085736577864</td>
+                        <td>I Wayan Suardinata, S.Kom., M.T.</td>
+                        <td>ADPL</td>
+                        <td>198010222015041000</td>
+                        <td>085736577864</td>
                     </tr>
                     <tr>
-                        <td class="text-x font-weight-bold">Eka Mistiko Rini, S.Kom, M.Kom.</td>
-                        <td class="text-x">Basis Data</td>
-                        <td class="text-x">198310202014042001</td>
-                        <td class="text-x">081913922224</td>
+                        <td>Eka Mistiko Rini, S.Kom, M.Kom.</td>
+                        <td>Basis Data</td>
+                        <td>198310202014042001</td>
+                        <td>081913922224</td>
                     </tr>
                     <tr>
-                        <td class="text-x font-weight-bold">Ruth Ema Febrita, S.Pd., M.Kom.</td>
-                        <td class="text-x">Proyek Aplikasi Dasar</td>
-                        <td class="text-x">199202272020122000</td>
-                        <td class="text-x">085259082627</td>
+                        <td>Ruth Ema Febrita, S.Pd., M.Kom.</td>
+                        <td>Proyek Aplikasi Dasar</td>
+                        <td>199202272020122000</td>
+                        <td>085259082627</td>
                     </tr>
                 </tbody>
             </table>
