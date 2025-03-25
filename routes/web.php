@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Website\Admin\DosenController;
 use App\Http\Controllers\Website\Admin\MahasiswaController;
 use App\Http\Controllers\Website\Admin\MataKuliahController;
-
+use App\Http\Controllers\Website\Admin\PeriodePBLController;
 
 // use App\Http\Controllers\Auth\DashboardController;
 /*
@@ -41,10 +41,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
 
     // Periode PBL
-    Route::prefix('menu/periode-pbl')->group(function () {
-        Route::view('/', 'admin.periode-pbl.periodepbl')->name('admin.periodepbl');
-        Route::view('/tambah', 'admin.periode-pbl.tambah-periodepbl')->name('admin.tambah-periodepbl');
-        Route::view('/edit', 'admin.periode-pbl.edit-periodepbl')->name('admin.edit-periodepbl');
+    Route::prefix('menu/master-data/periode-pbl')->middleware(['auth:sanctum', 'admin'])->group(function () {
+        Route::get('/', [PeriodePBLController::class, 'index'])->name('admin.periodepbl');
+        Route::get('/tambah', [PeriodePBLController::class, 'create'])->name('admin.tambah-periodepbl');
+        Route::post('/simpan', [PeriodePBLController::class, 'store'])->name('admin.periodepbl.store');
+        Route::get('/edit/{id}', [PeriodePBLController::class, 'edit'])->name('admin.edit-periodepbl');
+        Route::patch('/update/{id}', [PeriodePBLController::class, 'update'])->name('admin.periodepbl.update');
+        Route::delete('/hapus/{id}', [PeriodePBLController::class, 'destroy'])->name('admin.periodepbl.delete');
+        Route::delete('/hapus-massal', [PeriodePBLController::class, 'bulkDelete'])->name('admin.periodepbl.bulk-delete');
     });
 
     // Tahapan Pelaksanaan Proyek

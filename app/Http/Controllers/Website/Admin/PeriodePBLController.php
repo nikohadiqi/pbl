@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Website\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -8,46 +8,57 @@ use App\Models\PeriodePBL;
 
 class PeriodePBLController extends Controller
 {
-    public function create(Request $request)
+    public function index()
     {
-        $request->validate([
-            'semester' => 'required|string|in:4,5',
-            'tahun' => 'required|string',
-        ]);
-
-        $periode = PeriodePBL::create($request->all());
-
-        return response()->json([
-            'message' => 'Periode PBL berhasil ditambahkan!',
-            'data' => $periode
-        ], 201);
+        $periodePBL = PeriodePBL::all();
+        return view('admin.periode-pbl.periodepbl', compact('periodePBL'));
     }
 
-    public function get()
+    public function create()
     {
-        return response()->json(PeriodePBL::all());
+        return view('admin.periode-pbl.tambah-periodepbl');
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'semester' => 'required|in:4,5',
+            'tahun' => 'required|digits:4',
+        ]);
+
+        PeriodePBL::create($request->all());
+
+        return redirect()->route('admin.periodepbl')->with('success', 'Periode PBL berhasil ditambahkan!');
+    }
+
+    public function edit($id)
+    {
+        $periode = PeriodePBL::findOrFail($id);
+        return view('admin.periode-pbl.edit-periodepbl', compact('periode'));
     }
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'semester' => 'required|in:4,5',
+            'tahun' => 'required|digits:4',
+        ]);
+
         $periode = PeriodePBL::findOrFail($id);
         $periode->update($request->all());
 
-        return response()->json([
-            'message' => 'Periode PBL berhasil diperbarui!',
-            'data' => $periode
-        ]);
+        return redirect()->route('admin.periodepbl')->with('success', 'Periode PBL berhasil diperbarui!');
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
-        PeriodePBL::destroy($id);
-        return response()->json(['message' => 'Periode PBL berhasil dihapus!']);
+        PeriodePBL::findOrFail($id)->delete();
+        return redirect()->route('admin.periodepbl')->with('success', 'Periode PBL berhasil dihapus!');
     }
 
     public function bulkDelete(Request $request)
     {
         PeriodePBL::whereIn('id', $request->ids)->delete();
-        return response()->json(['message' => 'Periode PBL berhasil dihapus secara massal!']);
+        return redirect()->route('admin.periodepbl')->with('success', 'Periode PBL berhasil dihapus secara massal!');
     }
 }
