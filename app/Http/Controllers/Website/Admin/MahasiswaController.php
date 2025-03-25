@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Website\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Mahasiswa;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class MahasiswaController extends Controller
 {
@@ -32,7 +33,10 @@ class MahasiswaController extends Controller
 
         Mahasiswa::create($request->all());
 
-        return redirect()->route('admin.mahasiswa')->with('success', 'Mahasiswa berhasil ditambahkan!');
+        // Menampilkan SweetAlert
+        Alert::success('Berhasil!', 'Data Berhasil Ditambahkan!');
+        
+        return redirect()->route('admin.mahasiswa');
     }
 
     // Menampilkan form edit mahasiswa
@@ -55,15 +59,21 @@ class MahasiswaController extends Controller
 
         $mahasiswa->update($request->all());
 
-        return redirect()->route('admin.mahasiswa')->with('success', 'Data mahasiswa berhasil diperbarui!');
+        // Menampilkan SweetAlert
+        Alert::success('Berhasil!', 'Data Berhasil Diba!');
+
+        return redirect()->route('admin.mahasiswa');
     }
 
     public function destroy($id)
     {
         $mahasiswa = Mahasiswa::findOrFail($id);
         $mahasiswa->delete();
-    
-        return redirect()->route('admin.mahasiswa')->with('success', 'Mahasiswa berhasil dihapus!');
+        
+        // Menampilkan SweetAlert
+        Alert::success('Berhasil!', 'Data Berhasil Diaps!');
+
+        return redirect()->route('admin.mahasiswa');
     }
     
 }
