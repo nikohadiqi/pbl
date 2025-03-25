@@ -2,27 +2,29 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('assets/img/logo-poliwangi.png') }}">
     <link rel="icon" type="image/png" href="{{ asset('assets/img/logo-poliwangi.png') }}">
     <title>
         @yield('title')
     </title>
-    <!-- Fonts and icons -->
+    <!--     Fonts and icons     -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
     <!-- Nucleo Icons -->
-    <link href="https://demos.creative-tim.com/argon-dashboard-pro/assets/css/nucleo-icons.css" rel="stylesheet" />
-    <link href="https://demos.creative-tim.com/argon-dashboard-pro/assets/css/nucleo-svg.css" rel="stylesheet" />
-    <!-- Font Awesome -->
+    <link href="{{ asset('assets/css/nucleo-icons.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/nucleo-svg.css') }}" rel="stylesheet">
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <!-- Bootstrap Icon -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="{{ asset('assets/css/nucleo-svg.css') }}" rel="stylesheet">
+    {{--
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/ju/dt-1.11.5/datatables.min.css" /> --}}
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+
     <!-- CSS Files -->
-    <link id="pagestyle" href="{{ asset('assets/css/argon-dashboard.css?v=2.1.0') }}" rel="stylesheet" />
-    <!-- Data Tables -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="{{ asset('assets/css/datatables.css') }}">
+    <link id="pagestyle" href="{{ asset('assets/css/argon-dashboard.css') }}" rel="stylesheet" />
+
+    @stack('css')
 </head>
 
 <body class="g-sidenav-show bg-body-custom">
@@ -43,105 +45,40 @@
     <!-- End of Konfigurasi Style -->
 
     <!--   Core JS Files   -->
-    <script src="{{ asset('assets/js/core/popper.min.js') }}"></script>
+    @stack('js')
+
+    <script src="{{ asset('assets/js/core/popper.min.js')}}"></script>
     <script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>
+    {{-- <script src="{{ asset('') }}/assets/js/core/bootstrap.bundle.min.js"></script> --}}
     <script src="{{ asset('assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/smooth-scrollbar.min.js') }}"></script>
-    <script src="{{ asset('assets/js/plugins/chartjs.min.j') }}s"></script>
-
-    {{-- Sidebar Scroll --}}
+    <script src="{{ asset('assets/js/plugins/fullcalendar.min.js') }}"></script>
     <script>
         var win = navigator.platform.indexOf('Win') > -1;
-    if (win && document.querySelector('#sidenav-scrollbar')) {
-      var options = {
-        damping: '0.5'
-      }
-      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-    }
-    </script>
-
-    {{-- Menyimpan Konfigurasi Tampilan --}}
-    <script>
-        function sidebarColor(element) {
-        let color = element.getAttribute("data-color");
-
-        // Simpan warna di Local Storage
-        localStorage.setItem("sidebar_color", color);
-
-        // Terapkan warna ke sidebar
-        document.querySelector(".sidenav").className = `sidenav bg-gradient-${color}`;
-    }
-
-    function loadSidebarColor() {
-        let savedColor = localStorage.getItem("sidebar_color");
-        if (savedColor) {
-            document.querySelector(".sidenav").className = `sidenav bg-gradient-${savedColor}`;
+        if (win && document.querySelector('#sidenav-scrollbar')) {
+            var options = {
+                damping: '0.5'
+            }
+            Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
         }
-    }
-
-    // Panggil saat halaman dimuat
-    document.addEventListener("DOMContentLoaded", loadSidebarColor);
     </script>
-
-    {{-- Menyimpan Mode Gelap --}}
-    <script>
-        function darkMode(element) {
-        let isDark = element.checked;
-
-        // Simpan status di Local Storage
-        localStorage.setItem("dark_mode", isDark);
-
-        // Terapkan mode gelap/terang
-        if (isDark) {
-            document.body.classList.add("dark-mode");
-        } else {
-            document.body.classList.remove("dark-mode");
-        }
-    }
-
-    function loadDarkMode() {
-        let isDark = localStorage.getItem("dark_mode") === "true";
-        document.getElementById("dark-version").checked = isDark;
-        if (isDark) {
-            document.body.classList.add("dark-mode");
-        }
-    }
-
-    // Panggil saat halaman dimuat
-    document.addEventListener("DOMContentLoaded", loadDarkMode);
-    </script>
-
     <!-- Github buttons -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
-    <script src="{{ asset('assets/js/argon-dashboard.min.js?v=2.1.0') }}"></script>
-    {{-- Sweet Alert --}}
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    @include('sweetalert::alert')
-    {{-- Logout Alert --}}
+    <script src="{{ asset('assets/js/argon-dashboard.js') }}"></script>
+    {{-- Datatables --}}
+    <script src="{{ asset('assets/js/plugins/datatables.js') }}"></script>
     <script>
-        document.getElementById('logout-btn').addEventListener('click', function (event) {
-        event.preventDefault();
-        Swal.fire({
-            title: 'Apakah Anda yakin ingin logout?',
-            text: "Anda harus login kembali setelah keluar!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya, Logout!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                document.getElementById('logout-form').submit();
-            }
+        const dataTableBasic = new simpleDatatables.DataTable("#datatable-basic", {
+            searchable: false,
+            fixedHeight: true
         });
-    });
-    </script>
 
-    <!-- Data Tables -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    <script src="{{ asset('assets/js/datatables.js') }}"></script>
+        const dataTableSearch = new simpleDatatables.DataTable("#datatable-search", {
+            searchable: true,
+            fixedHeight: true
+        });
+    </script>
 </body>
 
 </html>

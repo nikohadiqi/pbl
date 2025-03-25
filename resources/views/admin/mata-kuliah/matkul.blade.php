@@ -21,9 +21,9 @@
         @endif
 
         <p class="text-muted">Data Mata Kuliah Prodi TRPL</p>
-        <div class="table-responsive mt-3">
-            <table class="table table-hover" id="datatable">
-                <thead class="table-light">
+        <div class="table-responsive mt-2">
+            <table class="table table-hover" id="datatable-search">
+                <thead class="table-light font-weight-bold">
                     <tr>
                         <th>Nomor</th>
                         <th>Mata Kuliah</th>
@@ -32,7 +32,7 @@
                         <th>Aksi</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="text-sm font-weight-normal">
                     @foreach($data as $index => $matkul)
                     <tr>
                         <td>{{ $index + 1 }}</td>

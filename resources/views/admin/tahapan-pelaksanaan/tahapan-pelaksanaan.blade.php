@@ -12,9 +12,9 @@
             </a>
         </div>
         <p class="text-muted">Tahapan Pelaksanaan Proyek Mingguan Mahasiswa</p>
-        <div class="table-responsive mt-3">
-            <table class="table table-hover" id="datatable">
-                <thead class="table-light">
+        <div class="table-responsive mt-2">
+            <table class="table table-hover" id="datatable-search">
+                <thead class="table-light font-weight-bold">
                     <tr>
                         <th>Minggu Ke-</th>
                         <th>Nama Tahapan</th>
@@ -22,7 +22,7 @@
                         <th>Aksi</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="text-sm font-weight-normal">
                     <tr>
                         <td>1</td>
                         <td class="text-wrap">Mengidentifikasi fitur tambahan yang akan dikembangkan dalam waktu pelaksanaan proyek</td>
