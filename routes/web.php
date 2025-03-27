@@ -6,6 +6,9 @@ use App\Http\Controllers\Website\Admin\DosenController;
 use App\Http\Controllers\Website\Admin\MahasiswaController;
 use App\Http\Controllers\Website\Admin\MataKuliahController;
 use App\Http\Controllers\Website\Admin\PeriodePBLController;
+use App\Http\Controllers\Website\Admin\TPP4Controller;
+use App\Http\Controllers\Website\Admin\TPP5Controller;
+use App\Http\Controllers\Website\Admin\TimPBLController;
 
 // use App\Http\Controllers\Auth\DashboardController;
 /*
@@ -33,11 +36,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
         return view('admin.dashboard-admin');
     })->name('admin.dashboard');
 
-    // Tim PBL
-    Route::prefix('menu/tim-pbl')->group(function () {
-        Route::view('/', 'admin.tim-pbl.timpbl')->name('admin.timpbl');
-        Route::view('/tambah', 'admin.tim-pbl.tambah-timpbl')->name('admin.tambah-timpbl');
-        Route::view('/edit', 'admin.tim-pbl.edit-timpbl')->name('admin.edit-timpbl');
+    // TIM PBL
+    Route::prefix('admin/tim-pbl')->middleware(['auth:sanctum', 'admin'])->group(function () {
+        Route::get('/', [TimPBLController::class, 'index'])->name('admin.timpbl');
+        Route::get('/tambah', [TimPBLController::class, 'create'])->name('admin.tambah-timpbl');
+        Route::post('/store', [TimPBLController::class, 'store'])->name('admin.timpbl.store');
+        Route::get('/edit/{id}', [TimPBLController::class, 'edit'])->name('admin.edit-timpbl');
+        Route::put('/update/{id}', [TimPBLController::class, 'update'])->name('admin.timpbl.update');
+        Route::delete('/delete/{id}', [TimPBLController::class, 'destroy'])->name('admin.timpbl.delete');
     });
 
     // Periode PBL
@@ -51,16 +57,24 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::delete('/hapus-massal', [PeriodePBLController::class, 'bulkDelete'])->name('admin.periodepbl.bulk-delete');
     });
 
-    // Tahapan Pelaksanaan Proyek
-    Route::prefix('menu/tahapan-pelaksanaan-proyek')->group(function () {
-        // Semester 4
-        Route::view('/semester-4', 'admin.tahapan-pelaksanaan.semester4.tahapan-pelaksanaan')->name('admin.tahapanpelaksanaan-sem4');
-        Route::view('semester-4/tambah', 'admin.tahapan-pelaksanaan.semester4.tambah-tahapan-pelaksanaan')->name('admin.tambah-tahapanpelaksanaan-sem4');
-        Route::view('semester-4/edit', 'admin.tahapan-pelaksanaan.semester4.edit-tahapan-pelaksanaan')->name('admin.edit-tahapanpelaksanaan-sem4');
-        // Semester 5
-        Route::view('/semester-5', 'admin.tahapan-pelaksanaan.semester5.tahapan-pelaksanaan')->name('admin.tahapanpelaksanaan-sem5');
-        Route::view('semester-5/tambah', 'admin.tahapan-pelaksanaan.semester5.tambah-tahapan-pelaksanaan')->name('admin.tambah-tahapanpelaksanaan-sem5');
-        Route::view('semester-5/edit', 'admin.tahapan-pelaksanaan.semester5.edit-tahapan-pelaksanaan')->name('admin.edit-tahapanpelaksanaan-sem5');
+    // TPP SEMESTER 4
+    Route::prefix('admin/tahapan-pelaksanaan/semester4')->middleware(['auth:sanctum', 'admin'])->group(function () {
+        Route::get('/', [TPP4Controller::class, 'index'])->name('admin.tahapanpelaksanaan-sem4');
+        Route::get('/tambah', [TPP4Controller::class, 'create'])->name('admin.tambah-tahapanpelaksanaan-sem4');
+        Route::post('/store', [TPP4Controller::class, 'store'])->name('admin.tahapanpelaksanaan.store');
+        Route::get('/edit/{id}', [TPP4Controller::class, 'edit'])->name('admin.edit-tahapanpelaksanaan-sem4');
+        Route::put('/update/{id}', [TPP4Controller::class, 'update'])->name('admin.tahapanpelaksanaan.update');
+        Route::delete('/delete/{id}', [TPP4Controller::class, 'destroy'])->name('admin.tahapanpelaksanaan.delete');
+    });
+
+    // TPP SEMESTER 5
+    Route::prefix('admin/tahapan-pelaksanaan/semester5')->middleware(['auth:sanctum', 'admin'])->group(function () {
+        Route::get('/', [TPP5Controller::class, 'index'])->name('admin.tahapanpelaksanaan-sem5');
+        Route::get('/tambah', [TPP5Controller::class, 'create'])->name('admin.tambah-tahapanpelaksanaan-sem5');
+        Route::post('/store', [TPP5Controller::class, 'store'])->name('admin.tahapanpelaksanaan.store');
+        Route::get('/edit/{id}', [TPP5Controller::class, 'edit'])->name('admin.edit-tahapanpelaksanaan-sem5');
+        Route::put('/update/{id}', [TPP5Controller::class, 'update'])->name('admin.tahapanpelaksanaan.update');
+        Route::delete('/delete/{id}', [TPP5Controller::class, 'destroy'])->name('admin.tahapanpelaksanaan.delete');
     });
 
 Route::prefix('menu/master-data/mata-kuliah')->middleware(['auth:sanctum', 'admin'])->group(function () {
