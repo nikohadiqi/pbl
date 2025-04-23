@@ -99,8 +99,12 @@ Route::prefix('mahasiswa')->middleware(['auth:sanctum'])->group(function () {
         return view('mahasiswa.dashboard-mahasiswa');
     })->name('mahasiswa.dashboard');
 
-    // RPP
-    Route::get('/menu/rencana-pelaksanaan-proyek', function () {
-        return view('mahasiswa.rpp.rencana-proyek');
-    })->name('mahasiswa.rpp');
+    // Tahapan Pelaksanaan Proyek
+    Route::prefix('menu/semester-4')->group(function () {
+        // RPP
+        Route::view('/rpp', 'mahasiswa.semester4.rpp.rencana-proyek')->name('mahasiswa.rpp.sem4');
+        // Logbook
+        // Pelaporan
+    });
+
 });

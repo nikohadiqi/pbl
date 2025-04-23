@@ -10,16 +10,17 @@
         @yield('title')
     </title>
     <!--     Fonts and icons     -->
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
     <!-- Nucleo Icons -->
     <link href="{{ asset('assets/css/nucleo-icons.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/css/nucleo-svg.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="{{ asset('assets/css/nucleo-svg.css') }}" rel="stylesheet">
     {{--
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/ju/dt-1.11.5/datatables.min.css" /> --}}
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.2.2/css/dataTables.bootstrap5.css">
 
     <!-- CSS Files -->
     <link id="pagestyle" href="{{ asset('assets/css/argon-dashboard.css') }}" rel="stylesheet" />
@@ -29,6 +30,7 @@
 
 <body class="g-sidenav-show bg-body-custom">
     <div class="min-height-300 bg-primary position-absolute w-100"></div>
+    <div class="container-fluid d-flex"></div>
     <!-- sidebar menu -->
     @include('mahasiswa.components.sidebar')
     <!-- end of sidebar menu -->
@@ -43,6 +45,30 @@
     <!-- Konfigurasi Style -->
     @include('mahasiswa.components.configuration-style')
     <!-- End of Konfigurasi Style -->
+
+    {{-- Sweetalert --}}
+    @include('sweetalert::alert')
+    <script src="{{ asset('assets/js/plugins/sweetalert.min.js') }}"></script>
+
+    {{-- Logout --}}
+    <script>
+        document.getElementById('logout-btn').addEventListener('click', function (event) {
+        event.preventDefault();
+        Swal.fire({
+            title: 'Apakah Anda yakin ingin logout?',
+            text: "Anda harus login kembali setelah keluar!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Logout!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('logout-form').submit();
+            }
+        });
+    });
+    </script>
 
     <!--   Core JS Files   -->
     @stack('js')
@@ -62,23 +88,72 @@
             Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
         }
     </script>
-    <!-- Github buttons -->
-    <script async defer src="https://buttons.github.io/buttons.js"></script>
-    <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
-    <script src="{{ asset('assets/js/argon-dashboard.js') }}"></script>
     {{-- Datatables --}}
     <script src="{{ asset('assets/js/plugins/datatables.js') }}"></script>
+    <script>
+        const dataTableSearch = new simpleDatatables.DataTable("#datatable-search", {
+            searchable: true,
+            fixedHeight: true,
+        });
+    </script>
     <script>
         const dataTableBasic = new simpleDatatables.DataTable("#datatable-basic", {
             searchable: false,
             fixedHeight: true
         });
-
-        const dataTableSearch = new simpleDatatables.DataTable("#datatable-search", {
-            searchable: true,
+    </script>
+    <script>
+        const dataTableNormal = new simpleDatatables.DataTable("#datatable-normal", {
+            searchable: false,
             fixedHeight: true
         });
     </script>
+    <script>
+        const dataTableTahapan = new simpleDatatables.DataTable("#datatable-tahapan", {
+            searchable: false,
+            fixedHeight: false
+        });
+    </script>
+    <script>
+        const dataTableKebutuhan = new simpleDatatables.DataTable("#datatable-kebutuhan-peralatan", {
+            searchable: false,
+            fixedHeight: false
+        });
+    </script>
+    <script>
+        const dataTableTantangan = new simpleDatatables.DataTable("#datatable-tantangan", {
+            searchable: false,
+            fixedHeight: false
+        });
+    </script>
+    <script>
+        const dataTableEstimasi = new simpleDatatables.DataTable("#datatable-estimasi", {
+            searchable: false,
+            fixedHeight: false
+        });
+    </script>
+    <script>
+        const dataTableBiaya = new simpleDatatables.DataTable("#datatable-biaya", {
+            searchable: false,
+            fixedHeight: false
+        });
+    </script>
+    <script>
+        const dataTableTim = new simpleDatatables.DataTable("#datatable-tim", {
+            searchable: false,
+            fixedHeight: false
+        });
+    </script>
+    <script>
+        const dataTableMatkul = new simpleDatatables.DataTable("#datatable-matkul", {
+            searchable: false,
+            fixedHeight: false
+        });
+    </script>
+    <!-- Github buttons -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
+    <script src="{{ asset('assets/js/argon-dashboard.js') }}"></script>
 </body>
 
 </html>

@@ -3464,6 +3464,17 @@ textarea.form-control-lg {
     border-color: #fb7353;
 }
 
+.btn-next {
+    color: #fff;
+    background-color: #21005D;
+    border-color: #21005D;
+  }
+.btn-next:hover {
+    color: #ffff;
+    background-color: #5A00FF;
+    border-color: #5A00FF;
+}
+
 .btn-check:focus + .btn-primary, .btn-primary:focus {
   color: #000;
   background-color: #fc7a5d;

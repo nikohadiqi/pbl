@@ -1,7 +1,6 @@
-<aside class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4"
-    id="sidenav-main">
-    <div class="sidenav-header d-md-flex align-items-center px-2 mt-3">
-        <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-3 top-3 d-none d-xl-none"
+<aside class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4" id="sidenav-main">
+    <div class="sidenav-header d-md-flex align-items-center px-2">
+        <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-3 d-none d-xl-none"
             aria-hidden="true" id="iconSidenav"></i>
         <img src="{{ asset('assets/img/logo-poliwangi.png') }}" width="30" height="30"
             class="navbar-brand-img h-100 me-2" alt="Logo">
@@ -29,33 +28,74 @@
             <li class="nav-item mt-4">
                 <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">MENU</h6>
             </li>
-            <li class="nav-item mb-2">
-                <a class="nav-link {{ request()->routeIs('mahasiswa.rpp') ? 'active' : '' }}" href="{{ route('mahasiswa.rpp') }}">
+            {{-- Semester 4 --}}
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('mahasiswa.rpp.sem4') ? 'active' : '' }}"
+                    data-bs-toggle="collapse" href="#semester4" role="button"
+                    aria-expanded="{{ request()->routeIs('mahasiswa.rpp.sem4') ? 'true' : 'false' }}"
+                    aria-controls="semester4">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="bi bi-activity text-success text-sm opacity-10"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Semester 4</span>
+                </a>
+                <div class="collapse {{ request()->routeIs('mahasiswa.rpp.sem4') ? 'show' : '' }}"
+                    id="semester4">
+                    <ul class="nav flex-column ms-4">
+                        <li class="nav-item mt-2">
+                            <a class="nav-link {{ request()->routeIs('mahasiswa.rpp.sem4') ? 'active' : '' }}"
+                                href="{{ route('mahasiswa.rpp.sem4') }}">
+                                Rencana Pelaksanaan Proyek
+                            </a>
+                        </li>
+                        <li class="nav-item mt-2">
+                            <a class="nav-link {{ request()->routeIs('mahasiswa.logbook.sem4') ? 'active' : '' }}" href="#">
+                                Logbook Mingguan
+                            </a>
+                        </li>
+                        <li class="nav-item mt-2">
+                            <a class="nav-link {{ request()->routeIs('mahasiswa.pelaporan.sem4') ? 'active' : '' }}" href="#">
+                                Pelaporan PBL
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            {{-- Semester 5 --}}
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('mahasiswa.rpp.sem5') ? 'active' : '' }}"
+                    data-bs-toggle="collapse" href="#semester5" role="button"
+                    aria-expanded="{{ request()->routeIs('mahasiswa.rpp.sem5') ? 'true' : 'false' }}"
+                    aria-controls="semester5">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="bi bi-activity text-danger text-sm opacity-10"></i>
                     </div>
-                    <span class="nav-link-text ms-1">Rencana Pelaksanaan Proyek</span>
+                    <span class="nav-link-text ms-1">Semester 5</span>
                 </a>
-            </li>
-
-            <li class="nav-item mb-2">
-                <a class="nav-link {{ request()->routeIs('mahasiswa.logbook') ? 'active' : '' }}" href="#">
-                    <div
-                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="bi bi-calendar-fill text-warning text-sm opacity-10"></i>
-                    </div>
-                    <span class="nav-link-text ms-1">Logbook Mingguan</span>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('mahasiswa.laporan') ? 'active' : '' }}" href="#">
-                    <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-app text-success text-sm opacity-10"></i>
-                    </div>
-                    <span class="nav-link-text ms-1">Pelaporan PBL</span>
-                </a>
+                <div class="collapse {{ request()->routeIs('mahasiswa.rpp.sem5') ? 'show' : '' }}"
+                    id="semester5">
+                    <ul class="nav flex-column ms-4">
+                        <li class="nav-item mt-2">
+                            <a class="nav-link {{ request()->routeIs('mahasiswa.rpp.sem5') ? 'active' : '' }}"
+                                href="#">
+                                Rencana Pelaksanaan Proyek
+                            </a>
+                        </li>
+                        <li class="nav-item mt-2">
+                            <a class="nav-link {{ request()->routeIs('mahasiswa.logbook.sem5') ? 'active' : '' }}" href="#">
+                                Logbook Mingguan
+                            </a>
+                        </li>
+                        <li class="nav-item mt-2">
+                            <a class="nav-link {{ request()->routeIs('mahasiswa.pelaporan.sem5') ? 'active' : '' }}" href="#">
+                                Pelaporan PBL
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </li>
         </ul>
     </div>
