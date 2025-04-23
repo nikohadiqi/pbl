@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('timpbl', function (Blueprint $table) {
+        Schema::create('tpp_sem5', function (Blueprint $table) {
             $table->id();
-            $table->string('id_tim');
-            $table->string('code_tim');
-            $table->foreignId('ketua_tim');
+            $table->string('tahapan');
+            $table->string('pic');
+            $table->integer('score');
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('timpbl');
+        Schema::dropIfExists('tpp_sem5');
     }
 };

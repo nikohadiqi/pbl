@@ -1,86 +1,64 @@
 @extends('layouts.dashboardadmin-template')
 
-@section('title','Tim PBL | Sistem Informasi dan Monitoring Project Based Learning')
+@section('title', 'Tim PBL')
 
 @section('content')
 <div class="container-fluid py-4">
     <div class="card p-4">
         <div class="d-flex justify-content-between align-items-center">
-            <h4 class="mb-0 fw-bold">Data Tim PBL Mahasiswa</h4>
-            <a href="{{ route('admin.tambah-timpbl') }}">
-                <button class="btn btn-primary text-white fw-bold"><i class="bi bi-plus me-2"></i>Tambah Data</button>
+            <h4 class="fw-bold">Daftar Tim PBL</h4>
+            <a href="{{ route('admin.tambah-timpbl') }}" class="btn btn-primary fw-bold">
+                <i class="bi bi-plus me-2"></i>Tambah Tim
             </a>
         </div>
-        <p class="text-sm mb-0">Tim proyek PBL mahasiswa dengan id proyek, judul dan ketua tim PBL Program Studi TRPL</p>
+        <p class="text-sm">Daftar tim yang terdaftar dalam sistem PBL</p>
+        
         <div class="table-responsive mt-2">
-            <table class="table table-hover" id="datatable-search">
-                <thead class="table-light font-weight-bold">
+            <table class="table table-hover">
+                <thead class="table-light">
                     <tr>
-                        <th>ID Proyek</th>
-                        <th>Judul PBL</th>
+                        <th>No</th>
+                        <th>ID Tim</th>
+                        <th>Kode Tim</th>
                         <th>Ketua Tim</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="text-sm font-weight-normal">
+                <tbody>
+                    @forelse ($timPBL as $index => $tim)
                     <tr>
-                        <td>3A_1</td>
-                        <td>Sistem Monitoring Laboratorium</td>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $tim->id }}</td>
+                        <td>{{ $tim->kode_tim }}</td>
+                        <td>{{ $tim->ketua->nama ?? '-' }}</td>
                         <td>
-                            <p>362355401001</p>
-                            <p>Rio Adjie</p>
-                        </td>
-                        <td>
-                            <a href="{{ route('admin.edit-timpbl') }}">
-                                <button class="btn btn-sm btn-info text-white"><i class="bi bi-pencil-square"></i></button>
+                            <a href="{{ route('admin.edit-timpbl', $tim->id) }}" 
+                               class="btn btn-sm btn-info text-white" aria-label="Edit {{ $tim->kode_tim }}">
+                                <i class="bi bi-pencil-square"></i> Edit
                             </a>
-                            <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                            <form action="{{ route('admin.timpbl.delete', $tim->id) }}" 
+                                  method="POST" class="d-inline" 
+                                  onsubmit="return confirm('Yakin ingin menghapus tim {{ $tim->kode_tim }}?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger" aria-label="Hapus {{ $tim->kode_tim }}">
+                                    <i class="bi bi-trash"></i> Hapus
+                                </button>
+                            </form>
                         </td>
                     </tr>
+                    @empty
                     <tr>
-                        <td>3A_2</td>
-                        <td>Aplikasi Cek Kadar Gula Darah</td>
-                        <td>
-                            <p>362355401017</p>
-                            <p>Achmad Nico</p>
-                        </td>
-                        <td>
-                            <a href="{{ route('admin.edit-timpbl') }}">
-                                <button class="btn btn-sm btn-info text-white"><i class="bi bi-pencil-square"></i></button>
-                            </a>
-                            <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
-                        </td>
+                        <td colspan="5" class="text-center text-muted">Belum ada data tim PBL.</td>
                     </tr>
-                    <tr>
-                        <td>3A_3</td>
-                        <td>Aplikasi berbasis Web dalam Pengelolaan Arsip</td>
-                        <td>
-                            <p>362355401025</p>
-                            <p>Wahyu Eka</p>
-                        </td>
-                        <td>
-                            <a href="{{ route('admin.edit-timpbl') }}">
-                                <button class="btn btn-sm btn-info text-white"><i class="bi bi-pencil-square"></i></button>
-                            </a>
-                            <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>3A_4</td>
-                        <td>Web Pengenalan Perusahan Abdi Jaya</td>
-                        <td>
-                            <p>362355401030</p>
-                            <p>Ken Affila</p>
-                        </td>
-                        <td>
-                            <a href="{{ route('admin.edit-timpbl') }}">
-                                <button class="btn btn-sm btn-info text-white"><i class="bi bi-pencil-square"></i></button>
-                            </a>
-                            <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
-                        </td>
-                    </tr>
+                    @endforelse
                 </tbody>
             </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="mt-3">
+            {{ $timPBL->links() }}
         </div>
     </div>
 </div>

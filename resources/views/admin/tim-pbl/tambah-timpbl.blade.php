@@ -1,55 +1,78 @@
 @extends('layouts.dashboardadmin-template')
 
-@section('title','Tambah Tim PBL | Sistem Informasi dan Monitoring Project Based Learning')
+@section('title', 'Tambah Tim PBL')
 
 @section('content')
 <div class="container-fluid py-4">
     <div class="card p-4">
-        <div class="d-flex justify-content-between align-items-center">
-            <h5 class="fw-bold">Tambah Data Tim PBL</h5>
-        </div>
-        <p class="text-sm">Sistem Informasi dan Monitoring Project Based Learning - TRPL Poliwangi</p>
-       <form class="mt-1">
-            <div class="row">
-                <label for="id_pbl" class="form-control-label">ID Proyek PBL</label>
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <select class="form-control" id="kelas">
-                            <option selected disabled>Pilih Kelas</option>
-                            <option>3A</option>
-                            <option>3B</option>
-                            <option>3C</option>
-                            <option>3D</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-10">
-                    <div class="form-group">
-                        <input class="form-control" type="text" placeholder="Kode Tim" id="kode_tim">
-                    </div>
-                </div>
+        <h5 class="fw-bold">Tambah Tim PBL</h5>
+        <p class="text-sm">Tambahkan tim baru dalam sistem PBL</p>
+        
+        <form action="{{ route('admin.timpbl.store') }}" method="POST">
+            @csrf
+
+            <!-- ID Tim (Manual Input) -->
+            <div class="form-group mb-3">
+                <label for="id_tim">ID Tim</label>
+                <input type="text" name="id_tim" class="form-control @error('id_tim') is-invalid @enderror" 
+                       placeholder="Masukkan ID Tim" value="{{ old('id_tim') }}" required>
+                @error('id_tim')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
-            <div class="form-group">
-                <label for="ketua_tim" class="form-control-label">Ketua Tim PBL</label>
+
+            <!-- Kode Tim -->
+            <div class="form-group mb-3">
+                <label for="kode_tim">Kode Tim</label>
+                <input type="text" name="kode_tim" class="form-control @error('kode_tim') is-invalid @enderror" 
+                       placeholder="Masukkan Kode Tim" value="{{ old('kode_tim') }}" required>
+                @error('kode_tim')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <!-- Ketua Tim (Search by NIM) -->
+            <div class="form-group mb-3">
+                <label for="ketua_nim">Ketua Tim</label>
                 <div class="input-group">
-                    <input class="form-control" placeholder="Cari Berdasarkan NIM" type="search">
+                    <input type="text" class="form-control @error('ketua_nim') is-invalid @enderror" 
+                           id="ketua_nim" name="ketua_nim" placeholder="Cari berdasarkan NIM..." required>
                     <span class="input-group-text"><i class="bi bi-search"></i></span>
                 </div>
+                <small class="text-muted" id="nama_ketua">Nama Ketua: -</small>
+                @error('ketua_nim')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
-            <div class="form-group">
-                <label for="periode_pbl" class="form-control-label">Periode PBL</label>
-                <select class="form-control" id="periode_pbl">
-                    <option selected disabled>Pilih Periode PBL</option>
-                    <option>2025</option>
-                    <option>2024</option>
-                    <option>2023</option>
-                </select>
-            </div>
-            <div class="form-grou mt-4">
-                <button type="submit" class="btn btn-primary me-2">Simpan Data</button>
-                <button type="reset" class="btn btn-danger">Reset Data</button>
+
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary">Simpan Data</button>
+                <a href="{{ route('admin.timpbl') }}" class="btn btn-secondary">Batal</a>
             </div>
         </form>
     </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    let ketuaInput = document.getElementById('ketua_nim');
+    let namaKetua = document.getElementById('nama_ketua');
+
+    ketuaInput.addEventListener('input', function() {
+        let nim = this.value.trim();
+        if (nim.length >= 5) {
+            fetch(`{{ url('/admin/search-mahasiswa') }}?nim=${nim}`)
+                .then(response => response.json())
+                .then(data => {
+                    namaKetua.textContent = data.nama ? `Nama Ketua: ${data.nama}` : "Mahasiswa tidak ditemukan.";
+                })
+                .catch(error => {
+                    namaKetua.textContent = "Gagal mencari mahasiswa.";
+                });
+        } else {
+            namaKetua.textContent = "Nama Ketua: -";
+        }
+    });
+});
+</script>
 @endsection
