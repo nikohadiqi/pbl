@@ -8,7 +8,7 @@
         <h5 class="fw-bold">Tambah Tahapan Pelaksanaan - Semester 4</h5>
         <p class="text-sm">Tambahkan tahapan pelaksanaan proyek berdasarkan semester 4</p>
         
-        <form action="{{ route('admin.tahapanpelaksanaan.store') }}" method="POST">
+        <form action="{{ route('admin.tahapanpelaksanaan.store4') }}" method="POST">
             @csrf
             
             <!-- Nama Tahapan -->

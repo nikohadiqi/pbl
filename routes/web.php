@@ -61,20 +61,20 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::prefix('admin/tahapan-pelaksanaan/semester4')->middleware(['auth:sanctum', 'admin'])->group(function () {
         Route::get('/', [TPP4Controller::class, 'index'])->name('admin.tahapanpelaksanaan-sem4');
         Route::get('/tambah', [TPP4Controller::class, 'create'])->name('admin.tambah-tahapanpelaksanaan-sem4');
-        Route::post('/store', [TPP4Controller::class, 'store'])->name('admin.tahapanpelaksanaan.store');
+        Route::post('/store', [TPP4Controller::class, 'store'])->name('admin.tahapanpelaksanaan.store4');
         Route::get('/edit/{id}', [TPP4Controller::class, 'edit'])->name('admin.edit-tahapanpelaksanaan-sem4');
-        Route::put('/update/{id}', [TPP4Controller::class, 'update'])->name('admin.tahapanpelaksanaan.update');
-        Route::delete('/delete/{id}', [TPP4Controller::class, 'destroy'])->name('admin.tahapanpelaksanaan.delete');
+        Route::put('/update/{id}', [TPP4Controller::class, 'update'])->name('admin.tahapanpelaksanaan.update4');
+        Route::delete('/delete/{id}', [TPP4Controller::class, 'destroy'])->name('admin.tahapanpelaksanaan.delete4');
     });
 
     // TPP SEMESTER 5
     Route::prefix('admin/tahapan-pelaksanaan/semester5')->middleware(['auth:sanctum', 'admin'])->group(function () {
         Route::get('/', [TPP5Controller::class, 'index'])->name('admin.tahapanpelaksanaan-sem5');
         Route::get('/tambah', [TPP5Controller::class, 'create'])->name('admin.tambah-tahapanpelaksanaan-sem5');
-        Route::post('/store', [TPP5Controller::class, 'store'])->name('admin.tahapanpelaksanaan.store');
+        Route::post('/store', [TPP5Controller::class, 'store'])->name('admin.tahapanpelaksanaan.store5');
         Route::get('/edit/{id}', [TPP5Controller::class, 'edit'])->name('admin.edit-tahapanpelaksanaan-sem5');
-        Route::put('/update/{id}', [TPP5Controller::class, 'update'])->name('admin.tahapanpelaksanaan.update');
-        Route::delete('/delete/{id}', [TPP5Controller::class, 'destroy'])->name('admin.tahapanpelaksanaan.delete');
+        Route::put('/update/{id}', [TPP5Controller::class, 'update'])->name('admin.tahapanpelaksanaan.update5');
+        Route::delete('/delete/{id}', [TPP5Controller::class, 'destroy'])->name('admin.tahapanpelaksanaan.delete5');
     });
 
 Route::prefix('menu/master-data/mata-kuliah')->middleware(['auth:sanctum', 'admin'])->group(function () {
