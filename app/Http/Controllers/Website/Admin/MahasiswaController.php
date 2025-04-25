@@ -45,22 +45,22 @@ class MahasiswaController extends Controller
     }
 
     // Menampilkan form edit mahasiswa
-    public function edit($id)
+    public function edit($nim)
     {
-        $mahasiswa = Mahasiswa::findOrFail($id);
+        $mahasiswa = Mahasiswa::findOrFail($nim);
         return view('admin.akun-mahasiswa.edit-mahasiswa', compact('mahasiswa'));
     }
 
     // Memperbarui data mahasiswa
-    public function update(Request $request, $id)
+    public function update(Request $request, $nim)
     {
-        $mahasiswa = Mahasiswa::findOrFail($id);
+        $mahasiswa = Mahasiswa::findOrFail($nim);
 
         $request->validate([
-            'nim' => 'required|string|max:15|unique:mahasiswa,nim,' . $id,
+            'nim' => 'required|string|max:15|unique:mahasiswa,nim,' . $nim . ',nim',
             'nama' => 'required|string|max:100',
             'kelas' => 'required|string|max:10',
-        ]);
+        ]);        
 
         $mahasiswa->update($request->all());
 
@@ -74,9 +74,9 @@ class MahasiswaController extends Controller
         return redirect()->route('admin.mahasiswa');
     }
 
-    public function destroy($id)
+    public function destroy($nim)
     {
-        $mahasiswa = Mahasiswa::findOrFail($id);
+        $mahasiswa = Mahasiswa::findOrFail($nim);
         $mahasiswa->delete();
 
         

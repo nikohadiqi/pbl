@@ -10,7 +10,6 @@ return new class extends Migration {
         Schema::create('logbook', function (Blueprint $table) {
             $table->id();
             $table->foreignId('timpbl_id')->constrained('timpbl')->onDelete('cascade');
-            $table->unsignedBigInteger('mahasiswa_id');
             $table->text('aktivitas')->nullable();
             $table->text('hasil')->nullable();
             $table->string('foto_kegiatan')->nullable();
@@ -20,8 +19,6 @@ return new class extends Migration {
             $table->text('anggota4')->nullable();
             $table->text('anggota5')->nullable();
             $table->timestamps();
-
-            $table->foreign('mahasiswa_id')->references('id')->on('mahasiswa')->onDelete('cascade');
         });
     }
 
