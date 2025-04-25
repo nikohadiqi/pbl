@@ -37,16 +37,16 @@
                         <td>{{ $mhs->nim }}</td>
                         <td>{{ $mhs->kelas }}</td>
                         <td>
-                            <a href="{{ route('admin.edit-mahasiswa', $mhs->id) }}" class="btn btn-sm btn-info text-white">
+                            <a href="{{ route('admin.edit-mahasiswa', $mhs->nim) }}" class="btn btn-sm btn-info text-white">
                                 <i class="bi bi-pencil-square"></i>
                             </a>
-                            <button class="btn btn-sm btn-danger" onclick="confirmDelete({{ $mhs->id }})">
+                            <button class="btn btn-sm btn-danger" onclick="confirmDelete('{{ $mhs->nim }}')">
                                 <i class="bi bi-trash"></i>
                             </button>
-                            <form id="delete-form-{{ $mhs->id }}" action="{{ route('admin.delete-mahasiswa', ['id' => $mhs->id]) }}" method="POST" style="display: none;">
-                            @csrf
-                            @method('DELETE')
-                        </form>
+                            <form id="delete-form-{{ $mhs->nim }}" action="{{ route('admin.delete-mahasiswa', ['nim' => $mhs->nim]) }}" method="POST" style="display: none;">
+                                @csrf
+                                @method('DELETE')
+                            </form>
                         </td>
                     </tr>
                     @endforeach
@@ -57,9 +57,9 @@
 </div>
 
 <script>
-    function confirmDelete(id) {
+    function confirmDelete(nim) {
         if (confirm("Apakah Anda yakin ingin menghapus mahasiswa ini?")) {
-            document.getElementById('delete-form-' + id).submit();
+            document.getElementById('delete-form-' + nim).submit();
         }
     }
 </script>

@@ -90,9 +90,9 @@ Route::prefix('menu/master-data/mata-kuliah')->middleware(['auth:sanctum', 'admi
     Route::get('/', [MahasiswaController::class, 'index'])->name('admin.mahasiswa');
     Route::get('/tambah', [MahasiswaController::class, 'create'])->name('admin.tambah-mahasiswa');
     Route::post('/simpan', [MahasiswaController::class, 'store'])->name('admin.mahasiswa.store');  // ✅ Route untuk simpan
-    Route::get('/edit/{id}', [MahasiswaController::class, 'edit'])->name('admin.edit-mahasiswa');
-    Route::patch('/update/{id}', [MahasiswaController::class, 'update'])->name('admin.update-mahasiswa');
-    Route::delete('/hapus/{id}', [MahasiswaController::class, 'destroy'])->name('admin.delete-mahasiswa');
+    Route::get('/edit/{nim}', [MahasiswaController::class, 'edit'])->name('admin.edit-mahasiswa');
+    Route::patch('/update/{nim}', [MahasiswaController::class, 'update'])->name('admin.update-mahasiswa');
+    Route::delete('/hapus/{nim}', [MahasiswaController::class, 'destroy'])->name('admin.delete-mahasiswa');
     });
 
     Route::prefix('menu/master-data/akun-dosen')->middleware(['auth:sanctum', 'admin'])->group(function () {

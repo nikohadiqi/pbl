@@ -11,7 +11,6 @@ return new class extends Migration {
             $table->id();
             // Relasi ke tabel tim pbl dan mahasiswa
             $table->foreignId('timpbl_id')->constrained('timpbl')->onDelete('cascade');
-            $table->foreignId('mahasiswa_id')->constrained('mahasiswa')->onDelete('cascade');
             // Kolom berikut dibuat nullable
             $table->string('judul_proyek')->nullable();
             $table->string('pengusul_proyek')->nullable();

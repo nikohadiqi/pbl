@@ -12,9 +12,11 @@ class Mahasiswa extends Model
     // Tentukan nama tabel jika tidak menggunakan plural
     protected $table = 'mahasiswa';
 
+    protected $primaryKey = 'nim'; // <- tambahkan ini
+    public $incrementing = false;  // <- tambahkan ini
+    protected $keyType = 'string'; // <- jika nim berupa string
     // Tentukan kolom yang dapat diisi
     protected $fillable = [
-        'id_tahun',
         'nim',
         'nama',
         'kelas',
