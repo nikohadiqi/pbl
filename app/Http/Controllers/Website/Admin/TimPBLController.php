@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Website\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Mahasiswa;
+use App\Models\PeriodePBL;
 use App\Models\TimPBL;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class TimPBLController extends Controller
 {
@@ -14,8 +16,10 @@ class TimPBLController extends Controller
      */
     public function index()
     {
-        $timPBL = TimPBL::with('ketua')->paginate(10); // Gunakan paginate() agar pagination bisa muncul
-        return view('admin.tim-pbl.timpbl', compact('timPBL'));
+        $timPBL = TimPBL::all();
+        $ketuaTim = Mahasiswa::all();
+        $periode = PeriodePBL::all();
+        return view('admin.tim-pbl.timpbl', compact('timPBL', 'ketuaTim', 'periode'));
     }
 
     /**
@@ -23,7 +27,9 @@ class TimPBLController extends Controller
      */
     public function create()
     {
-        return view('admin.tim-pbl.tambah-timpbl'); // Pastikan file view ini ada di folder views/admin/tim-pbl/
+        $periode = PeriodePBL::all();
+        $ketuaTim = Mahasiswa::all();
+        return view('admin.tim-pbl.tambah-timpbl', compact('periode', 'ketuaTim')); // Pastikan file view ini ada di folder views/admin/tim-pbl/
     }
 
     /**
@@ -33,61 +39,83 @@ class TimPBLController extends Controller
     {
         $request->validate([
             'id_tim' => 'required|unique:timpbl,id_tim',
-            'kode_tim' => 'required', // Pastikan kode_tim diisi
-            'ketua_nim' => 'required|exists:mahasiswa,nim',
+            'ketua_tim' => 'required|exists:mahasiswa,nim',
+            'periode_id' => 'required',
         ]);
-    
+
         TimPBL::create([
             'id_tim' => $request->id_tim,
-            'kode_tim' => $request->kode_tim, // Menambahkan kode_tim
-            'ketua_nim' => $request->ketua_nim,
-            'created_at' => now(),
-            'updated_at' => now(),
+            'ketua_tim' => $request->ketua_tim,
+            'periode_id' => $request->periode_id,
         ]);
-    
-        return redirect()->route('admin.timpbl')->with('success', 'Tim PBL berhasil ditambahkan.');
+
+        // Menampilkan SweetAlert
+        Alert::success('Berhasil!', 'Data Tim berhasil Ditambahkan!');
+
+        return redirect()->route('admin.timpbl');
     }
-    
+
     /**
      * Menampilkan halaman edit Tim PBL
      */
-    public function edit($id)
+    public function edit($id_tim)
     {
-        $timPBL = TimPBL::findOrFail($id);
-        return view('admin.tim-pbl.edit-timpbl', compact('timPBL')); // Pastikan path view sesuai dengan file yang ada
+        $timPBL = TimPBL::findOrFail($id_tim);
+        $periode = PeriodePBL::all();
+        $ketuaTim = Mahasiswa::all();
+        return view('admin.tim-pbl.edit-timpbl', compact('timPBL', 'periode', 'ketuaTim')); // Pastikan path view sesuai dengan file yang ada
     }
 
     /**
      * Proses perbarui Tim PBL
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id_tim)
     {
-        $timPBL = TimPBL::findOrFail($id);
-
         $request->validate([
-            'kelas' => 'sometimes|string',
-            'code_tim' => 'sometimes|string',
-            'ketua_tim_nim' => 'sometimes|string|exists:mahasiswa,nim',
+            'id_tim' => 'required|unique:timpbl,id_tim,' . $id_tim . ',id_tim',
+            'ketua_tim' => 'required|exists:mahasiswa,nim',
+            'periode_id' => 'required',
         ]);
 
-        if ($request->has('ketua_tim_nim')) {
-            $ketuaTim = Mahasiswa::where('nim', $request->ketua_tim_nim)->firstOrFail();
-            $timPBL->ketua_tim = $ketuaTim->id;
-        }
+        $timPBL = TimPBL::findOrFail($id_tim);
 
-        $timPBL->update($request->except('ketua_tim_nim'));
+        $timPBL->update([
+            'id_tim' => $request->id_tim,
+            'ketua_tim' => $request->ketua_tim,
+            'periode_id' => $request->periode_id,
+        ]);
 
-        return redirect()->route('admin.timpbl')->with('success', 'Tim PBL berhasil diperbarui!');
+        // Menampilkan SweetAlert
+        Alert::success('Berhasil!', 'Data Tim berhasil Diperbarui!');
+
+        return redirect()->route('admin.timpbl');
     }
+
 
     /**
      * Hapus Tim PBL
      */
-    public function destroy($id)
+    public function destroy($id_tim)
     {
-        $timPBL = TimPBL::findOrFail($id);
+        $timPBL = TimPBL::findOrFail($id_tim);
         $timPBL->delete();
         return redirect()->route('admin.timpbl')->with('success', 'Tim PBL berhasil dihapus!');
     }
 
+    public function cariKetua(Request $request)
+    {
+        $nim = $request->query('nim');
+        $mahasiswa = Mahasiswa::where('nim', $nim)->first();
+
+        if ($mahasiswa) {
+            return response()->json([
+                'success' => true,
+                'nim' => $mahasiswa->nim,
+                'nama' => $mahasiswa->nama,
+                'kelas' => $mahasiswa->kelas,
+            ]);
+        } else {
+            return response()->json(['success' => false]);
+        }
+    }
 }

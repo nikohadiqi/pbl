@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('pelaporan_uts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('timpbl_id')->constrained('timpbl')->onDelete('cascade');
+            // $table->foreignId('timpbl_id')->constrained('timpbl')->onDelete('cascade');
             $table->text('keterangan')->nullable();
             $table->string('link_drive')->nullable();
             $table->string('link_youtube')->nullable();

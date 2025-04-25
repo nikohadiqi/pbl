@@ -9,47 +9,98 @@
             <h5 class="fw-bold">Edit Data Tim PBL</h5>
         </div>
         <p class="text-sm">Sistem Informasi dan Monitoring Project Based Learning - TRPL Poliwangi</p>
-       <form class="mt-1">
-            <div class="row">
-                <label for="id_pbl" class="form-control-label">ID Proyek PBL</label>
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <select class="form-control" id="kelas">
-                            <option disabled>Pilih Kelas</option>
-                            <option selected>3A</option>
-                            <option>3B</option>
-                            <option>3C</option>
-                            <option>3D</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-10">
-                    <div class="form-group">
-                        <input class="form-control" type="text" value="1" id="kode_tim">
-                    </div>
-                </div>
+        <form action="{{ route('admin.timpbl.update', $timPBL->id_tim) }}" method="POST">
+            @csrf
+            @method('PUT')
+
+            <!-- ID Tim (Read Only) -->
+            <div class="form-group mb-3">
+                <label for="id_tim">ID Tim Proyek</label>
+                <input type="text" name="id_tim" class="form-control @error('id_tim') is-invalid @enderror"
+                       value="{{ old('id_tim', $timPBL->id_tim) }}" readonly>
+                @error('id_tim')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
-            <div class="form-group">
-                <label for="ketua_tim" class="form-control-label">Ketua Tim PBL</label>
+
+            <!-- Ketua Tim (Search by NIM) -->
+            <div class="form-group mb-3">
+                <label for="ketua_tim">Ketua Tim</label>
                 <div class="input-group">
-                    <input class="form-control" value="362355401001" type="search">
+                    <input type="text" class="form-control @error('ketua_tim') is-invalid @enderror"
+                           id="ketua_tim" name="ketua_tim"
+                           placeholder="Cari berdasarkan NIM..."
+                           value="{{ old('ketua_tim', $timPBL->ketua_tim) }}" required>
                     <span class="input-group-text"><i class="bi bi-search"></i></span>
                 </div>
+                <div id="info_ketua" class="mt-3">
+                    @if($timPBL->ketua)
+                        Nama Ketua: {{ $timPBL->ketua->nama }}<br>
+                        Kelas: {{ $timPBL->ketua->kelas }}<br>
+                        NIM: {{ $timPBL->ketua->nim }}
+                    @endif
+                </div>
+                @error('ketua_tim')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
+
+            <!-- Periode -->
             <div class="form-group">
-                <label for="periode_pbl" class="form-control-label">Periode PBL</label>
-                <select class="form-control" id="periode_pbl">
-                    <option disabled>Pilih Periode PBL</option>
-                    <option selected>2025</option>
-                    <option>2024</option>
-                    <option>2023</option>
+                <label for="periode_id">Periode PBL</label>
+                <select class="form-control" id="periode_id" name="periode_id">
+                    <option value="" disabled selected hidden>Pilih Periode PBL</option>
+                    @foreach($periode as $periodepbl)
+                    <option value="{{ $periodepbl->id }}"
+                        {{ old('periode_id', $timPBL->periode_id) == $periodepbl->id ? 'selected' : '' }}>
+                        Semester {{ $periodepbl->semester }} - {{ $periodepbl->tahun }}
+                    </option>
+                    @endforeach
                 </select>
             </div>
-            <div class="form-grou mt-4">
-                <button type="submit" class="btn btn-primary me-2">Simpan Data</button>
-                <button type="reset" class="btn btn-danger">Reset Data</button>
+
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary">Update Data</button>
+                <a href="{{ route('admin.timpbl') }}" class="btn btn-secondary">Batal</a>
             </div>
         </form>
     </div>
 </div>
 @endsection
+
+@push('script')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        let debounceTimer;
+
+        $('#ketua_tim').on('input', function () {
+            clearTimeout(debounceTimer);
+            let nim = $(this).val();
+
+            debounceTimer = setTimeout(function () {
+                if (nim.length >= 6) {
+                    $.ajax({
+                        url: "{{ route('admin.timpbl.cariKetua') }}",
+                        method: "GET",
+                        data: { nim: nim },
+                        success: function (response) {
+                            if (response.success) {
+                                $('#info_ketua').html(`
+                                    Nama Ketua: ${response.nama}<br>
+                                    Kelas: ${response.kelas}<br>
+                                    NIM: ${response.nim}
+                                `).fadeIn();
+                            } else {
+                                $('#info_ketua').fadeOut();
+                            }
+                        }
+                    });
+                } else {
+                    $('#info_ketua').fadeOut();
+                }
+            }, 800);
+        });
+    });
+</script>
+@endpush

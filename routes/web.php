@@ -41,9 +41,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/', [TimPBLController::class, 'index'])->name('admin.timpbl');
         Route::get('/tambah', [TimPBLController::class, 'create'])->name('admin.tambah-timpbl');
         Route::post('/store', [TimPBLController::class, 'store'])->name('admin.timpbl.store');
-        Route::get('/edit/{id}', [TimPBLController::class, 'edit'])->name('admin.edit-timpbl');
-        Route::put('/update/{id}', [TimPBLController::class, 'update'])->name('admin.timpbl.update');
-        Route::delete('/delete/{id}', [TimPBLController::class, 'destroy'])->name('admin.timpbl.delete');
+        Route::get('/edit/{id_tim}', [TimPBLController::class, 'edit'])->name('admin.edit-timpbl');
+        Route::put('/update/{id_tim}', [TimPBLController::class, 'update'])->name('admin.timpbl.update');
+        Route::delete('/delete/{id_tim}', [TimPBLController::class, 'destroy'])->name('admin.timpbl.delete');
+        Route::get('/cari-ketua', [TimPBLController::class, 'cariKetua'])->name('admin.timpbl.cariKetua');
     });
 
     // Periode PBL
