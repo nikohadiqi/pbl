@@ -6,15 +6,15 @@
 <div class="container-fluid py-4">
     <div class="card p-4">
         <div class="d-flex justify-content-between align-items-center">
-            <h4 class="fw-bold">Tahapan Pelaksanaan Proyek - Semester 5</h4>
+            <h4 class="fw-bold">Tahapan Pelaksanaan Proyek - Semester 4</h4>
             <a href="{{ route('admin.tambah-tahapanpelaksanaan-sem5') }}" class="btn btn-primary text-white fw-bold">
                 <i class="bi bi-plus me-2"></i>Tambah Data
             </a>
         </div>
-        <p class="text-sm">Daftar tahapan pelaksanaan proyek semester 5</p>
-        
+        <p class="text-sm">Daftar tahapan pelaksanaan proyek semester 4</p>
+
         <div class="table-responsive mt-2">
-            <table class="table table-hover">
+            <table class="table table-hover" id="datatable-search">
                 <thead class="table-light font-weight-bold">
                     <tr>
                         <th>No</th>
