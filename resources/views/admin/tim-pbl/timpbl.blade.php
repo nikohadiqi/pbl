@@ -12,9 +12,9 @@
             </a>
         </div>
         <p class="text-sm">Daftar tim yang terdaftar dalam sistem PBL</p>
-        
+
         <div class="table-responsive mt-2">
-            <table class="table table-hover">
+            <table class="table table-hover" id="datatable-search">
                 <thead class="table-light">
                     <tr>
                         <th>No</th>
@@ -32,12 +32,12 @@
                         <td>{{ $tim->kode_tim }}</td>
                         <td>{{ $tim->ketua->nama ?? '-' }}</td>
                         <td>
-                            <a href="{{ route('admin.edit-timpbl', $tim->id) }}" 
+                            <a href="{{ route('admin.edit-timpbl', $tim->id) }}"
                                class="btn btn-sm btn-info text-white" aria-label="Edit {{ $tim->kode_tim }}">
                                 <i class="bi bi-pencil-square"></i> Edit
                             </a>
-                            <form action="{{ route('admin.timpbl.delete', $tim->id) }}" 
-                                  method="POST" class="d-inline" 
+                            <form action="{{ route('admin.timpbl.delete', $tim->id) }}"
+                                  method="POST" class="d-inline"
                                   onsubmit="return confirm('Yakin ingin menghapus tim {{ $tim->kode_tim }}?');">
                                 @csrf
                                 @method('DELETE')
