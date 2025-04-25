@@ -14,7 +14,7 @@
                             <div class="numbers">
                                 <p class="text-sm mb-0 text-uppercase font-weight-bold">Total Proyek PBL</p>
                                 <h3 class="font-weight-bolder">
-                                    70
+                                    {{ $timPBLCount }}
                                 </h3>
                             </div>
                         </div>
@@ -35,7 +35,7 @@
                             <div class="numbers">
                                 <p class="text-sm mb-0 text-uppercase font-weight-bold">Total Mahasiswa</p>
                                 <h3 class="font-weight-bolder">
-                                    350
+                                    {{ $mahasiswaCount }}
                                 </h3>
                             </div>
                         </div>
@@ -56,7 +56,7 @@
                             <div class="numbers">
                                 <p class="text-sm mb-0 text-uppercase font-weight-bold">Total Dosen</p>
                                 <h3 class="font-weight-bolder">
-                                    30
+                                    {{ $dosenCount }}
                                 </h3>
                             </div>
                         </div>

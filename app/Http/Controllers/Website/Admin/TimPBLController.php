@@ -99,7 +99,9 @@ class TimPBLController extends Controller
     {
         $timPBL = TimPBL::findOrFail($id_tim);
         $timPBL->delete();
-        return redirect()->route('admin.timpbl')->with('success', 'Tim PBL berhasil dihapus!');
+        // Menampilkan SweetAlert
+        Alert::success('Berhasil!', 'Data Tim PBL berhasil dihapus!');
+        return redirect()->route('admin.timpbl');
     }
 
     public function cariKetua(Request $request)

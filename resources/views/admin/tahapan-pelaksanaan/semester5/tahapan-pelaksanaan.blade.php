@@ -36,7 +36,7 @@
                                class="btn btn-sm btn-info text-white" aria-label="Edit {{ $item->tahapan }}">
                                 <i class="bi bi-pencil-square"></i> Edit
                             </a>
-                            <form action="{{ route('admin.tahapanpelaksanaan.delete', $item->id) }}"
+                            <form action="{{ route('admin.tahapanpelaksanaan-sem5.delete', $item->id) }}"
                                   method="POST" class="d-inline"
                                   onsubmit="return confirm('Yakin ingin menghapus data {{ $item->tahapan }}?');">
                                 @csrf

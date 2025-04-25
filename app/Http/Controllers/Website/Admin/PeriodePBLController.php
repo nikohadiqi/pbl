@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Website\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\PeriodePBL;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class PeriodePBLController extends Controller
 {
@@ -28,7 +29,9 @@ class PeriodePBLController extends Controller
 
         PeriodePBL::create($request->all());
 
-        return redirect()->route('admin.periodepbl')->with('success', 'Periode PBL berhasil ditambahkan!');
+        // Menampilkan SweetAlert
+        Alert::success('Berhasil!', 'Data Periode PBL berhasil ditambahkan!');
+        return redirect()->route('admin.periodepbl');
     }
 
     public function edit($id)
@@ -47,18 +50,24 @@ class PeriodePBLController extends Controller
         $periode = PeriodePBL::findOrFail($id);
         $periode->update($request->all());
 
-        return redirect()->route('admin.periodepbl')->with('success', 'Periode PBL berhasil diperbarui!');
+        // Menampilkan SweetAlert
+        Alert::success('Berhasil!', 'Data Periode PBL berhasil diperbarui!');
+        return redirect()->route('admin.periodepbl');
     }
 
     public function destroy($id)
     {
         PeriodePBL::findOrFail($id)->delete();
-        return redirect()->route('admin.periodepbl')->with('success', 'Periode PBL berhasil dihapus!');
+        // Menampilkan SweetAlert
+        Alert::success('Berhasil!', 'Data Periode PBL berhasil dihapus!');
+        return redirect()->route('admin.periodepbl');
     }
 
     public function bulkDelete(Request $request)
     {
         PeriodePBL::whereIn('id', $request->ids)->delete();
-        return redirect()->route('admin.periodepbl')->with('success', 'Periode PBL berhasil dihapus secara massal!');
+        // Menampilkan SweetAlert
+        Alert::success('Berhasil!', 'Data Periode PBL berhasil dihapus!');
+        return redirect()->route('admin.periodepbl');
     }
 }

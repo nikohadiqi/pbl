@@ -7,10 +7,10 @@
     <div class="card p-4">
         <h5 class="fw-bold">Tambah Tahapan Pelaksanaan - Semester 4</h5>
         <p class="text-sm">Tambahkan tahapan pelaksanaan proyek berdasarkan semester 4</p>
-        
-        <form action="{{ route('admin.tahapanpelaksanaan.store') }}" method="POST">
+
+        <form action="{{ route('admin.tahapanpelaksanaan-sem4.store') }}" method="POST">
             @csrf
-            
+
             <!-- Nama Tahapan -->
             <div class="form-group mb-3">
                 <label for="tahapan">Nama Tahapan</label>

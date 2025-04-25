@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Website\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Tpp_sem5; // Model yang digunakan sesuai dengan yang kamu minta
+use RealRashid\SweetAlert\Facades\Alert;
 
 class TPP5Controller extends Controller
 {
@@ -36,7 +37,9 @@ class TPP5Controller extends Controller
             'score' => $request->score,
         ]);
 
-        return redirect()->route('admin.tahapanpelaksanaan-sem5')->with('success', 'Data berhasil ditambahkan!');
+        // Menampilkan SweetAlert
+        Alert::success('Berhasil!', 'Data berhasil ditambahkan!');
+        return redirect()->route('admin.tahapanpelaksanaan-sem5');
     }
 
     // Menampilkan form edit
@@ -62,7 +65,9 @@ class TPP5Controller extends Controller
             'score' => $request->score,
         ]);
 
-        return redirect()->route('admin.tahapanpelaksanaan-sem5')->with('success', 'Data berhasil diperbarui!');
+        // Menampilkan SweetAlert
+        Alert::success('Berhasil!', 'Data berhasil diperbarui!');
+        return redirect()->route('admin.tahapanpelaksanaan-sem5');
     }
 
     // Menghapus data tahapan pelaksanaan
@@ -71,6 +76,8 @@ class TPP5Controller extends Controller
         $tahapan = Tpp_sem5::findOrFail($id);
         $tahapan->delete();
 
-        return redirect()->route('admin.tahapanpelaksanaan-sem5')->with('success', 'Data berhasil dihapus!');
+        // Menampilkan SweetAlert
+        Alert::success('Berhasil!', 'Data berhasil dihapus!');
+        return redirect()->route('admin.tahapanpelaksanaan-sem5');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Website\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Tpp_sem4;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class TPP4Controller extends Controller
 {
@@ -36,7 +37,9 @@ class TPP4Controller extends Controller
             'score' => $request->score,
         ]);
 
-        return redirect()->route('admin.tahapanpelaksanaan-sem4')->with('success', 'Data berhasil ditambahkan!');
+        // Menampilkan SweetAlert
+        Alert::success('Berhasil!', 'Data berhasil ditambahkan!');
+        return redirect()->route('admin.tahapanpelaksanaan-sem4');
     }
 
 // Menampilkan form edit
@@ -61,14 +64,19 @@ public function edit($id)
             'score' => $request->score,
         ]);
 
-        return redirect()->route('admin.tahapanpelaksanaan-sem4')->with('success', 'Data berhasil diperbarui!');
+        // Menampilkan SweetAlert
+        Alert::success('Berhasil!', 'Data berhasil diperbarui!');
+        return redirect()->route('admin.tahapanpelaksanaan-sem4');
     }
+
     // Menghapus data tahapan pelaksanaan
     public function destroy($id)
     {
         $tahapan = Tpp_sem4::findOrFail($id);
         $tahapan->delete();
 
-        return redirect()->route('admin.tahapanpelaksanaan-sem4')->with('success', 'Data berhasil dihapus!');
+        // Menampilkan SweetAlert
+        Alert::success('Berhasil!', 'Data berhasil dihapus!');
+        return redirect()->route('admin.tahapanpelaksanaan-sem4');
     }
 }

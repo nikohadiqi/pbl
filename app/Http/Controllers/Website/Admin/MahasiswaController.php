@@ -60,11 +60,7 @@ class MahasiswaController extends Controller
         $mahasiswa->update($request->all());
 
         // Menampilkan SweetAlert
-
-        Alert::success('Berhasil!', 'Data Berhasil Diba!');
-
         Alert::success('Berhasil!', 'Data mahasiswa berhasil diperbarui!');
-
 
         return redirect()->route('admin.mahasiswa');
     }
@@ -74,14 +70,8 @@ class MahasiswaController extends Controller
         $mahasiswa = Mahasiswa::findOrFail($nim);
         $mahasiswa->delete();
 
-
-        // Menampilkan SweetAlert
-        Alert::success('Berhasil!', 'Data Berhasil Diaps!');
-
-
         // Menampilkan SweetAlert
         Alert::success('Berhasil!', 'Data mahasiswa berhasil Dihapus!');
-
 
         return redirect()->route('admin.mahasiswa');
     }
