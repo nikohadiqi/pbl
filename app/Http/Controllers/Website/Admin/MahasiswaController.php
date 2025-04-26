@@ -34,12 +34,7 @@ class MahasiswaController extends Controller
         Mahasiswa::create($request->all());
 
         // Menampilkan SweetAlert
-
-        Alert::success('Berhasil!', 'Data Berhasil Ditambahkan!');
-        
-
         Alert::success('Berhasil!', 'Data mahasiswa berhasil Ditambahkan!');
-
 
         return redirect()->route('admin.mahasiswa');
     }
@@ -60,16 +55,12 @@ class MahasiswaController extends Controller
             'nim' => 'required|string|max:15|unique:mahasiswa,nim,' . $nim . ',nim',
             'nama' => 'required|string|max:100',
             'kelas' => 'required|string|max:10',
-        ]);        
+        ]);
 
         $mahasiswa->update($request->all());
 
         // Menampilkan SweetAlert
-
-        Alert::success('Berhasil!', 'Data Berhasil Diba!');
-
         Alert::success('Berhasil!', 'Data mahasiswa berhasil diperbarui!');
-
 
         return redirect()->route('admin.mahasiswa');
     }
@@ -79,14 +70,8 @@ class MahasiswaController extends Controller
         $mahasiswa = Mahasiswa::findOrFail($nim);
         $mahasiswa->delete();
 
-        
-        // Menampilkan SweetAlert
-        Alert::success('Berhasil!', 'Data Berhasil Diaps!');
-
-
         // Menampilkan SweetAlert
         Alert::success('Berhasil!', 'Data mahasiswa berhasil Dihapus!');
-
 
         return redirect()->route('admin.mahasiswa');
     }

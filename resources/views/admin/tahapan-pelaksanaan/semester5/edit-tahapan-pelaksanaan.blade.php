@@ -26,7 +26,7 @@
         </div>
         <p class="text-sm">Sistem Informasi dan Monitoring Project Based Learning - TRPL Poliwangi</p>
 
-        <form class="mt-1" action="{{ route('admin.tahapanpelaksanaan.update', $tahapan->id) }}" method="POST">
+        <form class="mt-1" action="{{ route('admin.tahapanpelaksanaan-sem5.update', $tahapan->id) }}" method="POST">
             @csrf
             @method('PUT')
 

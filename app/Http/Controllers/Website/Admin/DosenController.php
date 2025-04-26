@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Website\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Dosen;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class DosenController extends Controller
 {
@@ -32,7 +33,9 @@ class DosenController extends Controller
 
         Dosen::create($request->all());
 
-        return redirect()->route('admin.dosen')->with('success', 'Dosen berhasil ditambahkan.');
+        // Menampilkan SweetAlert
+        Alert::success('Berhasil!', 'Data Dosen berhasil Ditambahkan!');
+        return redirect()->route('admin.dosen');
     }
 
     public function edit($id)
@@ -56,7 +59,9 @@ public function update(Request $request, $id)
         'no_telp' => $request->no_telp,
     ]);
 
-    return redirect()->route('admin.dosen')->with('success', 'Data Dosen berhasil diperbarui!');
+    // Menampilkan SweetAlert
+    Alert::success('Berhasil!', 'Data Dosen berhasil Diperbarui!');
+    return redirect()->route('admin.dosen');
 }
     // Menghapus data dosen
     public function destroy($id)
@@ -64,6 +69,8 @@ public function update(Request $request, $id)
         $dosen = Dosen::findOrFail($id);
         $dosen->delete();
 
-        return redirect()->route('admin.dosen')->with('success', 'Dosen berhasil dihapus.');
+        // Menampilkan SweetAlert
+        Alert::success('Berhasil!', 'Data Dosen berhasil Dihapus!');
+        return redirect()->route('admin.dosen');
     }
 }

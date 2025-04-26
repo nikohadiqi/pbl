@@ -35,7 +35,8 @@
                             <a href="{{ route('admin.edit-tahapanpelaksanaan-sem4', $item->id) }}" class="btn btn-sm btn-info text-white">
                                 <i class="bi bi-pencil-square"></i> Edit
                             </a>
-                            <form action="{{ route('admin.tahapanpelaksanaan.delete4', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus data ini?');">
+
+                            <form action="{{ route('admin.tahapanpelaksanaan-sem4.delete', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus data ini?');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-danger">

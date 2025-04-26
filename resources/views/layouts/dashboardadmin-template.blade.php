@@ -71,7 +71,7 @@
     </script>
 
     <!--   Core JS Files   -->
-    @stack('js')
+    @stack('script')
 
     <script src="{{ asset('assets/js/core/popper.min.js')}}"></script>
     <script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>

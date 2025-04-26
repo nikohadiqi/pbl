@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Website\Admin\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Website\Admin\DosenController;
 use App\Http\Controllers\Website\Admin\MahasiswaController;
@@ -32,18 +33,17 @@ Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth')->
 // Route Akun Admin
 Route::middleware(['auth:sanctum'])->group(function () {
     // Dashboard
-    Route::get('admin/dashboard', function () {
-        return view('admin.dashboard-admin');
-    })->name('admin.dashboard');
+    Route::get('admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
     // TIM PBL
     Route::prefix('admin/tim-pbl')->middleware(['auth:sanctum', 'admin'])->group(function () {
         Route::get('/', [TimPBLController::class, 'index'])->name('admin.timpbl');
         Route::get('/tambah', [TimPBLController::class, 'create'])->name('admin.tambah-timpbl');
         Route::post('/store', [TimPBLController::class, 'store'])->name('admin.timpbl.store');
-        Route::get('/edit/{id}', [TimPBLController::class, 'edit'])->name('admin.edit-timpbl');
-        Route::put('/update/{id}', [TimPBLController::class, 'update'])->name('admin.timpbl.update');
-        Route::delete('/delete/{id}', [TimPBLController::class, 'destroy'])->name('admin.timpbl.delete');
+        Route::get('/edit/{id_tim}', [TimPBLController::class, 'edit'])->name('admin.edit-timpbl');
+        Route::put('/update/{id_tim}', [TimPBLController::class, 'update'])->name('admin.timpbl.update');
+        Route::delete('/delete/{id_tim}', [TimPBLController::class, 'destroy'])->name('admin.timpbl.delete');
+        Route::get('/cari-ketua', [TimPBLController::class, 'cariKetua'])->name('admin.timpbl.cariKetua');
     });
 
     // Periode PBL
@@ -61,32 +61,33 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::prefix('admin/tahapan-pelaksanaan/semester4')->middleware(['auth:sanctum', 'admin'])->group(function () {
         Route::get('/', [TPP4Controller::class, 'index'])->name('admin.tahapanpelaksanaan-sem4');
         Route::get('/tambah', [TPP4Controller::class, 'create'])->name('admin.tambah-tahapanpelaksanaan-sem4');
-        Route::post('/store', [TPP4Controller::class, 'store'])->name('admin.tahapanpelaksanaan.store4');
+        Route::post('/store', [TPP4Controller::class, 'store'])->name('admin.tahapanpelaksanaan-sem4.store');
         Route::get('/edit/{id}', [TPP4Controller::class, 'edit'])->name('admin.edit-tahapanpelaksanaan-sem4');
-        Route::put('/update/{id}', [TPP4Controller::class, 'update'])->name('admin.tahapanpelaksanaan.update4');
-        Route::delete('/delete/{id}', [TPP4Controller::class, 'destroy'])->name('admin.tahapanpelaksanaan.delete4');
+        Route::put('/update/{id}', [TPP4Controller::class, 'update'])->name('admin.tahapanpelaksanaan-sem4.update');
+        Route::delete('/delete/{id}', [TPP4Controller::class, 'destroy'])->name('admin.tahapanpelaksanaan-sem4.delete');
     });
 
     // TPP SEMESTER 5
     Route::prefix('admin/tahapan-pelaksanaan/semester5')->middleware(['auth:sanctum', 'admin'])->group(function () {
         Route::get('/', [TPP5Controller::class, 'index'])->name('admin.tahapanpelaksanaan-sem5');
         Route::get('/tambah', [TPP5Controller::class, 'create'])->name('admin.tambah-tahapanpelaksanaan-sem5');
-        Route::post('/store', [TPP5Controller::class, 'store'])->name('admin.tahapanpelaksanaan.store5');
+        Route::post('/store', [TPP5Controller::class, 'store'])->name('admin.tahapanpelaksanaan-sem5.store');
         Route::get('/edit/{id}', [TPP5Controller::class, 'edit'])->name('admin.edit-tahapanpelaksanaan-sem5');
-        Route::put('/update/{id}', [TPP5Controller::class, 'update'])->name('admin.tahapanpelaksanaan.update5');
-        Route::delete('/delete/{id}', [TPP5Controller::class, 'destroy'])->name('admin.tahapanpelaksanaan.delete5');
+        Route::put('/update/{id}', [TPP5Controller::class, 'update'])->name('admin.tahapanpelaksanaan-sem5.update');
+        Route::delete('/delete/{id}', [TPP5Controller::class, 'destroy'])->name('admin.tahapanpelaksanaan-sem5.delete');
     });
 
-Route::prefix('menu/master-data/mata-kuliah')->middleware(['auth:sanctum', 'admin'])->group(function () {
-    Route::get('/', [MataKuliahController::class, 'index'])->name('admin.matkul');
-    Route::get('/tambah', [MataKuliahController::class, 'create'])->name('admin.tambah-matkul');
-    Route::post('/simpan', [MataKuliahController::class, 'store'])->name('admin.matkul.store');
-    Route::get('/edit/{id}', [MataKuliahController::class, 'edit'])->name('admin.edit-matkul');
-    Route::patch('/update/{id}', [MataKuliahController::class, 'update'])->name('admin.update-matkul');
-    Route::delete('/hapus/{id}', [MataKuliahController::class, 'destroy'])->name('admin.hapus-matkul');
-});
- // Akun Mahasiswa
- Route::prefix('menu/master-data/akun-mahasiswa')->middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::prefix('menu/master-data/mata-kuliah')->middleware(['auth:sanctum', 'admin'])->group(function () {
+        Route::get('/', [MataKuliahController::class, 'index'])->name('admin.matkul');
+        Route::get('/tambah', [MataKuliahController::class, 'create'])->name('admin.tambah-matkul');
+        Route::post('/simpan', [MataKuliahController::class, 'store'])->name('admin.matkul.store');
+        Route::get('/edit/{id}', [MataKuliahController::class, 'edit'])->name('admin.edit-matkul');
+        Route::patch('/update/{id}', [MataKuliahController::class, 'update'])->name('admin.update-matkul');
+        Route::delete('/hapus/{id}', [MataKuliahController::class, 'destroy'])->name('admin.hapus-matkul');
+    });
+
+    // Akun Mahasiswa
+    Route::prefix('menu/master-data/akun-mahasiswa')->middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::get('/', [MahasiswaController::class, 'index'])->name('admin.mahasiswa');
     Route::get('/tambah', [MahasiswaController::class, 'create'])->name('admin.tambah-mahasiswa');
     Route::post('/simpan', [MahasiswaController::class, 'store'])->name('admin.mahasiswa.store');  // ✅ Route untuk simpan

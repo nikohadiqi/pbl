@@ -9,9 +9,9 @@ return new class extends Migration {
     {
         Schema::create('estimasi_waktu', function (Blueprint $table) {
             $table->id();
-            
+
             // Relasi ke tabel tim PBL dan mahasiswa
-            $table->foreignId('timpbl_id')->constrained('timpbl')->onDelete('cascade');
+            // $table->foreignId('timpbl_id')->constrained('timpbl')->onDelete('cascade');
             $table->foreignId('rencana_proyek_id')->constrained('rencana_proyek')->onDelete('cascade');
 
             $table->string('proses')->nullable();

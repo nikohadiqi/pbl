@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Website\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\MataKuliah;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class MataKuliahController extends Controller
 {
@@ -36,7 +37,9 @@ class MataKuliahController extends Controller
             'tujuan' => $request->tujuan,
         ]);
 
-        return redirect()->route('admin.matkul')->with('success', 'Mata Kuliah berhasil ditambahkan.');
+        // Menampilkan SweetAlert
+        Alert::success('Berhasil!', 'Data Mata Kuliah berhasil Ditambahkan!');
+        return redirect()->route('admin.matkul');
     }
 
     // **Tampilkan Form Edit**
@@ -62,7 +65,9 @@ class MataKuliahController extends Controller
             'tujuan' => $request->tujuan,
         ]);
 
-        return redirect()->route('admin.matkul')->with('success', 'Mata Kuliah berhasil diperbarui!');
+        // Menampilkan SweetAlert
+        Alert::success('Berhasil!', 'Data Mata Kuliah berhasil Diperbarui!');
+        return redirect()->route('admin.matkul');
     }
 
     // **Hapus Mata Kuliah**
@@ -71,6 +76,8 @@ class MataKuliahController extends Controller
         $matkul = MataKuliah::findOrFail($id);
         $matkul->delete();
 
-        return redirect()->route('admin.matkul')->with('success', 'Mata Kuliah berhasil dihapus!');
+        // Menampilkan SweetAlert
+        Alert::success('Berhasil!', 'Data Mata Kuliah berhasil Dihapus!');
+        return redirect()->route('admin.matkul');
     }
 }

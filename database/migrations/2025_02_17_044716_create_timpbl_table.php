@@ -12,10 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('timpbl', function (Blueprint $table) {
-            $table->id();
-            $table->string('id_tim');
-            $table->string('code_tim');
-            $table->foreignId('ketua_tim');
+            $table->string('id_tim')->primary();
+            $table->string('ketua_tim');
+            $table->string('periode_id');
             $table->timestamps();
         });
     }
