@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Website\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\Mahasiswa;
 use App\Models\PeriodePBL;
 use App\Models\TimPBL;
+use App\Models\User;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class TimPBLController extends Controller
@@ -42,18 +44,32 @@ class TimPBLController extends Controller
             'ketua_tim' => 'required|exists:mahasiswa,nim',
             'periode_id' => 'required',
         ]);
-
+    
+        // Simpan TimPBL
         TimPBL::create([
             'id_tim' => $request->id_tim,
             'ketua_tim' => $request->ketua_tim,
             'periode_id' => $request->periode_id,
         ]);
-
+    
+        // Cek apakah user dengan nim ini sudah ada
+        $existingUser = User::where('nim', $request->ketua_tim)->first();
+    
+        if (!$existingUser) {
+            // Buat akun baru untuk mahasiswa
+            User::create([
+                'nim' => $request->ketua_tim,
+                'password' => Hash::make($request->ketua_tim), // password = nim
+                'role' => 'mahasiswa',
+            ]);
+        }
+    
         // Menampilkan SweetAlert
-        Alert::success('Berhasil!', 'Data Tim berhasil Ditambahkan!');
-
+        Alert::success('Berhasil!', 'Data Tim dan User Mahasiswa berhasil Ditambahkan!');
+    
         return redirect()->route('admin.timpbl');
     }
+    
 
     /**
      * Menampilkan halaman edit Tim PBL
