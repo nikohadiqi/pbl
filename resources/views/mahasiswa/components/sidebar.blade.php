@@ -30,9 +30,9 @@
             </li>
             {{-- Semester 4 --}}
             <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('mahasiswa.rpp.sem4') ? 'active' : '' }}"
+                <a class="nav-link {{ request()->routeIs('mahasiswa.rpp.rencana-proyek.create') ? 'active' : '' }}"
                     data-bs-toggle="collapse" href="#semester4" role="button"
-                    aria-expanded="{{ request()->routeIs('mahasiswa.rpp.sem4') ? 'true' : 'false' }}"
+                    aria-expanded="{{ request()->routeIs('mahasiswa.rpp.rencana-proyek.create') ? 'true' : 'false' }}"
                     aria-controls="semester4">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -40,12 +40,12 @@
                     </div>
                     <span class="nav-link-text ms-1">Semester 4</span>
                 </a>
-                <div class="collapse {{ request()->routeIs('mahasiswa.rpp.sem4') ? 'show' : '' }}"
+                <div class="collapse {{ request()->routeIs('mahasiswa.rpp.rencana-proyek.create') ? 'show' : '' }}"
                     id="semester4">
                     <ul class="nav flex-column ms-4">
                         <li class="nav-item mt-2">
-                            <a class="nav-link {{ request()->routeIs('mahasiswa.rpp.sem4') ? 'active' : '' }}"
-                                href="{{ route('mahasiswa.rpp.sem4') }}">
+                            <a class="nav-link {{ request()->routeIs('mahasiswa.rpp.rencana-proyek.create') ? 'active' : '' }}"
+                                href="{{ route('mahasiswa.rpp.rencana-proyek.create') }}">
                                 Rencana Pelaksanaan Proyek
                             </a>
                         </li>

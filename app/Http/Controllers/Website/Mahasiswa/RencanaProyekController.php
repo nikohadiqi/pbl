@@ -8,109 +8,47 @@ use App\Models\RencanaProyek;
 
 class RencanaProyekController extends Controller
 {
-    /**
-     * Display the rencana proyek form with existing data if any.
-     */
-    public function index()
-    {
-        $rencanaProyek = RencanaProyek::first();
-        return view('mahasiswa.semester.rpp.rencana-proyek', compact('rencanaProyek'));
+    public function create() {
+        $rencanaProyek = RencanaProyek::all(); // or fetch existing record if necessary
+        return view('mahasiswa.semester4.rpp.rencana-proyek', compact('rencanaProyek'));
     }
 
-    /**
-     * Show the form for creating or editing the rencana proyek.
-     */
-    public function showForm()
-    {
-        $rencanaProyek = RencanaProyek::first();
-        return view('mahasiswa.semester.rpp.rencana-proyek', compact('rencanaProyek'));
-    }
-
-    /**
-     * Store a newly created rencana proyek in storage.
-     */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'id_proyek'        => 'nullable|string|max:255',
-            'judul_proyek'     => 'nullable|string|max:255',
-            'pengusul_proyek'  => 'nullable|string|max:255',
-            'manajer_proyek'   => 'nullable|string|max:255',
-            'luaran'           => 'nullable|string',
-            'sponsor'          => 'nullable|string',
-            'biaya'            => 'nullable|numeric',
-            'klien'            => 'nullable|string|max:255',
-            'waktu'            => 'nullable|string|max:255',
-            'ruang_lingkup'    => 'nullable|string',
-            'rancangan_sistem' => 'nullable|string',
-            'minggu'           => 'nullable|integer',
-            'tahapan'          => 'nullable|string|max:255',
-            'pic'              => 'nullable|string|max:255',
-            'keterangan'       => 'nullable|string',
-            'proses'           => 'nullable|string|max:255',
-            'peralatan'        => 'nullable|string|max:255',
-            'bahan'            => 'nullable|string|max:255',
-            'tantangan'        => 'nullable|string|max:255',
-            'level'            => 'nullable|string|max:255',
-            'rencana_tindakan' => 'nullable|string',
-            'catatan'          => 'nullable|string',
-            'uraian_pekerjaan' => 'nullable|string',
-            'perkiraan_biaya'  => 'nullable|numeric',
-            'estimasi'         => 'nullable|string|max:255',
-            'nama'             => 'nullable|string|max:255',
-            'nim'              => 'nullable|string|max:255',
-            'program_studi'    => 'nullable|string|max:255',
-        ]);
+        $this->validateRequest($request);
 
-        $rencanaProyek = RencanaProyek::create($validated);
+        RencanaProyek::create($request->all());
 
-        return redirect()->route('rencana-proyek.index')->with('success', 'Rencana Proyek berhasil disimpan.');
+        return redirect()->back()->with('success', 'Rencana proyek berhasil disimpan.');
     }
 
-    /**
-     * Update the specified rencana proyek in storage.
-     */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id_proyek)
     {
-        $rencanaProyek = RencanaProyek::find($id);
+        $this->validateRequest($request);
 
-        if (!$rencanaProyek) {
-            return redirect()->route('rencana-proyek.index')->with('error', 'Rencana Proyek tidak ditemukan.');
-        }
+        $rencanaProyek = RencanaProyek::findOrFail($id_proyek);
+        $rencanaProyek->update($request->all());
 
-        $validated = $request->validate([
-            'id_proyek'        => 'nullable|string|max:255',
-            'judul_proyek'     => 'nullable|string|max:255',
-            'pengusul_proyek'  => 'nullable|string|max:255',
-            'manajer_proyek'   => 'nullable|string|max:255',
-            'luaran'           => 'nullable|string',
-            'sponsor'          => 'nullable|string',
-            'biaya'            => 'nullable|numeric',
-            'klien'            => 'nullable|string|max:255',
-            'waktu'            => 'nullable|string|max:255',
-            'ruang_lingkup'    => 'nullable|string',
-            'rancangan_sistem' => 'nullable|string',
-            'minggu'           => 'nullable|integer',
-            'tahapan'          => 'nullable|string|max:255',
-            'pic'              => 'nullable|string|max:255',
-            'keterangan'       => 'nullable|string',
-            'proses'           => 'nullable|string|max:255',
-            'peralatan'        => 'nullable|string|max:255',
-            'bahan'            => 'nullable|string|max:255',
-            'tantangan'        => 'nullable|string|max:255',
-            'level'            => 'nullable|string|max:255',
-            'rencana_tindakan' => 'nullable|string',
-            'catatan'          => 'nullable|string',
-            'uraian_pekerjaan' => 'nullable|string',
-            'perkiraan_biaya'  => 'nullable|numeric',
-            'estimasi'         => 'nullable|string|max:255',
-            'nama'             => 'nullable|string|max:255',
-            'nim'              => 'nullable|string|max:255',
-            'program_studi'    => 'nullable|string|max:255',
+        return redirect()->back()->with('success', 'Rencana proyek berhasil diperbarui.');
+    }
+
+    private function validateRequest(Request $request)
+    {
+        $request->validate([
+            'id_proyek'            => 'required|string|max:255',
+            'judul_proyek'         => 'required|string',
+            'pengusul_proyek'      => 'required|string',
+            'luaran'               => 'required|string',
+            'sponsor'              => 'required|string',
+            'rancangan_sistem'     => 'required|string',
+            'tahapan_pelaksanaan'  => 'required|string',
+            'kebutuhan_peralatan'  => 'required|string',
+            'tantangan'            => 'required|string',
+            'waktu'                => 'required|string',
+            'ruang_lingkup'        => 'required|string',
+            'klien'                => 'required|string',
+            'biaya'                => 'required|string',
+            'biaya_proyek'         => 'required|string',
         ]);
-
-        $rencanaProyek->update($validated);
-
-        return redirect()->route('rencana-proyek.index')->with('success', 'Rencana Proyek berhasil diperbarui.');
     }
 }

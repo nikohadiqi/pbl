@@ -116,11 +116,20 @@ Route::prefix('mahasiswa')->middleware(['auth:sanctum'])->group(function () {
     })->name('mahasiswa.dashboard');
 
     // Tahapan Pelaksanaan Proyek
-    Route::prefix('menu/semester-4')->group(function () {
-        // RPP
-        Route::get('/rpp', [RencanaProyekController::class, 'showForm'])->name('mahasiswa.rpp.sem4');
+//     Route::prefix('menu/mahasiswa/semester4/rpp/rencana-proyek')->middleware(['auth:sanctum', 'mahasiswa'])->group(function () {
+//         Route::get('/', [RencanaProyekController::class, 'create'])->name('mahasiswa.rpp.rencana-proyek.create');
+//         Route::post('/', [RencanaProyekController::class, 'store'])->name('mahasiswa.rpp.rencana-proyek.store');
+//         Route::put('/{id}', [RencanaProyekController::class, 'update'])->name('mahasiswa.rpp.rencana-proyek.update');
+// });
+    
+    // Tahapan Pelaksanaan Proyek
+    Route::resource('menu/mahasiswa/semester4/rpp/rencana-proyek', RencanaProyekController::class)->names([
+        'create' => 'mahasiswa.rpp.rencana-proyek.create',
+        'store' => 'mahasiswa.rpp.rencana-proyek.store',
+        'update' => 'mahasiswa.rpp.rencana-proyek.update'
+    ]);
+
+
         // Logbook
         // Pelaporan
-    });
-
-});
+ });

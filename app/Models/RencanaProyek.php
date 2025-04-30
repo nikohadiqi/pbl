@@ -11,11 +11,9 @@ class RencanaProyek extends Model
 
     protected $table = 'rencana_proyek';
 
-    public $incrementing = false; // Since id_proyek is string and nullable, no auto-increment
-
-    protected $primaryKey = null; // No primary key defined in migration
-
-    public $timestamps = false; // No timestamps columns in migration
+    protected $primaryKey = 'id_proyek';
+    public $incrementing = false; // Karena id_tim bukan auto-increment
+    protected $keyType = 'string'; // Karena id_tim bertipe string
 
     protected $fillable = [
         'id_proyek',
@@ -29,22 +27,11 @@ class RencanaProyek extends Model
         'waktu',
         'ruang_lingkup',
         'rancangan_sistem',
-        'minggu',
-        'tahapan',
-        'pic',
-        'keterangan',
-        'proses',
-        'peralatan',
-        'bahan',
+        'tahapan_pelaksanaan',
+        'kebutuhan_peralatan',
         'tantangan',
-        'level',
-        'rencana_tindakan',
-        'catatan',
-        'uraian_pekerjaan',
-        'perkiraan_biaya',
         'estimasi',
-        'nama',
-        'nim',
-        'program_studi',
+        'biaya_proyek',
+        'tim_proyek',
     ];
 }
