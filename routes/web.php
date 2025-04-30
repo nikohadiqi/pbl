@@ -10,6 +10,7 @@ use App\Http\Controllers\Website\Admin\PeriodePBLController;
 use App\Http\Controllers\Website\Admin\TPP4Controller;
 use App\Http\Controllers\Website\Admin\TPP5Controller;
 use App\Http\Controllers\Website\Admin\TimPBLController;
+use App\Http\Controllers\Website\Mahasiswa\RencanaProyekController;
 
 // use App\Http\Controllers\Auth\DashboardController;
 /*
@@ -117,7 +118,7 @@ Route::prefix('mahasiswa')->middleware(['auth:sanctum'])->group(function () {
     // Tahapan Pelaksanaan Proyek
     Route::prefix('menu/semester-4')->group(function () {
         // RPP
-        Route::view('/rpp', 'mahasiswa.semester4.rpp.rencana-proyek')->name('mahasiswa.rpp.sem4');
+        Route::get('/rpp', [RencanaProyekController::class, 'showForm'])->name('mahasiswa.rpp.sem4');
         // Logbook
         // Pelaporan
     });

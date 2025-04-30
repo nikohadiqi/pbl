@@ -1,42 +1,38 @@
 <?php
 
-namespace App\Http\Controllers\Mahasiswa;
+namespace App\Http\Controllers\Website\Mahasiswa;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\RencanaProyek;
-use App\Models\TimPBL; // Pastikan model TimPBL diimpor
 
 class RencanaProyekController extends Controller
 {
     /**
-     * Tampilkan semua rencana proyek yang hanya milik tim mahasiswa yang login.
+     * Display the rencana proyek form with existing data if any.
      */
-    public function index(Request $request)
+    public function index()
     {
-        $userId = $request->user()->id;
-
-        // Cari tim di mana mahasiswa yang login adalah ketua atau anggota.
-        $team = TimPBL::whereJsonContains('anggota_tim', $userId)
-            ->orWhere('ketua_tim', $userId)
-            ->first();
-
-        if (!$team) {
-            return response()->json(['message' => 'Tim PBL tidak ditemukan untuk mahasiswa ini'], 404);
-        }
-
-        // Ambil semua rencana proyek yang terkait dengan tim tersebut.
-        $data = RencanaProyek::where('timpbl_id', $team->id)->get();
-        return response()->json($data);
+        $rencanaProyek = RencanaProyek::first();
+        return view('mahasiswa.semester.rpp.rencana-proyek', compact('rencanaProyek'));
     }
 
     /**
-     * Tambah data rencana proyek baru.
+     * Show the form for creating or editing the rencana proyek.
+     */
+    public function showForm()
+    {
+        $rencanaProyek = RencanaProyek::first();
+        return view('mahasiswa.semester.rpp.rencana-proyek', compact('rencanaProyek'));
+    }
+
+    /**
+     * Store a newly created rencana proyek in storage.
      */
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'timpbl_id'        => 'required|exists:timpbl,id',
+            'id_proyek'        => 'nullable|string|max:255',
             'judul_proyek'     => 'nullable|string|max:255',
             'pengusul_proyek'  => 'nullable|string|max:255',
             'manajer_proyek'   => 'nullable|string|max:255',
@@ -47,47 +43,43 @@ class RencanaProyekController extends Controller
             'waktu'            => 'nullable|string|max:255',
             'ruang_lingkup'    => 'nullable|string',
             'rancangan_sistem' => 'nullable|string',
+            'minggu'           => 'nullable|integer',
+            'tahapan'          => 'nullable|string|max:255',
+            'pic'              => 'nullable|string|max:255',
+            'keterangan'       => 'nullable|string',
+            'proses'           => 'nullable|string|max:255',
+            'peralatan'        => 'nullable|string|max:255',
+            'bahan'            => 'nullable|string|max:255',
+            'tantangan'        => 'nullable|string|max:255',
+            'level'            => 'nullable|string|max:255',
+            'rencana_tindakan' => 'nullable|string',
+            'catatan'          => 'nullable|string',
+            'uraian_pekerjaan' => 'nullable|string',
+            'perkiraan_biaya'  => 'nullable|numeric',
+            'estimasi'         => 'nullable|string|max:255',
+            'nama'             => 'nullable|string|max:255',
+            'nim'              => 'nullable|string|max:255',
+            'program_studi'    => 'nullable|string|max:255',
         ]);
 
-        // Pastikan bahwa rencana proyek yang ditambahkan adalah milik tim mahasiswa yang login
-        $validated['mahasiswa_id'] = $request->user()->id;
+        $rencanaProyek = RencanaProyek::create($validated);
 
-        $data = RencanaProyek::create($validated);
-
-        return response()->json([
-            'message' => 'Rencana Proyek berhasil ditambahkan',
-            'data'    => $data
-        ], 201);
+        return redirect()->route('rencana-proyek.index')->with('success', 'Rencana Proyek berhasil disimpan.');
     }
 
     /**
-     * Tampilkan detail rencana proyek berdasarkan ID (hanya jika dimiliki oleh tim mahasiswa yang login).
-     */
-    public function show(Request $request, $id)
-    {
-        $data = RencanaProyek::where('id', $id)
-                              ->where('mahasiswa_id', $request->user()->id)
-                              ->first();
-        if (!$data) {
-            return response()->json(['message' => 'Rencana Proyek tidak ditemukan'], 404);
-        }
-        return response()->json($data);
-    }
-
-    /**
-     * Update data rencana proyek berdasarkan ID (hanya jika dimiliki oleh mahasiswa yang login).
+     * Update the specified rencana proyek in storage.
      */
     public function update(Request $request, $id)
     {
-        $data = RencanaProyek::where('id', $id)
-                              ->where('mahasiswa_id', $request->user()->id)
-                              ->first();
-        if (!$data) {
-            return response()->json(['message' => 'Rencana Proyek tidak ditemukan'], 404);
+        $rencanaProyek = RencanaProyek::find($id);
+
+        if (!$rencanaProyek) {
+            return redirect()->route('rencana-proyek.index')->with('error', 'Rencana Proyek tidak ditemukan.');
         }
 
         $validated = $request->validate([
-            'timpbl_id'        => 'sometimes|exists:timpbl,id',
+            'id_proyek'        => 'nullable|string|max:255',
             'judul_proyek'     => 'nullable|string|max:255',
             'pengusul_proyek'  => 'nullable|string|max:255',
             'manajer_proyek'   => 'nullable|string|max:255',
@@ -98,44 +90,27 @@ class RencanaProyekController extends Controller
             'waktu'            => 'nullable|string|max:255',
             'ruang_lingkup'    => 'nullable|string',
             'rancangan_sistem' => 'nullable|string',
+            'minggu'           => 'nullable|integer',
+            'tahapan'          => 'nullable|string|max:255',
+            'pic'              => 'nullable|string|max:255',
+            'keterangan'       => 'nullable|string',
+            'proses'           => 'nullable|string|max:255',
+            'peralatan'        => 'nullable|string|max:255',
+            'bahan'            => 'nullable|string|max:255',
+            'tantangan'        => 'nullable|string|max:255',
+            'level'            => 'nullable|string|max:255',
+            'rencana_tindakan' => 'nullable|string',
+            'catatan'          => 'nullable|string',
+            'uraian_pekerjaan' => 'nullable|string',
+            'perkiraan_biaya'  => 'nullable|numeric',
+            'estimasi'         => 'nullable|string|max:255',
+            'nama'             => 'nullable|string|max:255',
+            'nim'              => 'nullable|string|max:255',
+            'program_studi'    => 'nullable|string|max:255',
         ]);
 
-        $data->update($validated);
+        $rencanaProyek->update($validated);
 
-        return response()->json([
-            'message' => 'Rencana Proyek berhasil diperbarui',
-            'data'    => $data
-        ]);
-    }
-
-    /**
-     * Hapus data rencana proyek berdasarkan ID (hanya jika dimiliki oleh mahasiswa yang login).
-     */
-    public function destroy(Request $request, $id)
-    {
-        $data = RencanaProyek::where('id', $id)
-                              ->where('mahasiswa_id', $request->user()->id)
-                              ->first();
-        if (!$data) {
-            return response()->json(['message' => 'Rencana Proyek tidak ditemukan'], 404);
-        }
-        $data->delete();
-        return response()->json(['message' => 'Rencana Proyek berhasil dihapus']);
-    }
-
-    /**
-     * Bulk Delete: Hapus banyak rencana proyek (hanya data yang dimiliki oleh mahasiswa yang login).
-     */
-    public function bulkDelete(Request $request)
-    {
-        $validated = $request->validate([
-            'ids'   => 'required|array',
-            'ids.*' => 'integer|exists:rencana_proyek,id'
-        ]);
-
-        RencanaProyek::whereIn('id', $validated['ids'])
-                     ->where('mahasiswa_id', $request->user()->id)
-                     ->delete();
-        return response()->json(['message' => 'Rencana Proyek berhasil dihapus secara massal']);
+        return redirect()->route('rencana-proyek.index')->with('success', 'Rencana Proyek berhasil diperbarui.');
     }
 }
