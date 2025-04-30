@@ -32,22 +32,46 @@
                             <label>Nomor ID Proyek</label>
                             <input type="text" class="form-control" value="3A_1" readonly>
                         </div>
-                        <div class="form-group"><label>Judul Proyek PBL</label><input type="text" class="form-control"
-                                placeholder="Masukan Judul Proyek PBL"></div>
-                        <div class="form-group"><label>Pengusul Proyek</label><input type="text" class="form-control"
-                                placeholder="Masukan Pengusul Proyek"></div>
-                        <div class="form-group"><label>Manajer Proyek</label><input type="text" class="form-control"
-                                placeholder="Masukan Nama Manajer Proyek"></div>
-                        <div class="form-group"><label>Luaran</label><input type="text" class="form-control"
-                                placeholder="Masukan Luaran Proyek PBL"></div>
-                        <div class="form-group"><label>Sponsor</label><input type="text" class="form-control"
-                                placeholder="Masukan Sponsor dari Proyek PBL"></div>
-                        <div class="form-group"><label>Biaya</label><input type="text" class="form-control"
-                                placeholder="Masukan Biaya Proyek PBL"></div>
-                        <div class="form-group"><label>Klien/Pelanggan</label><input type="text" class="form-control"
-                                placeholder="Masukan Klien dari Proyek PBL"></div>
-                        <div class="form-group"><label>Waktu</label><input type="text" class="form-control"
-                                placeholder="Masukan Waktu Pelaksanaan Proyek PBL"></div>
+                        <div class="form-group d-flex justify-content-between">
+                            <div class="w-50 me-3">
+                                <label>Judul Proyek PBL</label>
+                                <input type="text" class="form-control" placeholder="Masukan Judul Proyek PBL">
+                            </div>
+                            <div class="w-50">
+                                <label>Pengusul Proyek</label>
+                                <input type="text" class="form-control" placeholder="Masukan Pengusul Proyek">
+                            </div>
+                        </div>
+                        <div class="form-group d-flex justify-content-between">
+                            <div class="w-50 me-3">
+                                <div class="form-group"><label>Manajer Proyek</label><input type="text" class="form-control"
+                                    placeholder="Masukan Nama Manajer Proyek"></div>
+                            </div>
+                            <div class="w-50">
+                                <div class="form-group"><label>Luaran</label><input type="text" class="form-control"
+                                    placeholder="Masukan Luaran Proyek PBL"></div>
+                            </div>
+                        </div>
+                        <div class="form-group d-flex justify-content-between">
+                            <div class="w-50 me-3">
+                                <div class="form-group"><label>Sponsor</label><input type="text" class="form-control"
+                                    placeholder="Masukan Sponsor dari Proyek PBL"></div>
+                            </div>
+                            <div class="w-50">
+                                <div class="form-group"><label>Biaya</label><input type="text" class="form-control"
+                                    placeholder="Masukan Biaya Proyek PBL"></div>
+                            </div>
+                        </div>
+                        <div class="form-group d-flex justify-content-between">
+                            <div class="w-50 me-3">
+                                <div class="form-group"><label>Klien/Pelanggan</label><input type="text" class="form-control"
+                                    placeholder="Masukan Klien dari Proyek PBL"></div>
+                            </div>
+                            <div class="w-50">
+                                <div class="form-group"><label>Waktu</label><input type="text" class="form-control"
+                                    placeholder="Masukan Waktu Pelaksanaan Proyek PBL"></div>
+                            </div>
+                        </div>
                         <div class="d-flex justify-content-end">
                             <button type="button" class="btn btn-primary me-2">Simpan</button>
                             <button type="button" class="btn btn-next btn-secondary"
