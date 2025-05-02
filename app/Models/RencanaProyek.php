@@ -27,11 +27,18 @@ class RencanaProyek extends Model
         'waktu',
         'ruang_lingkup',
         'rancangan_sistem',
-        'tahapan_pelaksanaan',
-        'kebutuhan_peralatan',
         'tantangan',
         'estimasi',
         'biaya_proyek',
         'tim_proyek',
     ];
+    public function tahapanPelaksanaan()
+{
+    return $this->hasMany(TahapanPelaksanaan::class);
+}
+
+public function kebutuhanPeralatan()
+{
+    return $this->hasMany(KebutuhanPeralatan::class);
+}
 }

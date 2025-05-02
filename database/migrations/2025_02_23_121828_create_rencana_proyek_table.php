@@ -19,8 +19,6 @@ return new class extends Migration {
             $table->string('waktu')->nullable();
             $table->string('ruang_lingkup')->nullable();
             $table->string('rancangan_sistem')->nullable();
-            $table->string('tahapan_pelaksanaan')->nullable();
-            $table->string('kebutuhan_peralatan')->nullable();
             $table->string('tantangan')->nullable();
             $table->string('estimasi')->nullable();
             $table->string('biaya_proyek')->nullable();
