@@ -1,12 +1,12 @@
 @extends('layouts.dashboardadmin-template')
 
-@section('title', 'Tambah Akun Mahasiswa | Sistem Informasi dan Monitoring Project Based Learning')
-
+@section('title', 'Tambah Data Mahasiswa | Sistem Informasi dan Monitoring Project Based Learning')
+@section('page-title', 'Tambah Data Mahasiswa')
 @section('content')
 <div class="container-fluid py-4">
     <div class="card p-4">
         <div class="d-flex justify-content-between align-items-center">
-            <h5 class="fw-bold">Tambah Akun Mahasiswa</h5>
+            <h5 class="fw-bold">Tambah Data Mahasiswa</h5>
         </div>
         <p class="text-sm">Sistem Informasi dan Monitoring Project Based Learning - TRPL Poliwangi</p>
 
@@ -39,14 +39,28 @@
                 <input id="nama" class="form-control" name="nama" placeholder="Masukkan Nama Mahasiswa" type="text" required value="{{ old('nama') }}">
             </div>
 
+            {{-- Ambil Data Kelas --}}
             <div class="form-group">
-                <label for="kelas" class="form-control-label">Kelas</label>
-                <input id="kelas" class="form-control" name="kelas" placeholder="Masukkan Kelas" type="text" required value="{{ old('kelas') }}">
+                <label for="kelas">Kelas</label>
+                <select class="form-control" id="kelas" name="kelas">
+                    <option value="" disabled selected hidden>Pilih Kelas</option>
+                    @foreach($kelas as $kelas)
+                    <option value="{{ $kelas->kelas }}">{{ $kelas->kelas }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="program_studi">Program Studi</label>
+                <select class="form-control" id="program_studi" name="program_studi">
+                    <option value="" disabled selected hidden>Pilih Program Studi</option>
+                    <option value="Teknologi Rekayasa Perangkat Lunak">Teknologi Rekayasa Perangkat Lunak</option>
+                </select>
             </div>
 
             <div class="form-group mt-4">
-                <button type="submit" class="btn btn-primary me-2">Simpan Data</button>
-                <button type="reset" class="btn btn-danger">Reset Data</button>
+                <button type="submit" class="btn btn-primary me-2">Simpan</button>
+                <button type="reset" class="btn btn-danger">Reset</button>
             </div>
         </form>
     </div>

@@ -14,11 +14,16 @@ return new class extends Migration
         Schema::create('mahasiswa', function (Blueprint $table) {
             $table->string('nim')->primary();
             $table->string('nama');
+            $table->string('program_studi');
+            $table->string('dosen_wali')->nullable();
+            $table->string('status')->nullable();
+            $table->string('jenis_kelamin')->nullable();
             $table->string('kelas');
+            $table->string('angkatan')->nullable();
             $table->timestamps();
         });
     }
-    
+
     /**
      * Reverse the migrations.
      */

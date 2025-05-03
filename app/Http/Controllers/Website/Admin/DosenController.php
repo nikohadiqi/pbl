@@ -13,22 +13,27 @@ class DosenController extends Controller
     public function index()
     {
         $dosen = Dosen::all();
-        return view('admin.akun-dosen.dosen', compact('dosen'));
+        return view('admin.dosen.dosen', compact('dosen'));
     }
 
     // Menampilkan form tambah dosen
     public function create()
     {
-        return view('admin.akun-dosen.tambah-dosen');
+        return view('admin.dosen.tambah-dosen');
     }
 
     // Menyimpan data dosen
     public function store(Request $request)
     {
         $request->validate([
-            'nip' => 'required|unique:dosen,nip|max:20',
-            'nama' => 'required|string|max:100',
-            'no_telp' => 'nullable|string|max:15'
+            'nip'            => 'required|unique:dosen,nip|max:50',
+            'nama'           => 'required|string|max:100',
+            'no_telp'        => 'required|string|max:15',
+            'email'          => 'required|email',
+            'prodi'          => 'required|string|max:100',
+            'jurusan'        => 'required|string|max:100',
+            'jenis_kelamin'  => 'nullable|in:L,P',
+            'status_dosen'   => 'nullable|string|max:50',
         ]);
 
         Dosen::create($request->all());
@@ -38,35 +43,37 @@ class DosenController extends Controller
         return redirect()->route('admin.dosen');
     }
 
-    public function edit($id)
+    public function edit($nip)
 {
-    $dosen = Dosen::findOrFail($id);
-    return view('admin.akun-dosen.edit-dosen', compact('dosen')); // Perbaiki path view
+    $dosen = Dosen::findOrFail($nip);
+    return view('admin.dosen.edit-dosen', compact('dosen')); // Perbaiki path view
 }
 
-public function update(Request $request, $id)
+public function update(Request $request, $nip)
 {
+    $dosen = Dosen::findOrFail($nip);
+
     $request->validate([
-        'nip' => 'required|string|max:255',
-        'nama' => 'required|string|max:255',
-        'no_telp' => 'nullable|string|max:15',
+        'nip'            => 'required|string|max:50|unique:dosen,nip,' . $nip . ',nip',
+        'nama'           => 'required|string|max:100',
+        'no_telp'        => 'required|string|max:15',
+        'email'          => 'required|email',
+        'prodi'          => 'required|string|max:100',
+        'jurusan'        => 'required|string|max:100',
+        'jenis_kelamin'  => 'nullable|in:L,P',
+        'status_dosen'   => 'nullable|string|max:50',
     ]);
 
-    $dosen = Dosen::findOrFail($id);
-    $dosen->update([
-        'nip' => $request->nip,
-        'nama' => $request->nama,
-        'no_telp' => $request->no_telp,
-    ]);
+    $dosen->update($request->all());
 
     // Menampilkan SweetAlert
     Alert::success('Berhasil!', 'Data Dosen berhasil Diperbarui!');
     return redirect()->route('admin.dosen');
 }
     // Menghapus data dosen
-    public function destroy($id)
+    public function destroy($nip)
     {
-        $dosen = Dosen::findOrFail($id);
+        $dosen = Dosen::findOrFail($nip);
         $dosen->delete();
 
         // Menampilkan SweetAlert

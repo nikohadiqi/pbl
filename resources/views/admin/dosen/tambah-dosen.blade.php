@@ -1,12 +1,12 @@
 @extends('layouts.dashboardadmin-template')
 
-@section('title', 'Tambah Akun Dosen | Sistem Informasi dan Monitoring Project Based Learning')
-
+@section('title', 'Tambah Data Dosen | Sistem Informasi dan Monitoring Project Based Learning')
+@section('page-title', 'Tambah Data Dosen')
 @section('content')
 <div class="container-fluid py-4">
     <div class="card p-4">
         <div class="d-flex justify-content-between align-items-center">
-            <h5 class="fw-bold">Tambah Akun Dosen</h5>
+            <h5 class="fw-bold">Tambah Data Dosen</h5>
         </div>
         <p class="text-sm">Sistem Informasi dan Monitoring Project Based Learning - TRPL Poliwangi</p>
 
@@ -31,7 +31,7 @@
             @csrf
             <div class="form-group">
                 <label for="nip" class="form-control-label">NIP/NIK/NIPPPK</label>
-                <input class="form-control" name="nip" placeholder="Masukkan NIP/NIK/NIPPPK" type="text" required value="{{ old('nip') }}">
+                <input class="form-control" name="nip" placeholder="Masukkan NIP/NIK/NIPPPK" type="number" required value="{{ old('nip') }}">
             </div>
             <div class="form-group">
                 <label for="nama" class="form-control-label">Nama Dosen</label>
@@ -39,11 +39,27 @@
             </div>
             <div class="form-group">
                 <label for="no_telp" class="form-control-label">Nomor Telephone</label>
-                <input class="form-control" name="no_telp" placeholder="Masukkan Nomor Telephone" type="text" value="{{ old('no_telp') }}">
+                <input class="form-control" name="no_telp" placeholder="Masukkan Nomor Telephone" type="number" value="{{ old('no_telp') }}">
+            </div>
+            <div class="form-group">
+                <label for="email" class="form-control-label">Email</label>
+                <input class="form-control" name="email" placeholder="Masukkan Email" type="email" value="{{ old('email') }}">
+            </div>
+            <div class="form-group">
+                <label for="prodi">Program Studi</label>
+                <select class="form-control" id="prodi" name="prodi">
+                    <option value="" disabled selected hidden>Pilih Program Studi</option>
+                    <option value="Teknologi Rekayasa Perangkat Lunak">Teknologi Rekayasa Perangkat Lunak</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="jurusan">Jurusan</label>
+                <input class="form-control" value="Bisnis dan Informatika" type="text" disabled>
+                <input type="hidden" name="jurusan" value="Bisnis dan Informatika">
             </div>
             <div class="form-group mt-4">
-                <button type="submit" class="btn btn-primary me-2">Simpan Data</button>
-                <button type="reset" class="btn btn-danger">Reset Data</button>
+                <button type="submit" class="btn btn-primary me-2">Simpan</button>
+                <button type="reset" class="btn btn-danger">Reset</button>
             </div>
         </form>
     </div>

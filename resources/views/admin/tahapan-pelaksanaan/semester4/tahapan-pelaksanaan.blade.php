@@ -1,7 +1,7 @@
 @extends('layouts.dashboardadmin-template')
 
-@section('title', 'Tahapan Pelaksanaan Semester 4')
-
+@section('title', 'Tahapan Pelaksanaan Semester 4 | Sistem Informasi dan Monitoring Project Based Learning')
+@section('page-title', 'Tahapan Pelaksanaan Semester 4')
 @section('content')
 <div class="container-fluid py-4">
     <div class="card p-4">
@@ -14,7 +14,7 @@
         <p class="text-sm">Daftar tahapan pelaksanaan proyek semester 4</p>
 
         <div class="table-responsive mt-2">
-            <table class="table table-hover">
+            <table class="table table-hover" id="datatable-search">
                 <thead class="table-light font-weight-bold">
                     <tr>
                         <th>No</th>
@@ -33,14 +33,14 @@
                         <td>{{ $item->score }}%</td>
                         <td>
                             <a href="{{ route('admin.edit-tahapanpelaksanaan-sem4', $item->id) }}" class="btn btn-sm btn-info text-white">
-                                <i class="bi bi-pencil-square"></i> Edit
+                                <i class="bi bi-pencil-square"></i>
                             </a>
 
                             <form action="{{ route('admin.tahapanpelaksanaan-sem4.delete', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus data ini?');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-danger">
-                                    <i class="bi bi-trash"></i> Hapus
+                                    <i class="bi bi-trash"></i>
                                 </button>
                             </form>
                         </td>

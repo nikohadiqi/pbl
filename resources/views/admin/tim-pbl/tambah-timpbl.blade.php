@@ -1,7 +1,7 @@
 @extends('layouts.dashboardadmin-template')
 
-@section('title', 'Tambah Tim PBL')
-
+@section('title', 'Tambah Tim PBL | Sistem Informasi dan Monitoring Project Based Learning')
+@section('page-title', 'Tambah Data Tim PBL')
 @section('content')
 <div class="container-fluid py-4">
     <div class="card p-4">
@@ -21,19 +21,16 @@
                 @enderror
             </div>
 
-            <!-- Ketua Tim (Search by NIM) -->
-            <div class="form-group mb-3">
-                <label for="ketua_tim">Ketua Tim</label>
-                <div class="input-group">
-                    <input type="text" class="form-control @error('ketua_tim') is-invalid @enderror"
-                           id="ketua_tim" name="ketua_tim" placeholder="Cari berdasarkan NIM..." required>
-                    <span class="input-group-text"><i class="bi bi-search"></i></span>
-                </div>
-                <!-- Display Data Pelanggan yang Ditemukan -->
-                <div id="info_ketua" class="mt-3"></div>
-                @error('ketua_tim')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
+            {{-- Cari Ketua Tim berdasarkan NIM/Nama --}}
+            <div class="form-group">
+                <label for="ketua_tim" class="form-control-label">Ketua Tim</label>
+                <select name="ketua_tim" class="form-control select2">
+                    <option value="" disabled selected hidden>Pilih Mahasiswa Sebagai Ketua Tim</option>
+                    @foreach($ketuaTim as $ketua)
+                        <option value="{{ $ketua->nim }}">{{ $ketua->nim }} - {{ $ketua->nama }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
 
             {{-- Periode PBL --}}
@@ -47,49 +44,43 @@
                 </select>
             </div>
 
+            {{-- Manpro --}}
+            <div class="form-group">
+                <label for="manpro">Manajer Proyek</label>
+                <select class="form-control" id="manpro" name="manpro">
+                    <option value="" disabled selected hidden>Pilih Manajer Proyek</option>
+                    @foreach($manpro as $dosen)
+                    <option value="{{ $dosen->nip }}">{{ $dosen->nama }}</option>
+                    @endforeach
+                </select>
+            </div>
+
             <div class="mt-3">
-                <button type="submit" class="btn btn-primary">Simpan Data</button>
-                <a href="{{ route('admin.timpbl') }}" class="btn btn-secondary">Batal</a>
+                <button type="submit" class="btn btn-primary">Simpan</button>
+                <button type="reset" class="btn btn-danger">Reset</button>
             </div>
         </form>
     </div>
 </div>
+@endsection
+
+@push('css')
+    <!-- Select2 Bootstrap 4 Theme jika belum dimuat -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+@endpush
+
 @push('script')
+<!-- jQuery (required by Select2) -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
     $(document).ready(function () {
-        let debounceTimer;
-
-        $('#ketua_tim').on('input', function () {
-            clearTimeout(debounceTimer);
-
-            let nim = $(this).val();
-
-            debounceTimer = setTimeout(function () {
-                if (nim.length >= 6) {
-                    $.ajax({
-                        url: "{{ route('admin.timpbl.cariKetua') }}",
-                        method: "GET",
-                        data: { nim: nim },
-                        success: function (response) {
-                            if (response.success) {
-                                $('#info_ketua').html(`
-                                    Nama Ketua: ${response.nama}<br>
-                                    Kelas: ${response.kelas}<br>
-                                    NIM: ${response.nim}
-                                `).fadeIn();
-                            } else {
-                                $('#info_ketua').fadeOut();
-                            }
-                        }
-                    });
-                } else {
-                    $('#info_ketua').fadeOut();
-                }
-            }, 1000); // tunggu 1 detik setelah berhenti mengetik
+        $('.select2').select2({
+            placeholder: 'Pilih Mahasiswa Sebagai Ketua Tim',
+            allowClear: true
         });
     });
 </script>
 @endpush
-@endsection
-

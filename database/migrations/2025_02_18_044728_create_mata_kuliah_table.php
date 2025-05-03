@@ -7,17 +7,19 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up()
     {
-        Schema::create('mata_kuliah', function (Blueprint $table) {
+        Schema::create('matakuliah', function (Blueprint $table) {
             $table->id();
+            $table->string('program_studi');
+            $table->string('kode');
             $table->string('matakuliah');
-            $table->text('capaian');
-            $table->text('tujuan');
+            $table->text('sks')->nullable();
+            $table->text('id_feeder')->nullable();
             $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('mata_kuliah');
+        Schema::dropIfExists('matakuliah');
     }
 };

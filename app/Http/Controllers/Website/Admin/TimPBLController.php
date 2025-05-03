@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Website\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Dosen;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\Mahasiswa;
@@ -21,8 +22,15 @@ class TimPBLController extends Controller
         $timPBL = TimPBL::all();
         $ketuaTim = Mahasiswa::all();
         $periode = PeriodePBL::all();
-        return view('admin.tim-pbl.timpbl', compact('timPBL', 'ketuaTim', 'periode'));
+        $manpro = Dosen::all();
+
+        // Ubah setiap nama tim menjadi base64 aman untuk digunakan di HTML ID
+        foreach ($timPBL as $item) {
+            $item->timPBL_encoded = base64_encode($item->timPBL);
+        }
+        return view('admin.tim-pbl.timpbl', compact('timPBL', 'ketuaTim', 'periode', 'manpro'));
     }
+
 
     /**
      * Menampilkan halaman tambah Tim PBL
@@ -31,7 +39,8 @@ class TimPBLController extends Controller
     {
         $periode = PeriodePBL::all();
         $ketuaTim = Mahasiswa::all();
-        return view('admin.tim-pbl.tambah-timpbl', compact('periode', 'ketuaTim')); // Pastikan file view ini ada di folder views/admin/tim-pbl/
+        $manpro = Dosen::all();
+        return view('admin.tim-pbl.tambah-timpbl', compact('periode', 'ketuaTim', 'manpro')); // Pastikan file view ini ada di folder views/admin/tim-pbl/
     }
 
     /**
@@ -43,18 +52,20 @@ class TimPBLController extends Controller
             'id_tim' => 'required|unique:timpbl,id_tim',
             'ketua_tim' => 'required|exists:mahasiswa,nim',
             'periode_id' => 'required',
+            'manpro' => 'required|exists:dosen,nip',
         ]);
-    
+
         // Simpan TimPBL
         TimPBL::create([
             'id_tim' => $request->id_tim,
             'ketua_tim' => $request->ketua_tim,
             'periode_id' => $request->periode_id,
+            'manpro' => $request->manpro,
         ]);
-    
+
         // Cek apakah user dengan nim ini sudah ada
         $existingUser = User::where('nim', $request->ketua_tim)->first();
-    
+
         if (!$existingUser) {
             // Buat akun baru untuk mahasiswa
             User::create([
@@ -63,13 +74,13 @@ class TimPBLController extends Controller
                 'role' => 'mahasiswa',
             ]);
         }
-    
+
         // Menampilkan SweetAlert
         Alert::success('Berhasil!', 'Data Tim dan User Mahasiswa berhasil Ditambahkan!');
-    
+
         return redirect()->route('admin.timpbl');
     }
-    
+
 
     /**
      * Menampilkan halaman edit Tim PBL
@@ -79,7 +90,8 @@ class TimPBLController extends Controller
         $timPBL = TimPBL::findOrFail($id_tim);
         $periode = PeriodePBL::all();
         $ketuaTim = Mahasiswa::all();
-        return view('admin.tim-pbl.edit-timpbl', compact('timPBL', 'periode', 'ketuaTim')); // Pastikan path view sesuai dengan file yang ada
+        $manpro = Dosen::all();
+        return view('admin.tim-pbl.edit-timpbl', compact('timPBL', 'periode', 'ketuaTim', 'manpro')); // Pastikan path view sesuai dengan file yang ada
     }
 
     /**
@@ -91,6 +103,7 @@ class TimPBLController extends Controller
             'id_tim' => 'required|unique:timpbl,id_tim,' . $id_tim . ',id_tim',
             'ketua_tim' => 'required|exists:mahasiswa,nim',
             'periode_id' => 'required',
+            'manpro' => 'required|exists:dosen,nip',
         ]);
 
         $timPBL = TimPBL::findOrFail($id_tim);
@@ -99,6 +112,7 @@ class TimPBLController extends Controller
             'id_tim' => $request->id_tim,
             'ketua_tim' => $request->ketua_tim,
             'periode_id' => $request->periode_id,
+            'manpro' => $request->manpro,
         ]);
 
         // Menampilkan SweetAlert

@@ -1,7 +1,7 @@
 @extends('layouts.dashboardadmin-template')
 
-@section('title', 'Edit Tahapan Pelaksanaan Proyek | Sistem Informasi dan Monitoring Project Based Learning')
-
+@section('title', 'Tahapan Pelaksanaan Semester 5 | Sistem Informasi dan Monitoring Project Based Learning')
+@section('page-title', 'Tahapan Pelaksanaan Semester 5')
 @section('content')
 <div class="container-fluid py-4">
 
@@ -62,8 +62,8 @@
             </div>
 
             <div class="form-group mt-4">
-                <button type="submit" class="btn btn-primary me-2">Simpan Data</button>
-                <a href="{{ route('admin.tahapanpelaksanaan-sem5') }}" class="btn btn-secondary">Batal</a>
+                <button type="submit" class="btn btn-primary me-2">Simpan</button>
+                <button type="reset" class="btn btn-danger">Reset</button>
             </div>
         </form>
     </div>

@@ -12,10 +12,20 @@ class Dosen extends Model
     // Tentukan nama tabel jika tidak menggunakan plural
     protected $table = 'dosen';
 
+    protected $primaryKey = 'nip'; // <- tambahkan ini
+    public $incrementing = false;  // <- tambahkan ini
+    protected $keyType = 'string'; // <- jika nim berupa string
+    // Tentukan kolom yang dapat diisi
+
     // Tentukan kolom yang dapat diisi
     protected $fillable = [
         'nip',
         'nama',
         'no_telp',
+        'email',
+        'prodi',
+        'jurusan',
+        'jenis_kelamin',
+        'status_dosen',
     ];
 }

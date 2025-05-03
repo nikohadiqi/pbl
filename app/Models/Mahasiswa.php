@@ -19,6 +19,19 @@ class Mahasiswa extends Model
     protected $fillable = [
         'nim',
         'nama',
+        'program_studi',
+        'dosen_wali',
+        'status',
+        'jenis_kelamin',
         'kelas',
+        'angkatan',
     ];
+
+    /**
+     * Relasi ke tabel kelas
+     */
+    public function kelas()
+    {
+        return $this->belongsTo(Kelas::class, 'kelas', 'kelas');
+    }
 }

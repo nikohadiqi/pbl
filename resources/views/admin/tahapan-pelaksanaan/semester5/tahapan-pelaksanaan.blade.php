@@ -1,7 +1,7 @@
 @extends('layouts.dashboardadmin-template')
 
-@section('title', 'Tahapan Pelaksanaan Semester 5')
-
+@section('title', 'Tahapan Pelaksanaan Semester 5 | Sistem Informasi dan Monitoring Project Based Learning')
+@section('page-title', 'Tahapan Pelaksanaan Semester 5')
 @section('content')
 <div class="container-fluid py-4">
     <div class="card p-4">
@@ -12,9 +12,9 @@
             </a>
         </div>
         <p class="text-sm">Daftar tahapan pelaksanaan proyek semester 5</p>
-        
+
         <div class="table-responsive mt-3">
-            <table class="table table-hover">
+            <table class="table table-hover" id="datatable-search">
                 <thead class="table-light">
                     <tr>
                         <th>No</th>
@@ -32,9 +32,9 @@
                         <td>{{ $item->pic }}</td>
                         <td>{{ $item->score }}%</td>
                         <td>
-                            <a href="{{ route('admin.edit-tahapanpelaksanaan-sem5', $item->id) }}" 
+                            <a href="{{ route('admin.edit-tahapanpelaksanaan-sem5', $item->id) }}"
                                class="btn btn-sm btn-info text-white" aria-label="Edit {{ $item->tahapan }}">
-                                <i class="bi bi-pencil-square"></i> Edit
+                                <i class="bi bi-pencil-square"></i>
                             </a>
                             <form action="{{ route('admin.tahapanpelaksanaan-sem5.delete', $item->id) }}"
                                   method="POST" class="d-inline"
@@ -42,7 +42,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-danger" aria-label="Hapus {{ $item->tahapan }}">
-                                    <i class="bi bi-trash"></i> Hapus
+                                    <i class="bi bi-trash"></i>
                                 </button>
                             </form>
                         </td>

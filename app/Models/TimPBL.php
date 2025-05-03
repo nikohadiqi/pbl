@@ -20,6 +20,7 @@ class TimPBL extends Model
         'id_tim',
         'ketua_tim',
         'periode_id',
+        'manpro'
     ];
 
     /**
@@ -34,5 +35,11 @@ class TimPBL extends Model
     public function periode()
     {
         return $this->belongsTo(PeriodePBL::class, 'periode_id', 'id');
+    }
+
+    // Relasi dengan dosen
+    public function manajer_proyek()
+    {
+        return $this->belongsTo(Dosen::class, 'manpro', 'nip');
     }
 }

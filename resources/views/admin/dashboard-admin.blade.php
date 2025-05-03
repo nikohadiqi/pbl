@@ -1,7 +1,7 @@
 @extends('layouts.dashboardadmin-template')
 
 @section('title','Dashboard Admin | Sistem Informasi dan Monitoring Project Based Learning')
-
+@section('page-title', 'Dasbor')
 @section('content')
 <div class="container-fluid py-4">
     {{-- Rekap Total Dashboard --}}
