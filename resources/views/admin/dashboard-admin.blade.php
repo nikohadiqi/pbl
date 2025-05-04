@@ -79,24 +79,26 @@
                 <h6 class="mb-2">Riwayat Tim PBL</h6>
             </div>
         </div>
-        <div class="table-responsive">
+        <div class="table-responsive mt-2">
             <table class="table table-hover" id="datatable-normal">
-                <thead class="table-light font-weight-bold">
+                <thead class="table-light">
                     <tr>
-                        <th>Nama Tim</th>
-                        <th>Judul Proyek PBL
-                        </th>
+                        <th>Kode Tim</th>
+                        <th>Judul Proyek PBL</th>
+                        <th>Nama Ketua</th>
                         <th>Kelas</th>
-                        <th>Progres Proyek
-                        </th>
-                        <th></th>
+                        <th>Manajer Proyek</th>
+                        <th>Progres Proyek</th>
                     </tr>
                 </thead>
-                <tbody class="text-xs font-weight-bold">
+                <tbody>
+                    @foreach ($timpbl as $index => $item)
                     <tr>
-                        <td>3A_1</td>
-                        <td>Aplikasi 1</td>
-                        <td>3A</td>
+                        <td>{{ $item->id_tim ?? '-' }}</td>
+                        <td>Aplikasi ...</td>
+                        <td>{{ $item->ketua->nama ?? '-' }}</td>
+                        <td>{{ $item->ketua->kelas ?? '-' }}</td>
+                        <td>{{ $item->manajer_proyek->nama ?? '-' }}</td>
                         <td class="align-middle text-center">
                             <div class="d-flex align-items-center">
                                 <span class="me-2 text-xs">60%</span>
@@ -105,88 +107,11 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="align-middle">
-                            <button class="btn btn-link text-secondary mb-0">
-                                <i class="fa fa-ellipsis-v text-xs"></i>
-                            </button>
-                        </td>
                     </tr>
-                    <tr>
-                        <td>3A_2</td>
-                        <td>Aplikasi 2</td>
-                        <td>3A</td>
-                        <td class="align-middle text-center">
-                            <div class="d-flex align-items-center">
-                                <span class="me-2 text-xs">80%</span>
-                                <div class="progress w-100">
-                                    <div class="progress-bar bg-success" role="progressbar" style="width: 80%"></div>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="align-middle">
-                            <button class="btn btn-link text-secondary mb-0">
-                                <i class="fa fa-ellipsis-v text-xs"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>3A_3</td>
-                        <td>Web apps</td>
-                        <td>3A</td>
-                        <td class="align-middle text-center">
-                            <div class="d-flex align-items-center">
-                                <span class="me-2 text-xs">50%</span>
-                                <div class="progress w-100">
-                                    <div class="progress-bar bg-danger" role="progressbar" style="width: 50%"></div>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="align-middle">
-                            <button class="btn btn-link text-secondary mb-0">
-                                <i class="fa fa-ellipsis-v text-xs"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>3A_4</td>
-                        <td>Web App</td>
-                        <td>3A</td>
-                        <td class="align-middle text-center">
-                            <div class="d-flex align-items-center">
-                                <span class="me-2 text-xs">40%</span>
-                                <div class="progress w-100">
-                                    <div class="progress-bar bg-secondary" role="progressbar" style="width: 40%"></div>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="align-middle">
-                            <button class="btn btn-link text-secondary mb-0">
-                                <i class="fa fa-ellipsis-v text-xs"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>3A_5</td>
-                        <td>Web Apps</td>
-                        <td>3A</td>
-                        <td class="align-middle text-center">
-                            <div class="d-flex align-items-center">
-                                <span class="me-2 text-xs">70%</span>
-                                <div class="progress w-100">
-                                    <div class="progress-bar bg-info" role="progressbar" style="width: 70%"></div>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="align-middle">
-                            <button class="btn btn-link text-secondary mb-0">
-                                <i class="fa fa-ellipsis-v text-xs"></i>
-                            </button>
-                        </td>
-                    </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
-
     </div>
     {{-- End of Riwayat Tim PBL --}}
 
@@ -197,50 +122,29 @@
                 <h6 class="mb-2">Data Dosen</h6>
             </div>
         </div>
-        <div class="table-responsive">
+        <div class="table-responsive mt-2">
             <table class="table table-hover" id="datatable-basic">
-                <thead class="table-light font-weight-bold">
+                <thead class="table-light">
                     <tr>
+                        <th>Kode Matkul</th>
+                        <th>Nama Mata Kuliah</th>
                         <th>Nama Dosen</th>
-                        <th>Mengampu
-                            Mata Kuliah</th>
-                        <th>
-                            NIP/NIK</th>
-                        <th>No
-                            Telp</th>
+                        <th>NIP/NIK/NIPPPK</th>
+                        <th>Status</th>
+                        <th>Kelas yang Diampu</th>
                     </tr>
                 </thead>
-                <tbody class="text-sm font-weight-normal">
+                <tbody>
+                    @foreach ($datadosen as $index => $item)
                     <tr>
-                        <td>Mohamad Dimyati Ayatullah, S.T., M.Kom.</td>
-                        <td>Proyek Aplikasi Dasar</td>
-                        <td>197601222021211000</td>
-                        <td>08123399184</td>
+                        <td>{{ $item->matkulFK->kode ?? '-' }}</td>
+                        <td>{{ $item->matkulFK->matakuliah ?? '-' }}</td>
+                        <td>{{ $item->dosenFk->nama ?? '-' }}</td>
+                        <td>{{ $item->dosenFk->nip ?? '-' }}</td>
+                        <td>{{ $item->status }}</td>
+                        <td>{{ $item->kelasFk->kelas ?? '-' }}</td>
                     </tr>
-                    <tr>
-                        <td>Dianni Yusuf, S.Kom., M.Kom.</td>
-                        <td>Basis Data</td>
-                        <td>198403052021212000</td>
-                        <td>082328333999</td>
-                    </tr>
-                    <tr>
-                        <td>I Wayan Suardinata, S.Kom., M.T.</td>
-                        <td>ADPL</td>
-                        <td>198010222015041000</td>
-                        <td>085736577864</td>
-                    </tr>
-                    <tr>
-                        <td>Eka Mistiko Rini, S.Kom, M.Kom.</td>
-                        <td>Basis Data</td>
-                        <td>198310202014042001</td>
-                        <td>081913922224</td>
-                    </tr>
-                    <tr>
-                        <td>Ruth Ema Febrita, S.Pd., M.Kom.</td>
-                        <td>Proyek Aplikasi Dasar</td>
-                        <td>199202272020122000</td>
-                        <td>085259082627</td>
-                    </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>

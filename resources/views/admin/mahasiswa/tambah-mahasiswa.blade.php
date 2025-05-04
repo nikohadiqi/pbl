@@ -31,7 +31,7 @@
             @csrf
             <div class="form-group">
                 <label for="nim" class="form-control-label">NIM</label>
-                <input id="nim" class="form-control" name="nim" placeholder="Masukkan NIM" type="text" required value="{{ old('nim') }}">
+                <input id="nim" class="form-control" name="nim" placeholder="Masukkan NIM" type="number" required value="{{ old('nim') }}">
             </div>
 
             <div class="form-group">

@@ -1,16 +1,16 @@
 @extends('layouts.dashboardadmin-template')
 
-@section('title','Edit Data Kelas | Sistem Informasi dan Monitoring Project Based Learning')
+@section('title','Ubah Data Kelas | Sistem Informasi dan Monitoring Project Based Learning')
 @section('page-title', 'Ubah Kelas')
 @section('content')
 <div class="container-fluid py-4">
     <div class="card p-4">
         <div class="d-flex justify-content-between align-items-center">
-            <h5 class="fw-bold">Edit Data Kelas</h5>
+            <h5 class="fw-bold">Ubah Data Kelas</h5>
         </div>
         <p class="text-sm">Sistem Informasi dan Monitoring Project Based Learning - TRPL Poliwangi</p>
 
-        <form class="mt-3" action="{{ route('admin.update-kelas', $kelas->kelas) }}" method="POST">
+        <form class="mt-3" action="{{ route('admin.kelas.update', $kelas->kelas) }}" method="POST">
             @csrf
             @method('PUT')
 

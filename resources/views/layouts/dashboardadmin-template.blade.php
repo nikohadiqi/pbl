@@ -93,19 +93,46 @@
     <script>
         const dataTableSearch = new simpleDatatables.DataTable("#datatable-search", {
             searchable: true,
+            sortable: true,
+            perPage: 5,
+            perPageSelect: [5, 10, 20, 50],
             fixedHeight: true,
+            labels: {
+                placeholder: "Cari...",
+                perPage: "{select} data per halaman",
+                noRows: "Tidak ada data",
+                info: "Menampilkan {start} sampai {end} dari {rows} data"
+            }
         });
     </script>
     <script>
         const dataTableBasic = new simpleDatatables.DataTable("#datatable-basic", {
             searchable: false,
-            fixedHeight: true
+            sortable: true,
+            perPage: 5,
+            perPageSelect: [5, 10, 20, 50],
+            fixedHeight: true,
+            labels: {
+                placeholder: "Cari...",
+                perPage: "{select} data per halaman",
+                noRows: "Tidak ada data",
+                info: "Menampilkan {start} sampai {end} dari {rows} data"
+            }
         });
     </script>
     <script>
         const dataTableNormal = new simpleDatatables.DataTable("#datatable-normal", {
             searchable: false,
-            fixedHeight: true
+            sortable: true,
+            perPage: 5,
+            perPageSelect: [5, 10, 20, 50],
+            fixedHeight: true,
+            labels: {
+                placeholder: "Cari...",
+                perPage: "{select} data per halaman",
+                noRows: "Tidak ada data",
+                info: "Menampilkan {start} sampai {end} dari {rows} data"
+            }
         });
     </script>
     <!-- Github buttons -->

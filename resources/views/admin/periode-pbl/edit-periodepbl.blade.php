@@ -1,12 +1,12 @@
 @extends('layouts.dashboardadmin-template')
 
-@section('title','Edit Periode PBL | Sistem Informasi dan Monitoring Project Based Learning')
+@section('title','Ubah Periode PBL | Sistem Informasi dan Monitoring Project Based Learning')
 @section('page-title', 'Ubah Data Periode PBL')
 @section('content')
 <div class="container-fluid py-4">
     <div class="card p-4">
         <div class="d-flex justify-content-between align-items-center">
-            <h5 class="fw-bold">Edit Data Periode PBL</h5>
+            <h5 class="fw-bold">Ubah Data Periode PBL</h5>
         </div>
         <p class="text-sm">Sistem Informasi dan Monitoring Project Based Learning - TRPL Poliwangi</p>
 
@@ -27,7 +27,7 @@
             </div>
         @endif
 
-        <!-- Form Edit Periode PBL -->
+        <!-- Form Ubah Periode PBL -->
         <form class="mt-1" method="POST" action="{{ route('admin.periodepbl.update', $periode->id) }}">
             @csrf
             @method('PUT')

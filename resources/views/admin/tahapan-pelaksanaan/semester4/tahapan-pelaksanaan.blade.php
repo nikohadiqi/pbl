@@ -7,7 +7,7 @@
     <div class="card p-4">
         <div class="d-flex justify-content-between align-items-center">
             <h4 class="fw-bold">Tahapan Pelaksanaan Proyek - Semester 4</h4>
-            <a href="{{ route('admin.tambah-tahapanpelaksanaan-sem4') }}" class="btn btn-primary text-white fw-bold">
+            <a href="{{ route('admin.tahapanpelaksanaan-sem4.tambah') }}" class="btn btn-primary text-white fw-bold">
                 <i class="bi bi-plus me-2"></i>Tambah Data
             </a>
         </div>
@@ -32,14 +32,16 @@
                         <td>{{ $item->pic }}</td>
                         <td>{{ $item->score }}%</td>
                         <td>
-                            <a href="{{ route('admin.edit-tahapanpelaksanaan-sem4', $item->id) }}" class="btn btn-sm btn-info text-white">
+                            <a href="{{ route('admin.tahapanpelaksanaan-sem4.edit', $item->id) }}" class="btn btn-sm btn-info text-white">
                                 <i class="bi bi-pencil-square"></i>
                             </a>
-
-                            <form action="{{ route('admin.tahapanpelaksanaan-sem4.delete', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus data ini?');">
+                            <!-- Delete Button -->
+                            <form id="delete-form-{{ $item->id }}"
+                                action="{{route('admin.tahapanpelaksanaan-sem4.delete', $item->id)}}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger">
+                                <button type="button" class="btn btn-sm btn-danger text-white"
+                                    onclick="confirmDelete({{ $item->id }})">
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </form>
@@ -52,3 +54,27 @@
     </div>
 </div>
 @endsection
+
+@push('script')
+{{-- Script Konfirmasi Hapus Data --}}
+<script>
+    function confirmDelete(id) {
+        console.log(id);
+    Swal.fire({
+        title: 'Apakah Anda Yakin?',
+        text: "Data ini akan dihapus secara permanen!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya, Hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Submit form delete
+            document.getElementById('delete-form-' + encodeURIComponent(id)).submit();
+        }
+    })
+}
+</script>
+@endpush

@@ -22,7 +22,7 @@
 
     <div class="card p-4">
         <div class="d-flex justify-content-between align-items-center">
-            <h5 class="fw-bold">Edit Data Tahapan Pelaksanaan Proyek - Semester 4</h5>
+            <h5 class="fw-bold">Ubah Data Tahapan Pelaksanaan Proyek - Semester 4</h5>
         </div>
         <p class="text-sm">Sistem Informasi dan Monitoring Project Based Learning - TRPL Poliwangi</p>
 

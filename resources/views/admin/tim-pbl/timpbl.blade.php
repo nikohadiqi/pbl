@@ -7,7 +7,7 @@
     <div class="card p-4">
         <div class="d-flex justify-content-between align-items-center">
             <h4 class="fw-bold">Daftar Tim PBL</h4>
-            <a href="{{ route('admin.tambah-timpbl') }}" class="btn btn-primary fw-bold">
+            <a href="{{ route('admin.timpbl.tambah') }}" class="btn btn-primary fw-bold">
                 <i class="bi bi-plus me-2"></i>Tambah Tim
             </a>
         </div>
@@ -35,7 +35,7 @@
                         <td>{{ $tim->manajer_proyek->nip }} - {{ $tim->manajer_proyek->nama }}</td>
                         <td class="text-center">
                             <div class="d-flex justify-content-center gap-2">
-                                <a href="{{ route('admin.edit-timpbl', $tim->id_tim) }}"
+                                <a href="{{ route('admin.timpbl.edit', $tim->id_tim) }}"
                                 class="btn btn-sm btn-info text-white" aria-label="Edit {{ $tim->kode_tim }}">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>

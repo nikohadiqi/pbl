@@ -1,12 +1,12 @@
 @extends('layouts.dashboardadmin-template')
 
-@section('title','Edit Tim PBL | Sistem Informasi dan Monitoring Project Based Learning')
+@section('title','Ubah Tim PBL | Sistem Informasi dan Monitoring Project Based Learning')
 @section('page-title', 'Ubah Data Tim PBL')
 @section('content')
 <div class="container-fluid py-4">
     <div class="card p-4">
         <div class="ketua-flex justify-content-between align-items-center">
-            <h5 class="fw-bold">Edit Data Tim PBL</h5>
+            <h5 class="fw-bold">Ubah Data Tim PBL</h5>
         </div>
         <p class="text-sm">Sistem Informasi dan Monitoring Project Based Learning - TRPL Poliwangi</p>
         <form action="{{ route('admin.timpbl.update', $timPBL->id_tim) }}" method="POST">

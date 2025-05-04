@@ -7,7 +7,7 @@
     <div class="card p-4">
         <div class="d-flex justify-content-between align-items-center">
             <h4 class="fw-bold">Data Periode PBL</h4>
-            <a href="{{ route('admin.tambah-periodepbl') }}">
+            <a href="{{ route('admin.periodepbl.tambah') }}">
                 <button class="btn btn-primary text-white fw-bold">
                     <i class="bi bi-plus me-2"></i>Tambah Data
                 </button>
@@ -41,7 +41,7 @@
                         <td>{{ $periode->tahun }}</td>
                         <td class="text-center">
                             <div class="d-flex justify-content-center gap-2">
-                                <a href="{{ route('admin.edit-periodepbl', $periode->id) }}">
+                                <a href="{{ route('admin.periodepbl.edit', $periode->id) }}">
                                     <button class="btn btn-sm btn-info text-white">
                                         <i class="bi bi-pencil-square"></i>
                                     </button>

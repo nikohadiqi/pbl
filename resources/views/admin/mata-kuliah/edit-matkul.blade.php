@@ -1,13 +1,13 @@
 @extends('layouts.dashboardadmin-template')
 
-@section('title','Edit Mata Kuliah | Sistem Informasi dan Monitoring Project Based Learning')
+@section('title','Ubah Mata Kuliah | Sistem Informasi dan Monitoring Project Based Learning')
 @section('page-title', 'Ubah Data Mata Kuliah')
 @section('content')
 <div class="container-fluid py-4">
     <div class="card p-4">
-        <h5 class="fw-bold">Edit Data Mata Kuliah</h5>
+        <h5 class="fw-bold">Ubah Data Mata Kuliah</h5>
         <p class="text-sm">Sistem Informasi dan Monitoring Project Based Learning - TRPL Poliwangi</p>
-        <form action="{{ route('admin.update-matkul', $matkul->id) }}" method="POST">
+        <form action="{{ route('admin.matkul.update', $matkul->id) }}" method="POST">
             @csrf
             @method('PUT')
             <!-- Kode Mata Kuliah -->

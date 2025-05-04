@@ -7,7 +7,7 @@
     <div class="card p-4">
         <div class="d-flex justify-content-between align-items-center">
             <h4 class="fw-bold">Daftar Dosen Pengampu MK / Manpro</h4>
-            <a href="{{ route('admin.tambah-pengampu') }}" class="btn btn-primary fw-bold">
+            <a href="{{ route('admin.pengampu.tambah') }}" class="btn btn-primary fw-bold">
                 <i class="bi bi-plus me-2"></i>Tambah Tim
             </a>
         </div>
@@ -18,9 +18,9 @@
                 <thead class="table-light">
                     <tr>
                         <th>No</th>
+                        <th>Mata Kuliah</th>
                         <th>Nama Dosen</th>
                         <th>Status</th>
-                        <th>Mata Kuliah</th>
                         <th>Kelas yang Diampu</th>
                         <th>Periode PBL</th>
                         <th class="text-center">Aksi</th>
@@ -30,14 +30,14 @@
                     @foreach ($pengampus as $index => $item)
                     <tr>
                         <td>{{ $index + 1 }}</td>
+                        <td>{{ $item->matkulFK->kode ?? '-' }} - {{ $item->matkulFK->matakuliah ?? '-' }}</td>
                         <td>{{ $item->dosenFk->nama ?? '-' }}</td>
                         <td>{{ $item->status }}</td>
-                        <td>{{ $item->matkulFK->kode ?? '-' }} - {{ $item->matkulFK->matakuliah ?? '-' }}</td>
                         <td>{{ $item->kelasFk->kelas ?? '-' }}</td>
                         <td>Semester{{ $item->periodeFK->semester ?? '-' }} - {{ $item->periodeFK->tahun ?? '-' }}</td>
                         <td class="text-center">
                             <div class="d-flex justify-content-center gap-2">
-                                <a href="{{ route('admin.edit-pengampu', $item->id) }}">
+                                <a href="{{ route('admin.pengampu.edit', $item->id) }}">
                                     <button class="btn btn-sm btn-info text-white">
                                         <i class="bi bi-pencil-square"></i>
                                     </button>

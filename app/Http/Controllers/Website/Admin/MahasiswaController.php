@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Website\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Imports\MahasiswaImport;
 use App\Models\Kelas;
 use Illuminate\Http\Request;
 use App\Models\Mahasiswa;
+use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class MahasiswaController extends Controller
@@ -90,4 +92,17 @@ class MahasiswaController extends Controller
         return redirect()->route('admin.mahasiswa');
     }
 
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv,xls'
+        ]);
+
+        Excel::import(new MahasiswaImport, $request->file('file'));
+
+        // Menampilkan SweetAlert
+        Alert::success('Berhasil!', 'Data Mahasiswa Berhasil Diimpor!');
+
+        return redirect()->route('admin.mahasiswa');
+    }
 }

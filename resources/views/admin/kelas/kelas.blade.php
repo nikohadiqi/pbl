@@ -8,7 +8,7 @@
         <div class="d-flex justify-content-between align-items-center">
             <h4 class="fw-bold">Data Kelas</h4>
             <div class="d-flex gap-2">
-                <a href="{{ route('admin.tambah-kelas') }}" class="btn btn-primary text-white fw-bold">
+                <a href="{{ route('admin.kelas.tambah') }}" class="btn btn-primary text-white fw-bold">
                     <i class="bi bi-plus me-2"></i>Tambah Data
                 </a>
             </div>
@@ -31,10 +31,10 @@
                         <td>{{ $object->kelas }}</td>
                         <td class="text-center">
                             <div class="d-flex justify-content-center gap-2">
-                                <a href="{{ route('admin.edit-kelas', $object->kelas) }}" class="btn btn-sm btn-info text-white" title="Edit">
+                                <a href="{{ route('admin.kelas.edit', $object->kelas) }}" class="btn btn-sm btn-info text-white">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
-                                <form id="delete-form-{{ $object->kelas_encoded }}" action="{{ route('admin.delete-kelas', $object->kelas) }}" method="POST">
+                                <form id="delete-form-{{ $object->kelas_encoded }}" action="{{ route('admin.kelas.delete', $object->kelas) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
                                     <button type="button" class="btn btn-sm btn-danger text-white" title="Hapus" onclick="confirmDelete('{{ $object->kelas_encoded }}')">

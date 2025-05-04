@@ -8,12 +8,17 @@
         <div class="d-flex justify-content-between align-items-center">
             <h4 class="fw-bold">Data Dosen</h4>
             <div class="d-flex gap-2">
-                <a href="{{ route('admin.tambah-dosen') }}">
+                <a href="{{ route('admin.dosen.tambah') }}">
                     <button class="btn btn-primary text-white fw-bold"><i class="bi bi-plus me-2"></i>Tambah Data</button>
                 </a>
-                <a href="#">
-                    <button class="btn btn-primary text-white fw-bold"><i class="bi bi-upload me-2"></i>Impor Data</button>
-                </a>
+                <form id="import-form" action="{{ route('admin.dosen.import') }}" method="POST" enctype="multipart/form-data" style="display: none;">
+                    @csrf
+                    <input type="file" id="import-file" name="file" accept=".xlsx,.xls,.csv" onchange="document.getElementById('import-form').submit();">
+                </form>
+                <!-- Tombol Trigger -->
+                <button class="btn btn-primary text-white fw-bold" onclick="document.getElementById('import-file').click();">
+                    <i class="bi bi-upload me-2"></i>Impor Data
+                </button>
             </div>
         </div>
         <p class="text-sm">Data Dosen Program Studi Teknologi Rekayasa Perangkat Lunak - JBI Poliwangi</p>
@@ -49,7 +54,7 @@
                         <td>{{ $data->jurusan}}</td> --}}
                         <td class="text-center">
                             <div class="d-flex justify-content-center gap-2">
-                                <a href="{{ route('admin.edit-dosen', $data->nip) }}">
+                                <a href="{{ route('admin.dosen.edit', $data->nip) }}">
                                     <button class="btn btn-sm btn-info text-white"><i class="bi bi-pencil-square"></i></button>
                                 </a>
                                 <!-- Delete Button -->

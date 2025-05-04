@@ -27,7 +27,7 @@
             </div>
         @endif
 
-        <!-- Form Edit Periode PBL -->
+        <!-- Form Ubah Periode PBL -->
         <form class="mt-1" method="POST" action="{{ route('admin.pengampu.update', $pengampu->id) }}">
             @csrf
             @method('PUT')

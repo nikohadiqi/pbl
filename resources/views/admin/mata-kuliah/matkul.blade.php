@@ -7,7 +7,7 @@
     <div class="card p-4">
         <div class="d-flex justify-content-between align-items-center">
             <h4 class="fw-bold">Mata Kuliah</h4>
-            <a href="{{ route('admin.tambah-matkul') }}">
+            <a href="{{ route('admin.matkul.tambah') }}">
                 <button class="btn btn-primary text-white fw-bold"><i class="bi bi-plus me-2"></i>Tambah Data</button>
             </a>
         </div>
@@ -39,11 +39,11 @@
                         <td>{{ $mataKuliah->matakuliah }}</td>
                         <td class="text-center">
                             <div class="d-flex justify-content-center gap-2">
-                                <a href="{{ route('admin.edit-matkul', $mataKuliah->id) }}">
+                                <a href="{{ route('admin.matkul.edit', $mataKuliah->id) }}">
                                     <button class="btn btn-sm btn-info text-white"><i class="bi bi-pencil-square"></i></button>
                                 </a>
                                 <!-- Delete Button -->
-                                <form id="delete-form-{{ $mataKuliah->id }}" action="{{route('admin.delete-matkul', $mataKuliah->id)}}" method="POST" class="d-inline">
+                                <form id="delete-form-{{ $mataKuliah->id }}" action="{{route('admin.matkul.delete', $mataKuliah->id)}}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
                                     <button type="button" class="btn btn-sm btn-danger text-white" onclick="confirmDelete({{ $mataKuliah->id }})">

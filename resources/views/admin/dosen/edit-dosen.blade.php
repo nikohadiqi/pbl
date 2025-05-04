@@ -1,12 +1,12 @@
 @extends('layouts.dashboardadmin-template')
 
-@section('title','Edit Data Dosen | Sistem Informasi dan Monitoring Project Based Learning')
+@section('title','Ubah Data Dosen | Sistem Informasi dan Monitoring Project Based Learning')
 @section('page-title', 'Ubah Data Dosen')
 @section('content')
 <div class="container-fluid py-4">
     <div class="card p-4">
         <div class="d-flex justify-content-between align-items-center">
-            <h5 class="fw-bold">Edit Data Dosen</h5>
+            <h5 class="fw-bold">Ubah Data Dosen</h5>
         </div>
         <p class="text-sm">Sistem Informasi dan Monitoring Project Based Learning - TRPL Poliwangi</p>
 
@@ -26,7 +26,7 @@
             @method('PUT')
             <div class="form-group">
                 <label for="nip" class="form-control-label">NIP/NIK/NIPPPK</label>
-                <input class="form-control" name="nip" type="number" readonly value="{{ $dosen->nip }}">
+                <input class="form-control" name="nip" type="number" value="{{ $dosen->nip }}">
             </div>
 
             <div class="form-group">

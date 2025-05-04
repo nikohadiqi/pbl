@@ -1,22 +1,22 @@
 @extends('layouts.dashboardadmin-template')
 
-@section('title','Edit Data Mahasiswa | Sistem Informasi dan Monitoring Project Based Learning')
+@section('title','Ubah Data Mahasiswa | Sistem Informasi dan Monitoring Project Based Learning')
 @section('page-title', 'Ubah Data Mahasiswa')
 @section('content')
 <div class="container-fluid py-4">
     <div class="card p-4">
         <div class="d-flex justify-content-between align-items-center">
-            <h5 class="fw-bold">Edit Data Mahasiswa</h5>
+            <h5 class="fw-bold">Ubah Data Mahasiswa</h5>
         </div>
         <p class="text-sm">Sistem Informasi dan Monitoring Project Based Learning - TRPL Poliwangi</p>
 
-        <form class="mt-3" action="{{ route('admin.update-mahasiswa', $mahasiswa->nim) }}" method="POST">
+        <form class="mt-3" action="{{ route('admin.mahasiswa.update', $mahasiswa->nim) }}" method="POST">
             @csrf
             @method('PUT')
 
             <div class="form-group mb-3">
                 <label for="nim" class="form-control-label">NIM</label>
-                <input class="form-control @error('nim') is-invalid @enderror" id="nim" name="nim" value="{{ old('nim', $mahasiswa->nim) }}" type="text" readonly>
+                <input class="form-control @error('nim') is-invalid @enderror" id="nim" name="nim" value="{{ old('nim', $mahasiswa->nim) }}" type="number">
                 @error('nim')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror

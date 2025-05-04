@@ -7,6 +7,7 @@ use App\Models\Dosen;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\Mahasiswa;
+use App\Models\Pengampu;
 use App\Models\PeriodePBL;
 use App\Models\TimPBL;
 use App\Models\User;
@@ -39,7 +40,11 @@ class TimPBLController extends Controller
     {
         $periode = PeriodePBL::all();
         $ketuaTim = Mahasiswa::all();
-        $manpro = Dosen::all();
+        $manpro = Pengampu::with('dosenFk')
+            ->where('status', 'Manajer Proyek')
+            ->get()
+            ->pluck('dosenFk') // mengambil objek dosen saja
+            ->unique('nip'); // menghindari duplikat
         return view('admin.tim-pbl.tambah-timpbl', compact('periode', 'ketuaTim', 'manpro')); // Pastikan file view ini ada di folder views/admin/tim-pbl/
     }
 
@@ -90,7 +95,11 @@ class TimPBLController extends Controller
         $timPBL = TimPBL::findOrFail($id_tim);
         $periode = PeriodePBL::all();
         $ketuaTim = Mahasiswa::all();
-        $manpro = Dosen::all();
+        $manpro = Pengampu::with('dosenFk')
+            ->where('status', 'Manajer Proyek')
+            ->get()
+            ->pluck('dosenFk') // mengambil objek dosen saja
+            ->unique('nip'); // menghindari duplikat
         return view('admin.tim-pbl.edit-timpbl', compact('timPBL', 'periode', 'ketuaTim', 'manpro')); // Pastikan path view sesuai dengan file yang ada
     }
 
