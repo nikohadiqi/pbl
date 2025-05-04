@@ -10,25 +10,31 @@ class UserSeeder extends Seeder
 {
     public function run()
     {
-        // Seeder untuk role admin
-        User::create([
+        // Admin
+        $admin = User::create([
             'nim' => '111111',
-            'password' => Hash::make('11111'),  // Password yang di-hash
+            'password' => Hash::make('11111'),
             'role' => 'admin',
         ]);
+        $adminToken = $admin->createToken('admin-token')->plainTextToken;
+        echo "Admin Token: {$adminToken}\n";
 
-        // Seeder untuk role mahasiswa
-        User::create([
+        // Mahasiswa
+        $mahasiswa = User::create([
             'nim' => '22222',
-            'password' => Hash::make('22222'),  // Password yang di-hash
+            'password' => Hash::make('22222'),
             'role' => 'mahasiswa',
         ]);
+        $mahasiswaToken = $mahasiswa->createToken('mahasiswa-token')->plainTextToken;
+        echo "Mahasiswa Token: {$mahasiswaToken}\n";
 
-        // Seeder untuk role dosen
-        User::create([
+        // Dosen
+        $dosen = User::create([
             'nim' => '33333',
-            'password' => Hash::make('33333'),  // Password yang di-hash
+            'password' => Hash::make('33333'),
             'role' => 'dosen',
         ]);
+        $dosenToken = $dosen->createToken('dosen-token')->plainTextToken;
+        echo "Dosen Token: {$dosenToken}\n";
     }
 }

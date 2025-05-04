@@ -3,10 +3,12 @@
 @section('title','Rencana Pelaksanaan Proyek | Sistem Informasi dan Monitoring Project Based Learning')
 
 @section('content')
+    
+
 <div class="container-fluid py-4">
     <div class="card">
         <div class="card-header">
-            <ul class="nav nav-pills nav-fill" id="tabs">
+            <!-- <ul class="nav nav-pills nav-fill" id="tabs">
                 <li class="nav-item">
                     <a class="nav-link active" id="step1-tab" data-toggle="pill" href="#step1">1 Deskripsi Proyek</a>
                 </li>
@@ -25,53 +27,106 @@
                 <li class="nav-item">
                     <a class="nav-link" id="step6-tab" data-toggle="pill" href="#step6">6 Mata Kuliah & Evaluasi</a>
                 </li>
-            </ul>
+            </ul> -->
+            <div class="step-wizard">
+        <div class="step active" data-target="#step1">
+            <div class="circle">1</div>
+            <div class="label">Deskripsi Proyek</div>
         </div>
-
-        <div class="tab-content" id="formTabsContent">
-    <!-- Step 1: Informasi Dasar -->
-    <div class="tab-pane fade show active" id="step1" role="tabpanel">
-        <div class="card p-4 mb-4">
-            <h4>Step 1: Informasi Dasar</h4>
-            <div class="form-group mb-3">
-                <label>ID Proyek</label>
-                <input type="text" name="id_proyek" class="form-control" value="{{ old('id_proyek', $rencanaProyek->first()->id_proyek ?? '') }}" required>
-            </div>
-            <div class="form-group mb-3">
-                <label>Judul Proyek</label>
-                <input type="text" name="judul_proyek" class="form-control" value="{{ old('judul_proyek', $rencanaProyek->first()->judul_proyek ?? '') }}" required>
-            </div>
-            <div class="form-group mb-3">
-                <label>Pengusul Proyek</label>
-                <input type="text" name="pengusul_proyek" class="form-control" value="{{ old('pengusul_proyek', $rencanaProyek->first()->pengusul_proyek ?? '') }}" required>
-            </div>
-            <div class="form-group mb-3">
-                <label>Manajer Proyek</label>
-                <input type="text" name="manajer_proyek" class="form-control" value="{{ old('manajer_proyek', $rencanaProyek->first()->manajer_proyek ?? '') }}" required>
-            </div>
-            <div class="form-group mb-3">
-                <label>Luaran</label>
-                <textarea name="luaran" class="form-control" rows="3" required>{{ old('luaran', $rencanaProyek->first()->luaran ?? '') }}</textarea>
-            </div>
-            <div class="form-group mb-3">
-                <label>Sponsor</label>
-                <textarea name="sponsor" class="form-control" rows="3" required>{{ old('sponsor', $rencanaProyek->first()->sponsor ?? '') }}</textarea>
-            </div>
-            <div class="form-group mb-3">
-                <label>Biaya</label>
-                <textarea name="biaya" class="form-control" rows="3" required>{{ old('biaya', $rencanaProyek->first()->biaya ?? '') }}</textarea>
-            </div>
-            <div class="form-group mb-3">
-                <label>Klien</label>
-                <textarea name="klien" class="form-control" rows="3" required>{{ old('klien', $rencanaProyek->first()->klien ?? '') }}</textarea>
-            </div>
-            <div class="form-group mb-3">
-                <label>Estimasi Waktu</label>
-                <textarea name="waktu" class="form-control" rows="3" required>{{ old('waktu', $rencanaProyek->first()->waktu ?? '') }}</textarea>
-            </div>
-            <button type="button" class="btn btn-primary btn-next" data-next="#step2">Next</button>
+        <div class="step" data-target="#step2">
+            <div class="circle">2</div>
+            <div class="label">Ruang Lingkup</div>
+        </div>
+        <div class="step" data-target="#step3">
+            <div class="circle">3</div>
+            <div class="label">Tahapan</div>
+        </div>
+        <div class="step" data-target="#step4">
+            <div class="circle">4</div>
+            <div class="label">Tantangan</div>
+        </div>
+        <div class="step" data-target="#step5">
+            <div class="circle">5</div>
+            <div class="label">Biaya & Tim</div>
+        </div>
+        <div class="step" data-target="#step6">
+            <div class="circle">6</div>
+            <div class="label">Evaluasi</div>
         </div>
     </div>
+        </div>
+
+<form method="POST" action="{{ route('mahasiswa.rpp.rencana-proyek.store') }}">
+            @csrf
+            <div class="tab-content" id="formTabsContent">
+<!-- Step 1: Informasi Dasar --> 
+<div class="tab-pane fade show active" id="step1" role="tabpanel">
+    <div class="card p-4 mb-4">
+        <h4>Step 1: Informasi Dasar</h4>
+
+        <!-- ID Tim -->
+        <div class="form-group mb-3">
+            <label>ID Tim</label>
+            <input type="text" name="id_tim" class="form-control" 
+                value="{{ old('id_tim', $rencanaProyek->id_tim ?? '') }}" required>
+        </div>
+
+        <!-- Judul Proyek -->
+        <div class="form-group mb-3">
+            <label>Judul Proyek</label>
+            <input type="text" name="judul_proyek" class="form-control" 
+                   value="{{ old('judul_proyek', $rencanaProyek->judul_proyek ?? '') }}">
+        </div>
+
+        <!-- Pengusul Proyek -->
+        <div class="form-group mb-3">
+            <label>Pengusul Proyek</label>
+            <input type="text" name="pengusul_proyek" class="form-control" 
+                   value="{{ old('pengusul_proyek', $rencanaProyek->pengusul_proyek ?? '') }}">
+        </div>
+
+        <!-- Manajer Proyek -->
+        <div class="form-group mb-3">
+            <label>Manajer Proyek</label>
+            <input type="text" name="manajer_proyek" class="form-control" 
+                   value="{{ old('manajer_proyek', $rencanaProyek->manajer_proyek ?? '') }}">
+        </div>
+
+        <!-- Luaran -->
+        <div class="form-group mb-3">
+            <label>Luaran</label>
+            <textarea name="luaran" class="form-control" rows="3">{{ old('luaran', $rencanaProyek->luaran ?? '') }}</textarea>
+        </div>
+
+        <!-- Sponsor -->
+        <div class="form-group mb-3">
+            <label>Sponsor</label>
+            <textarea name="sponsor" class="form-control" rows="3">{{ old('sponsor', $rencanaProyek->sponsor ?? '') }}</textarea>
+        </div>
+
+        <!-- Biaya -->
+        <div class="form-group mb-3">
+            <label>Biaya</label>
+            <textarea name="biaya" class="form-control" rows="3">{{ old('biaya', $rencanaProyek->biaya ?? '') }}</textarea>
+        </div>
+
+        <!-- Klien -->
+        <div class="form-group mb-3">
+            <label>Klien</label>
+            <textarea name="klien" class="form-control" rows="3">{{ old('klien', $rencanaProyek->klien ?? '') }}</textarea>
+        </div>
+
+        <!-- Estimasi Waktu -->
+        <div class="form-group mb-3">
+            <label>Estimasi Waktu</label>
+            <textarea name="waktu" class="form-control" rows="3">{{ old('waktu', $rencanaProyek->waktu ?? '') }}</textarea>
+        </div>
+
+        <!-- Tombol Next -->
+        <button type="button" class="btn btn-primary btn-next" data-next="#step2">Next</button>
+    </div>
+</div>
+
 
 
 <!-- Step 2: Ruang Lingkup & Rancangan Sistem -->
@@ -80,11 +135,11 @@
         <h4>Step 2: Ruang Lingkup & Rancangan Sistem</h4>
         <div class="form-group mb-3">
             <label>Ruang Lingkup</label>
-            <textarea name="ruang_lingkup" class="form-control" rows="3" required>{{ old('ruang_lingkup', $rencanaProyek->first()->ruang_lingkup ?? '') }}</textarea>
+            <textarea name="ruang_lingkup" class="form-control" rows="3" required>{{ old('ruang_lingkup', $rencanaProyek->ruang_lingkup ?? '') }}</textarea>
         </div>
         <div class="form-group mb-3">
             <label>Rancangan Sistem</label>
-            <textarea name="rancangan_sistem" class="form-control" rows="3" required>{{ old('rancangan_sistem', $rencanaProyek->first()->rancangan_sistem ?? '') }}</textarea>
+            <textarea name="rancangan_sistem" class="form-control" rows="3" required>{{ old('rancangan_sistem', $rencanaProyek->rancangan_sistem ?? '') }}</textarea>
         </div>
         <button type="button" class="btn btn-secondary btn-prev" data-prev="#step1">Previous</button>
         <button type="button" class="btn btn-primary btn-next" data-next="#step3">Next</button>
@@ -180,114 +235,361 @@
     }
 </script>
 
-
-
     <!-- Step 4: Tantangan & Estimasi Waktu -->
     <div class="tab-pane fade" id="step4" role="tabpanel">
-        <div class="card p-4 mb-4">
-            <h4>Step 4: Tantangan & Estimasi Waktu</h4>
-            <div class="form-group mb-3">
-                <label>Tantangan</label>
-                <textarea name="tantangan" class="form-control" rows="3" required>{{ old('tantangan', $rencanaProyek->first()->tantangan ?? '') }}</textarea>
-            </div>
-            <div class="form-group mb-3">
-                <label>Estimasi Waktu</label>
-                <textarea name="waktu" class="form-control" rows="3" required>{{ old('waktu', $rencanaProyek->first()->waktu ?? '') }}</textarea>
-            </div>
-            <div class="form-group mb-3">
-                <label>Ruang Lingkup</label>
-                <textarea name="ruang_lingkup" class="form-control" rows="3" required>{{ old('ruang_lingkup', $rencanaProyek->first()->ruang_lingkup ?? '') }}</textarea>
-            </div>
+    <div class="card p-4 mb-4">
+        <h4>Step 4: Tantangan & Estimasi</h4>
+
+        <!-- Tantangan -->
+        <h5 class="mt-3">Tantangan Dan Isu</h5>
+        <table class="table table-bordered" id="tahapan-table">
+            <thead>
+                <tr>
+                    <th>nomor</th>
+                    <th>proses</th>
+                    <th>isu</th>
+                    <th>level_resiko</th>
+                    <th>catatan</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="number" name="nomor[]" class="form-control"></td>
+                    <td><input type="text" name="proses[]" class="form-control"></td>
+                    <td><input type="text" name="isu[]" class="form-control"></td>
+                    <td><input type="text" name="level_resiko[]" class="form-control"></td>
+                    <td><input type="text" name="catatan[]" class="form-control"></td>
+                </tr>
+            </tbody>
+        </table>
+        <button type="button" class="btn btn-sm btn-success mb-3" onclick="addTantanganRow()">+ Tambah Isu</button>
+
+        <!-- Estimasi -->
+        <h5 class="mt-4">Estimasi</h5>
+        <table class="table table-bordered" id="peralatan-table">
+            <thead>
+                <tr>
+                    <th>Fase</th>
+                    <th>uraian_pekerjaan</th>
+                    <th>esstimasi_waktu</th>
+                    <th>catatan</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="number" name="fase[]" class="form-control"></td>
+                    <td><input type="text" name="uraian_pekerjaan[]" class="form-control"></td>
+                    <td><input type="text" name="estimasi_waktu[]" class="form-control"></td>
+                    <td><input type="text" name="catatan[]" class="form-control"></td>
+                </tr>
+            </tbody>
+        </table>
+        <button type="button" class="btn btn-sm btn-success mb-4" onclick="addEstimasiRow()">+ Tambah Estimasi</button>
+
+        <!-- Navigation buttons -->
+        <div class="d-flex justify-content-between">
             <button type="button" class="btn btn-secondary btn-prev" data-prev="#step3">Previous</button>
             <button type="button" class="btn btn-primary btn-next" data-next="#step5">Next</button>
         </div>
     </div>
+</div>
 
-    <!-- Step 5: Klien & Biaya Proyek -->
-    <div class="tab-pane fade" id="step5" role="tabpanel">
-        <div class="card p-4 mb-4">
-            <h4>Step 5: Klien & Biaya Proyek</h4>
-            <div class="form-group mb-3">
-                <label>Klien</label>
-                <textarea name="klien" class="form-control" rows="3" required>{{ old('klien', $rencanaProyek->first()->klien ?? '') }}</textarea>
-            </div>
-            <div class="form-group mb-3">
-                <label>Biaya</label>
-                <textarea name="biaya" class="form-control" rows="3" required>{{ old('biaya', $rencanaProyek->first()->biaya ?? '') }}</textarea>
-            </div>
-            <div class="form-group mb-3">
-                <label>Biaya Proyek</label>
-                <textarea name="biaya_proyek" class="form-control" rows="3" required>{{ old('biaya_proyek', $rencanaProyek->first()->biaya_proyek ?? '') }}</textarea>
-            </div>
+<script>
+    // Function to add a new row to the Tahapan Pelaksanaan table
+    function addTantanganRow() {
+        const tableBody = document.querySelector('#tantangan-table tbody');
+        const newRow = document.createElement('tr');
+        
+        newRow.innerHTML = `
+            <td><input type="number" name="nomor[]" class="form-control"></td>
+            <td><input type="text" name="proses[]" class="form-control"></td>
+            <td><input type="text" name="isu[]" class="form-control"></td>
+            <td><input type="text" name="level_resiko[]" class="form-control"></td>
+            <td><input type="text" name="catatan[]" class="form-control"></td>
+        `;
+        
+        tableBody.appendChild(newRow);
+    }
+
+    // Function to add a new row to the Kebutuhan Peralatan table
+    function addEstimasiRow() {
+        const tableBody = document.querySelector('#Estimasi-table tbody');
+        const newRow = document.createElement('tr');
+        
+        newRow.innerHTML = `
+            <td><input type="number" name="fase[]" class="form-control"></td>
+            <td><input type="text" name="uraian_pekerjaan[]" class="form-control"></td>
+            <td><input type="text" name="estimasi_waktu[]" class="form-control"></td>
+            <td><input type="text" name="catatan[]" class="form-control"></td>
+        `;
+        
+        tableBody.appendChild(newRow);
+    }
+</script>
+
+ <!-- Step 5: Biaya & Tim -->
+ <div class="tab-pane fade" id="step5" role="tabpanel">
+    <div class="card p-4 mb-4">
+        <h4>Step 5: Biaya & Tim</h4>
+
+        <!-- Biya -->
+        <h5 class="mt-3">Biaya Proyek </h5>
+        <table class="table table-bordered" id="biaya-table">
+            <thead>
+                <tr>
+                    <th>Fase</th>
+                    <th>Uraian pekerjaan</th>
+                    <th>perkiraan biaya</th>
+                    <th>catatan</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="number" name="fase[]" class="form-control"></td>
+                    <td><input type="text" name="uraian_pekerjaan[]" class="form-control"></td>
+                    <td><input type="text" name="biaya[]" class="form-control"></td>
+                    <td><input type="text" name="catatan[]" class="form-control"></td>
+                </tr>
+            </tbody>
+        </table>
+        <button type="button" class="btn btn-sm btn-success mb-3" onclick="addBiayaRow()">+ Tambah Biaya</button>
+
+        <!-- Tim proyek -->
+        <h5 class="mt-4">Tim proyek</h5>
+        <table class="table table-bordered" id="timproyek-table">
+            <thead>
+                <tr>
+                    <th>nomor</th>
+                    <th>nama</th>
+                    <th>nim</th>
+                    <th>program studi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="number" name="nomor[]" class="form-control"></td>
+                    <td><input type="text" name="nama[]" class="form-control"></td>
+                    <td><input type="text" name="nim[]" class="form-control"></td>
+                    <td><input type="text" name="program studi[]" class="form-control"></td>
+                </tr>
+            </tbody>
+        </table>
+        <button type="button" class="btn btn-sm btn-success mb-4" onclick="addTimproyekRow()">+ Tambah timproyek</button>
+
+        <!-- Navigation buttons -->
+        <div class="d-flex justify-content-between">
             <button type="button" class="btn btn-secondary btn-prev" data-prev="#step4">Previous</button>
             <button type="button" class="btn btn-primary btn-next" data-next="#step6">Next</button>
         </div>
     </div>
+</div>
 
-    <!-- Step 6: Tim & Estimasi -->
+<script>
+    // Function to add a new row to the Tahapan Pelaksanaan table
+    function addBiayaRow() {
+        const tableBody = document.querySelector('#biaya-table tbody');
+        const newRow = document.createElement('tr');
+        
+        newRow.innerHTML = `
+            <td><input type="number" name="fase[]" class="form-control"></td>
+            <td><input type="text" name="uraian_pekerjaan[]" class="form-control"></td>
+            <td><input type="text" name="biaya[]" class="form-control"></td>
+            <td><input type="text" name="catatan[]" class="form-control"></td>
+        `;
+        
+        tableBody.appendChild(newRow);
+    }
+
+    // Function to add a new row to the Kebutuhan Peralatan table
+    function addTimproyekRow() {
+        const tableBody = document.querySelector('#Timproyek-table tbody');
+        const newRow = document.createElement('tr');
+        
+        newRow.innerHTML = `
+            <td><input type="number" name="nomor[]" class="form-control"></td>
+            <td><input type="text" name="nama[]" class="form-control"></td>
+            <td><input type="text" name="nim[]" class="form-control"></td>
+            <td><input type="text" name="program_studi[]" class="form-control"></td>
+        `;
+        
+        tableBody.appendChild(newRow);
+    }
+</script>
+
+    <!-- Step 6: Mata Kuliah & Estimasi -->
     <div class="tab-pane fade" id="step6" role="tabpanel">
         <div class="card p-4 mb-4">
-            <h4>Step 6: Tim & Estimasi</h4>
+            <h4>Step 6: Mata Kuliah & Estimasi</h4>
+            
+     <!-- Mata Kuliah -->
+     <h5 class="mt-3">Mata Kuliah </h5>
+        <table class="table table-bordered" id="MataKuliah-table">
+            <thead>
+                <tr>
+                    <th>nomor</th>
+                    <th>mata kuliah</th>
+                    <th>capaian pembelajaran</th>
+                    <th>tujuan</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="number" name="nomor[]" class="form-control"></td>
+                    <td><input type="text" name="matakuliah[]" class="form-control"></td>
+                    <td><input type="text" name="capaian[]" class="form-control"></td>
+                    <td><input type="text" name="tujuan[]" class="form-control"></td>
+                </tr>
+            </tbody>
+        </table>
+        <button type="button" class="btn btn-sm btn-success mb-3" onclick="addBiayaRow()">+ Tambah Biaya</button>
+        
+        <!-- Pemantauan & Evaluasi -->
             <div class="form-group mb-3">
-                <label>Estimasi</label>
-                <input type="text" name="estimasi" class="form-control" value="{{ old('estimasi', $rencanaProyek->first()->estimasi ?? '') }}" required>
+                <label>Evaluasi</label>
+                <textarea name="tim_proyek" class="form-control" rows="3" required>{{ old('tim_proyek', $rencanaProyek->tim_proyek ?? '') }}</textarea>
             </div>
-            <div class="form-group mb-3">
-                <label>Tim Proyek</label>
-                <textarea name="tim_proyek" class="form-control" rows="3" required>{{ old('tim_proyek', $rencanaProyek->first()->tim_proyek ?? '') }}</textarea>
-            </div>
+            <!-- Navigation buttons -->
+        <div class="d-flex justify-content-between">
             <button type="button" class="btn btn-secondary btn-prev" data-prev="#step5">Previous</button>
             <button type="submit" class="btn btn-success">Simpan</button>
         </div>
     </div>
 </div>
 
-
+<script>
+    // Function to add a new row to the Tahapan Pelaksanaan table
+    function addMatakuliahRow() {
+        const tableBody = document.querySelector('#Matakuliah-table tbody');
+        const newRow = document.createElement('tr');
+        
+        newRow.innerHTML = `
+            <td><input type="number" name="nomor[]" class="form-control"></td>
+            <td><input type="text" name="matakuliah[]" class="form-control"></td>
+            <td><input type="text" name="capaian[]" class="form-control"></td>
+            <td><input type="text" name="tujuan[]" class="form-control"></td>
+        `;
+        
+        tableBody.appendChild(newRow);
+    }
+    
+</form>
 @push('js')
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const navLinks = document.querySelectorAll('.nav-link');
+        const steps = document.querySelectorAll('.step');
 
-        // Function to activate tab
-        function activateTab(targetId) {
-            // Remove active class from all tabs
+        function activateStep(targetId) {
+            // Remove active from all
+            steps.forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.tab-pane').forEach(tab => tab.classList.remove('show', 'active'));
-            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
 
-            // Activate the target tab
+            // Add active to current
+            const targetStep = document.querySelector(`[data-target="${targetId}"]`);
             const targetPane = document.querySelector(targetId);
-            const targetNav = document.querySelector(`[href="${targetId}"]`);
-
-            if (targetPane && targetNav) {
+            if (targetStep && targetPane) {
+                targetStep.classList.add('active');
                 targetPane.classList.add('show', 'active');
-                targetNav.classList.add('active');
             }
         }
 
-        // Tab navigation click handler
-        navLinks.forEach(tab => {
-            tab.addEventListener('click', function () {
-                activateTab(this.getAttribute('href'));
+        // Click on steps
+        steps.forEach(step => {
+            step.addEventListener('click', () => {
+                const target = step.getAttribute('data-target');
+                if (target) activateStep(target);
             });
         });
 
-        // Next button click handler
+        // Next and Previous Button Handlers (optional)
         document.querySelectorAll('.btn-next').forEach(button => {
             button.addEventListener('click', function () {
                 const next = this.getAttribute('data-next');
-                if (next) activateTab(next);
+                if (next) activateStep(next);
             });
         });
 
-        // Previous button click handler
         document.querySelectorAll('.btn-prev').forEach(button => {
             button.addEventListener('click', function () {
                 const prev = this.getAttribute('data-prev');
-                if (prev) activateTab(prev);
+                if (prev) activateStep(prev);
             });
         });
     });
 </script>
+
 @endpush
 
 @endsection
+
+@push ('css')
+<style>
+    .step-wizard {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        position: relative;
+        margin: 20px auto 30px;
+        max-width: 800px;
+    }
+
+    .step-wizard::before {
+        content: '';
+        position: absolute;
+        top: 18px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background-color: #e0e0e0;
+        z-index: 0;
+    }
+
+    .step {
+        position: relative;
+        text-align: center;
+        flex: 1;
+        font-size: 11px;
+    }
+
+    .step .circle {
+        width: 28px;
+        height: 28px;
+        margin: 0 auto;
+        border-radius: 50%;
+        background-color: #ccc;
+        line-height: 28px;
+        font-size: 13px;
+        color: white;
+        font-weight: 600;
+        z-index: 2;
+        position: relative;
+    }
+
+    .step.active .circle {
+        background-color: #F7CD07;
+    }
+
+    .step .label {
+        margin-top: 6px;
+        font-size: 11px;
+        line-height: 1.2;
+        word-break: break-word;
+    }
+
+    .step:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        top: 14px;
+        left: 50%;
+        width: 100%;
+        height: 2px;
+        background-color: #F7CD07;
+        z-index: -1;
+        transform: translateX(14px);
+    }
+
+    .step:last-child::after {
+        display: none;
+    }
+</style>
+
+@endpush

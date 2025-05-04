@@ -11,12 +11,9 @@ class RencanaProyek extends Model
 
     protected $table = 'rencana_proyek';
 
-    protected $primaryKey = 'id_proyek';
-    public $incrementing = false; // Karena id_tim bukan auto-increment
-    protected $keyType = 'string'; // Karena id_tim bertipe string
 
     protected $fillable = [
-        'id_proyek',
+        'id_tim',
         'judul_proyek',
         'pengusul_proyek',
         'manajer_proyek',
@@ -37,8 +34,21 @@ class RencanaProyek extends Model
     return $this->hasMany(TahapanPelaksanaan::class);
 }
 
-public function kebutuhanPeralatan()
+    public function kebutuhanPeralatan()
 {
     return $this->hasMany(KebutuhanPeralatan::class);
+}
+    public function estimasi()
+{
+    return $this->hasMany(estimasi::class);
+}
+
+    public function tantangan()
+{
+    return $this->hasMany(tantangan::class);
+}
+public function timpbl()
+{
+    return $this->belongsTo(TimPBL::class, 'id_tim', 'id_tim');
 }
 }

@@ -9,20 +9,19 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create('kebutuhan_peralatan', function (Blueprint $table) {
+        Schema::create('estimasi', function (Blueprint $table) {
             $table->id();
             $table->string('id_tim');
-            $table->integer('nomor')->nullable();
             $table->string('fase')->nullable();
-            $table->string('peralatan')->nullable();
-            $table->string('bahan')->nullable();
+            $table->string('uraian_pekerjaan')->nullable();
+            $table->string('estimasi_waktu')->nullable();
+            $table->string('catatan')->nullable();
             $table->timestamps();
-          
+         
             // Foreign Key Constraint
             $table->foreign('id_tim')->references('id_tim')->on('timpbl')->onDelete('cascade');
         });
     }
-    
 };

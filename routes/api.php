@@ -79,8 +79,6 @@ Route::prefix('mahasiswa')->middleware(['auth:sanctum', 'mahasiswa'])->group(fun
     Route::get('/rencana-proyek/{id}', [RencanaProyekController::class, 'show']);
     Route::put('/rencana-proyek/{id}', [RencanaProyekController::class, 'update']);
     Route::delete('/rencana-proyek/{id}', [RencanaProyekController::class, 'destroy']);
-    Route::post('/rencana-proyek/bulk-delete', [RencanaProyekController::class, 'bulkDelete']);
-
     //tahapan pelaksaan mahasiswa
     Route::get('/tahapan-pelaksaan', [TahapanPelaksaanController::class, 'index']);
     Route::post('/tahapan-pelaksaan', [TahapanPelaksaanController::class, 'store']);

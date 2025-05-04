@@ -13,22 +13,15 @@ return new class extends Migration
     {
         Schema::create('tahapan_pelaksanaan', function (Blueprint $table) {
             $table->id();
-        
-            // Ubah ke string karena foreign key-nya ke `id_proyek` yang bertipe string
-            $table->string('rencana_proyek_id');
-            $table->foreign('rencana_proyek_id')->references('id_proyek')->on('rencana_proyek')->onDelete('cascade');
-        
+            $table->string('id_tim');
             $table->string('minggu')->nullable();
             $table->string('tahapan')->nullable();
             $table->string('pic')->nullable();
             $table->text('keterangan')->nullable();
             $table->timestamps();
-        });
-        
-    }
     
-    public function down()
-    {
-        Schema::dropIfExists('tahapan_pelaksanaan');
+            // Foreign Key Constraint
+            $table->foreign('id_tim')->references('id_tim')->on('timpbl')->onDelete('cascade');
+        });
     }
 };
