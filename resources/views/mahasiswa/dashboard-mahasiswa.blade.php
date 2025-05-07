@@ -1,7 +1,7 @@
 @extends('layouts.dashboardmahasiswa-template')
 
 @section('title','Dashboard Mahasiswa | Sistem Informasi dan Monitoring Project Based Learning')
-
+@section('page-title', 'Dasbor')
 @section('content')
 <div class="container-fluid py-4">
     <!-- Project Card -->
