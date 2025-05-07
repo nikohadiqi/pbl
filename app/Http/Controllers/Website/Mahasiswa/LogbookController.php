@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Mahasiswa;
+namespace App\Http\Controllers\Website\Mahasiswa;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -11,12 +11,12 @@ class LogbookController extends Controller
 {
     public function index()
     {
-        $logbooks = Logbook::with(['mahasiswa', 'timPbl'])->get();
-        return response()->json([
-            'success' => true,
-            'message' => 'List of Logbooks',
-            'data' => $logbooks
-        ], 200);
+        return view('mahasiswa.semester4.logbook.logbook');
+    }
+
+    public function create()
+    {
+        return view('mahasiswa.semester4.logbook.form-logbook');
     }
 
     public function store(Request $request)

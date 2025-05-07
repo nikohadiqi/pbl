@@ -13,7 +13,10 @@ use App\Http\Controllers\Website\Admin\ProfilController;
 use App\Http\Controllers\Website\Admin\TPP4Controller;
 use App\Http\Controllers\Website\Admin\TPP5Controller;
 use App\Http\Controllers\Website\Admin\TimPBLController;
+use App\Http\Controllers\Website\Mahasiswa\DashboardMahasiswaController;
 use App\Http\Controllers\Website\Mahasiswa\RencanaProyekController;
+use App\Http\Controllers\Website\Mahasiswa\LogbookController;
+use App\Http\Controllers\Website\Mahasiswa\ProfilController as MahasiswaProfilController;
 
 // use App\Http\Controllers\Auth\DashboardController;
 /*
@@ -41,7 +44,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Profil
     Route::get('admin/profil', [ProfilController::class, 'index'])->name('admin.profil');
     Route::get('/admin/profil/ubah-password', [ProfilController::class, 'editPassword'])->name('admin.profil.ubah-password');
-    Route::post('/admin//profil/ubah-password', [ProfilController::class, 'updatePassword'])->name('admin.profil.update-password');
+    Route::post('/admin/profil/ubah-password', [ProfilController::class, 'updatePassword'])->name('admin.profil.update-password');
 
     // TIM PBL
     Route::prefix('admin/master-data/tim-pbl')->middleware(['auth:sanctum', 'admin'])->group(function () {
@@ -146,13 +149,18 @@ Route::prefix('mahasiswa')->middleware(['auth:sanctum'])->group(function () {
         return view('mahasiswa.dashboard-mahasiswa');
     })->name('mahasiswa.dashboard');
 
+    // Profil
+    Route::get('/profil', [MahasiswaProfilController::class, 'index'])->name('mahasiswa.profil');
+    Route::get('/profil/ubah-password', [MahasiswaProfilController::class, 'editPassword'])->name('mahasiswa.profil.ubah-password');
+    Route::post('/profil/ubah-password', [MahasiswaProfilController::class, 'updatePassword'])->name('mahasiswa.profil.update-password');
+
     // Tahapan Pelaksanaan Proyek
 //     Route::prefix('menu/mahasiswa/semester4/rpp/rencana-proyek')->middleware(['auth:sanctum', 'mahasiswa'])->group(function () {
 //         Route::get('/', [RencanaProyekController::class, 'create'])->name('mahasiswa.rpp.rencana-proyek.create');
 //         Route::post('/', [RencanaProyekController::class, 'store'])->name('mahasiswa.rpp.rencana-proyek.store');
 //         Route::put('/{id}', [RencanaProyekController::class, 'update'])->name('mahasiswa.rpp.rencana-proyek.update');
 // });
-    
+
     // Tahapan Pelaksanaan Proyek
     Route::resource('menu/mahasiswa/semester4/rpp/rencana-proyek', RencanaProyekController::class)->names([
         'create' => 'mahasiswa.rpp.rencana-proyek.create',
@@ -161,6 +169,14 @@ Route::prefix('mahasiswa')->middleware(['auth:sanctum'])->group(function () {
     ]);
 
 
-        // Logbook
-        // Pelaporan
+    // Logbook
+    Route::prefix('semester-4/logbook')->middleware(['auth:sanctum', 'mahasiswa'])->group(function () {
+        Route::get('/', [LogbookController::class, 'index'])->name('mahasiswa.logbook');
+        Route::get('/isi-logbook', [LogbookController::class, 'create'])->name('mahasiswa.logbook.create');
+    });
+    // Pelaporan
+    Route::prefix('semester-4/laporan-pbl')->middleware(['auth:sanctum', 'mahasiswa'])->group(function () {
+        Route::get('/', [DashboardMahasiswaController::class, 'laporan_pbl'])->name('mahasiswa.pelaporan-pbl');
+        Route::get('/form-laporan', [DashboardMahasiswaController::class, 'form_laporan'])->name('mahasiswa.pelaporan-pbl.create');
+    });
  });
