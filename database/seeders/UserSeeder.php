@@ -11,13 +11,25 @@ class UserSeeder extends Seeder
     public function run()
     {
         // Admin
-        $admin = User::create([
+        User::create([
             'nim' => '111111',
             'password' => Hash::make('11111'),
             'role' => 'admin',
         ]);
-        $adminToken = $admin->createToken('admin-token')->plainTextToken;
-        echo "Admin Token: {$adminToken}\n";
+
+        // Admin Bu Dian
+        User::create([
+            'nim' => '198711032021212001',
+            'password' => Hash::make('198711032021212001'),  // Password yang di-hash
+            'role' => 'admin',
+        ]);
+
+        // Admin Pak Arya
+        User::create([
+            'nim' => '198103232014041001',
+            'password' => Hash::make('198103232014041001'),  // Password yang di-hash
+            'role' => 'admin',
+        ]);
 
         // Mahasiswa
         $mahasiswa = User::create([

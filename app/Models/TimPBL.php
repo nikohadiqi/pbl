@@ -20,6 +20,7 @@ class TimPBL extends Model
         'id_tim',
         'ketua_tim',
         'periode_id',
+        'manpro'
     ];
 
     /**
@@ -35,10 +36,16 @@ class TimPBL extends Model
     {
         return $this->belongsTo(PeriodePBL::class, 'periode_id', 'id');
     }
+
+    // Relasi dengan dosen
+    public function manajer_proyek()
+    {
+        return $this->belongsTo(Dosen::class, 'manpro', 'nip');
+    }
+
+    // Relasi User
     public function user()
-{
-    return $this->belongsTo(User::class, 'user_id');
-}
-
-
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

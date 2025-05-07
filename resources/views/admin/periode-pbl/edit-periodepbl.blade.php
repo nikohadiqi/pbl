@@ -1,12 +1,12 @@
 @extends('layouts.dashboardadmin-template')
 
-@section('title','Edit Periode PBL | Sistem Informasi dan Monitoring Project Based Learning')
-
+@section('title','Ubah Periode PBL | Sistem Informasi dan Monitoring Project Based Learning')
+@section('page-title', 'Ubah Data Periode PBL')
 @section('content')
 <div class="container-fluid py-4">
     <div class="card p-4">
         <div class="d-flex justify-content-between align-items-center">
-            <h5 class="fw-bold">Edit Data Periode PBL</h5>
+            <h5 class="fw-bold">Ubah Data Periode PBL</h5>
         </div>
         <p class="text-sm">Sistem Informasi dan Monitoring Project Based Learning - TRPL Poliwangi</p>
 
@@ -27,28 +27,25 @@
             </div>
         @endif
 
-        <!-- Form Edit Periode PBL -->
+        <!-- Form Ubah Periode PBL -->
         <form class="mt-1" method="POST" action="{{ route('admin.periodepbl.update', $periode->id) }}">
             @csrf
-            @method('PATCH')
-
-            <div class="form-group">
+            @method('PUT')
+            <div class="form-group mb-3">
                 <label for="semester" class="form-control-label">Semester Pelaksanaan PBL</label>
-                <select class="form-control" id="semester" name="semester" required>
-                    <option disabled>Pilih Semester</option>
-                    <option value="4" {{ $periode->semester == 4 ? 'selected' : '' }}>Semester 4</option>
-                    <option value="5" {{ $periode->semester == 5 ? 'selected' : '' }}>Semester 5</option>
-                </select>
+                <input class="form-control @error('semester') is-invalid @enderror" type="number" name="semester" id="semester" value="{{ old('semester', $periode->semester) }}" min="1" max="6">
+                @error('semester')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
-
             <div class="form-group mt-3">
                 <label for="tahun_pelaksanaan" class="form-control-label">Tahun Pelaksanaan PBL</label>
-                <input class="form-control" placeholder="Masukan Tahun Periode Pelaksanaan PBL" type="text" name="tahun" value="{{ $periode->tahun }}" required>
+                <input class="form-control" placeholder="Masukan Tahun Periode Pelaksanaan PBL" type="text" name="tahun" value="{{ $periode->tahun }}">
             </div>
 
             <div class="form-group mt-4">
-                <button type="submit" class="btn btn-primary me-2">Simpan Perubahan</button>
-                <a href="{{ route('admin.periodepbl') }}" class="btn btn-secondary">Batal</a>
+                <button type="submit" class="btn btn-primary me-2">Simpan</button>
+                <button type="reset" class="btn btn-danger">Reset</button>
             </div>
         </form>
     </div>

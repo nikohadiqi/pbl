@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('id_tim')->primary();
             $table->string('ketua_tim');
             $table->string('periode_id');
+            $table->string('manpro');
             $table->timestamps();
         });
     }

@@ -1,12 +1,12 @@
 @extends('layouts.dashboardadmin-template')
 
-@section('title','Edit Tim PBL | Sistem Informasi dan Monitoring Project Based Learning')
-
+@section('title','Ubah Tim PBL | Sistem Informasi dan Monitoring Project Based Learning')
+@section('page-title', 'Ubah Data Tim PBL')
 @section('content')
 <div class="container-fluid py-4">
     <div class="card p-4">
-        <div class="d-flex justify-content-between align-items-center">
-            <h5 class="fw-bold">Edit Data Tim PBL</h5>
+        <div class="ketua-flex justify-content-between align-items-center">
+            <h5 class="fw-bold">Ubah Data Tim PBL</h5>
         </div>
         <p class="text-sm">Sistem Informasi dan Monitoring Project Based Learning - TRPL Poliwangi</p>
         <form action="{{ route('admin.timpbl.update', $timPBL->id_tim) }}" method="POST">
@@ -17,32 +17,23 @@
             <div class="form-group mb-3">
                 <label for="id_tim">ID Tim Proyek</label>
                 <input type="text" name="id_tim" class="form-control @error('id_tim') is-invalid @enderror"
-                       value="{{ old('id_tim', $timPBL->id_tim) }}" readonly>
+                    value="{{ old('id_tim', $timPBL->id_tim) }}" readonly>
                 @error('id_tim')
-                    <div class="invalid-feedback">{{ $message }}</div>
+                <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
 
-            <!-- Ketua Tim (Search by NIM) -->
-            <div class="form-group mb-3">
-                <label for="ketua_tim">Ketua Tim</label>
-                <div class="input-group">
-                    <input type="text" class="form-control @error('ketua_tim') is-invalid @enderror"
-                           id="ketua_tim" name="ketua_tim"
-                           placeholder="Cari berdasarkan NIM..."
-                           value="{{ old('ketua_tim', $timPBL->ketua_tim) }}" required>
-                    <span class="input-group-text"><i class="bi bi-search"></i></span>
-                </div>
-                <div id="info_ketua" class="mt-3">
-                    @if($timPBL->ketua)
-                        Nama Ketua: {{ $timPBL->ketua->nama }}<br>
-                        Kelas: {{ $timPBL->ketua->kelas }}<br>
-                        NIM: {{ $timPBL->ketua->nim }}
-                    @endif
-                </div>
-                @error('ketua_tim')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
+            <!-- Ketua Tim (Search by NIM/Nama) -->
+            <div class="form-group">
+                <label for="ketua_tim" class="form-control-label">Ketua Tim</label>
+                <select name="ketua_tim" class="form-control select2">
+                    <option value="" disabled selected hidden>Pilih Mahasiswa Sebagai Ketua Tim</option>
+                    @foreach($ketuaTim as $ketua)
+                        <option value="{{ $ketua->nim }}" {{ (old('ketua_tim', $timPBL->ketua_tim ?? '') == $ketua->nim) ? 'selected' : '' }}>
+                            {{ $ketua->nim }} - {{ $ketua->nama }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
 
             <!-- Periode -->
@@ -51,55 +42,52 @@
                 <select class="form-control" id="periode_id" name="periode_id">
                     <option value="" disabled selected hidden>Pilih Periode PBL</option>
                     @foreach($periode as $periodepbl)
-                    <option value="{{ $periodepbl->id }}"
-                        {{ old('periode_id', $timPBL->periode_id) == $periodepbl->id ? 'selected' : '' }}>
+                    <option value="{{ $periodepbl->id }}" {{ old('periode_id', $timPBL->periode_id) == $periodepbl->id ?
+                        'selected' : '' }}>
                         Semester {{ $periodepbl->semester }} - {{ $periodepbl->tahun }}
                     </option>
                     @endforeach
                 </select>
             </div>
 
+            {{-- Manpro --}}
+            <div class="form-group">
+                <label for="manpro">Manajer Proyek</label>
+                <select class="form-control" id="manpro" name="manpro" required>
+                    <option value="" disabled hidden>Pilih Manajer Proyek</option>
+                    @foreach($manpro as $dosen)
+                    <option value="{{ $dosen->nip }}" {{ $timPBL->manpro == $dosen->nip ? 'selected' : '' }}>
+                        {{ $dosen->nama }}
+                    </option>
+                    @endforeach
+                </select>
+            </div>
+
             <div class="mt-3">
-                <button type="submit" class="btn btn-primary">Update Data</button>
-                <a href="{{ route('admin.timpbl') }}" class="btn btn-secondary">Batal</a>
+                <button type="submit" class="btn btn-primary">Simpan</button>
+                <button type="reset" class="btn btn-danger">Reset</button>
             </div>
         </form>
     </div>
 </div>
 @endsection
 
+@push('css')
+    <!-- Select2 Bootstrap 4 Theme jika belum dimuat -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+@endpush
+
 @push('script')
+<!-- jQuery (required by Select2) -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
     $(document).ready(function () {
-        let debounceTimer;
-
-        $('#ketua_tim').on('input', function () {
-            clearTimeout(debounceTimer);
-            let nim = $(this).val();
-
-            debounceTimer = setTimeout(function () {
-                if (nim.length >= 6) {
-                    $.ajax({
-                        url: "{{ route('admin.timpbl.cariKetua') }}",
-                        method: "GET",
-                        data: { nim: nim },
-                        success: function (response) {
-                            if (response.success) {
-                                $('#info_ketua').html(`
-                                    Nama Ketua: ${response.nama}<br>
-                                    Kelas: ${response.kelas}<br>
-                                    NIM: ${response.nim}
-                                `).fadeIn();
-                            } else {
-                                $('#info_ketua').fadeOut();
-                            }
-                        }
-                    });
-                } else {
-                    $('#info_ketua').fadeOut();
-                }
-            }, 800);
+        $('.select2').select2({
+            placeholder: 'Pilih Mahasiswa Sebagai Ketua Tim',
+            allowClear: true
         });
     });
 </script>

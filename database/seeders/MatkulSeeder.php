@@ -1,0 +1,40 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\MataKuliah;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+
+class MatkulSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        MataKuliah::create([
+            'kode' => 'RPL401',
+            'matakuliah' => 'Proyek Aplikasi Dasar',
+            'program_studi' => 'Teknologi Rekayasa Perangkat Lunak',
+        ]);
+
+        MataKuliah::create([
+            'kode' => 'RPL402',
+            'matakuliah' => 'Proyek Aplikasi Lanjut',
+            'program_studi' => 'Teknologi Rekayasa Perangkat Lunak',
+        ]);
+
+        MataKuliah::create([
+            'kode' => 'RPL403',
+            'matakuliah' => 'Desain Pengalaman Pengguna',
+            'program_studi' => 'Teknologi Rekayasa Perangkat Lunak',
+        ]);
+
+        MataKuliah::create([
+            'kode' => 'RPL404',
+            'matakuliah' => 'Keamanan Perangkat Lunak',
+            'program_studi' => 'Teknologi Rekayasa Perangkat Lunak',
+        ]);
+    }
+}

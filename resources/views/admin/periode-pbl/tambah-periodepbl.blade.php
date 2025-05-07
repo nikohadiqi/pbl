@@ -1,7 +1,7 @@
 @extends('layouts.dashboardadmin-template')
 
 @section('title','Tambah Periode PBL | Sistem Informasi dan Monitoring Project Based Learning')
-
+@section('page-title', 'Tambah Data Periode PBL')
 @section('content')
 <div class="container-fluid py-4">
     <div class="card p-4">
@@ -34,29 +34,28 @@
             @csrf
             <div class="form-group">
                 <label for="semester" class="form-control-label">Semester Pelaksanaan PBL</label>
-                <select class="form-control" id="semester" name="semester" required>
-                    <option selected disabled>Pilih Semester</option>
-                    <option value="4" {{ old('semester') == '4' ? 'selected' : '' }}>Semester 4</option>
-                    <option value="5" {{ old('semester') == '5' ? 'selected' : '' }}>Semester 5</option>
-                </select>
+                <input type="number" name="semester" class="form-control @error('semester') is-invalid @enderror" min="1" max="6" placeholder="Masukkan Semester (Angka)" value="{{ old('semester') }}" required>
+                @error('semester')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
 
             <div class="form-group mt-3">
                 <label for="tahun" class="form-control-label">Tahun Pelaksanaan PBL</label>
-                <input class="form-control" 
-                       placeholder="Masukkan Tahun (contoh: 2024)" 
-                       type="text" 
-                       name="tahun" 
+                <input class="form-control"
+                       placeholder="Masukkan Tahun (contoh: 2024)"
+                       type="text"
+                       name="tahun"
                        id="tahun"
-                       maxlength="4" 
-                       pattern="\d{4}" 
-                       value="{{ old('tahun') }}" 
+                       maxlength="4"
+                       pattern="\d{4}"
+                       value="{{ old('tahun') }}"
                        required>
             </div>
 
             <div class="form-group mt-4">
-                <button type="submit" class="btn btn-primary me-2">Simpan Data</button>
-                <button type="reset" class="btn btn-danger">Reset Data</button>
+                <button type="submit" class="btn btn-primary me-2">Simpan</button>
+                <button type="reset" class="btn btn-danger">Reset</button>
             </div>
         </form>
     </div>

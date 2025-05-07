@@ -1,33 +1,44 @@
 @extends('layouts.dashboardadmin-template')
 
 @section('title', 'Tambah Mata Kuliah')
-
+@section('page-title', 'Tambah Data Mata Kuliah')
 @section('content')
 <div class="container-fluid py-4">
     <div class="card p-4">
         <h5 class="fw-bold">Tambah Data Mata Kuliah</h5>
         <p class="text-sm">Sistem Informasi dan Monitoring Project Based Learning - TRPL Poliwangi</p>
-    </div> <!-- ✅ Menutup div card yang terbuka -->
 
-    <div class="card p-4 mt-3"> <!-- ✅ Menambah card untuk form agar rapi -->
+        {{-- Form Tambah --}}
         <form action="{{ route('admin.matkul.store') }}" method="POST">
             @csrf
-            <div class="form-group">
-                <label for="matakuliah">Mata Kuliah</label>
-                <input class="form-control" type="text" name="matakuliah" placeholder="Masukkan Nama Mata Kuliah" required>
+            <div class="form-group mb-3">
+                <label for="kode">Kode Mata Kuliah</label>
+                <input type="text" name="kode" class="form-control @error('kode') is-invalid @enderror"
+                       value="{{ old('kode') }}" required>
+                @error('kode')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+            <div class="form-group mb-3">
+                <label for="matakuliah">Nama Mata Kuliah</label>
+                <input type="text" name="matakuliah" class="form-control @error('matakuliah') is-invalid @enderror"
+                       value="{{ old('matakuliah') }}" required>
+                @error('matakuliah')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
             <div class="form-group">
-                <label for="capaian">Capaian</label>
-                <textarea class="form-control" name="capaian" rows="5" placeholder="Masukkan Capaian Mata Kuliah" required></textarea>
-            </div>
-            <div class="form-group">
-                <label for="tujuan">Tujuan</label>
-                <textarea class="form-control" name="tujuan" rows="5" placeholder="Masukkan Tujuan Mata Kuliah" required></textarea>
+                <label for="program_studi">Program Studi</label>
+                <select class="form-control" id="program_studi" name="program_studi">
+                    <option value="" disabled selected hidden>Pilih Program Studi</option>
+                    <option value="Teknologi Rekayasa Perangkat Lunak">Teknologi Rekayasa Perangkat Lunak</option>
+                </select>
             </div>
             <div class="form-group mt-4">
-                <button type="submit" class="btn btn-primary">Simpan Data</button>
+                <button type="submit" class="btn btn-primary me-2">Simpan</button>
+                <button type="reset" class="btn btn-danger">Reset</button>
             </div>
         </form>
-    </div> <!-- ✅ Menutup div card baru -->
+    </div>
 </div>
 @endsection

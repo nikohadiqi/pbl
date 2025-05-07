@@ -20,7 +20,7 @@
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="bi bi-cast text-primary text-sm opacity-10"></i>
                     </div>
-                    <span class="nav-link-text ms-1">Dashboard</span>
+                    <span class="nav-link-text ms-1">Dasbor</span>
                 </a>
             </li>
 
@@ -28,85 +28,92 @@
             <li class="nav-item mt-4">
                 <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">MENU</h6>
             </li>
-            <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.timpbl') ? 'active' : '' }}" href="{{ route('admin.timpbl') }}">
+            <!-- Master Data -->
+            <li class="nav-item mt-2">
+                <a class="nav-link {{ request()->routeIs('admin.periodepbl*') || request()->routeIs('admin.matkul*') || request()->routeIs('admin.kelas*') || request()->routeIs('admin.dosen*') || request()->routeIs('admin.mahasiswa*') || request()->routeIs('admin.pengampu*') || request()->routeIs('admin.timpbl*') ? 'active' : '' }}"
+                    data-bs-toggle="collapse" href="#masterData" role="button"
+                    aria-expanded="{{ request()->routeIs('admin.periodepbl*') || request()->routeIs('admin.matkul*') || request()->routeIs('admin.kelas*') || request()->routeIs('admin.dosen*') || request()->routeIs('admin.mahasiswa*') || request()->routeIs('admin.pengampu*') || request()->routeIs('admin.timpbl*') ? 'true' : 'false' }}"
+                    aria-controls="masterData">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="bi bi-people-fill text-danger text-sm opacity-10"></i>
+                        <i class="ni ni-briefcase-24 text-info text-sm opacity-10"></i>
                     </div>
-                    <span class="nav-link-text ms-1">Tim PBL</span>
+                    <span class="nav-link-text ms-1">Master Data</span>
                 </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.periodepbl') ? 'active' : '' }}" href="{{ route('admin.periodepbl') }}">
-                    <div
-                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="bi bi-calendar-fill text-warning text-sm opacity-10"></i>
-                    </div>
-                    <span class="nav-link-text ms-1">Periode PBL</span>
-                </a>
-            </li>
-
-            <!-- Tahapan Pelaksanaan Proyek -->
-            <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.tahapanpelaksanaan-sem4') || request()->routeIs('admin.tahapanpelaksanaan-sem5') ? 'active' : '' }}"
-                    data-bs-toggle="collapse" href="#tahapanPelaksanaan" role="button"
-                    aria-expanded="{{ request()->routeIs('admin.tahapanpelaksanaan-sem4') || request()->routeIs('admin.tahapanpelaksanaan-sem5') ? 'true' : 'false' }}"
-                    aria-controls="tahapanPelaksanaan">
-                    <div
-                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-app text-info text-sm opacity-10"></i>
-                    </div>
-                    <span class="nav-link-text ms-1">Tahapan Pelaksanaan Proyek</span>
-                </a>
-                <div class="collapse {{ request()->routeIs('admin.tahapanpelaksanaan-sem4') || request()->routeIs('admin.tahapanpelaksanaan-sem5') ? 'show' : '' }}"
-                    id="tahapanPelaksanaan">
+                <div class="collapse {{ request()->routeIs('admin.periodepbl*') || request()->routeIs('admin.matkul*') || request()->routeIs('admin.kelas*') || request()->routeIs('admin.dosen*') || request()->routeIs('admin.mahasiswa*') || request()->routeIs('admin.pengampu*') || request()->routeIs('admin.timpbl*') ? 'show' : '' }}"
+                    id="masterData">
                     <ul class="nav flex-column ms-4">
                         <li class="nav-item mt-2">
-                            <a class="nav-link {{ request()->routeIs('admin.tahapanpelaksanaan-sem4') ? 'active' : '' }}"
-                                href="{{ route('admin.tahapanpelaksanaan-sem4') }}">
-                                Semester 4
+                            <a class="nav-link {{ request()->routeIs('admin.periodepbl*') ? 'active' : '' }}"
+                                href="{{ route('admin.periodepbl') }}">
+                                Periode PBL
                             </a>
                         </li>
                         <li class="nav-item mt-2">
-                            <a class="nav-link {{ request()->routeIs('admin.tahapanpelaksanaan-sem5') ? 'active' : '' }}" href="{{ route('admin.tahapanpelaksanaan-sem5') }}">
-                                Semester 5
+                            <a class="nav-link {{ request()->routeIs('admin.matkul*') ? 'active' : '' }}"
+                                href="{{ route('admin.matkul') }}">
+                                Mata Kuliah
+                            </a>
+                        </li>
+                        <li class="nav-item mt-2">
+                            <a class="nav-link {{ request()->routeIs('admin.kelas*') ? 'active' : '' }}"
+                                href="{{ route('admin.kelas') }}">
+                                Kelas
+                            </a>
+                        </li>
+                        <li class="nav-item mt-2">
+                            <a class="nav-link {{ request()->routeIs('admin.dosen*') ? 'active' : '' }}"
+                                href="{{ route('admin.dosen') }}">
+                                Data Dosen
+                            </a>
+                        </li>
+                        <li class="nav-item mt-2">
+                            <a class="nav-link {{ request()->routeIs('admin.mahasiswa*') ? 'active' : '' }}"
+                                href="{{ route('admin.mahasiswa') }}">
+                                Data Mahasiswa
+                            </a>
+                        </li>
+                        <li class="nav-item mt-2">
+                            <a class="nav-link {{ request()->routeIs('admin.pengampu*') ? 'active' : '' }}"
+                                href="{{ route('admin.pengampu') }}">
+                                Mengampu MK / Mapro
+                            </a>
+                        </li>
+                        <li class="nav-item mt-2">
+                            <a class="nav-link {{ request()->routeIs('admin.timpbl*') ? 'active' : '' }}"
+                                href="{{ route('admin.timpbl') }}">
+                                Tim PBL
                             </a>
                         </li>
                     </ul>
                 </div>
             </li>
 
-            <!-- Master Data -->
-            <li class="nav-item mt-2">
-                <a class="nav-link {{ request()->routeIs('admin.matkul') || request()->routeIs('admin.mahasiswa') || request()->routeIs('admin.dosen') ? 'active' : '' }}"
-                    data-bs-toggle="collapse" href="#masterData" role="button"
-                    aria-expanded="{{ request()->routeIs('admin.matkul') || request()->routeIs('admin.mahasiswa') || request()->routeIs('admin.dosen') ? 'true' : 'false' }}"
-                    aria-controls="masterData">
+            <!-- Tahapan Pelaksanaan Proyek -->
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('admin.tahapanpelaksanaan-sem4*') || request()->routeIs('admin.tahapanpelaksanaan-sem5*') ? 'active' : '' }}"
+                    data-bs-toggle="collapse" href="#tahapanPelaksanaan" role="button"
+                    aria-expanded="{{ request()->routeIs('admin.tahapanpelaksanaan-sem4*') || request()->routeIs('admin.tahapanpelaksanaan-sem5*') ? 'true' : 'false' }}"
+                    aria-controls="tahapanPelaksanaan">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-single-copy-04 text-success text-sm opacity-10"></i>
+                        <i class="bi bi-file-earmark-text-fill text-success text-sm opacity-10"></i>
                     </div>
-                    <span class="nav-link-text ms-1">Master Data</span>
+                    <span class="nav-link-text ms-1">Tahapan Pelaksanaan Proyek</span>
                 </a>
-                <div class="collapse {{ request()->routeIs('admin.matkul') || request()->routeIs('admin.mahasiswa') || request()->routeIs('admin.dosen') ? 'show' : '' }}"
-                    id="masterData">
+                <div class="collapse {{ request()->routeIs('admin.tahapanpelaksanaan-sem4*') || request()->routeIs('admin.tahapanpelaksanaan-sem5*') ? 'show' : '' }}"
+                    id="tahapanPelaksanaan">
                     <ul class="nav flex-column ms-4">
                         <li class="nav-item mt-2">
-                            <a class="nav-link {{ request()->routeIs('admin.matkul') ? 'active' : '' }}"
-                                href="{{ route('admin.matkul') }}">
-                                Mata Kuliah
+                            <a class="nav-link {{ request()->routeIs('admin.tahapanpelaksanaan-sem4*') ? 'active' : '' }}"
+                                href="{{ route('admin.tahapanpelaksanaan-sem4') }}">
+                                Semester 4
                             </a>
                         </li>
                         <li class="nav-item mt-2">
-                            <a class="nav-link {{ request()->routeIs('admin.mahasiswa') ? 'active' : '' }}" href="{{ route('admin.mahasiswa') }}">
-                                Akun Mahasiswa
-                            </a>
-                        </li>
-                        <li class="nav-item mt-2">
-                            <a class="nav-link {{ request()->routeIs('admin.dosen') ? 'active' : '' }}" href="{{ route('admin.dosen') }}">
-                                Akun Dosen
+                            <a class="nav-link {{ request()->routeIs('admin.tahapanpelaksanaan-sem5*') ? 'active' : '' }}"
+                                href="{{ route('admin.tahapanpelaksanaan-sem5') }}">
+                                Semester 5
                             </a>
                         </li>
                     </ul>

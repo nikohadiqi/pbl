@@ -4,9 +4,10 @@
 
 namespace App\Models;
 
+use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Laravel\Sanctum\HasApiTokens; 
+use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -48,7 +49,7 @@ class User extends Authenticatable
     // Relasi ke Role
     public function role()
     {
-        return $this->belongsTo(Role::class);
+        return $this->belongsTo(RoleMiddleware::class);
     }
     public function timpbl()
     {

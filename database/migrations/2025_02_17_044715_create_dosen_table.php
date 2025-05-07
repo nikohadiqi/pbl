@@ -12,15 +12,19 @@ return new class extends Migration
     public function up()
     {
         Schema::create('dosen', function (Blueprint $table) {
-            $table->id();
+            $table->string('nip')->primary();
             $table->string('nama');
-            $table->string('nip');
-            $table->string('no_telp'); 
+            $table->string('no_telp');
+            $table->string('email');
+            $table->string('prodi');
+            $table->string('jurusan');
+            $table->string('jenis_kelamin')->nullable();
+            $table->string('status_dosen')->nullable();
             $table->timestamps();
         });
     }
-    
-    
+
+
     /**
      * Reverse the migrations.
      */

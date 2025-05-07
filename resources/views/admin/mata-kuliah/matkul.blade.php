@@ -1,13 +1,13 @@
 @extends('layouts.dashboardadmin-template')
 
 @section('title','Mata Kuliah | Sistem Informasi dan Monitoring Project Based Learning')
-
+@section('page-title', 'Mata Kuliah')
 @section('content')
 <div class="container-fluid py-4">
     <div class="card p-4">
         <div class="d-flex justify-content-between align-items-center">
             <h4 class="fw-bold">Mata Kuliah</h4>
-            <a href="{{ route('admin.tambah-matkul') }}">
+            <a href="{{ route('admin.matkul.tambah') }}">
                 <button class="btn btn-primary text-white fw-bold"><i class="bi bi-plus me-2"></i>Tambah Data</button>
             </a>
         </div>
@@ -20,36 +20,37 @@
             </div>
         @endif
 
-        <p class="text-sm">Data Mata Kuliah Prodi TRPL</p>
+        <p class="text-sm">Data Mata Kuliah Prodi TRPL yang merupakan Mata Kuliah PBL</p>
         <div class="table-responsive mt-2">
             <table class="table table-hover" id="datatable-search">
                 <thead class="table-light font-weight-bold">
                     <tr>
                         <th>Nomor</th>
+                        <th>Kode Matkul</th>
                         <th>Mata Kuliah</th>
-                        <th>Capaian</th>
-                        <th>Tujuan</th>
-                        <th>Aksi</th>
+                        <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="text-sm font-weight-normal">
-                    @foreach($data as $index => $matkul)
+                    @foreach($matkul as $index => $mataKuliah)
                     <tr>
                         <td>{{ $index + 1 }}</td>
-                        <td>{{ $matkul->matakuliah }}</td>
-                        <td>{{ $matkul->capaian }}</td>
-                        <td>{{ $matkul->tujuan }}</td>
-                        <td>
-                            <a href="{{ route('admin.edit-matkul', $matkul->id) }}">
-                                <button class="btn btn-sm btn-info text-white"><i class="bi bi-pencil-square"></i></button>
-                            </a>
-                            <form action="{{ route('admin.hapus-matkul', $matkul->id) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus?')">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </form>
+                        <td>{{ $mataKuliah->kode }}</td>
+                        <td>{{ $mataKuliah->matakuliah }}</td>
+                        <td class="text-center">
+                            <div class="d-flex justify-content-center gap-2">
+                                <a href="{{ route('admin.matkul.edit', $mataKuliah->id) }}">
+                                    <button class="btn btn-sm btn-info text-white"><i class="bi bi-pencil-square"></i></button>
+                                </a>
+                                <!-- Delete Button -->
+                                <form id="delete-form-{{ $mataKuliah->id }}" action="{{route('admin.matkul.delete', $mataKuliah->id)}}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="button" class="btn btn-sm btn-danger text-white" onclick="confirmDelete({{ $mataKuliah->id }})">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                     @endforeach
@@ -59,3 +60,27 @@
     </div>
 </div>
 @endsection
+
+@push('script')
+{{-- Script Konfirmasi Hapus Data --}}
+<script>
+    function confirmDelete(id) {
+        console.log(id);
+    Swal.fire({
+        title: 'Apakah Anda Yakin?',
+        text: "Data ini akan dihapus secara permanen!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya, Hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Submit form delete
+            document.getElementById('delete-form-' + encodeURIComponent(id)).submit();
+        }
+    })
+}
+</script>
+@endpush

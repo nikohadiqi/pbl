@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Website\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Dosen;
 use App\Models\Mahasiswa;
+use App\Models\Pengampu;
 use App\Models\TimPBL;
 use Illuminate\Http\Request;
 
@@ -14,9 +15,18 @@ class DashboardController extends Controller
         $timPBLCount = TimPBL::count();
         $mahasiswaCount = Mahasiswa::count();
         $dosenCount = Dosen::count();
-
+        // Menampilkan Data Tim Terbaru
+        $timpbl = TimPBL::with(['ketua', 'periode', 'manajer_proyek'])
+        ->latest()
+        ->take(5) // Mengambil 5 data terbaru
+        ->get();
+        // Menampilkan Data Dosen Pengampu Terbaru
+        $datadosen = Pengampu::with(['kelasFk', 'dosenFk', 'matkulFK', 'periodeFK'])
+            ->latest()
+            ->take(5) // Mengambil 5 data terbaru
+            ->get();
         return view('admin.dashboard-admin', compact(
-            'timPBLCount', 'mahasiswaCount', 'dosenCount',
+            'timPBLCount', 'mahasiswaCount', 'dosenCount', 'timpbl','datadosen'
         ));
     }
 }

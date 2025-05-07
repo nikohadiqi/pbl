@@ -12,8 +12,8 @@ class MataKuliahController extends Controller
     // **Tampilkan Semua Data Mata Kuliah**
     public function index()
     {
-        $data = MataKuliah::all();
-        return view('admin.mata-kuliah.matkul', compact('data'));
+        $matkul = MataKuliah::all();
+        return view('admin.mata-kuliah.matkul', compact('matkul'));
     }
 
     // **Tampilkan Form Tambah Mata Kuliah**
@@ -26,16 +26,14 @@ class MataKuliahController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'matakuliah' => 'required|string|max:255',
-            'capaian' => 'required|string',
-            'tujuan' => 'required|string',
+            'program_studi' => 'required|string',
+            'kode' => 'required|string|unique:matakuliah,kode',
+            'matakuliah' => 'required|string',
+            'sks' => 'nullable|integer',
+            'id_feeder' => 'nullable|string',
         ]);
 
-        MataKuliah::create([
-            'matakuliah' => $request->matakuliah,
-            'capaian' => $request->capaian,
-            'tujuan' => $request->tujuan,
-        ]);
+        MataKuliah::create($request->all());
 
         // Menampilkan SweetAlert
         Alert::success('Berhasil!', 'Data Mata Kuliah berhasil Ditambahkan!');
@@ -52,18 +50,17 @@ class MataKuliahController extends Controller
     // **Update Mata Kuliah**
     public function update(Request $request, $id)
     {
+        $matkul = MataKuliah::findOrFail($id);
+
         $request->validate([
-            'matakuliah' => 'required|string|max:255',
-            'capaian' => 'required|string',
-            'tujuan' => 'required|string',
+            'program_studi' => 'required|string',
+            'kode' => 'required|string|unique:matakuliah,kode,' . $id,
+            'matakuliah' => 'required|string',
+            'sks' => 'nullable|integer',
+            'id_feeder' => 'nullable|string',
         ]);
 
-        $matkul = MataKuliah::findOrFail($id);
-        $matkul->update([
-            'matakuliah' => $request->matakuliah,
-            'capaian' => $request->capaian,
-            'tujuan' => $request->tujuan,
-        ]);
+        $matkul->update($request->all());
 
         // Menampilkan SweetAlert
         Alert::success('Berhasil!', 'Data Mata Kuliah berhasil Diperbarui!');

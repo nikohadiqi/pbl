@@ -70,9 +70,6 @@
     });
     </script>
 
-    <!--   Core JS Files   -->
-    @stack('js')
-
     <script src="{{ asset('assets/js/core/popper.min.js')}}"></script>
     <script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>
     {{-- <script src="{{ asset('') }}/assets/js/core/bootstrap.bundle.min.js"></script> --}}
@@ -154,6 +151,9 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
     <script src="{{ asset('assets/js/argon-dashboard.js') }}"></script>
+
+    <!--   Stack JS untuk blade lain   -->
+    @stack('js')
 </body>
 
 </html>

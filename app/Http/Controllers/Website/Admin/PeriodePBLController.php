@@ -23,7 +23,7 @@ class PeriodePBLController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'semester' => 'required|in:4,5',
+            'semester' => 'required|in:1,2,3,4,5,6',
             'tahun' => 'required|digits:4',
         ]);
 
@@ -43,7 +43,7 @@ class PeriodePBLController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'semester' => 'required|in:4,5',
+            'semester' => 'required|in:1,2,3,4,5,6',
             'tahun' => 'required|digits:4',
         ]);
 
