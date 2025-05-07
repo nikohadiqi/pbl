@@ -17,6 +17,20 @@ class UserSeeder extends Seeder
             'role' => 'admin',
         ]);
 
+        // Admin Bu Dian
+        User::create([
+            'nim' => '198711032021212001',
+            'password' => Hash::make('198711032021212001'),  // Password yang di-hash
+            'role' => 'admin',
+        ]);
+
+        // Admin Pak Arya
+        User::create([
+            'nim' => '198103232014041001',
+            'password' => Hash::make('198103232014041001'),  // Password yang di-hash
+            'role' => 'admin',
+        ]);
+
         // Seeder untuk role mahasiswa
         User::create([
             'nim' => '22222',

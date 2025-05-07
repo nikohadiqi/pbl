@@ -9,6 +9,7 @@ use App\Http\Controllers\Website\Admin\MahasiswaController;
 use App\Http\Controllers\Website\Admin\MataKuliahController;
 use App\Http\Controllers\Website\Admin\PengampuController;
 use App\Http\Controllers\Website\Admin\PeriodePBLController;
+use App\Http\Controllers\Website\Admin\ProfilController;
 use App\Http\Controllers\Website\Admin\TPP4Controller;
 use App\Http\Controllers\Website\Admin\TPP5Controller;
 use App\Http\Controllers\Website\Admin\TimPBLController;
@@ -36,6 +37,10 @@ Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth')->
 Route::middleware(['auth:sanctum'])->group(function () {
     // Dashboard
     Route::get('admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+    // Profil
+    Route::get('admin/profil', [ProfilController::class, 'index'])->name('admin.profil');
+    Route::get('/admin/profil/ubah-password', [ProfilController::class, 'editPassword'])->name('admin.profil.ubah-password');
+    Route::post('/admin//profil/ubah-password', [ProfilController::class, 'updatePassword'])->name('admin.profil.update-password');
 
     // TIM PBL
     Route::prefix('admin/master-data/tim-pbl')->middleware(['auth:sanctum', 'admin'])->group(function () {

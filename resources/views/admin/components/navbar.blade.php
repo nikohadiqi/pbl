@@ -28,11 +28,14 @@
                 <!-- User Profile Dropdown -->
                 <li class="nav-item dropdown">
                     <a class="nav-link text-dark d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="{{ asset('assets/img/team-3.jpg') }}" alt="User Avatar" class="rounded-circle me-2" width="40" height="40">
-                        <span class="fw-bold">Admin</span>
+                        <img src="{{ asset('assets/img/logo-poliwangi.png') }}" alt="User Avatar" class="rounded-circle me-2" width="40" height="40">
+                        <span class="d-flex flex-column">
+                            <span class="fw-bold">Admin</span>
+                            <span class="fw-bold">{{ Auth::user()-> nim }}</span>
+                        </span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i> Profil</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.profil') }}"><i class="fas fa-user me-2"></i> Profil</a></li>
                         <li>
                             <a class="dropdown-item fixed-plugin-button-nav" href="javascript:;">
                                 <i class="fas fa-cog me-2"></i> Pengaturan
