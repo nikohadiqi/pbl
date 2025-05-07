@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'web', // default guard untuk pengguna biasa
         'passwords' => 'users',
     ],
 
@@ -27,23 +27,19 @@ return [
     | Of course, a great default configuration has been defined for you
     | here which uses session storage and the Eloquent user provider.
     |
-    | All authentication drivers have a user provider. This defines how the
-    | users are actually retrieved out of your database or other storage
-    | mechanisms used by this application to persist your user's data.
-    |
     | Supported: "session"
     |
     */
 
-    'guards' => [
+   'guards' => [
     'web' => [
         'driver' => 'session',
         'provider' => 'users',
     ],
 
-    'mahasiswa' => [ // 👈 Tambahkan ini
+    'mahasiswa' => [
         'driver' => 'session',
-        'provider' => 'mahasiswas',
+        'provider' => 'akun_mahasiswa',
     ],
 ],
 
@@ -70,18 +66,11 @@ return [
         'model' => App\Models\User::class,
     ],
 
-    'mahasiswa' => [ // 👈 Tambahkan ini
+    'akun_mahasiswa' => [
         'driver' => 'eloquent',
         'model' => App\Models\AkunMahasiswa::class,
     ],
-
-
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
-    ],
+],
 
     /*
     |--------------------------------------------------------------------------
@@ -105,6 +94,12 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
+            'table' => 'password_reset_tokens',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'mahasiswa' => [ // Konfigurasi password reset untuk mahasiswa
+            'provider' => 'mahasiswa',
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,

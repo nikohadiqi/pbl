@@ -8,13 +8,10 @@ use Illuminate\Support\Facades\Auth;
 
 class MahasiswaMiddleware
 {
-    /**
-     * Handle an incoming request.
-     */
     public function handle(Request $request, Closure $next)
     {
-        // Cek apakah user login lewat guard mahasiswa
-        if (!Auth::guard('mahasiswa')->check()) {
+        // Cek apakah user login secara umum (via guard 'web') dan role-nya mahasiswa
+        if (!Auth::check() || Auth::user()->role !== 'mahasiswa') {
             return redirect()->route('login')->withErrors([
                 'akses' => 'Akses ditolak! Silakan login sebagai mahasiswa.'
             ]);

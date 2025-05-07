@@ -145,11 +145,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 });
 
 // Route Akun Mahasiswa
-Route::prefix('mahasiswa')->middleware(['auth:sanctum'])->group(function () {
     // Dashboard
-    Route::get('/dashboard', function () {
-        return view('mahasiswa.dashboard-mahasiswa');
-    })->name('mahasiswa.dashboard');
+    Route::middleware(['auth:mahasiswa'])->group(function () {
+    Route::get('/dashboard', function () {return view('mahasiswa.dashboard-mahasiswa');})->name('mahasiswa.dashboard');
 
     // Profil
     Route::get('/profil', [MahasiswaProfilController::class, 'index'])->name('mahasiswa.profil');
@@ -172,12 +170,12 @@ Route::prefix('mahasiswa')->middleware(['auth:sanctum'])->group(function () {
 
 
     // Logbook
-    Route::prefix('semester-4/logbook')->middleware(['auth:sanctum', 'mahasiswa'])->group(function () {
+    Route::prefix('semester-4/logbook')->middleware(['auth:mahasiswa', 'mahasiswa'])->group(function () {
         Route::get('/', [LogbookController::class, 'index'])->name('mahasiswa.logbook');
         Route::get('/isi-logbook', [LogbookController::class, 'create'])->name('mahasiswa.logbook.create');
     });
     // Pelaporan
-    Route::prefix('semester-4/laporan-pbl')->middleware(['auth:sanctum', 'mahasiswa'])->group(function () {
+    Route::prefix('semester-4/laporan-pbl')->middleware(['auth:mahasiswa', 'mahasiswa'])->group(function () {
         Route::get('/', [DashboardMahasiswaController::class, 'laporan_pbl'])->name('mahasiswa.pelaporan-pbl');
         Route::get('/form-laporan', [DashboardMahasiswaController::class, 'form_laporan'])->name('mahasiswa.pelaporan-pbl.create');
     });
