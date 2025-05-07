@@ -36,11 +36,16 @@ return [
     */
 
     'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
-        ],
+    'web' => [
+        'driver' => 'session',
+        'provider' => 'users',
     ],
+
+    'mahasiswa' => [ // 👈 Tambahkan ini
+        'driver' => 'session',
+        'provider' => 'mahasiswas',
+    ],
+],
 
     /*
     |--------------------------------------------------------------------------
@@ -59,11 +64,18 @@ return [
     |
     */
 
-    'providers' => [
-        'users' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\User::class,
-        ],
+   'providers' => [
+    'users' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\User::class,
+    ],
+
+    'mahasiswa' => [ // 👈 Tambahkan ini
+        'driver' => 'eloquent',
+        'model' => App\Models\AkunMahasiswa::class,
+    ],
+
+
 
         // 'users' => [
         //     'driver' => 'database',

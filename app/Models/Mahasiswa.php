@@ -10,7 +10,7 @@ class Mahasiswa extends Model
     use HasFactory;
 
     // Tentukan nama tabel jika tidak menggunakan plural
-    protected $table = 'mahasiswa';
+    protected $table = 'data_mahasiswa';
 
     protected $primaryKey = 'nim'; // <- tambahkan ini
     public $incrementing = false;  // <- tambahkan ini

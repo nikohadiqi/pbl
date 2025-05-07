@@ -7,15 +7,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\AkunMahasiswa;
 use Illuminate\Support\Facades\Session as FacadesSession;
 
 class LoginController extends Controller
 {
+    // Menampilkan halaman login
     public function showLoginForm()
     {
         return view('auth.login'); // Halaman Login
     }
 
+    // Proses login
     public function login(Request $request)
     {
         $validated = $request->validate([
@@ -24,16 +27,26 @@ class LoginController extends Controller
             'role' => 'required|string|in:admin,mahasiswa,dosen',
         ]);
 
-        // Cari user berdasarkan NIM
+        // Check role and redirect to the respective login function
+        switch ($validated['role']) {
+            case 'admin':
+                return $this->loginAdmin($request, $validated);
+            case 'mahasiswa':
+                return $this->loginMahasiswa($request, $validated);
+            case 'dosen':
+                return $this->loginDosen($request, $validated);
+            default:
+                return back()->withErrors(['role' => 'Role tidak sesuai!']);
+        }
+    }
+
+    // Login untuk Admin
+    public function loginAdmin(Request $request, $validated)
+    {
         $user = User::where('nim', $validated['nim'])->first();
 
-        // Cek apakah user ditemukan dan password valid
-        if ($user && Hash::check($validated['password'], $user->password)) {
-            // Pastikan role sesuai dengan yang dipilih di form login
-            if ($user->role !== $validated['role']) {
-                return back()->withErrors(['role' => 'Role tidak sesuai dengan akun ini!']);
-            }
-
+        // Cek apakah admin ditemukan dan password valid
+        if ($user && Hash::check($validated['password'], $user->password) && $user->role == 'admin') {
             // Generate token untuk autentikasi (opsional jika pakai API)
             $token = $user->createToken('YourAppName')->plainTextToken;
             $request->session()->put('token', $token);
@@ -41,19 +54,57 @@ class LoginController extends Controller
             // Simpan informasi user di session untuk kebutuhan autentikasi
             auth()->login($user);
 
-            // Redirect ke dashboard sesuai role
-            return match ($user->role) {
-                'admin' => redirect()->route('admin.dashboard'),
-                'mahasiswa' => redirect()->route('mahasiswa.dashboard'),
-                'dosen' => redirect()->route('dosen.dashboard'),
-                default => back()->withErrors(['role' => 'Role tidak sesuai!'])
-            };
+            // Redirect ke dashboard admin
+            return redirect()->route('admin.dashboard');
         }
 
         // Jika login gagal
         return back()->withErrors(['nim' => 'NIM atau password salah!']);
     }
 
+    // Login untuk Mahasiswa
+    public function loginMahasiswa(Request $request, $validated)
+    {
+        $mahasiswa = AkunMahasiswa::where('nim', $validated['nim'])->first();
+
+        // Cek apakah mahasiswa ditemukan dan password valid
+        if ($mahasiswa && Hash::check($validated['password'], $mahasiswa->password)) {
+            // Login mahasiswa
+            auth()->guard('web')->login($mahasiswa);
+
+            // Simpan session atau token jika perlu
+            $token = $mahasiswa->createToken('mahasiswa-token')->plainTextToken;
+            $request->session()->put('token', $token);
+
+            // Redirect ke dashboard mahasiswa
+            return redirect()->route('mahasiswa.dashboard');
+        }
+
+        // Jika login gagal
+        return back()->withErrors(['nim' => 'NIM atau password salah!']);
+    }
+
+    // Login untuk Dosen
+    public function loginDosen(Request $request, $validated)
+    {
+        $user = User::where('nim', $validated['nim'])->first();
+
+        // Cek apakah dosen ditemukan dan password valid
+        if ($user && Hash::check($validated['password'], $user->password) && $user->role == 'dosen') {
+            // Generate token untuk autentikasi
+            $token = $user->createToken('YourAppName')->plainTextToken;
+            $request->session()->put('token', $token);
+
+            // Simpan informasi user di session untuk kebutuhan autentikasi
+            auth()->login($user);
+
+            // Redirect ke dashboard dosen
+            return redirect()->route('dosen.dashboard');
+        }
+
+        // Jika login gagal
+        return back()->withErrors(['nim' => 'NIM atau password salah!']);
+    }
 
     // Admin Dashboard
     public function adminDashboard()

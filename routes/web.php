@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Auth\MahasiswaRegisterController;
+use App\Http\Controllers\Auth\LoginMahasiswaController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Website\Admin\DashboardController;
 use Illuminate\Support\Facades\Route;

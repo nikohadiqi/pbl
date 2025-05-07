@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Auth\MahasiswaRegisterController;
+use App\Http\Controllers\Auth\MahasiswaLoginController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Admin\DosenController;
 use App\Http\Controllers\API\Admin\MahasiswaController;
@@ -19,6 +21,11 @@ use App\Http\Controllers\API\Mahasiswa\CapaianPembelajaranController;
 use App\Http\Controllers\API\Mahasiswa\LogbookController;
 
 
+// Registrasi mahasiswa
+Route::post('/mahasiswa/register', [MahasiswaRegisterController::class, 'register']);
+
+// Login mahasiswa
+Route::post('/mahasiswa/login', [MahasiswaLoginController::class, 'login']);
 Route::post('/login', [LoginController::class, 'login']);
 
 Route::prefix('admin')->middleware(['auth:sanctum', 'admin'])->group(function () {

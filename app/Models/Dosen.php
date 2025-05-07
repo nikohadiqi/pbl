@@ -10,7 +10,7 @@ class Dosen extends Model
     use HasFactory;
 
     // Tentukan nama tabel jika tidak menggunakan plural
-    protected $table = 'dosen';
+    protected $table = 'data_dosen';
 
     protected $primaryKey = 'nip'; // <- tambahkan ini
     public $incrementing = false;  // <- tambahkan ini

@@ -9,17 +9,12 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create('mahasiswa', function (Blueprint $table) {
-            $table->string('nim')->primary();
-            $table->string('nama');
-            $table->string('program_studi');
-            $table->string('dosen_wali')->nullable();
-            $table->string('status')->nullable();
-            $table->string('jenis_kelamin')->nullable();
+        Schema::create('tim_pbl', function (Blueprint $table) {
+            $table->string('kode_tim')->primary(); // PRIMARY KEY
             $table->string('kelas');
-            $table->string('angkatan')->nullable();
+            $table->integer('kelompok');
             $table->timestamps();
         });
     }

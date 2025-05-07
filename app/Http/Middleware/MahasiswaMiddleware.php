@@ -13,12 +13,11 @@ class MahasiswaMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        // Pastikan pengguna sudah login dan memiliki peran 'admin'
-        if (!Auth::check() || Auth::user()->role !== 'mahasiswa') {
-            return response()->json([
-                'success' => false,
-                'message' => 'Akses ditolak! Hanya mahasiswa yang diperbolehkan.'
-            ], 403);
+        // Cek apakah user login lewat guard mahasiswa
+        if (!Auth::guard('mahasiswa')->check()) {
+            return redirect()->route('login')->withErrors([
+                'akses' => 'Akses ditolak! Silakan login sebagai mahasiswa.'
+            ]);
         }
 
         return $next($request);

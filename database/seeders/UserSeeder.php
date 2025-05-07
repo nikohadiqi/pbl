@@ -5,11 +5,14 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\AkunMahasiswa;
 
 class UserSeeder extends Seeder
 {
     public function run()
     {
+
+        $mahasiswa = AkunMahasiswa::first();
         // Admin
         User::create([
             'nim' => '111111',
@@ -20,19 +23,19 @@ class UserSeeder extends Seeder
         // Admin Bu Dian
         User::create([
             'nim' => '198711032021212001',
-            'password' => Hash::make('198711032021212001'),  // Password yang di-hash
+            'password' => Hash::make('198711032021212001'),
             'role' => 'admin',
         ]);
 
         // Admin Pak Arya
         User::create([
             'nim' => '198103232014041001',
-            'password' => Hash::make('198103232014041001'),  // Password yang di-hash
+            'password' => Hash::make('198103232014041001'),
             'role' => 'admin',
         ]);
 
-        // Mahasiswa
-        $mahasiswa = User::create([
+        // Mahasiswa - Use AkunMahasiswa model if needed
+        $mahasiswa = AkunMahasiswa::create([
             'nim' => '22222',
             'password' => Hash::make('22222'),
             'role' => 'mahasiswa',
