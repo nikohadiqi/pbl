@@ -145,9 +145,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
 });
 
 // Route Akun Mahasiswa
-    // Dashboard
-    Route::middleware(['auth:mahasiswa'])->group(function () {
-    Route::get('/dashboard', function () {return view('mahasiswa.dashboard-mahasiswa');})->name('mahasiswa.dashboard');
+// Dashboard Mahasiswa
+Route::middleware(['auth:mahasiswa'])->group(function () {
+    Route::get('/dashboard', [DashboardMahasiswaController::class, 'index'])->name('mahasiswa.dashboard');
+
 
     // Profil
     Route::get('/profil', [MahasiswaProfilController::class, 'index'])->name('mahasiswa.profil');
@@ -171,12 +172,17 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // Logbook
     Route::prefix('semester-4/logbook')->middleware(['auth:mahasiswa', 'mahasiswa'])->group(function () {
-        Route::get('/', [LogbookController::class, 'index'])->name('mahasiswa.logbook');
-        Route::get('/isi-logbook', [LogbookController::class, 'create'])->name('mahasiswa.logbook.create');
-    });
+        Route::get('/logbook', [LogbookController::class, 'index'])->name('mahasiswa.logbook');
+        Route::get('/logbook/isi', [LogbookController::class, 'create'])->name('mahasiswa.logbook.create');
+        Route::post('/logbook', [LogbookController::class, 'store'])->name('mahasiswa.logbook.store');
+        Route::get('/logbook/{id}/edit', [LogbookController::class, 'edit'])->name('mahasiswa.logbook.edit');
+        Route::get('/{id}', [LogbookController::class, 'show'])->name('mahasiswa.logbook.show');
+        Route::put('/logbook/{id}', [LogbookController::class, 'update'])->name('mahasiswa.logbook.update');
+
+});
     // Pelaporan
     Route::prefix('semester-4/laporan-pbl')->middleware(['auth:mahasiswa', 'mahasiswa'])->group(function () {
         Route::get('/', [DashboardMahasiswaController::class, 'laporan_pbl'])->name('mahasiswa.pelaporan-pbl');
         Route::get('/form-laporan', [DashboardMahasiswaController::class, 'form_laporan'])->name('mahasiswa.pelaporan-pbl.create');
     });
- });
+});

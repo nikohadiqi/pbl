@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\AkunMahasiswa;
 use App\Models\regMahasiswa;
+use App\Models\Anggota_Tim_Pbl; // Pastikan ini diimpor dengan benar
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
@@ -28,9 +29,6 @@ class MahasiswaRegisterController extends Controller
         // Logging kode tim
         Log::info('Kode tim yang dibuat:', ['kode_tim' => $kode_tim]);
 
-        // Debug langsung sebelum buat akun
-        // dd($kode_tim, $request->anggota);
-
         // Buat data tim jika belum ada
         $tim = regMahasiswa::firstOrCreate([
             'kode_tim' => $kode_tim,
@@ -48,6 +46,7 @@ class MahasiswaRegisterController extends Controller
                 'nim' => $nim,
             ]);
 
+            // Membuat akun mahasiswa baru
             $akun = AkunMahasiswa::create([
                 'kode_tim' => $kode_tim, // Foreign key ke tim
                 'nim' => $nim,
@@ -56,6 +55,13 @@ class MahasiswaRegisterController extends Controller
             ]);
 
             Log::info('Akun berhasil dibuat:', $akun->toArray());
+
+            // Setelah akun dibuat, simpan anggota tim ke tabel anggota_tim_pbl
+            Anggota_Tim_Pbl::create([
+                'kode_tim' => $kode_tim,
+                'nim' => $nim,
+                'nama' => null, // Status bisa diset null jika tidak diisi
+            ]);
         }
 
         // Mengirim respons JSON setelah registrasi berhasil

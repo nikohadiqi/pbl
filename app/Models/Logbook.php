@@ -12,25 +12,23 @@ class Logbook extends Model
     protected $table = 'logbook';
 
     protected $fillable = [
-        'timpbl_id',
-        'mahasiswa_id',
         'aktivitas',
         'hasil',
         'foto_kegiatan',
-        'anggota1',
-        'anggota2',
-        'anggota3',
-        'anggota4',
-        'anggota5'
+        'kontribusi',
+        'progress',
+        'kode_tim',
+        'nim'
     ];
 
     public function mahasiswa()
     {
-        return $this->belongsTo(Mahasiswa::class, 'mahasiswa_id');
+        return $this->belongsTo(AkunMahasiswa::class, 'nim', 'nim');
     }
 
-    public function timPbl()
-    {
-        return $this->belongsTo(TimPbl::class, 'timpbl_id');
-    }
+   // Relasi dengan tim_pbl
+   public function timPbl()
+   {
+       return $this->belongsTo(TimPbl::class, 'kode_tim', 'kode_tim');
+   }
 }

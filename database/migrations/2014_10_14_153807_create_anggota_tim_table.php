@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('anggota_tim_pbl', function (Blueprint $table) {
             $table->string('kode_tim'); // foreign key
+            $table->string('nama')->nullable();
             $table->string('nim')->unique();
+            $table->string('status')->nullable();
             $table->timestamps();
 
             $table->foreign('kode_tim')->references('kode_tim')->on('tim_pbl')->onDelete('cascade');

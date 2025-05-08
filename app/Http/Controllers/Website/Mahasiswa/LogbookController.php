@@ -4,108 +4,105 @@ namespace App\Http\Controllers\Website\Mahasiswa;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\AkunMahasiswa;
+use App\Models\regMahasiswa;
+use App\Models\Anggota_Tim_Pbl;
 use App\Models\Logbook;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class LogbookController extends Controller
 {
     public function index()
     {
-        return view('mahasiswa.semester4.logbook.logbook');
-    }
-
-    public function create()
-    {
-        return view('mahasiswa.semester4.logbook.form-logbook');
-    }
-
-    public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'timpbl_id' => 'required|exists:timpbl,id',
-            'mahasiswa_id' => 'required|exists:mahasiswa,id',
-            'aktivitas' => 'nullable|string',
-            'hasil' => 'nullable|string',
-            'foto_kegiatan' => 'nullable|string',
-            'anggota1' => 'nullable|string',
-            'anggota2' => 'nullable|string',
-            'anggota3' => 'nullable|string',
-            'anggota4' => 'nullable|string',
-            'anggota5' => 'nullable|string',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation Error',
-                'errors' => $validator->errors()
-            ], 400);
-        }
-
-        $logbook = Logbook::create($request->all());
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Logbook created successfully',
-            'data' => $logbook
-        ], 201);
+        $mahasiswa = Auth::guard('mahasiswa')->user();
+        $logbooks = Logbook::where('kode_tim', $mahasiswa->kode_tim)->get();
+        return view('mahasiswa.semester4.logbook.logbook', compact('logbooks'));
     }
 
     public function show($id)
     {
-        $logbook = Logbook::with(['mahasiswa', 'timPbl'])->find($id);
+        $logbook = Logbook::findOrFail($id);
+        return view('mahasiswa.semester4.logbook.show', compact('logbook'));
+    }
+    
+    public function create()
+    {
+        $logbook = null;
+        return view('mahasiswa.semester4.logbook.form-logbook', compact('logbook'));
+    }
 
-        if (!$logbook) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Logbook not found'
-            ], 404);
+    public function store(Request $request)
+    {
+        $mahasiswa = Auth::guard('mahasiswa')->user();
+    
+        $validated = $request->validate([
+            'aktivitas' => 'required|string|max:255',
+            'hasil' => 'required|string|max:255',
+            'progress' => 'required|integer|between:0,100',
+            'foto_kegiatan' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'anggota1' => 'nullable|string|max:255',
+            'anggota2' => 'nullable|string|max:255',
+            'anggota3' => 'nullable|string|max:255',
+            'anggota4' => 'nullable|string|max:255',
+            'anggota5' => 'nullable|string|max:255',
+        ]);
+    
+        $logbook = new Logbook();
+        $logbook->kode_tim = $mahasiswa->kode_tim;
+        $logbook->aktivitas = $request->aktivitas;
+        $logbook->hasil = $request->hasil;
+        $logbook->progress = $request->progress;
+        $logbook->anggota1 = $request->anggota1;
+        $logbook->anggota2 = $request->anggota2;
+        $logbook->anggota3 = $request->anggota3;
+        $logbook->anggota4 = $request->anggota4;
+        $logbook->anggota5 = $request->anggota5;
+    
+        if ($request->hasFile('foto_kegiatan')) {
+            $logbook->foto_kegiatan = $request->file('foto_kegiatan')->store('foto_kegiatan', 'public');
         }
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Logbook details',
-            'data' => $logbook
-        ], 200);
+    
+        $logbook->save();
+    
+        return redirect()->route('mahasiswa.logbook')->with('success', 'Logbook berhasil disimpan!');
+    }
+    
+    public function edit($id)
+    {
+        $logbook = Logbook::findOrFail($id);
+        return view('mahasiswa.semester4.logbook.form-logbook', compact('logbook'));
     }
 
     public function update(Request $request, $id)
     {
-        $logbook = Logbook::find($id);
-
-        if (!$logbook) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Logbook not found'
-            ], 404);
-        }
-
-        $validator = Validator::make($request->all(), [
-            'aktivitas' => 'nullable|string',
-            'hasil' => 'nullable|string',
-            'foto_kegiatan' => 'nullable|string',
-            'anggota1' => 'nullable|string',
-            'anggota2' => 'nullable|string',
-            'anggota3' => 'nullable|string',
-            'anggota4' => 'nullable|string',
-            'anggota5' => 'nullable|string',
+        $validated = $request->validate([
+            'aktivitas' => 'required|string|max:255',
+            'hasil' => 'required|string|max:255',
+            'progress' => 'required|integer|between:0,100',
+            'foto_kegiatan' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'anggota1' => 'nullable|string|max:255',
+            'anggota2' => 'nullable|string|max:255',
+            'anggota3' => 'nullable|string|max:255',
+            'anggota4' => 'nullable|string|max:255',
+            'anggota5' => 'nullable|string|max:255',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation Error',
-                'errors' => $validator->errors()
-            ], 400);
+        $logbook = Logbook::findOrFail($id);
+        $logbook->aktivitas = $request->aktivitas;
+        $logbook->hasil = $request->hasil;
+        $logbook->anggota1 = $request->anggota1;
+        $logbook->anggota2 = $request->anggota2;
+        $logbook->anggota3 = $request->anggota3;
+        $logbook->anggota4 = $request->anggota4;
+        $logbook->anggota5 = $request->anggota5;
+
+        if ($request->hasFile('foto_kegiatan')) {
+            $logbook->foto_kegiatan = $request->file('foto_kegiatan')->store('foto_kegiatan', 'public');
         }
 
-        $logbook->update($request->all());
+        $logbook->save();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Logbook updated successfully',
-            'data' => $logbook
-        ], 200);
+        return redirect()->route('mahasiswa.logbook')->with('success', 'Logbook berhasil diperbarui!');
     }
 
     public function destroy($id)
@@ -115,7 +112,7 @@ class LogbookController extends Controller
         if (!$logbook) {
             return response()->json([
                 'success' => false,
-                'message' => 'Logbook not found'
+                'message' => 'Logbook tidak ditemukan'
             ], 404);
         }
 
@@ -123,30 +120,7 @@ class LogbookController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Logbook deleted successfully'
-        ], 200);
-    }
-
-    public function bulkDelete(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'ids' => 'required|array',
-            'ids.*' => 'exists:logbook,id'
+            'message' => 'Logbook berhasil dihapus'
         ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation Error',
-                'errors' => $validator->errors()
-            ], 400);
-        }
-
-        Logbook::whereIn('id', $request->ids)->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Selected logbooks deleted successfully'
-        ], 200);
     }
 }

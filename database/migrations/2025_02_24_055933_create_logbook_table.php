@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('logbook', function (Blueprint $table) {
             $table->id();
-            // $table->foreignId('tim_id')->constrained('timpbl')->onDelete('cascade');
+            $table->string('kode_tim')->nullable();
             $table->text('aktivitas')->nullable();
             $table->text('hasil')->nullable();
             $table->string('foto_kegiatan')->nullable();
@@ -18,10 +18,11 @@ return new class extends Migration {
             $table->text('anggota3')->nullable();
             $table->text('anggota4')->nullable();
             $table->text('anggota5')->nullable();
+            $table->string('progress')->nullable();
             $table->timestamps();
+            $table->foreign('kode_tim')->references('kode_tim')->on('tim_pbl')->onDelete('cascade');
         });
     }
-
     public function down()
     {
         Schema::dropIfExists('logbook');
