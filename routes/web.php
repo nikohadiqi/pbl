@@ -15,9 +15,13 @@ use App\Http\Controllers\Website\Admin\ProfilController;
 use App\Http\Controllers\Website\Admin\TPP4Controller;
 use App\Http\Controllers\Website\Admin\TPP5Controller;
 use App\Http\Controllers\Website\Admin\TimPBLController;
+use App\Http\Controllers\Website\Dosen\DashboardDosenController;
+use App\Http\Controllers\Website\Dosen\ProfilController as DosenProfilController;
 use App\Http\Controllers\Website\Mahasiswa\DashboardMahasiswaController;
 use App\Http\Controllers\Website\Mahasiswa\RencanaProyekController;
 use App\Http\Controllers\Website\Mahasiswa\LogbookController;
+use App\Http\Controllers\Website\Mahasiswa\PelaporanUASController;
+use App\Http\Controllers\Website\Mahasiswa\PelaporanUTSController;
 use App\Http\Controllers\Website\Mahasiswa\ProfilController as MahasiswaProfilController;
 
 // use App\Http\Controllers\Auth\DashboardController;
@@ -149,11 +153,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
 Route::middleware(['auth:mahasiswa'])->group(function () {
     Route::get('/dashboard', [DashboardMahasiswaController::class, 'index'])->name('mahasiswa.dashboard');
 
+Route::middleware(['auth:mahasiswa'])->group(function () {
+    // Dashboard
+    Route::get('mahasiswa/dashboard', [DashboardMahasiswaController::class, 'index'])->name('mahasiswa.dashboard');
 
     // Profil
-    Route::get('/profil', [MahasiswaProfilController::class, 'index'])->name('mahasiswa.profil');
-    Route::get('/profil/ubah-password', [MahasiswaProfilController::class, 'editPassword'])->name('mahasiswa.profil.ubah-password');
-    Route::post('/profil/ubah-password', [MahasiswaProfilController::class, 'updatePassword'])->name('mahasiswa.profil.update-password');
+    Route::get('mahasiswa/profil', [MahasiswaProfilController::class, 'index'])->name('mahasiswa.profil');
+    Route::get('mahasiswa/profil/ubah-password', [MahasiswaProfilController::class, 'editPassword'])->name('mahasiswa.profil.ubah-password');
+    Route::post('mahasiswa/profil/ubah-password', [MahasiswaProfilController::class, 'updatePassword'])->name('mahasiswa.profil.update-password');
 
     // Tahapan Pelaksanaan Proyek
 //     Route::prefix('menu/mahasiswa/semester4/rpp/rencana-proyek')->middleware(['auth:sanctum', 'mahasiswa'])->group(function () {
@@ -182,7 +189,41 @@ Route::middleware(['auth:mahasiswa'])->group(function () {
 });
     // Pelaporan
     Route::prefix('semester-4/laporan-pbl')->middleware(['auth:mahasiswa', 'mahasiswa'])->group(function () {
-        Route::get('/', [DashboardMahasiswaController::class, 'laporan_pbl'])->name('mahasiswa.pelaporan-pbl');
-        Route::get('/form-laporan', [DashboardMahasiswaController::class, 'form_laporan'])->name('mahasiswa.pelaporan-pbl.create');
+
+    Route::prefix('mahasiswa/semester-4/logbook')->middleware(['auth:mahasiswa', 'mahasiswa'])->group(function () {
+        Route::get('/', [LogbookController::class, 'index'])->name('mahasiswa.logbook');
+        Route::get('/isi-logbook', [LogbookController::class, 'create'])->name('mahasiswa.logbook.create');
     });
+
+    // Pelaporan PBL
+    Route::prefix('mahasiswa/semester-4/laporan-pbl')->middleware(['auth:mahasiswa', 'mahasiswa'])->group(function () {
+        Route::get('/', [DashboardMahasiswaController::class, 'laporan_pbl'])->name('mahasiswa.pelaporan-pbl');
+        Route::get('/form-laporan-uts', [PelaporanUTSController::class, 'index'])->name('mahasiswa.pelaporan-pbl.laporan-uts');
+        Route::get('/form-laporan-uas', [PelaporanUASController::class, 'index'])->name('mahasiswa.pelaporan-pbl.laporan-uas');
+    });
+});
+ });
+
+// Route Akun Dosen
+Route::middleware(['auth:mahasiswa'])->group(function () {
+    // Dashboard
+    Route::get('dosen/dashboard', [DashboardDosenController::class, 'index'])->name('dosen.dashboard');
+    // Profil
+    Route::get('dosen/profil', [DosenProfilController::class, 'index'])->name('dosen.profil');
+    Route::get('dosen/profil/ubah-password', [DosenProfilController::class, 'editPassword'])->name('dosen.profil.ubah-password');
+    Route::post('dosen/profil/ubah-password', [DosenProfilController::class, 'updatePassword'])->name('dosen.profil.update-password');
+
+    // Validasi Tim
+    Route::get('/dosen/validasi-tim-pbl', function () {
+        return view('dosen.validasi.validasi-tim');
+    })->name('dosen.validasi-tim');
+    // Daftar Tim PBL
+    Route::get('/dosen/daftar-tim-pbl', function () {
+        return view('dosen.daftar-tim.daftar-timpbl');
+    })->name('dosen.daftar-tim');
+    // Penilaian Mahasiswa
+    Route::get('/dosen/penilaian-mahasiswa', function () {
+        return view('dosen.penilaian.penilaian');
+    })->name('dosen.penilaian');
+});
 });

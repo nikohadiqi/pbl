@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Mahasiswa;
+namespace App\Http\Controllers\Website\Mahasiswa;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -11,8 +11,7 @@ class PelaporanUASController extends Controller
 {
     public function index()
     {
-        $pelaporans = PelaporanUAS::with(['mahasiswa', 'timPbl'])->get();
-        return response()->json(['success' => true, 'message' => 'List of UAS Reports', 'data' => $pelaporans], 200);
+        return view('mahasiswa.semester4.pelaporan.form-laporan-uas');
     }
 
     public function store(Request $request)
