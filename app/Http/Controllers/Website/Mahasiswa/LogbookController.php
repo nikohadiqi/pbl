@@ -12,17 +12,23 @@ use Illuminate\Support\Facades\Auth;
 
 class LogbookController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $mahasiswa = Auth::guard('mahasiswa')->user();
         $logbooks = Logbook::where('kode_tim', $mahasiswa->kode_tim)->get();
-        return view('mahasiswa.semester4.logbook.logbook', compact('logbooks'));
+
+        $selectedLogbook = null;
+        if ($request->has('selectedId')) {
+            $selectedLogbook = Logbook::find($request->input('selectedId'));
+        }
+
+        return view('mahasiswa.semester4.logbook.logbook', compact('logbooks', 'selectedLogbook'));
     }
 
     public function show($id)
     {
         $logbook = Logbook::findOrFail($id);
-        return view('mahasiswa.semester4.logbook.show', compact('logbook'));
+        return view('mahasiswa.semester4.logbook.show.logbook', compact('logbook'));
     }
     
     public function create()

@@ -9,11 +9,12 @@ return new class extends Migration {
     {
         Schema::create('pelaporan_uas', function (Blueprint $table) {
             $table->id();
-            // $table->foreignId('timpbl_id')->constrained('timpbl')->onDelete('cascade');
+            $table->string('kode_tim')->nullable();
             $table->text('keterangan')->nullable();
             $table->string('link_drive')->nullable();
             $table->string('link_youtube')->nullable();
             $table->string('laporan_pdf')->nullable();
+            $table->foreign('kode_tim')->references('kode_tim')->on('tim_pbl')->onDelete('cascade');
             $table->timestamps();
 
         });

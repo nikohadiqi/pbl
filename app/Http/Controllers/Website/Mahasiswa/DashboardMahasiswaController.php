@@ -23,11 +23,10 @@ class DashboardMahasiswaController extends Controller
             'tim_members' => $timMembers, // Tim anggota sesuai kode_tim
         ]);
     }
-
     public function laporan_pbl() {
         return view('mahasiswa.semester4.pelaporan.pelaporan-pbl');
     }
-
+    
     public function form_laporan() {
         return view('mahasiswa.semester4.pelaporan.form-laporan');
     }
