@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\AkunMahasiswa;
+use App\Models\AkunDosen;
 use Illuminate\Support\Facades\Session;
 
 class LoginController extends Controller
@@ -72,12 +73,11 @@ class LoginController extends Controller
 
     public function loginDosen(Request $request, $validated)
     {
-        $user = User::where('nim', $validated['nim'])->first();
+        $dosen = AkunDosen::where('nim', $validated['nim'])->first();
 
-        if ($user && Hash::check($validated['password'], $user->password) && $user->role == 'dosen') {
-            $token = $user->createToken('YourAppName')->plainTextToken;
-            $request->session()->put('token', $token);
-            Auth::login($user);
+        if ($dosen && Hash::check($validated['password'], $dosen->password)) {
+             // Gunakan guard khusus dosen agar tidak tertukar dengan User
+             Auth::guard('dosen')->login($dosen);
 
             return redirect()->route('dosen.dashboard');
         }
@@ -97,7 +97,7 @@ class LoginController extends Controller
 
     public function dosenDashboard()
     {
-        return view('dashboard.dosen');
+        return view('dosen.dashboard-dosen');
     }
 
     public function logout(Request $request)
@@ -108,6 +108,9 @@ class LoginController extends Controller
 
         if (Auth::guard('mahasiswa')->check()) {
             Auth::guard('mahasiswa')->logout();
+        }
+        if (Auth::guard('dosen')->check()) {
+            Auth::guard('dosen')->logout();
         }
 
         $request->session()->invalidate();

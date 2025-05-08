@@ -2,12 +2,26 @@
 
 namespace App\Models;
 
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class AkunDosen extends Model
+class AkunDosen extends Authenticatable
 {
-    use HasFactory;
+    use HasFactory, Notifiable;
+
     protected $table = 'akun_dosen';
-    protected $fillable = ['role', 'nip', 'password'];
+
+    protected $fillable = ['role', 'nim', 'password'];
+
+    protected $hidden = [
+        'password',
+        'remember_token'
+    ];
+
+    public $timestamps = true;
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
 }

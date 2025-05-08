@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('akun_dosen', function (Blueprint $table) {
             $table->id();
             $table->string('role')->default('dosen');
-            $table->string('nip')->unique();
+            $table->string('nim')->unique();
             $table->string('password');
             $table->timestamps();
         });

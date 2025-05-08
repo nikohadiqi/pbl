@@ -204,10 +204,9 @@ Route::middleware(['auth:mahasiswa'])->group(function () {
 });
  });
 
-// Route Akun Dosen
-Route::middleware(['auth:mahasiswa'])->group(function () {
-    // Dashboard
-    Route::get('dosen/dashboard', [DashboardDosenController::class, 'index'])->name('dosen.dashboard');
+ Route::middleware(['auth:dosen'])->group(function () {
+    Route::get('/dosen/dashboard', [LoginController::class, 'dosenDashboard'])->name('dosen.dashboard');
+
     // Profil
     Route::get('dosen/profil', [DosenProfilController::class, 'index'])->name('dosen.profil');
     Route::get('dosen/profil/ubah-password', [DosenProfilController::class, 'editPassword'])->name('dosen.profil.ubah-password');
@@ -217,10 +216,12 @@ Route::middleware(['auth:mahasiswa'])->group(function () {
     Route::get('/dosen/validasi-tim-pbl', function () {
         return view('dosen.validasi.validasi-tim');
     })->name('dosen.validasi-tim');
+
     // Daftar Tim PBL
     Route::get('/dosen/daftar-tim-pbl', function () {
         return view('dosen.daftar-tim.daftar-timpbl');
     })->name('dosen.daftar-tim');
+
     // Penilaian Mahasiswa
     Route::get('/dosen/penilaian-mahasiswa', function () {
         return view('dosen.penilaian.penilaian');

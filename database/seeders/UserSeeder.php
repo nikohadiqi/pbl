@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\AkunMahasiswa;
+use App\Models\AkunDosen;
 
 class UserSeeder extends Seeder
 {
@@ -44,7 +45,7 @@ class UserSeeder extends Seeder
         // echo "Mahasiswa Token: {$mahasiswaToken}\n";
 
         // Dosen
-        $dosen = User::create([
+        $dosen = AkunDosen::create([
             'nim' => '33333',
             'password' => Hash::make('33333'),
             'role' => 'dosen',

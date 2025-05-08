@@ -31,8 +31,10 @@
                         <img src="{{ asset('assets/img/logo-poliwangi.png') }}" alt="User Avatar" class="rounded-circle me-2" width="40" height="40">
                         <span class="d-flex flex-column">
                             <span class="fw-bold">Dosen</span>
-                            <span class="fw-bold">{{ Auth::guard('mahasiswa')->user()-> nim }}</span>
-                        </span>
+                            <span class="fw-bold">
+                                {{ Auth::guard('dosen')->check() ? Auth::guard('dosen')->user()->nim : '-' }}
+                            </span>
+                        </span>                        
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item" href="{{ route('dosen.profil') }}"><i class="fas fa-user me-2"></i> Profil</a></li>
