@@ -1,12 +1,12 @@
 @extends('layouts.dashboardmahasiswa-template')
 
-@section('title', 'Form Laporan PBL | Sistem Informasi dan Monitoring Project Based Learning')
-@section('page-title', 'Form Laporan PBL')
+@section('title', 'Form Laporan UTS | Sistem Informasi dan Monitoring Project Based Learning')
+@section('page-title', 'Form Laporan UTS')
 @section('content')
 <div class="container-fluid py-4">
     <div class="card p-4">
         <div class="d-flex justify-content-between align-items-center">
-            <h5 class="fw-bold">Form Laporan PBL</h5>
+            <h5 class="fw-bold">Form Laporan UTS</h5>
         </div>
         <p class="text-sm">Sistem Informasi dan Monitoring Project Based Learning - TRPL Poliwangi</p>
 
@@ -31,7 +31,7 @@
             @csrf
             <div class="form-group">
                 <label for="keterangan" class="form-control-label">Keterangan</label>
-                <textarea name="keterangan" id="keterangan" class="form-control" rows="5"></textarea>
+                <textarea name="keterangan" id="keterangan" class="form-control" rows="5" placeholder="Jelaskan mengenai kegiatan PBL yang dikerjakan.."></textarea>
             </div>
             <div class="form-group">
                 <label for="link_drive" class="form-control-label">Link Drive Laporan (Foto Kegiatan, Hasil Desain, Hasil Pengujian, dll)</label>

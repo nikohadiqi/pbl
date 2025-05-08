@@ -40,8 +40,8 @@ class UserSeeder extends Seeder
             'password' => Hash::make('22222'),
             'role' => 'mahasiswa',
         ]);
-        $mahasiswaToken = $mahasiswa->createToken('mahasiswa-token')->plainTextToken;
-        echo "Mahasiswa Token: {$mahasiswaToken}\n";
+        // $mahasiswaToken = $mahasiswa->createToken('mahasiswa-token')->plainTextToken;
+        // echo "Mahasiswa Token: {$mahasiswaToken}\n";
 
         // Dosen
         $dosen = User::create([
@@ -49,7 +49,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('33333'),
             'role' => 'dosen',
         ]);
-        $dosenToken = $dosen->createToken('dosen-token')->plainTextToken;
-        echo "Dosen Token: {$dosenToken}\n";
+        // $dosenToken = $dosen->createToken('dosen-token')->plainTextToken;
+        // echo "Dosen Token: {$dosenToken}\n";
     }
 }

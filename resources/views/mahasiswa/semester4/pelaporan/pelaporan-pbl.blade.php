@@ -7,7 +7,7 @@
     <div class="row g-4">
         <!-- Card Laporan UTS -->
         <div class="col-12">
-            <a href="{{ route('mahasiswa.pelaporan-pbl.create') }}" class="text-decoration-none">
+            <a href="{{ route('mahasiswa.pelaporan-pbl.laporan-uts') }}" class="text-decoration-none">
                 <div class="card shadow-lg h-100 card-hover">
                     <div class="card-body d-flex justify-content-between align-items-center">
                         <div>
@@ -23,7 +23,7 @@
 
         <!-- Card Laporan UAS -->
         <div class="col-12">
-            <a href="{{ route('mahasiswa.pelaporan-pbl.create') }}" class="text-decoration-none">
+            <a href="{{ route('mahasiswa.pelaporan-pbl.laporan-uas') }}" class="text-decoration-none">
                 <div class="card shadow-lg h-100 card-hover">
                     <div class="card-body d-flex justify-content-between align-items-center">
                         <div>

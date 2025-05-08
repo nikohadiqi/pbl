@@ -14,8 +14,4 @@ class DashboardMahasiswaController extends Controller
     public function laporan_pbl() {
         return view('mahasiswa.semester4.pelaporan.pelaporan-pbl');
     }
-
-    public function form_laporan() {
-        return view('mahasiswa.semester4.pelaporan.form-laporan');
-    }
 }

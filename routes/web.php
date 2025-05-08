@@ -18,6 +18,8 @@ use App\Http\Controllers\Website\Admin\TimPBLController;
 use App\Http\Controllers\Website\Mahasiswa\DashboardMahasiswaController;
 use App\Http\Controllers\Website\Mahasiswa\RencanaProyekController;
 use App\Http\Controllers\Website\Mahasiswa\LogbookController;
+use App\Http\Controllers\Website\Mahasiswa\PelaporanUASController;
+use App\Http\Controllers\Website\Mahasiswa\PelaporanUTSController;
 use App\Http\Controllers\Website\Mahasiswa\ProfilController as MahasiswaProfilController;
 
 // use App\Http\Controllers\Auth\DashboardController;
@@ -174,9 +176,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/', [LogbookController::class, 'index'])->name('mahasiswa.logbook');
         Route::get('/isi-logbook', [LogbookController::class, 'create'])->name('mahasiswa.logbook.create');
     });
-    // Pelaporan
+
+    // Pelaporan PBL
     Route::prefix('semester-4/laporan-pbl')->middleware(['auth:mahasiswa', 'mahasiswa'])->group(function () {
         Route::get('/', [DashboardMahasiswaController::class, 'laporan_pbl'])->name('mahasiswa.pelaporan-pbl');
-        Route::get('/form-laporan', [DashboardMahasiswaController::class, 'form_laporan'])->name('mahasiswa.pelaporan-pbl.create');
+        Route::get('/form-laporan-uts', [PelaporanUTSController::class, 'index'])->name('mahasiswa.pelaporan-pbl.laporan-uts');
+        Route::get('/form-laporan-uas', [PelaporanUASController::class, 'index'])->name('mahasiswa.pelaporan-pbl.laporan-uas');
     });
  });
