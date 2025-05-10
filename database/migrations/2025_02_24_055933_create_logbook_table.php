@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->text('anggota3')->nullable();
             $table->text('anggota4')->nullable();
             $table->text('anggota5')->nullable();
-            $table->string('progress')->nullable();
+            $table->string('progress')->nullable();// Add this line for minggu
             $table->timestamps();
             $table->foreign('kode_tim')->references('kode_tim')->on('tim_pbl')->onDelete('cascade');
         });

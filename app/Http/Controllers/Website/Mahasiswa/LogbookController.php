@@ -25,62 +25,18 @@ class LogbookController extends Controller
         return view('mahasiswa.semester4.logbook.logbook', compact('logbooks', 'selectedLogbook'));
     }
 
-    public function show($id)
+        public function create()
     {
-        $logbook = Logbook::findOrFail($id);
-        return view('mahasiswa.semester4.logbook.show.logbook', compact('logbook'));
-    }
-    
-    public function create()
-    {
-        $logbook = null;
+        $mahasiswa = Auth::guard('mahasiswa')->user();
+        $logbook = Logbook::where('kode_tim', $mahasiswa->kode_tim)->first();
+
         return view('mahasiswa.semester4.logbook.form-logbook', compact('logbook'));
     }
 
     public function store(Request $request)
     {
         $mahasiswa = Auth::guard('mahasiswa')->user();
-    
-        $validated = $request->validate([
-            'aktivitas' => 'required|string|max:255',
-            'hasil' => 'required|string|max:255',
-            'progress' => 'required|integer|between:0,100',
-            'foto_kegiatan' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'anggota1' => 'nullable|string|max:255',
-            'anggota2' => 'nullable|string|max:255',
-            'anggota3' => 'nullable|string|max:255',
-            'anggota4' => 'nullable|string|max:255',
-            'anggota5' => 'nullable|string|max:255',
-        ]);
-    
-        $logbook = new Logbook();
-        $logbook->kode_tim = $mahasiswa->kode_tim;
-        $logbook->aktivitas = $request->aktivitas;
-        $logbook->hasil = $request->hasil;
-        $logbook->progress = $request->progress;
-        $logbook->anggota1 = $request->anggota1;
-        $logbook->anggota2 = $request->anggota2;
-        $logbook->anggota3 = $request->anggota3;
-        $logbook->anggota4 = $request->anggota4;
-        $logbook->anggota5 = $request->anggota5;
-    
-        if ($request->hasFile('foto_kegiatan')) {
-            $logbook->foto_kegiatan = $request->file('foto_kegiatan')->store('foto_kegiatan', 'public');
-        }
-    
-        $logbook->save();
-    
-        return redirect()->route('mahasiswa.logbook')->with('success', 'Logbook berhasil disimpan!');
-    }
-    
-    public function edit($id)
-    {
-        $logbook = Logbook::findOrFail($id);
-        return view('mahasiswa.semester4.logbook.form-logbook', compact('logbook'));
-    }
 
-    public function update(Request $request, $id)
-    {
         $validated = $request->validate([
             'aktivitas' => 'required|string|max:255',
             'hasil' => 'required|string|max:255',
@@ -93,22 +49,46 @@ class LogbookController extends Controller
             'anggota5' => 'nullable|string|max:255',
         ]);
 
-        $logbook = Logbook::findOrFail($id);
-        $logbook->aktivitas = $request->aktivitas;
-        $logbook->hasil = $request->hasil;
-        $logbook->anggota1 = $request->anggota1;
-        $logbook->anggota2 = $request->anggota2;
-        $logbook->anggota3 = $request->anggota3;
-        $logbook->anggota4 = $request->anggota4;
-        $logbook->anggota5 = $request->anggota5;
+        $logbook = Logbook::where('kode_tim', $mahasiswa->kode_tim)->first();
 
+        $filePath = null;
         if ($request->hasFile('foto_kegiatan')) {
-            $logbook->foto_kegiatan = $request->file('foto_kegiatan')->store('foto_kegiatan', 'public');
+            $file = $request->file('foto_kegiatan');
+            $filePath = $file->store('foto_kegiatan', 'public');
         }
 
-        $logbook->save();
+        if ($logbook) {
+            $logbook->update([
+                'aktivitas' => $request->aktivitas,
+                'hasil' => $request->hasil,
+                'progress' => $request->progress,
+                'anggota1' => $request->anggota1,
+                'anggota2' => $request->anggota2,
+                'anggota3' => $request->anggota3,
+                'anggota4' => $request->anggota4,
+                'anggota5' => $request->anggota5,
+            ]);
 
-        return redirect()->route('mahasiswa.logbook')->with('success', 'Logbook berhasil diperbarui!');
+            if ($filePath) {
+                $logbook->update(['foto_kegiatan' => $filePath]);
+            }
+        } else {
+            $logbook = Logbook::create([
+                'kode_tim' => $mahasiswa->kode_tim,
+                'aktivitas' => $request->aktivitas,
+                'hasil' => $request->hasil,
+                'progress' => $request->progress,
+                'anggota1' => $request->anggota1,
+                'anggota2' => $request->anggota2,
+                'anggota3' => $request->anggota3,
+                'anggota4' => $request->anggota4,
+                'anggota5' => $request->anggota5,
+                'foto_kegiatan' => $filePath,
+            ]);
+        }
+
+        return redirect()->route('mahasiswa.logbook.store', ['id' => $logbook->id])
+            ->with('success', 'Logbook berhasil disimpan!');
     }
 
     public function destroy($id)

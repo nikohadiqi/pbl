@@ -12,6 +12,11 @@ class KebutuhanPeralatan extends Model
     protected $table = 'kebutuhan_peralatan';
 
     protected $fillable = [
-        'nomor', 'fase', 'peralatan', 'bahan'
+              'kode_tim','nomor', 'fase', 'peralatan', 'bahan'
     ];
+    // Relasi dengan tim_pbl
+   public function timPbl()
+   {
+       return $this->belongsTo(TimPbl::class, 'kode_tim', 'kode_tim');
+   }
 }

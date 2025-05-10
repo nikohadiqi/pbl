@@ -12,21 +12,16 @@ class PelaporanUAS extends Model
     protected $table = 'pelaporan_uas';
 
     protected $fillable = [
-        'timpbl_id',
-        'mahasiswa_id',
+        'kode_tim',
         'keterangan',
         'link_drive',
         'link_youtube',
         'laporan_pdf'
     ];
 
-    public function mahasiswa()
-    {
-        return $this->belongsTo(Mahasiswa::class, 'mahasiswa_id');
-    }
-
+    // Relasi ke TimPbl
     public function timPbl()
     {
-        return $this->belongsTo(TimPbl::class, 'timpbl_id');
+        return $this->belongsTo(TimPbl::class, 'kode_tim', 'kode_tim');
     }
 }

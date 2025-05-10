@@ -15,10 +15,11 @@
                     <p class="fw-bold mb-1">Tahapan Pelaksanaan Mingguan</p>
                     <p class="mb-2">Keterangan</p>
                     @if($logbook)
-                        <a href="{{ route('mahasiswa.logbook.show', $logbook->id) }}" class="btn btn-success btn-sm">Lihat Logbook</a>
-                        <a href="{{ route('mahasiswa.logbook.edit', $logbook->id) }}" class="btn btn-warning btn-sm">Edit Logbook</a>
+                        {{-- <a href="{{ route('mahasiswa.logbook.show', $logbook->id) }}" class="btn btn-success btn-sm">Lihat Logbook</a>
+                        <a href="{{ route('mahasiswa.logbook.edit', $logbook->id) }}" class="btn btn-warning btn-sm">Edit Logbook</a> --}}
                     @else
-                        <a href="{{ route('mahasiswa.logbook.create', ['minggu' => $i]) }}" class="btn btn-dark btn-sm">Isi Logbook</a>
+                        <a href="{{ route('mahasiswa.logbook.create', ['minggu' => $i]) }}" 
+                            class="btn btn-dark btn-sm">Isi Logbook</a>
                     @endif
                 </div>
                 <div class="text-center">

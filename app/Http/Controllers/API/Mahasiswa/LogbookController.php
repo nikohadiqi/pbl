@@ -1,113 +1,167 @@
 <?php
 
-namespace App\Http\Controllers\API\Mahasiswa;
+namespace App\Http\Controllers\Website\Mahasiswa;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Logbook;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class LogbookController extends Controller
 {
-    public function index()
+    // Menampilkan logbook berdasarkan tim
+    public function index(Request $request)
     {
-        $logbooks = Logbook::with(['mahasiswa', 'timPbl'])->get();
-        return response()->json([
-            'success' => true,
-            'message' => 'List of Logbooks',
-            'data' => $logbooks
-        ], 200);
-    }
+        $mahasiswa = Auth::guard('mahasiswa')->user();
+        $logbooks = Logbook::where('kode_tim', $mahasiswa->kode_tim)->get();
 
-    public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'timpbl_id' => 'required|exists:timpbl,id',
-            'mahasiswa_id' => 'required|exists:mahasiswa,id',
-            'aktivitas' => 'nullable|string',
-            'hasil' => 'nullable|string',
-            'foto_kegiatan' => 'nullable|string',
-            'anggota1' => 'nullable|string',
-            'anggota2' => 'nullable|string',
-            'anggota3' => 'nullable|string',
-            'anggota4' => 'nullable|string',
-            'anggota5' => 'nullable|string',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation Error',
-                'errors' => $validator->errors()
-            ], 400);
+        // Jika ada request 'selectedId', maka akan menampilkan logbook tertentu
+        $selectedLogbook = null;
+        if ($request->has('selectedId')) {
+            $selectedLogbook = Logbook::find($request->input('selectedId'));
         }
 
-        $logbook = Logbook::create($request->all());
-
         return response()->json([
-            'success' => true,
-            'message' => 'Logbook created successfully',
-            'data' => $logbook
-        ], 201);
+            'logbooks' => $logbooks,
+            'selectedLogbook' => $selectedLogbook
+        ]);
     }
 
+    // Menampilkan form untuk membuat logbook baru atau mengedit logbook yang sudah ada
+    public function create(Request $request)
+    {
+        $minggu = $request->minggu;
+        $logbook = Logbook::where('kode_tim', Auth::guard('mahasiswa')->user()->kode_tim)
+                          ->where('minggu', $minggu)
+                          ->first();
+        return response()->json(['logbook' => $logbook]);
+    }
+
+    // Menampilkan logbook yang sudah ada berdasarkan ID
     public function show($id)
     {
-        $logbook = Logbook::with(['mahasiswa', 'timPbl'])->find($id);
-
-        if (!$logbook) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Logbook not found'
-            ], 404);
-        }
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Logbook details',
-            'data' => $logbook
-        ], 200);
+        $logbook = Logbook::findOrFail($id);
+        return response()->json(['logbook' => $logbook]);
     }
 
-    public function update(Request $request, $id)
+    // Menyimpan logbook baru atau mengupdate logbook yang sudah ada
+    public function store(Request $request)
     {
-        $logbook = Logbook::find($id);
-
-        if (!$logbook) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Logbook not found'
-            ], 404);
-        }
-
-        $validator = Validator::make($request->all(), [
-            'aktivitas' => 'nullable|string',
-            'hasil' => 'nullable|string',
-            'foto_kegiatan' => 'nullable|string',
-            'anggota1' => 'nullable|string',
-            'anggota2' => 'nullable|string',
-            'anggota3' => 'nullable|string',
-            'anggota4' => 'nullable|string',
-            'anggota5' => 'nullable|string',
+        // Validasi input
+        $validated = $request->validate([
+            'aktivitas' => 'required|string|max:255',
+            'hasil' => 'required|string|max:255',
+            'progress' => 'required|integer|between:0,100',
+            'foto_kegiatan' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'anggota1' => 'nullable|string|max:255',
+            'anggota2' => 'nullable|string|max:255',
+            'anggota3' => 'nullable|string|max:255',
+            'anggota4' => 'nullable|string|max:255',
+            'anggota5' => 'nullable|string|max:255',
+            'minggu' => 'required|integer|between:1,16',  // Validasi minggu (1-16)
         ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation Error',
-                'errors' => $validator->errors()
-            ], 400);
+        // Menyimpan foto kegiatan jika ada
+        $filePath = null;
+        if ($request->hasFile('foto_kegiatan')) {
+            $file = $request->file('foto_kegiatan');
+            $filePath = $file->store('foto_kegiatan', 'public');
         }
 
-        $logbook->update($request->all());
+        // Cek apakah logbook untuk minggu yang sama sudah ada
+        $logbook = Logbook::where('kode_tim', Auth::guard('mahasiswa')->user()->kode_tim)
+                          ->where('minggu', $request->minggu)
+                          ->first();
+
+        if ($logbook) {
+            // Update logbook jika sudah ada untuk minggu yang sama
+            $logbook->update([
+                'aktivitas' => $request->aktivitas,
+                'hasil' => $request->hasil,
+                'progress' => $request->progress,
+                'anggota1' => $request->anggota1,
+                'anggota2' => $request->anggota2,
+                'anggota3' => $request->anggota3,
+                'anggota4' => $request->anggota4,
+                'anggota5' => $request->anggota5,
+                'foto_kegiatan' => $filePath,
+            ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Logbook berhasil diperbarui!',
+                'logbook' => $logbook
+            ]);
+        } else {
+            // Buat logbook baru jika belum ada untuk minggu yang sama
+            $logbook = Logbook::create([
+                'kode_tim' => Auth::guard('mahasiswa')->user()->kode_tim,
+                'aktivitas' => $request->aktivitas,
+                'hasil' => $request->hasil,
+                'progress' => $request->progress,
+                'anggota1' => $request->anggota1,
+                'anggota2' => $request->anggota2,
+                'anggota3' => $request->anggota3,
+                'anggota4' => $request->anggota4,
+                'anggota5' => $request->anggota5,
+                'foto_kegiatan' => $filePath,
+                'minggu' => $request->minggu,  // Menyimpan minggu
+            ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Logbook berhasil disimpan!',
+                'logbook' => $logbook
+            ]);
+        }
+    }
+
+    // Mengupdate logbook yang sudah ada
+    public function update(Request $request, $id)
+    {
+        // Validasi input
+        $validated = $request->validate([
+            'aktivitas' => 'required|string|max:255',
+            'hasil' => 'required|string|max:255',
+            'progress' => 'required|integer|between:0,100',
+            'foto_kegiatan' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'anggota1' => 'nullable|string|max:255',
+            'anggota2' => 'nullable|string|max:255',
+            'anggota3' => 'nullable|string|max:255',
+            'anggota4' => 'nullable|string|max:255',
+            'anggota5' => 'nullable|string|max:255',
+            'minggu' => 'nullable|string|max:50',
+        ]);
+
+        // Mengambil logbook yang ada
+        $logbook = Logbook::findOrFail($id);
+
+        // Mengupdate data logbook yang ada
+        $logbook->update([
+            'aktivitas' => $request->aktivitas,
+            'hasil' => $request->hasil,
+            'progress' => $request->progress,
+            'anggota1' => $request->anggota1,
+            'anggota2' => $request->anggota2,
+            'anggota3' => $request->anggota3,
+            'anggota4' => $request->anggota4,
+            'anggota5' => $request->anggota5,
+            'minggu' => $request->minggu, 
+        ]);
+
+        // Menyimpan foto kegiatan jika ada
+        if ($request->hasFile('foto_kegiatan')) {
+            $file = $request->file('foto_kegiatan');
+            $filePath = $file->store('foto_kegiatan', 'public');
+            $logbook->update(['foto_kegiatan' => $filePath]);
+        }
 
         return response()->json([
             'success' => true,
-            'message' => 'Logbook updated successfully',
-            'data' => $logbook
-        ], 200);
+            'message' => 'Logbook berhasil diperbarui!',
+            'logbook' => $logbook
+        ]);
     }
 
+    // Menghapus logbook yang ada
     public function destroy($id)
     {
         $logbook = Logbook::find($id);
@@ -115,7 +169,7 @@ class LogbookController extends Controller
         if (!$logbook) {
             return response()->json([
                 'success' => false,
-                'message' => 'Logbook not found'
+                'message' => 'Logbook tidak ditemukan'
             ], 404);
         }
 
@@ -123,30 +177,7 @@ class LogbookController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Logbook deleted successfully'
-        ], 200);
-    }
-
-    public function bulkDelete(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'ids' => 'required|array',
-            'ids.*' => 'exists:logbook,id'
+            'message' => 'Logbook berhasil dihapus'
         ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation Error',
-                'errors' => $validator->errors()
-            ], 400);
-        }
-
-        Logbook::whereIn('id', $request->ids)->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Selected logbooks deleted successfully'
-        ], 200);
     }
 }

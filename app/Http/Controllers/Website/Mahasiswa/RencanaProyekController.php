@@ -9,157 +9,95 @@ use App\Models\TahapanPelaksanaan;
 use App\Models\KebutuhanPeralatan;
 use App\Models\Estimasi;
 use App\Models\Tantangan;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Anggota_Tim_Pbl;
 
 class RencanaProyekController extends Controller
 {
     public function create()
     {
-        $id_tim = auth()->user()->id_tim;
-        $rencanaProyek = RencanaProyek::where('id_tim', $id_tim)->first(); 
+        // Retrieve the authenticated user using the 'mahasiswa' guard
+        $nim = Auth::guard('mahasiswa')->user()->nim;
+
+        // Retrieve the first 'Anggota_Tim_Pbl' for the authenticated 'nim'
+        $anggota = Anggota_Tim_Pbl::where('nim', $nim)->first();
+
+        if ($anggota) {
+            // Retrieve the 'kode_tim' associated with the 'nim'
+            $kode_tim = $anggota->kode_tim;
+
+            // Retrieve the first RencanaProyek for the authenticated 'kode_tim'
+            $rencanaProyek = RencanaProyek::where('kode_tim', $kode_tim)->first();
+        } else {
+            // Handle the case where the 'Anggota_Tim_Pbl' is not found
+            $rencanaProyek = null;
+        }
+
+        // Return the view and pass the rencanaProyek data to it
         return view('mahasiswa.semester4.rpp.rencana-proyek', compact('rencanaProyek'));
     }
 
     public function store(Request $request)
     {
-        $this->validateRequest($request);
+       // Validate the data
+$validated = $request->validate([
+    'judul_proyek' => 'nullable|string',
+    'pengusul_proyek' => 'nullable|string',
+    'manajer_proyek' => 'nullable|string',
+    'luaran' => 'nullable|string',
+    'sponsor' => 'nullable|string',
+    'biaya' => 'nullable|string',
+    'klien' => 'nullable|string',
+    'waktu' => 'nullable|string',
+    'ruang_lingkup' => 'nullable|string', // This field is now nullable and string
+    'rancangan_sistem' => 'nullable|string', // This field is now nullable and string
+    'minggu' => 'nullable|array', // These fields are now nullable arrays
+    'tahapan' => 'nullable|array',
+    'pic' => 'nullable|array',
+    'keterangan' => 'nullable|array',
+    'nomor' => 'nullable|array',
+    'fase' => 'nullable|array',
+    'peralatan' => 'nullable|array',
+    'bahan' => 'nullable|array',
+    'proses' => 'nullable|array',
+    'isu' => 'nullable|array',
+    'level_resiko' => 'nullable|array',
+    'catatan' => 'nullable|array',
+    'uraian_pekerjaan' => 'nullable|array',
+    'estimasi_waktu' => 'nullable|array',
+]);
 
-        $id_tim = auth()->user()->id_tim;
-
-        // Cek apakah sudah ada data rencana proyek untuk tim ini
-        $rencanaProyek = RencanaProyek::where('id_tim', $id_tim)->first();
-
-        if (!$rencanaProyek) {
-            // Jika belum ada, buat data rencana proyek baru
-            $rencanaProyek = RencanaProyek::create([
-                'id_tim' => $id_tim,
-                'judul_proyek' => $request->judul_proyek,
-                'pengusul_proyek' => $request->pengusul_proyek,
-                'manajer_proyek' => $request->manajer_proyek,
-                'luaran' => $request->luaran,
-                'sponsor' => $request->sponsor,
-                'biaya' => $request->biaya,
-                'klien' => $request->klien,
-                'waktu' => $request->waktu,
-                'ruang_lingkup' => $request->ruang_lingkup,
-                'rancangan_sistem' => $request->rancangan_sistem,
-            ]);
-        }
-
-        // Simpan data tahapan, peralatan, tantangan, dan estimasi secara otomatis
+    
+        // Store the data in the database
+        $rencanaProyek = new RencanaProyek();
+        $rencanaProyek->judul_proyek = $request->judul_proyek;
+        $rencanaProyek->pengusul_proyek = $request->pengusul_proyek;
+        $rencanaProyek->manajer_proyek = $request->manajer_proyek;
+        $rencanaProyek->luaran = $request->luaran;
+        $rencanaProyek->sponsor = $request->sponsor;
+        $rencanaProyek->biaya = $request->biaya;
+        $rencanaProyek->klien = $request->klien;
+        $rencanaProyek->waktu = $request->waktu;
+        $rencanaProyek->ruang_lingkup = $request->ruang_lingkup;
+        $rencanaProyek->rancangan_sistem = $request->rancangan_sistem;
+    
+        // Save tahapan pelaksanaan
         $this->saveTahapanPelaksanaan($request, $rencanaProyek);
+    
+        // Save kebutuhan peralatan
         $this->saveKebutuhanPeralatan($request, $rencanaProyek);
+    
+        // Save tantangan
         $this->saveTantangan($request, $rencanaProyek);
+    
+        // Save estimasi
         $this->saveEstimasi($request, $rencanaProyek);
-
-        // Kirim respon autosave
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Data berhasil disimpan secara otomatis.',
-            'data' => $rencanaProyek
-        ]);
-    }
-
-    // Fungsi untuk menyimpan tahapan pelaksanaan
-    private function saveTahapanPelaksanaan(Request $request, $rencanaProyek)
-    {
-        foreach ($request->tahapan ?? [] as $index => $tahapan) {
-            if ($tahapan || $request->minggu[$index] || $request->pic[$index] || $request->keterangan[$index]) {
-                TahapanPelaksanaan::updateOrCreate(
-                    ['rencana_proyek_id' => $rencanaProyek->id, 'nomor' => $index + 1],
-                    [
-                        'minggu' => $request->minggu[$index],
-                        'tahapan' => $tahapan,
-                        'pic' => $request->pic[$index],
-                        'keterangan' => $request->keterangan[$index],
-                    ]
-                );
-            }
-        }
-    }
-
-    // Fungsi untuk menyimpan kebutuhan peralatan
-    private function saveKebutuhanPeralatan(Request $request, $rencanaProyek)
-    {
-        foreach ($request->fase ?? [] as $index => $fase) {
-            if ($fase || $request->peralatan[$index] || $request->bahan[$index]) {
-                KebutuhanPeralatan::updateOrCreate(
-                    ['rencana_proyek_id' => $rencanaProyek->id, 'nomor' => $index + 1],
-                    [
-                        'fase' => $fase,
-                        'peralatan' => $request->peralatan[$index],
-                        'bahan' => $request->bahan[$index],
-                    ]
-                );
-            }
-        }
-    }
-
-    // Fungsi untuk menyimpan tantangan
-    private function saveTantangan(Request $request, $rencanaProyek)
-    {
-        foreach ($request->proses ?? [] as $index => $proses) {
-            if ($proses || $request->isu[$index] || $request->level_resiko[$index] || $request->catatan_tantangan[$index]) {
-                Tantangan::updateOrCreate(
-                    ['rencana_proyek_id' => $rencanaProyek->id, 'nomor' => $index + 1],
-                    [
-                        'proses' => $proses,
-                        'isu' => $request->isu[$index],
-                        'level_resiko' => $request->level_resiko[$index],
-                        'catatan' => $request->catatan_tantangan[$index],
-                    ]
-                );
-            }
-        }
-    }
-
-    // Fungsi untuk menyimpan estimasi
-    private function saveEstimasi(Request $request, $rencanaProyek)
-    {
-        foreach ($request->uraian_pekerjaan ?? [] as $index => $uraian) {
-            if ($uraian || $request->estimasi_waktu[$index] || $request->catatan_estimasi[$index]) {
-                Estimasi::updateOrCreate(
-                    ['rencana_proyek_id' => $rencanaProyek->id, 'fase' => $index + 1],
-                    [
-                        'uraian_pekerjaan' => $uraian,
-                        'estimasi_waktu' => $request->estimasi_waktu[$index],
-                        'catatan' => $request->catatan_estimasi[$index],
-                    ]
-                );
-            }
-        }
-    }
-
-    private function validateRequest(Request $request)
-    {
-        $request->validate([
-            'judul_proyek' => 'nullable|string|max:255',
-            'pengusul_proyek' => 'nullable|string|max:255',
-            'manajer_proyek' => 'nullable|string|max:255',
-            'luaran' => 'nullable|string|max:255',
-            'sponsor' => 'nullable|string|max:255',
-            'biaya' => 'nullable|string|max:255',
-            'klien' => 'nullable|string|max:255',
-            'waktu' => 'nullable|string|max:255',
-            'ruang_lingkup' => 'nullable|string|max:255',
-            'rancangan_sistem' => 'nullable|string|max:255',
-
-            'tahapan.*' => 'nullable|string|max:255',
-            'minggu.*' => 'nullable|string|max:255',
-            'pic.*' => 'nullable|string|max:255',
-            'keterangan.*' => 'nullable|string|max:255',
-
-            'fase.*' => 'nullable|string|max:255',
-            'peralatan.*' => 'nullable|string|max:255',
-            'bahan.*' => 'nullable|string|max:255',
-
-            'proses.*' => 'nullable|string|max:255',
-            'isu.*' => 'nullable|string|max:255',
-            'level_resiko.*' => 'nullable|string|max:255',
-            'catatan_tantangan.*' => 'nullable|string|max:255',
-
-            'uraian_pekerjaan.*' => 'nullable|string|max:255',
-            'estimasi_waktu.*' => 'nullable|string|max:255',
-            'catatan_estimasi.*' => 'nullable|string|max:255',
-        ]);
+    
+        // Save the main rencanaProyek
+        $rencanaProyek->save();
+    
+        return redirect()->route('mahasiswa.rpp.rencana-proyek.store')
+                         ->with('success', 'Data berhasil disimpan!')
+                         ->with('rencanaProyek', $rencanaProyek); // Pass data back to the view
     }
 }

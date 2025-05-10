@@ -11,6 +11,11 @@ class TahapanPelaksanaan extends Model
     protected $table = 'tahapan_pelaksaan';
 
     protected $fillable = [
-        'minggu', 'tahapan', 'pic', 'keterangan'
+        'kode_tim', 'minggu', 'tahapan', 'pic', 'keterangan'
     ];
+    // Relasi dengan tim_pbl
+   public function timPbl()
+   {
+       return $this->belongsTo(TimPbl::class, 'kode_tim', 'kode_tim');
+   }
 }

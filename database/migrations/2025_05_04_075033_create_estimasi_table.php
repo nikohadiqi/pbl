@@ -13,15 +13,14 @@ return new class extends Migration
     {
         Schema::create('estimasi', function (Blueprint $table) {
             $table->id();
-            $table->string('id_tim');
+            $table->string('kode_tim')->nullable();
             $table->string('fase')->nullable();
             $table->string('uraian_pekerjaan')->nullable();
             $table->string('estimasi_waktu')->nullable();
             $table->string('catatan')->nullable();
             $table->timestamps();
          
-            // Foreign Key Constraint
-            $table->foreign('id_tim')->references('id_tim')->on('timpbl')->onDelete('cascade');
+            $table->foreign('kode_tim')->references('kode_tim')->on('tim_pbl')->onDelete('cascade');
         });
     }
 };

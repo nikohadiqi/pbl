@@ -11,6 +11,11 @@ class estimasi extends Model
     protected $table = 'estimasi';
 
     protected $fillable = [
-        'fase', 'uraian_pekerjaan', 'estimasi_waktu', 'catatan'
+        'kode_tim', 'fase', 'uraian_pekerjaan', 'estimasi_waktu', 'catatan'
     ];
+    // Relasi dengan tim_pbl
+   public function timPbl()
+   {
+       return $this->belongsTo(TimPbl::class, 'kode_tim', 'kode_tim');
+   }
 }

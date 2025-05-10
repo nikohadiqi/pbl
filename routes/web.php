@@ -178,28 +178,47 @@ Route::middleware(['auth:mahasiswa'])->group(function () {
 
 
     // Logbook
-    Route::prefix('semester-4/logbook')->middleware(['auth:mahasiswa', 'mahasiswa'])->group(function () {
-        Route::get('/logbook', [LogbookController::class, 'index'])->name('mahasiswa.logbook');
-        Route::get('/logbook/isi', [LogbookController::class, 'create'])->name('mahasiswa.logbook.create');
-        Route::post('/logbook', [LogbookController::class, 'store'])->name('mahasiswa.logbook.store');
-        Route::get('/logbook/{id}/edit', [LogbookController::class, 'edit'])->name('mahasiswa.logbook.edit');
-        Route::get('/{id}', [LogbookController::class, 'show'])->name('mahasiswa.logbook.show');
-        Route::put('/logbook/{id}', [LogbookController::class, 'update'])->name('mahasiswa.logbook.update');
-
-});
+    // Route::prefix('semester-4/logbook')->middleware(['auth:mahasiswa', 'mahasiswa'])->group(function () {
+    //     Route::get('/logbook', [LogbookController::class, 'index'])->name('mahasiswa.logbook');
+    //     Route::get('/logbook/isi', [LogbookController::class, 'create'])->name('mahasiswa.logbook.create');
+    //     Route::post('/logbook', [LogbookController::class, 'store'])->name('mahasiswa.logbook.store');
+    //     Route::get('/logbook/{id}/edit', [LogbookController::class, 'edit'])->name('mahasiswa.logbook.edit');
+    //     Route::get('/{id}', [LogbookController::class, 'show'])->name('mahasiswa.logbook.show');
+    //     Route::put('/logbook/{id}', [LogbookController::class, 'update'])->name('mahasiswa.logbook.update');
     // Pelaporan
-    Route::prefix('semester-4/laporan-pbl')->middleware(['auth:mahasiswa', 'mahasiswa'])->group(function () {
 
+    
     Route::prefix('mahasiswa/semester-4/logbook')->middleware(['auth:mahasiswa', 'mahasiswa'])->group(function () {
         Route::get('/', [LogbookController::class, 'index'])->name('mahasiswa.logbook');
         Route::get('/isi-logbook', [LogbookController::class, 'create'])->name('mahasiswa.logbook.create');
+        Route::post('/isi-logbook', [LogbookController::class, 'store'])->name('mahasiswa.logbook.store'); // <- Tambahkan ini
+        Route::get('logbook/{id}', [LogbookController::class, 'show'])->name('mahasiswa.semester4.logbook.index');
+
     });
+    
+    Route::prefix('semester-4/laporan-pbl')->middleware(['auth:mahasiswa', 'mahasiswa'])->group(function () {
+
+
+        Route::prefix('mahasiswa/semester-4/logbook')->middleware(['auth:mahasiswa', 'mahasiswa'])->group(function () {
+            Route::get('/', [LogbookController::class, 'index'])->name('mahasiswa.logbook');
+            Route::get('/isi-logbook', [LogbookController::class, 'create'])->name('mahasiswa.logbook.create');
+            Route::post('/isi-logbook', [LogbookController::class, 'store'])->name('mahasiswa.logbook.store'); // <- Tambahkan ini
+            Route::get('logbook/{id}', [LogbookController::class, 'show'])->name('mahasiswa.semester4.logbook.index');
+
+        });
+        
 
     // Pelaporan PBL
     Route::prefix('mahasiswa/semester-4/laporan-pbl')->middleware(['auth:mahasiswa', 'mahasiswa'])->group(function () {
         Route::get('/', [DashboardMahasiswaController::class, 'laporan_pbl'])->name('mahasiswa.pelaporan-pbl');
-        Route::get('/form-laporan-uts', [PelaporanUTSController::class, 'index'])->name('mahasiswa.pelaporan-pbl.laporan-uts');
+    // Rute untuk form laporan UTS
+    Route::get('/form-laporan-uts', [PelaporanUTSController::class, 'index'])->name('mahasiswa.pelaporan-pbl.laporan-uts');
+    Route::post('/form-laporan-uts', [PelaporanUTSController::class, 'store'])->name('mahasiswa.pelaporan-pbl.laporan-uts.store');
+    });
+    Route::middleware(['auth:mahasiswa'])->group(function () {
+        // Rute untuk form laporan UAS
         Route::get('/form-laporan-uas', [PelaporanUASController::class, 'index'])->name('mahasiswa.pelaporan-pbl.laporan-uas');
+        Route::post('/form-laporan-uas', [PelaporanUASController::class, 'store'])->name('mahasiswa.pelaporan-pbl.laporan-uas.store');
     });
 });
  });

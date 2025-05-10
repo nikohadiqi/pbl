@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('tantangan', function (Blueprint $table) {
             $table->id();
-            $table->string('id_tim');
+            $table->string('kode_tim')->nullable();
             $table->string('nomor')->nullable();
             $table->string('proses')->nullable();
             $table->string('isu')->nullable();
@@ -21,8 +21,7 @@ return new class extends Migration
             $table->string('catatan')->nullable();
             $table->timestamps();
          
-            // Foreign Key Constraint
-            $table->foreign('id_tim')->references('id_tim')->on('timpbl')->onDelete('cascade');
+            $table->foreign('kode_tim')->references('kode_tim')->on('tim_pbl')->onDelete('cascade');
         });
     }
 };

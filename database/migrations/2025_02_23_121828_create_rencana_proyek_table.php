@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('rencana_proyek', function (Blueprint $table) {
             $table->id(); // ID auto increment untuk identifikasi unik proyek
-            $table->string('id_tim');
+            $table->string('kode_tim')->nullable();
             $table->string('judul_proyek')->nullable();
             $table->string('pengusul_proyek')->nullable();
             $table->string('manajer_proyek')->nullable();
@@ -21,9 +21,7 @@ return new class extends Migration {
             $table->string('ruang_lingkup')->nullable();
             $table->string('rancangan_sistem')->nullable();
             $table->timestamps();
-        
-            // Foreign Key Constraint
-            $table->foreign('id_tim')->references('id_tim')->on('timpbl')->onDelete('cascade');
+            $table->foreign('kode_tim')->references('kode_tim')->on('tim_pbl')->onDelete('cascade');
         });
     } 
 };

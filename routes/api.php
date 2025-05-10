@@ -1,13 +1,12 @@
 <?php
 
 use App\Http\Controllers\Auth\MahasiswaRegisterController;
-use App\Http\Controllers\Auth\MahasiswaLoginController;
+use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Admin\DosenController;
 use App\Http\Controllers\API\Admin\MahasiswaController;
 use App\Http\Controllers\API\Admin\PeriodePBLController;
 use App\Http\Controllers\API\Admin\TimPBLController;
-use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\API\Admin\TahapanPelaksanaanProyekController;
 use App\Http\Controllers\API\Admin\MataKuliahController;
 use App\Http\Controllers\API\Mahasiswa\RencanaProyekController;
@@ -25,7 +24,7 @@ use App\Http\Controllers\API\Mahasiswa\LogbookController;
 Route::post('/mahasiswa/register', [MahasiswaRegisterController::class, 'register']);
 
 // Login mahasiswa
-Route::post('/mahasiswa/login', [MahasiswaLoginController::class, 'login']);
+Route::post('/ /login', [MahasiswaLoginController::class, 'login']);
 Route::post('/login', [LoginController::class, 'login']);
 
 Route::prefix('admin')->middleware(['auth:sanctum', 'admin'])->group(function () {
@@ -143,12 +142,17 @@ Route::prefix('mahasiswa')->middleware(['auth:sanctum', 'mahasiswa'])->group(fun
     Route::post('/capaian-pembelajaran/bulk-delete', [CapaianPembelajaranController::class, 'bulkDelete']);
 
     //logbook
-    Route::get('/logbook', [LogbookController::class, 'index']);
-    Route::post('/logbook', [LogbookController::class, 'store']);
-    Route::get('/logbook/{id}', [LogbookController::class, 'show']);
-    Route::put('/logbook/{id}', [LogbookController::class, 'update']);
-    Route::delete('/logbook/{id}', [LogbookController::class, 'destroy']);
-    Route::post('/logbook/bulk-delete', [LogbookController::class, 'bulkDelete']);
+
+
+Route::prefix('mahasiswa/logbook')->middleware('auth:mahasiswa')->group(function() {
+    Route::get('/', [LogbookController::class, 'index'])->name('mahasiswa.logbook.index');  // Menampilkan semua logbook
+    Route::get('/create', [LogbookController::class, 'create'])->name('mahasiswa.logbook.create');  // Menampilkan form untuk membuat logbook
+    Route::get('/{id}', [LogbookController::class, 'show'])->name('mahasiswa.logbook.show');  // Menampilkan logbook berdasarkan ID
+    Route::post('/store', [LogbookController::class, 'store'])->name('mahasiswa.logbook.store');  // Menyimpan atau mengupdate logbook
+    Route::put('/{id}', [LogbookController::class, 'update'])->name('mahasiswa.logbook.update');  // Mengupdate logbook
+    Route::delete('/{id}', [LogbookController::class, 'destroy'])->name('mahasiswa.logbook.destroy');  // Menghapus logbook
+});
+
 
     // Route untuk Pelaporan UTS
     Route::get('/uts', [PelaporanUTSController::class, 'index']);

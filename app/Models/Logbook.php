@@ -15,10 +15,13 @@ class Logbook extends Model
         'aktivitas',
         'hasil',
         'foto_kegiatan',
-        'kontribusi',
+        'anggota1',
+        'anggota2',
+        'anggota3',
+        'anggota4',
+        'anggota5',
         'progress',
         'kode_tim',
-        'nim'
     ];
 
     public function mahasiswa()

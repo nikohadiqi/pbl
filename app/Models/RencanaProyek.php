@@ -13,7 +13,7 @@ class RencanaProyek extends Model
 
 
     protected $fillable = [
-        'id_tim',
+        'kode_tim',
         'judul_proyek',
         'pengusul_proyek',
         'manajer_proyek',
@@ -47,8 +47,9 @@ class RencanaProyek extends Model
 {
     return $this->hasMany(tantangan::class);
 }
-public function timpbl()
+// Relasi dengan tim_pbl
+public function timPbl()
 {
-    return $this->belongsTo(TimPBL::class, 'id_tim', 'id_tim');
+    return $this->belongsTo(TimPbl::class, 'kode_tim', 'kode_tim');
 }
 }

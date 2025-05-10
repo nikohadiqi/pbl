@@ -13,15 +13,13 @@ return new class extends Migration
     {
         Schema::create('tahapan_pelaksanaan', function (Blueprint $table) {
             $table->id();
-            $table->string('id_tim');
+            $table->string('kode_tim')->nullable();
             $table->string('minggu')->nullable();
             $table->string('tahapan')->nullable();
             $table->string('pic')->nullable();
             $table->text('keterangan')->nullable();
             $table->timestamps();
-    
-            // Foreign Key Constraint
-            $table->foreign('id_tim')->references('id_tim')->on('timpbl')->onDelete('cascade');
+            $table->foreign('kode_tim')->references('kode_tim')->on('tim_pbl')->onDelete('cascade');
         });
     }
 };
