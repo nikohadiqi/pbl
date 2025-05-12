@@ -9,6 +9,7 @@ return new class extends Migration {
     {
         Schema::create('logbook', function (Blueprint $table) {
             $table->id();
+            $table->string('minggu')->nullable();
             $table->string('kode_tim')->nullable();
             $table->text('aktivitas')->nullable();
             $table->text('hasil')->nullable();
@@ -19,9 +20,13 @@ return new class extends Migration {
             $table->text('anggota4')->nullable();
             $table->text('anggota5')->nullable();
             $table->string('progress')->nullable();// Add this line for minggu
+            $table->unsignedBigInteger('tahapan_id')->nullable(); // ✅ kolom relasi tahapan
             $table->timestamps();
+
             $table->foreign('kode_tim')->references('kode_tim')->on('tim_pbl')->onDelete('cascade');
+            $table->foreign('tahapan_id')->references('id')->on('tpp_sem4')->onDelete('set null'); // ✅ foreign key ke tpp_sem4
         });
+
     }
     public function down()
     {

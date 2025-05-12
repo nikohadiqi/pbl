@@ -187,25 +187,27 @@ Route::middleware(['auth:mahasiswa'])->group(function () {
     //     Route::put('/logbook/{id}', [LogbookController::class, 'update'])->name('mahasiswa.logbook.update');
     // Pelaporan
 
-    
-    Route::prefix('mahasiswa/semester-4/logbook')->middleware(['auth:mahasiswa', 'mahasiswa'])->group(function () {
+Route::prefix('mahasiswa/semester-4/logbook')
+    ->middleware(['auth:mahasiswa', 'mahasiswa'])
+    ->group(function () {
         Route::get('/', [LogbookController::class, 'index'])->name('mahasiswa.logbook');
-        Route::get('/isi-logbook', [LogbookController::class, 'create'])->name('mahasiswa.logbook.create');
-        Route::post('/isi-logbook', [LogbookController::class, 'store'])->name('mahasiswa.logbook.store'); // <- Tambahkan ini
-        Route::get('logbook/{id}', [LogbookController::class, 'show'])->name('mahasiswa.semester4.logbook.index');
-
+        Route::get('/isi-logbook', [LogbookController::class, 'store'])->name('mahasiswa.semester4.logbook.logbook');
+        Route::post('/isi-logbook', [LogbookController::class, 'store'])->name('mahasiswa.semester4.logbook.logbook.store');
     });
+
+
+
     
     Route::prefix('semester-4/laporan-pbl')->middleware(['auth:mahasiswa', 'mahasiswa'])->group(function () {
 
 
-        Route::prefix('mahasiswa/semester-4/logbook')->middleware(['auth:mahasiswa', 'mahasiswa'])->group(function () {
-            Route::get('/', [LogbookController::class, 'index'])->name('mahasiswa.logbook');
-            Route::get('/isi-logbook', [LogbookController::class, 'create'])->name('mahasiswa.logbook.create');
-            Route::post('/isi-logbook', [LogbookController::class, 'store'])->name('mahasiswa.logbook.store'); // <- Tambahkan ini
-            Route::get('logbook/{id}', [LogbookController::class, 'show'])->name('mahasiswa.semester4.logbook.index');
+        // Route::prefix('mahasiswa/semester-4/logbook')->middleware(['auth:mahasiswa', 'mahasiswa'])->group(function () {
+        //     Route::get('/', [LogbookController::class, 'index'])->name('mahasiswa.logbook');
+        //     Route::get('/isi-logbook', [LogbookController::class, 'create'])->name('mahasiswa.logbook.create');
+        //     Route::post('/isi-logbook', [LogbookController::class, 'store'])->name('mahasiswa.logbook.store'); // <- Tambahkan ini
+        //     Route::get('logbook/{id}', [LogbookController::class, 'show'])->name('mahasiswa.semester4.logbook.index');
 
-        });
+        // });
         
 
     // Pelaporan PBL

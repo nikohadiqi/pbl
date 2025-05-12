@@ -16,4 +16,8 @@ class Tpp_sem4 extends Model
     'pic',
     'score'
 ];
+public function logbooks()
+{
+    return $this->hasMany(Logbook::class, 'tahapan_id');
+}
 }

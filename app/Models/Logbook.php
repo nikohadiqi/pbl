@@ -12,6 +12,7 @@ class Logbook extends Model
     protected $table = 'logbook';
 
     protected $fillable = [
+        'minggu',
         'aktivitas',
         'hasil',
         'foto_kegiatan',
@@ -34,4 +35,8 @@ class Logbook extends Model
    {
        return $this->belongsTo(TimPbl::class, 'kode_tim', 'kode_tim');
    }
+    public function tahapan()
+    {
+        return $this->belongsTo(Tpp_sem4::class, 'tahapan_id');
+    }
 }
