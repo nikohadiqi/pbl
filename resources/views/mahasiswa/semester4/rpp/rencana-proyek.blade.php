@@ -53,74 +53,72 @@
                     </div>
                 </div>
 
-                <form method="POST" action="{{ route('mahasiswa.rpp.rencana-proyek.store') }}">
-                    @csrf
                     <div class="tab-content" id="formTabsContent">
                         <!-- Step 1: Informasi Dasar -->
                         <div class="tab-pane fade show active" id="step1" role="tabpanel">
                             <div class="card p-4 mb-4">
                                 <h4>Step 1: Informasi Dasar</h4>
+                <!-- Form to submit project plan -->
+                        <form method="POST" action="{{ route('mahasiswa.rpp.rencana-proyek.store') }}">
+                            @csrf
+                                                 
+                    <div class="form-group mb-3">
+                        <label>Judul Proyek</label>
+                        <input type="text" name="judul_proyek" class="form-control" value="{{ old('judul_proyek', $rencanaProyek->judul_proyek ?? '') }}">
+                    </div>
 
-                                <!-- Judul Proyek -->
-                                <div class="form-group mb-3">
-                                    <label>Judul Proyek</label>
-                                    <input type="text" name="judul_proyek" class="form-control"
-                                        value="{{ old('judul_proyek', $rencanaProyek->judul_proyek ?? '') }}">
-                                </div>
+                    <div class="form-group mb-3">
+                        <label>Pengusul Proyek</label>
+                        <input type="text" name="pengusul_proyek" class="form-control" value="{{ old('pengusul_proyek', $rencanaProyek->pengusul_proyek ?? '') }}">
+                    </div>
 
-                                <!-- Pengusul Proyek -->
-                                <div class="form-group mb-3">
-                                    <label>Pengusul Proyek</label>
-                                    <input type="text" name="pengusul_proyek" class="form-control"
-                                        value="{{ old('pengusul_proyek', $rencanaProyek->pengusul_proyek ?? '') }}">
-                                </div>
+                    <div class="form-group mb-3">
+                        <label>Manajer Proyek</label>
+                        <input type="text" name="manajer_proyek" class="form-control" value="{{ old('manajer_proyek', $rencanaProyek->manajer_proyek ?? '') }}">
+                    </div>
 
-                                <!-- Manajer Proyek -->
-                                <div class="form-group mb-3">
-                                    <label>Manajer Proyek</label>
-                                    <input type="text" name="manajer_proyek" class="form-control"
-                                        value="{{ old('manajer_proyek', $rencanaProyek->manajer_proyek ?? '') }}">
-                                </div>
+                    <div class="form-group mb-3">
+                        <label>Luaran</label>
+                        <textarea name="luaran" class="form-control" rows="3">{{ old('luaran', $rencanaProyek->luaran ?? '') }}</textarea>
+                    </div>
 
-                                <!-- Luaran -->
-                                <div class="form-group mb-3">
-                                    <label>Luaran</label>
-                                    <textarea name="luaran" class="form-control"
-                                        rows="3">{{ old('luaran', $rencanaProyek->luaran ?? '') }}</textarea>
-                                </div>
+                    <div class="form-group mb-3">
+                        <label>Sponsor</label>
+                        <textarea name="sponsor" class="form-control" rows="3">{{ old('sponsor', $rencanaProyek->sponsor ?? '') }}</textarea>
+                    </div>
 
-                                <!-- Sponsor -->
-                                <div class="form-group mb-3">
-                                    <label>Sponsor</label>
-                                    <textarea name="sponsor" class="form-control"
-                                        rows="3">{{ old('sponsor', $rencanaProyek->sponsor ?? '') }}</textarea>
-                                </div>
+                  <div class="form-group mb-3">
+                        <label>biaya</label>
+                        <textarea name="biaya" class="form-control" rows="3">{{ old('biaya', $rencanaProyek->biaya ?? '') }}</textarea>
+                    </div>
 
-                                <!-- Biaya -->
-                                <div class="form-group mb-3">
-                                    <label>Biaya</label>
-                                    <textarea name="biaya" class="form-control"
-                                        rows="3">{{ old('biaya', $rencanaProyek->biaya ?? '') }}</textarea>
-                                </div>
+                    <div class="form-group mb-3">
+                        <label>Klien</label>
+                        <textarea name="klien" class="form-control" rows="3">{{ old('klien', $rencanaProyek->klien ?? '') }}</textarea>
+                    </div>
 
-                                <!-- Klien -->
-                                <div class="form-group mb-3">
-                                    <label>Klien</label>
-                                    <textarea name="klien" class="form-control"
-                                        rows="3">{{ old('klien', $rencanaProyek->klien ?? '') }}</textarea>
-                                </div>
+                    <div class="form-group mb-3">
+                        <label>Estimasi Waktu</label>
+                        <textarea name="waktu" class="form-control" rows="3">{{ old('waktu', $rencanaProyek->waktu ?? '') }}</textarea>
+                    </div>
 
-                                <!-- Estimasi Waktu -->
-                                <div class="form-group mb-3">
-                                    <label>Estimasi Waktu</label>
-                                    <textarea name="waktu" class="form-control"
-                                        rows="3">{{ old('waktu', $rencanaProyek->waktu ?? '') }}</textarea>
-                                </div>
+                    <div class="form-group mb-3">
+                        <label>Ruang Lingkup</label>
+                        <textarea name="ruang_lingkup" class="form-control" rows="3" required>{{ old('ruang_lingkup', $rencanaProyek->ruang_lingkup ?? '') }}</textarea>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label>Rancangan Sistem</label>
+                        <textarea name="rancangan_sistem" class="form-control" rows="3" required>{{ old('rancangan_sistem', $rencanaProyek->rancangan_sistem ?? '') }}</textarea>
+                    </div>
+
 
                                 <!-- Tombol Next -->
                                 <button type="button" class="btn btn-primary btn-next" data-next="#step2">Next</button>
-                            </div>
-                        </div>
+                            <button type="submit" class="btn btn-success">Simpan</button>
+                    </div>
+                </div>
+                  </form>
 
 
 
@@ -384,7 +382,7 @@
             tableBody.appendChild(newRow);
         }
                         </script>
-
+{{-- 
                         <!-- Step 6:Evaluasi -->
 
                                 <!-- Pemantauan & Evaluasi -->
@@ -403,7 +401,7 @@
                         </div>
 
                         <script>
-                            // Function to add a new row to the Tahapan Pelaksanaan table
+                            // Function to add a new row to the Tahapan Pelaksanaan table --}}
 
     </form>
     </div>

@@ -39,65 +39,45 @@ class RencanaProyekController extends Controller
 
     public function store(Request $request)
     {
-       // Validate the data
-$validated = $request->validate([
-    'judul_proyek' => 'nullable|string',
-    'pengusul_proyek' => 'nullable|string',
-    'manajer_proyek' => 'nullable|string',
-    'luaran' => 'nullable|string',
-    'sponsor' => 'nullable|string',
-    'biaya' => 'nullable|string',
-    'klien' => 'nullable|string',
-    'waktu' => 'nullable|string',
-    'ruang_lingkup' => 'nullable|string', // This field is now nullable and string
-    'rancangan_sistem' => 'nullable|string', // This field is now nullable and string
-    'minggu' => 'nullable|array', // These fields are now nullable arrays
-    'tahapan' => 'nullable|array',
-    'pic' => 'nullable|array',
-    'keterangan' => 'nullable|array',
-    'nomor' => 'nullable|array',
-    'fase' => 'nullable|array',
-    'peralatan' => 'nullable|array',
-    'bahan' => 'nullable|array',
-    'proses' => 'nullable|array',
-    'isu' => 'nullable|array',
-    'level_resiko' => 'nullable|array',
-    'catatan' => 'nullable|array',
-    'uraian_pekerjaan' => 'nullable|array',
-    'estimasi_waktu' => 'nullable|array',
-]);
+    $validated = $request->validate([
+        'judul_proyek' => 'nullable|string',
+        'pengusul_proyek' => 'nullable|string',
+        'manajer_proyek' => 'nullable|string',
+        'luaran' => 'nullable|string',
+        'sponsor' => 'nullable|string',
+        'biaya' => 'nullable|string',
+        'klien' => 'nullable|string',
+        'waktu' => 'nullable|string',
+        'ruang_lingkup' => 'nullable|string',
+        'rancangan_sistem' => 'nullable|string',
+    ]);
 
-    
-        // Store the data in the database
-        $rencanaProyek = new RencanaProyek();
-        $rencanaProyek->judul_proyek = $request->judul_proyek;
-        $rencanaProyek->pengusul_proyek = $request->pengusul_proyek;
-        $rencanaProyek->manajer_proyek = $request->manajer_proyek;
-        $rencanaProyek->luaran = $request->luaran;
-        $rencanaProyek->sponsor = $request->sponsor;
-        $rencanaProyek->biaya = $request->biaya;
-        $rencanaProyek->klien = $request->klien;
-        $rencanaProyek->waktu = $request->waktu;
-        $rencanaProyek->ruang_lingkup = $request->ruang_lingkup;
-        $rencanaProyek->rancangan_sistem = $request->rancangan_sistem;
-    
-        // Save tahapan pelaksanaan
-        $this->saveTahapanPelaksanaan($request, $rencanaProyek);
-    
-        // Save kebutuhan peralatan
-        $this->saveKebutuhanPeralatan($request, $rencanaProyek);
-    
-        // Save tantangan
-        $this->saveTantangan($request, $rencanaProyek);
-    
-        // Save estimasi
-        $this->saveEstimasi($request, $rencanaProyek);
-    
-        // Save the main rencanaProyek
-        $rencanaProyek->save();
-    
-        return redirect()->route('mahasiswa.rpp.rencana-proyek.store')
-                         ->with('success', 'Data berhasil disimpan!')
-                         ->with('rencanaProyek', $rencanaProyek); // Pass data back to the view
+    $nim = Auth::guard('mahasiswa')->user()->nim;
+    $anggota = Anggota_Tim_Pbl::where('nim', $nim)->first();
+
+    if (!$anggota) {
+        return redirect()->back()->with('error', 'Tim tidak ditemukan!');
     }
+
+    $kode_tim = $anggota->kode_tim;
+
+    // Update jika sudah ada
+    $rencanaProyek = RencanaProyek::firstOrNew(['kode_tim' => $kode_tim]);
+
+    $rencanaProyek->judul_proyek = $request->judul_proyek;
+    $rencanaProyek->pengusul_proyek = $request->pengusul_proyek;
+    $rencanaProyek->manajer_proyek = $request->manajer_proyek;
+    $rencanaProyek->luaran = $request->luaran;
+    $rencanaProyek->sponsor = $request->sponsor;
+    $rencanaProyek->biaya = $request->biaya;
+    $rencanaProyek->klien = $request->klien;
+    $rencanaProyek->waktu = $request->waktu;
+    $rencanaProyek->ruang_lingkup = $request->ruang_lingkup;
+    $rencanaProyek->rancangan_sistem = $request->rancangan_sistem;
+    $rencanaProyek->kode_tim = $kode_tim;
+
+    $rencanaProyek->save();
+
+    return redirect()->route('mahasiswa.rpp.rencana-proyek.create')->with('success', 'Data berhasil disimpan atau diperbarui!');
+}
 }

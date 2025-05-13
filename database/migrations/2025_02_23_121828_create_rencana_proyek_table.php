@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->string('manajer_proyek')->nullable();
             $table->string('luaran')->nullable();
             $table->string('sponsor')->nullable();
-            $table->decimal('biaya', 10, 2)->nullable();
+            $table->string('biaya')->nullable();
             $table->string('klien')->nullable();
             $table->string('waktu')->nullable();
             $table->string('ruang_lingkup')->nullable();
