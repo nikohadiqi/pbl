@@ -249,10 +249,22 @@ Route::prefix('mahasiswa/semester-4/logbook')
     Route::get('/dosen/daftar-tim-pbl', function () {
         return view('dosen.daftar-tim.daftar-timpbl');
     })->name('dosen.daftar-tim');
+    Route::get('/dosen/daftar-tim-pbl/logbook', function () {
+        return view('dosen.daftar-tim.logbook-timpbl');
+    })->name('dosen.daftar-tim.logbook');
+    Route::get('/dosen/daftar-tim-pbl/laporan', function () {
+        return view('dosen.daftar-tim.laporan-timpbl');
+    })->name('dosen.daftar-tim.laporan');
+    Route::get('/dosen/daftar-tim-pbl/penilaian-mahasiswa', function () {
+        return view('dosen.daftar-tim.penilaian-timpbl');
+    })->name('dosen.daftar-tim.penilaian');
 
     // Penilaian Mahasiswa
     Route::get('/dosen/penilaian-mahasiswa', function () {
         return view('dosen.penilaian.penilaian');
     })->name('dosen.penilaian');
+    Route::get('/dosen/penilaian-mahasiswa/rubrik-penilaian', function () {
+        return view('dosen.penilaian.form-nilai');
+    })->name('dosen.penilaian.beri-nilai');
 });
 });

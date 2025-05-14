@@ -34,7 +34,7 @@
                             <span class="fw-bold">
                                 {{ Auth::guard('dosen')->check() ? Auth::guard('dosen')->user()->nim : '-' }}
                             </span>
-                        </span>                        
+                        </span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item" href="{{ route('dosen.profil') }}"><i class="fas fa-user me-2"></i> Profil</a></li>
