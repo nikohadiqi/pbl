@@ -8,10 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class TahapanPelaksanaan extends Model
 {
     use HasFactory;
-    protected $table = 'tahapan_pelaksaan';
+    protected $table = 'tahapan_pelaksanaan';
 
-    protected $fillable = [
-        'kode_tim', 'minggu', 'tahapan', 'pic', 'keterangan'
+    protected $fillable = [ 'kode_tim','minggu', 'tahapan', 'pic', 'keterangan'
     ];
     // Relasi dengan tim_pbl
    public function timPbl()

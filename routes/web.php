@@ -175,9 +175,13 @@ Route::middleware(['auth:mahasiswa'])->group(function () {
         // Rencana Proyek
         Route::prefix('rencana-proyek')->group(function () {
             Route::get('/', [RencanaProyekController::class, 'create'])->name('mahasiswa.rpp.rencana-proyek.create');
-            Route::post('/', [RencanaProyekController::class, 'store'])->name('mahasiswa.rpp.rencana-proyek.store');
-              });
+            Route::post('/simpan', [RencanaProyekController::class, 'store'])->name('mahasiswa.rpp.rencana-proyek.store');
+            Route::post('/tahapan', [RencanaProyekController::class, 'storeTahapanPelaksanaan'])->name('mahasiswa.rpp.tahapan-pelaksanaan.store');
+            Route::post('/kebutuhan', [RencanaProyekController::class, 'storeKebutuhanPeralatan'])->name('mahasiswa.rpp.kebutuhan-peralatan.store');
+             Route::post('/tantangan', [RencanaProyekController::class, 'storeTantangan'])->name('mahasiswa.rpp.tantangan.store');
+        });
     });
+
 
 
     // Logbook

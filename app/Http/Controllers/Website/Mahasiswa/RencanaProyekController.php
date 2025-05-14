@@ -16,7 +16,6 @@ class RencanaProyekController extends Controller
 {
     public function create()
     {
-        // Retrieve the authenticated user using the 'mahasiswa' guard
         $nim = Auth::guard('mahasiswa')->user()->nim;
 
         // Retrieve the first 'Anggota_Tim_Pbl' for the authenticated 'nim'
@@ -28,13 +27,19 @@ class RencanaProyekController extends Controller
 
             // Retrieve the first RencanaProyek for the authenticated 'kode_tim'
             $rencanaProyek = RencanaProyek::where('kode_tim', $kode_tim)->first();
+            $tahapanPelaksanaan = TahapanPelaksanaan::where('kode_tim', $kode_tim)->get();
+            $KebutuhanPeralatan = KebutuhanPeralatan::where('kode_tim', $kode_tim)->get();
+            $Tantangan = Tantangan::where('kode_tim', $kode_tim)->get();
         } else {
-            // Handle the case where the 'Anggota_Tim_Pbl' is not found
             $rencanaProyek = null;
         }
+        return view('mahasiswa.semester4.rpp.rencana-proyek', compact(
+            'rencanaProyek', 
+            'tahapanPelaksanaan', 
+            'KebutuhanPeralatan', 
+            'Tantangan'
+));
 
-        // Return the view and pass the rencanaProyek data to it
-        return view('mahasiswa.semester4.rpp.rencana-proyek', compact('rencanaProyek'));
     }
 
     public function store(Request $request)
@@ -79,5 +84,111 @@ class RencanaProyekController extends Controller
     $rencanaProyek->save();
 
     return redirect()->route('mahasiswa.rpp.rencana-proyek.create')->with('success', 'Data berhasil disimpan atau diperbarui!');
+}
+
+public function storeTahapanPelaksanaan(Request $request)
+{
+    $validated = $request->validate([
+        'minggu.*' => 'required|integer',
+        'tahapan.*' => 'required|string',
+        'pic.*' => 'required|string',
+        'keterangan.*' => 'nullable|string',
+    ]);
+
+    $nim = Auth::guard('mahasiswa')->user()->nim;
+    $anggota = Anggota_Tim_Pbl::where('nim', $nim)->first();
+
+    if (!$anggota) {
+        return back()->with('error', 'Tim tidak ditemukan!');
+    }
+
+    $kode_tim = $anggota->kode_tim;
+
+    // Hapus data lama dulu (jika perlu update)
+    TahapanPelaksanaan::where('kode_tim', $kode_tim)->delete();
+
+    // Simpan ulang
+    for ($i = 0; $i < count($request->minggu); $i++) {
+        TahapanPelaksanaan::create([
+            'kode_tim' => $kode_tim,
+            'minggu' => $request->minggu[$i],
+            'tahapan' => $request->tahapan[$i],
+            'pic' => $request->pic[$i],
+            'keterangan' => $request->keterangan[$i],
+        ]);
+    }
+
+    return redirect()->back()->with(['success' => 'Tahapan Pelaksanaan disimpan.', 'active_step' => 'step2']);
+}
+
+public function storeKebutuhanPeralatan(Request $request)
+{
+    $validated = $request->validate([
+        'nomor.*' => 'required|integer',
+        'fase.*' => 'required|string',
+        'peralatan.*' => 'nullable|string',
+        'bahan.*' => 'nullable|string',
+    ]);
+
+    $nim = Auth::guard('mahasiswa')->user()->nim;
+    $anggota = Anggota_Tim_Pbl::where('nim', $nim)->first();
+
+    if (!$anggota) {
+        return back()->with('error', 'Tim tidak ditemukan!');
+    }
+
+    $kode_tim = $anggota->kode_tim;
+
+    // Hapus data lama
+    KebutuhanPeralatan::where('kode_tim', $kode_tim)->delete();
+
+    // Simpan data baru
+    for ($i = 0; $i < count($request->nomor); $i++) {
+        KebutuhanPeralatan::create([
+            'kode_tim' => $kode_tim,
+            'nomor' => $request->nomor[$i],
+            'fase' => $request->fase[$i],
+            'peralatan' => $request->peralatan[$i],
+            'bahan' => $request->bahan[$i],
+        ]);
+    }
+
+    return redirect()->back()->with(['success' => 'Kebutuhan Peralatan berhasil disimpan.', 'active_step' => 'step3']);
+}
+public function storeTantangan(Request $request)
+{
+    $validated = $request->validate([
+        'nomor.*' => 'required|integer',
+        'proses.*' => 'required|string',
+        'isu.*' => 'nullable|string',
+        'level_resiko.*' => 'nullable|string',
+        'catatan.*' => 'nullable|string',
+    ]);
+
+    $nim = Auth::guard('mahasiswa')->user()->nim;
+    $anggota = Anggota_Tim_Pbl::where('nim', $nim)->first();
+
+    if (!$anggota) {
+        return back()->with('error', 'Tim tidak ditemukan!');
+    }
+
+    $kode_tim = $anggota->kode_tim;
+
+    // Hapus data lama
+    Tantangan::where('kode_tim', $kode_tim)->delete();
+
+    // Simpan data baru
+    for ($i = 0; $i < count($request->nomor); $i++) {
+        Tantangan::create([
+            'kode_tim' => $kode_tim,
+            'nomor' => $request->nomor[$i],
+            'proses' => $request->proses[$i],
+            'isu' => $request->isu[$i],
+            'level_resiko' => $request->level_resiko[$i],
+            'catatan' => $request->catatan[$i],
+        ]);
+    }
+
+    return redirect()->back()->with(['success' => 'Tantangan berhasil disimpan.', 'active_step' => 'step4']);
 }
 }
