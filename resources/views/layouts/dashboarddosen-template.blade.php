@@ -94,7 +94,6 @@
         const dataTableSearch = new simpleDatatables.DataTable("#datatable-search", {
             searchable: true,
             sortable: true,
-            perPage: 5,
             perPageSelect: [5, 10, 20, 50],
             fixedHeight: true,
             labels: {
@@ -109,7 +108,6 @@
         const dataTableBasic = new simpleDatatables.DataTable("#datatable-basic", {
             searchable: false,
             sortable: true,
-            perPage: 5,
             perPageSelect: [5, 10, 20, 50],
             fixedHeight: true,
             labels: {
@@ -124,7 +122,6 @@
         const dataTableNormal = new simpleDatatables.DataTable("#datatable-normal", {
             searchable: false,
             sortable: true,
-            perPage: 5,
             perPageSelect: [5, 10, 20, 50],
             fixedHeight: true,
             labels: {

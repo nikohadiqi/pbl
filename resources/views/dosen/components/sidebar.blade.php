@@ -39,7 +39,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('dosen.daftar-tim') ? 'active' : '' }}"
+                <a class="nav-link {{ request()->routeIs('dosen.daftar-tim*') ? 'active' : '' }}"
                     href="{{ route('dosen.daftar-tim') }}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -49,7 +49,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('dosen.penilaian') ? 'active' : '' }}"
+                <a class="nav-link {{ request()->routeIs('dosen.penilaian*') ? 'active' : '' }}"
                     href="{{ route('dosen.penilaian') }}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">

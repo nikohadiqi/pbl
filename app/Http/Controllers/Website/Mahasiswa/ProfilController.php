@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Website\Mahasiswa;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\AkunMahasiswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -32,7 +32,7 @@ class ProfilController extends Controller
             'new_password.min' => 'Password baru minimal harus 6 karakter.',
         ]);
 
-        $auth = Auth::user();
+        $auth = Auth::guard('mahasiswa')->user();
 
         if (!Hash::check($request->get('old_password'), $auth->password)) {
             return back()->with('error', "Password lama salah!");
@@ -42,7 +42,7 @@ class ProfilController extends Controller
             return back()->with("error", "Password baru tidak boleh sama dengan password saat ini!");
         }
 
-        $user = User::find($auth->id);
+        $user = AkunMahasiswa::find($auth->id);
         $user->password = Hash::make($request->new_password);
         $user->save();
 

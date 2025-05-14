@@ -47,12 +47,13 @@ class ProfilController extends Controller
         }
 
         // Update the password
-        $auth->password = Hash::make($request->new_password);
-        $auth->save();
+        $user = AkunDosen::find($auth->id);
+        $user->password = Hash::make($request->new_password);
+        $user->save();
 
         // Display a success alert
         Alert::success('Berhasil!', 'Password berhasil diubah!');
-        
+
         // Redirect to the profile page
         return redirect()->route('dosen.profil');
     }
