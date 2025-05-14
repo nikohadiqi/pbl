@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->string('waktu')->nullable();
             $table->string('ruang_lingkup')->nullable();
             $table->string('rancangan_sistem')->nullable();
+            $table->string('evaluasi')->nullable();
             $table->timestamps();
             $table->foreign('kode_tim')->references('kode_tim')->on('tim_pbl')->onDelete('cascade');
         });

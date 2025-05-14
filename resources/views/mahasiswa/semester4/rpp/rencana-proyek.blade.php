@@ -32,10 +32,6 @@
                     <div class="circle">6</div>
                     <div class="label">Estimasi</div>
                 </div>
-                <div class="step" data-target="#step7">
-                    <div class="circle">7</div>
-                    <div class="label">Evaluasi</div>
-                </div>
             </div>
         </div>
 
@@ -97,7 +93,10 @@
                             <label>Rancangan Sistem</label>
                             <textarea name="rancangan_sistem" class="form-control">{{ old('rancangan_sistem', $rencanaProyek->rancangan_sistem ?? '') }}</textarea>
                         </div>
-
+                    <div class="form-group mb-3">
+                            <label>Evaluasi</label>
+                            <textarea name="rancangan_sistem" class="form-control">{{ old('evaluasi', $rencanaProyek->evaluasi ?? '') }}</textarea>
+                        </div>
                         <div class="d-flex justify-content-between">
                             <button type="submit" class="btn btn-success">Simpan</button>
                             <button type="button" class="btn btn-primary btn-next" data-next="#step2">Next</button>
@@ -121,21 +120,31 @@
                 </tr>
             </thead>
             <tbody>
-                @if (!empty($tahapanPelaksanaan) && $tahapanPelaksanaan->count())
-                    @foreach ($tahapanPelaksanaan as $tahapan)
+                @php $oldCount = count(old('minggu', [])); @endphp
+                @if($oldCount > 0)
+                    @for($i = 0; $i < $oldCount; $i++)
                         <tr>
-                            <td><input type="number" name="minggu[]" class="form-control" value="{{ old('minggu.' . $loop->index, $tahapan->minggu) }}"></td>
-                            <td><input type="text" name="tahapan[]" class="form-control" value="{{ old('tahapan.' . $loop->index, $tahapan->tahapan) }}"></td>
-                            <td><input type="text" name="pic[]" class="form-control" value="{{ old('pic.' . $loop->index, $tahapan->pic) }}"></td>
-                            <td><input type="text" name="keterangan[]" class="form-control" value="{{ old('keterangan.' . $loop->index, $tahapan->keterangan) }}"></td>
+                            <td><input type="number" name="minggu[]" class="form-control" value="{{ old('minggu.' . $i) }}"></td>
+                            <td><input type="text" name="tahapan[]" class="form-control" value="{{ old('tahapan.' . $i) }}"></td>
+                            <td><input type="text" name="pic[]" class="form-control" value="{{ old('pic.' . $i) }}"></td>
+                            <td><input type="text" name="keterangan[]" class="form-control" value="{{ old('keterangan.' . $i) }}"></td>
+                        </tr>
+                    @endfor
+                @elseif(isset($tahapanPelaksanaan) && $tahapanPelaksanaan->count())
+                    @foreach($tahapanPelaksanaan as $tahapan)
+                        <tr>
+                            <td><input type="number" name="minggu[]" class="form-control" value="{{ $tahapan->minggu }}"></td>
+                            <td><input type="text" name="tahapan[]" class="form-control" value="{{ $tahapan->tahapan }}"></td>
+                            <td><input type="text" name="pic[]" class="form-control" value="{{ $tahapan->pic }}"></td>
+                            <td><input type="text" name="keterangan[]" class="form-control" value="{{ $tahapan->keterangan }}"></td>
                         </tr>
                     @endforeach
                 @else
                     <tr>
-                        <td><input type="number" name="minggu[]" class="form-control" value="{{ old('minggu.0') }}"></td>
-                        <td><input type="text" name="tahapan[]" class="form-control" value="{{ old('tahapan.0') }}"></td>
-                        <td><input type="text" name="pic[]" class="form-control" value="{{ old('pic.0') }}"></td>
-                        <td><input type="text" name="keterangan[]" class="form-control" value="{{ old('keterangan.0') }}"></td>
+                        <td><input type="number" name="minggu[]" class="form-control"></td>
+                        <td><input type="text" name="tahapan[]" class="form-control"></td>
+                        <td><input type="text" name="pic[]" class="form-control"></td>
+                        <td><input type="text" name="keterangan[]" class="form-control"></td>
                     </tr>
                 @endif
             </tbody>
@@ -153,16 +162,18 @@
 
 <script>
     function addTahapanRow() {
-        var table = document.getElementById('tahapan-table').getElementsByTagName('tbody')[0];
-        var newRow = table.insertRow(table.rows.length);
-        newRow.innerHTML = `
+        const table = document.querySelector('#tahapan-table tbody');
+        const row = document.createElement('tr');
+        row.innerHTML = `
             <td><input type="number" name="minggu[]" class="form-control"></td>
             <td><input type="text" name="tahapan[]" class="form-control"></td>
             <td><input type="text" name="pic[]" class="form-control"></td>
             <td><input type="text" name="keterangan[]" class="form-control"></td>
         `;
+        table.appendChild(row);
     }
 </script>
+
 
 <!-- STEP 3 -->
 <div class="tab-pane fade {{ session('active_step') == 'step3' ? 'show active' : '' }}" id="step3" role="tabpanel">
@@ -180,21 +191,31 @@
                 </tr>
             </thead>
             <tbody>
-                @if (!empty($kebutuhanPeralatan) && $kebutuhanPeralatan->count())
-                    @foreach ($kebutuhanPeralatan as $peralatan)
+                @php $oldCount = count(old('nomor', [])); @endphp
+                @if($oldCount > 0)
+                    @for($i = 0; $i < $oldCount; $i++)
                         <tr>
-                            <td><input type="number" name="nomor[]" class="form-control" value="{{ old('nomor.' . $loop->index, $peralatan->nomor) }}"></td>
-                            <td><input type="text" name="fase[]" class="form-control" value="{{ old('fase.' . $loop->index, $peralatan->fase) }}"></td>
-                            <td><input type="text" name="peralatan[]" class="form-control" value="{{ old('peralatan.' . $loop->index, $peralatan->peralatan) }}"></td>
-                            <td><input type="text" name="bahan[]" class="form-control" value="{{ old('bahan.' . $loop->index, $peralatan->bahan) }}"></td>
+                            <td><input type="number" name="nomor[]" class="form-control" value="{{ old('nomor.' . $i) }}"></td>
+                            <td><input type="text" name="fase[]" class="form-control" value="{{ old('fase.' . $i) }}"></td>
+                            <td><input type="text" name="peralatan[]" class="form-control" value="{{ old('peralatan.' . $i) }}"></td>
+                            <td><input type="text" name="bahan[]" class="form-control" value="{{ old('bahan.' . $i) }}"></td>
+                        </tr>
+                    @endfor
+                @elseif(isset($kebutuhanPeralatan) && $kebutuhanPeralatan->count())
+                    @foreach($kebutuhanPeralatan as $item)
+                        <tr>
+                            <td><input type="number" name="nomor[]" class="form-control" value="{{ $item->nomor }}"></td>
+                            <td><input type="text" name="fase[]" class="form-control" value="{{ $item->fase }}"></td>
+                            <td><input type="text" name="peralatan[]" class="form-control" value="{{ $item->peralatan }}"></td>
+                            <td><input type="text" name="bahan[]" class="form-control" value="{{ $item->bahan }}"></td>
                         </tr>
                     @endforeach
                 @else
                     <tr>
-                        <td><input type="number" name="nomor[]" class="form-control" value="{{ old('nomor.0') }}"></td>
-                        <td><input type="text" name="fase[]" class="form-control" value="{{ old('fase.0') }}"></td>
-                        <td><input type="text" name="peralatan[]" class="form-control" value="{{ old('peralatan.0') }}"></td>
-                        <td><input type="text" name="bahan[]" class="form-control" value="{{ old('bahan.0') }}"></td>
+                        <td><input type="number" name="nomor[]" class="form-control"></td>
+                        <td><input type="text" name="fase[]" class="form-control"></td>
+                        <td><input type="text" name="peralatan[]" class="form-control"></td>
+                        <td><input type="text" name="bahan[]" class="form-control"></td>
                     </tr>
                 @endif
             </tbody>
@@ -212,22 +233,24 @@
 
 <script>
     function addPeralatanRow() {
-        var table = document.getElementById('peralatan-table').getElementsByTagName('tbody')[0];
-        var newRow = table.insertRow(table.rows.length);
-        newRow.innerHTML = `
+        const table = document.querySelector('#peralatan-table tbody');
+        const row = document.createElement('tr');
+        row.innerHTML = `
             <td><input type="number" name="nomor[]" class="form-control"></td>
             <td><input type="text" name="fase[]" class="form-control"></td>
             <td><input type="text" name="peralatan[]" class="form-control"></td>
             <td><input type="text" name="bahan[]" class="form-control"></td>
         `;
+        table.appendChild(row);
     }
 </script>
+
 
 <!-- STEP 4 -->
 <div class="tab-pane fade {{ session('active_step') == 'step4' ? 'show active' : '' }}" id="step4" role="tabpanel">
     <form method="POST" action="{{ route('mahasiswa.rpp.tantangan.store') }}">
         @csrf
-        <h4>Step 4: Tantangan</h4>
+        <h4 class="mb-3">Step 4: Tantangan</h4>
 
         <table class="table table-bordered" id="tantangan-table">
             <thead>
@@ -240,23 +263,34 @@
                 </tr>
             </thead>
             <tbody>
-                @if (!empty($tantanganList) && $tantanganList->count())
-                    @foreach ($tantanganList as $tantangan)
+                @php $oldCount = count(old('nomor', [])); @endphp
+                @if($oldCount > 0)
+                    @for($i = 0; $i < $oldCount; $i++)
                         <tr>
-                            <td><input type="number" name="nomor[]" class="form-control" value="{{ old('nomor.' . $loop->index, $tantangan->nomor) }}"></td>
-                            <td><input type="text" name="proses[]" class="form-control" value="{{ old('proses.' . $loop->index, $tantangan->proses) }}"></td>
-                            <td><input type="text" name="isu[]" class="form-control" value="{{ old('isu.' . $loop->index, $tantangan->isu) }}"></td>
-                            <td><input type="text" name="level_resiko[]" class="form-control" value="{{ old('level_resiko.' . $loop->index, $tantangan->level_resiko) }}"></td>
-                            <td><input type="text" name="catatan[]" class="form-control" value="{{ old('catatan.' . $loop->index, $tantangan->catatan) }}"></td>
+                            <td><input type="number" name="nomor[]" class="form-control" value="{{ old('nomor.' . $i) }}"></td>
+                            <td><input type="text" name="proses[]" class="form-control" value="{{ old('proses.' . $i) }}"></td>
+                            <td><input type="text" name="isu[]" class="form-control" value="{{ old('isu.' . $i) }}"></td>
+                            <td><input type="text" name="level_resiko[]" class="form-control" value="{{ old('level_resiko.' . $i) }}"></td>
+                            <td><input type="text" name="catatan[]" class="form-control" value="{{ old('catatan.' . $i) }}"></td>
+                        </tr>
+                    @endfor
+                @elseif(isset($tantangan) && $tantangan->count())
+                    @foreach($tantangan as $item)
+                        <tr>
+                            <td><input type="number" name="nomor[]" class="form-control" value="{{ $item->nomor }}"></td>
+                            <td><input type="text" name="proses[]" class="form-control" value="{{ $item->proses }}"></td>
+                            <td><input type="text" name="isu[]" class="form-control" value="{{ $item->isu }}"></td>
+                            <td><input type="text" name="level_resiko[]" class="form-control" value="{{ $item->level_resiko }}"></td>
+                            <td><input type="text" name="catatan[]" class="form-control" value="{{ $item->catatan }}"></td>
                         </tr>
                     @endforeach
                 @else
                     <tr>
-                        <td><input type="number" name="nomor[]" class="form-control" value="{{ old('nomor.0') }}"></td>
-                        <td><input type="text" name="proses[]" class="form-control" value="{{ old('proses.0') }}"></td>
-                        <td><input type="text" name="isu[]" class="form-control" value="{{ old('isu.0') }}"></td>
-                        <td><input type="text" name="level_resiko[]" class="form-control" value="{{ old('level_resiko.0') }}"></td>
-                        <td><input type="text" name="catatan[]" class="form-control" value="{{ old('catatan.0') }}"></td>
+                        <td><input type="number" name="nomor[]" class="form-control"></td>
+                        <td><input type="text" name="proses[]" class="form-control"></td>
+                        <td><input type="text" name="isu[]" class="form-control"></td>
+                        <td><input type="text" name="level_resiko[]" class="form-control"></td>
+                        <td><input type="text" name="catatan[]" class="form-control"></td>
                     </tr>
                 @endif
             </tbody>
@@ -265,7 +299,7 @@
         <button type="button" class="btn btn-sm btn-success mb-3" onclick="addTantanganRow()">+ Tambah Tantangan</button>
 
         <div class="d-flex justify-content-between">
-            <button type="button" class="btn btn-secondary btn-prev" data-prev="#step3">Previous</button>
+           <button type="button" class="btn btn-secondary btn-prev" data-prev="#step3">Previous</button>
             <button type="submit" class="btn btn-success">Simpan</button>
             <button type="button" class="btn btn-primary btn-next" data-next="#step5">Next</button>
         </div>
@@ -274,132 +308,158 @@
 
 <script>
     function addTantanganRow() {
-        var table = document.getElementById('tantangan-table').getElementsByTagName('tbody')[0];
-        var newRow = table.insertRow(table.rows.length);
-        newRow.innerHTML = `
+        const table = document.querySelector('#tantangan-table tbody');
+        const row = document.createElement('tr');
+        row.innerHTML = `
             <td><input type="number" name="nomor[]" class="form-control"></td>
             <td><input type="text" name="proses[]" class="form-control"></td>
             <td><input type="text" name="isu[]" class="form-control"></td>
             <td><input type="text" name="level_resiko[]" class="form-control"></td>
             <td><input type="text" name="catatan[]" class="form-control"></td>
         `;
+        table.appendChild(row);
+    }
+</script>
+<!-- STEP 5 -->
+<div class="tab-pane fade {{ session('active_step') == 'step5' ? 'show active' : '' }}" id="step5" role="tabpanel">
+    <form method="POST" action="{{ route('mahasiswa.rpp.biaya.store') }}">
+        @csrf
+        <h4 class="mb-3">Step 5: Biaya</h4>
+
+        <table class="table table-bordered" id="biaya-table">
+            <thead>
+                <tr>
+                    <th>Fase</th>
+                    <th>Uraian Pekerjaan</th>
+                    <th>Perkiraan Biaya</th>
+                    <th>Catatan</th>
+                </tr>
+            </thead>
+            <tbody>
+                @php $oldCount = count(old('fase', [])); @endphp
+                @if($oldCount > 0)
+                    @for($i = 0; $i < $oldCount; $i++)
+                        <tr>
+                            <td><input type="text" name="fase[]" class="form-control" value="{{ old('fase.' . $i) }}"></td>
+                            <td><input type="text" name="uraian_pekerjaan[]" class="form-control" value="{{ old('uraian_pekerjaan.' . $i) }}"></td>
+                            <td><input type="text" name="perkiraan_biaya[]" class="form-control" value="{{ old('perkiraan_biaya.' . $i) }}"></td>
+                            <td><input type="text" name="catatan[]" class="form-control" value="{{ old('catatan.' . $i) }}"></td>
+                        </tr>
+                    @endfor
+                @elseif(isset($biaya) && $biaya->count())
+                    @foreach($biaya as $biaya)
+                        <tr>
+                            <td><input type="text" name="fase[]" class="form-control" value="{{ $biaya->fase }}"></td>
+                            <td><input type="text" name="uraian_pekerjaan[]" class="form-control" value="{{ $biaya->uraian_pekerjaan }}"></td>
+                            <td><input type="text" name="perkiraan_biaya[]" class="form-control" value="{{ $biaya->perkiraan_biaya }}"></td>
+                            <td><input type="text" name="catatan[]" class="form-control" value="{{ $biaya->catatan }}"></td>
+                        </tr>
+                    @endforeach
+                @else
+                    <tr>
+                        <td><input type="text" name="fase[]" class="form-control"></td>
+                        <td><input type="text" name="uraian_pekerjaan[]" class="form-control"></td>
+                        <td><input type="text" name="perkiraan_biaya[]" class="form-control"></td>
+                        <td><input type="text" name="catatan[]" class="form-control"></td>
+                    </tr>
+                @endif
+            </tbody>
+        </table>
+
+        <button type="button" class="btn btn-sm btn-success mb-3" onclick="addBiayaRow()">+ Tambah Biaya</button>
+
+        <div class="d-flex justify-content-between">
+            <button type="button" class="btn btn-secondary btn-prev" data-prev="#step4">Previous</button>
+            <button type="submit" class="btn btn-success">Simpan</button>
+            <button type="button" class="btn btn-primary btn-next" data-next="#step6">Next</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function addBiayaRow() {
+        const table = document.querySelector('#biaya-table tbody');
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td><input type="text" name="fase[]" class="form-control"></td>
+            <td><input type="text" name="uraian_pekerjaan[]" class="form-control"></td>
+            <td><input type="text" name="perkiraan_biaya[]" class="form-control"></td>
+            <td><input type="text" name="catatan[]" class="form-control"></td>
+        `;
+        table.appendChild(row);
+    }
+</script>
+
+<!-- STEP 6 -->
+<div class="tab-pane fade {{ session('active_step') == 'step6' ? 'show active' : '' }}" id="step6" role="tabpanel">
+    <form method="POST" action="{{ route('mahasiswa.rpp.estimasi.store') }}">
+        @csrf
+        <h4 class="mb-3">Step 6: Estimasi Waktu</h4>
+
+        <table class="table table-bordered" id="estimasi-table">
+            <thead>
+                <tr>
+                    <th>Fase</th>
+                    <th>Uraian Pekerjaan</th>
+                    <th>Estimasi Waktu</th>
+                    <th>Catatan</th>
+                </tr>
+            </thead>
+            <tbody>
+                @php $oldCount = count(old('fase', [])); @endphp
+                @if($oldCount > 0)
+                    @for($i = 0; $i < $oldCount; $i++)
+                        <tr>
+                            <td><input type="text" name="fase[]" class="form-control" value="{{ old('fase.' . $i) }}"></td>
+                            <td><input type="text" name="uraian_pekerjaan[]" class="form-control" value="{{ old('uraian_pekerjaan.' . $i) }}"></td>
+                            <td><input type="text" name="estimasi_waktu[]" class="form-control" value="{{ old('estimasi_waktu.' . $i) }}"></td>
+                            <td><input type="text" name="catatan[]" class="form-control" value="{{ old('catatan.' . $i) }}"></td>
+                        </tr>
+                    @endfor
+                @elseif(isset($estimasi) && $estimasi->count())
+                    @foreach($estimasi as $estimasi)
+                        <tr>
+                            <td><input type="text" name="fase[]" class="form-control" value="{{ $estimasi->fase }}"></td>
+                            <td><input type="text" name="uraian_pekerjaan[]" class="form-control" value="{{ $estimasi->uraian_pekerjaan }}"></td>
+                            <td><input type="text" name="estimasi_waktu[]" class="form-control" value="{{ $estimasi->estimasi_waktu }}"></td>
+                            <td><input type="text" name="catatan[]" class="form-control" value="{{ $estimasi->catatan }}"></td>
+                        </tr>
+                    @endforeach
+                @else
+                    <tr>
+                        <td><input type="text" name="fase[]" class="form-control"></td>
+                        <td><input type="text" name="uraian_pekerjaan[]" class="form-control"></td>
+                        <td><input type="text" name="estimasi_waktu[]" class="form-control"></td>
+                        <td><input type="text" name="catatan[]" class="form-control"></td>
+                    </tr>
+                @endif
+            </tbody>
+        </table>
+
+        <button type="button" class="btn btn-sm btn-success mb-3" onclick="addEstimasiRow()">+ Tambah Estimasi</button>
+
+        <div class="d-flex justify-content-between">
+            <button type="button" class="btn btn-secondary btn-prev" data-prev="#step5">Previous</button>
+            <button type="submit" class="btn btn-success">Simpan</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function addEstimasiRow() {
+        const table = document.querySelector('#estimasi-table tbody');
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td><input type="text" name="fase[]" class="form-control"></td>
+            <td><input type="text" name="uraian_pekerjaan[]" class="form-control"></td>
+            <td><input type="text" name="estimasi_waktu[]" class="form-control"></td>
+            <td><input type="text" name="catatan[]" class="form-control"></td>
+        `;
+        table.appendChild(row);
     }
 </script>
 
 
-                        <!-- Step 5: Biaya-->
-                                     <div class="tab-pane fade {{ session('active_step') == 'step5' ? 'show active' : '' }}" id="step5" role="tabpanel">
-                            <div class="card p-4 mb-4">
-                                <h4>Step 5: Biaya & Tim</h4>
-
-                                <!-- Biya -->
-                                <h5 class="mt-3">Biaya Proyek </h5>
-                                <table class="table table-bordered" id="biaya-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Fase</th>
-                                            <th>Uraian pekerjaan</th>
-                                            <th>perkiraan biaya</th>
-                                            <th>catatan</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><input type="number" name="fase[]" class="form-control"></td>
-                                            <td><input type="text" name="uraian_pekerjaan[]" class="form-control"></td>
-                                            <td><input type="text" name="biaya[]" class="form-control"></td>
-                                            <td><input type="text" name="catatan[]" class="form-control"></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <button type="button" class="btn btn-sm btn-success mb-3" onclick="addBiayaRow()">+ Tambah
-                                    Biaya</button>
-
-                                <!-- Navigation buttons -->
-                                <div class="d-flex justify-content-between">
-                                    <button type="button" class="btn btn-secondary btn-prev"
-                                        data-prev="#step4">Previous</button>
-                                    <button type="button" class="btn btn-primary btn-next" data-next="#step6">Next</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <script>
-                            // Function to add a new row to the Tahapan Pelaksanaan table
-        function addBiayaRow() {
-            const tableBody = document.querySelector('#biaya-table tbody');
-            const newRow = document.createElement('tr');
-
-            newRow.innerHTML = `
-                <td><input type="number" name="fase[]" class="form-control"></td>
-                <td><input type="text" name="uraian_pekerjaan[]" class="form-control"></td>
-                <td><input type="text" name="biaya[]" class="form-control"></td>
-                <td><input type="text" name="catatan[]" class="form-control"></td>
-            `;
-
-            tableBody.appendChild(newRow);
-        }
-                        </script>
-              <!-- STEP 6 -->
-                <div class="tab-pane fade {{ session('active_step') == 'step6' ? 'show active' : '' }}" id="step6" role="tabpanel">
-                    {{-- <form method="POST" action="{{ route('mahasiswa.rpp.tahapan-pelaksanaan.store') }}">
-                        @csrf --}}
-                        <h4>Step 6: Estimasi</h4>
-                            <!-- Estimasi -->
-                                <h5 class="mt-4">Estimasi</h5>
-                                <table class="table table-bordered" id="peralatan-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Fase</th>
-                                            <th>uraian_pekerjaan</th>
-                                            <th>esstimasi_waktu</th>
-                                            <th>catatan</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><input type="number" name="fase[]" class="form-control"></td>
-                                            <td><input type="text" name="uraian_pekerjaan[]" class="form-control"></td>
-                                            <td><input type="text" name="estimasi_waktu[]" class="form-control"></td>
-                                            <td><input type="text" name="catatan[]" class="form-control"></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <button type="button" class="btn btn-sm btn-success mb-4" onclick="addEstimasiRow()">+
-                                    Tambah Estimasi</button>
-
-                                <!-- Navigation buttons -->
-                                <div class="d-flex justify-content-between">
-                                    <button type="button" class="btn btn-secondary btn-prev"
-                                        data-prev="#step3">Previous</button>
-                                    <button type="button" class="btn btn-primary btn-next" data-next="#step5">Next</button>
-                                </div>
-                            </div>
-        
-                <!-- Step 7:Evaluasi -->
-
-                            {{-- <div class="tab-pane fade show active" id="step7" role="tabpanel">
-                    {{-- <form method="POST" action="{{ route('mahasiswa.rpp.rencana-proyek.store') }}">
-                        @csrf --}}
-                        {{-- <h4>Step 7: Evaluasi</h4>
-
-                        <div class="form-group mb-3">
-                            <label>Evaluasi</label>
-                            <input type="text" name="judul_proyek" class="form-control" value="{{ old('judul_proyek', $rencanaProyek->judul_proyek ?? '') }}">
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <button type="submit" class="btn btn-success">Simpan</button>
-                            <button type="button" class="btn btn-primary btn-next" data-next="#step1">Next</button>
-                            <button type="button" class="btn btn-secondary btn-prev" data-prev="#step5">Previous</button>
-                        </div>
-                    </form>
-                </div> --}} 
-
-                        <script>
-                            // Function to add a new row to the Tahapan Pelaksanaan table --}}
-
-    </form>
-    </div>
     @endsection
 
     @push ('css')

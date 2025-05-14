@@ -28,6 +28,7 @@ class RencanaProyek extends Model
         'estimasi',
         'biaya_proyek',
         'tim_proyek',
+        'evaluasi'
     ];
     public function tahapanPelaksanaan()
 {
