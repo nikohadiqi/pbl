@@ -29,13 +29,13 @@ class LoginController extends Controller
         switch ($validated['role']) {
             case 'admin':
                 return $this->loginAdmin($request, $validated);
-            
+
             case 'mahasiswa':
                 return $this->loginMahasiswa($request, $validated);
-            
+
             case 'dosen':
                 return $this->loginDosen($request, $validated);
-            
+
             default:
                 return back()->withErrors(['role' => 'Role tidak valid.']);
         }
@@ -43,27 +43,30 @@ class LoginController extends Controller
 
     public function loginAdmin(Request $request, $validated)
     {
+        $remember = $request->has('remember'); // Remember Login
+
         $user = User::where('nim', $validated['nim'])->first();
 
         if ($user && Hash::check($validated['password'], $user->password) && $user->role == 'admin') {
             $token = $user->createToken('YourAppName')->plainTextToken;
             $request->session()->put('token', $token);
-            Auth::login($user);
+
+            Auth::guard('web')->login($user, $remember); // Pakai remember
 
             return redirect()->route('admin.dashboard');
         }
 
-        return back()->withErrors(['nim' => 'NIM atau password salah.']);
+        return back()->withErrors(['nim' => 'NIP atau password salah.']);
     }
 
     public function loginMahasiswa(Request $request, $validated)
     {
+        $remember = $request->has('remember'); // Remember Login
+
         $mahasiswa = AkunMahasiswa::where('nim', $validated['nim'])->first();
 
         if ($mahasiswa && Hash::check($validated['password'], $mahasiswa->password)) {
-
-            // Gunakan guard khusus mahasiswa agar tidak tertukar dengan User
-            Auth::guard('mahasiswa')->login($mahasiswa);
+            Auth::guard('mahasiswa')->login($mahasiswa, $remember); // Pakai remember
 
             return redirect()->route('mahasiswa.dashboard');
         }
@@ -73,16 +76,17 @@ class LoginController extends Controller
 
     public function loginDosen(Request $request, $validated)
     {
+        $remember = $request->has('remember'); // Remember Login
+
         $dosen = AkunDosen::where('nim', $validated['nim'])->first();
 
         if ($dosen && Hash::check($validated['password'], $dosen->password)) {
-             // Gunakan guard khusus dosen agar tidak tertukar dengan User
-             Auth::guard('dosen')->login($dosen);
+            Auth::guard('dosen')->login($dosen, $remember); // Pakai remember
 
             return redirect()->route('dosen.dashboard');
         }
 
-        return back()->withErrors(['nim' => 'NIM atau password salah.']);
+        return back()->withErrors(['nim' => 'NIP atau password salah.']);
     }
 
     public function adminDashboard()

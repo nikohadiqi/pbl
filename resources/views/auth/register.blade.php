@@ -1,77 +1,108 @@
-@extends('layouts.app')
+@extends('layouts.login-template')
 
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Register') }}</div>
+@section('title', 'Register | Sistem Informasi dan Monitoring Project Based Learning')
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('register') }}">
-                        @csrf
-
-                        <div class="row mb-3">
-                            <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('Name') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
-
-                                @error('name')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+@section('main-content')
+<section>
+    <div class="page-header min-vh-100">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column mx-lg-0 mx-auto">
+                    <div class="card card-plain">
+                        <div class="card-header pb-0 text-left">
+                            <h4 class="font-weight-bolder">Pendaftaran Tim PBL</h4>
+                            <p class="mb-0 text-sm">
+                                Masukan data yang diperlukan untuk pendaftaran tim dan tunggu akun divalidasi oleh
+                                Manajer Proyek untuk Login
+                            </p>
+                        </div>
+                        <div class="card-body pb-3">
+                            @if($errors->any())
+                            <div class="alert alert-danger">
+                                <ul class="mb-0">
+                                    @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
                             </div>
+                            @endif
+
+                            <form role="form" method="POST" action="{{ route('register.tim') }}">
+                                @csrf
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="kelas">Kelas</label>
+                                        <input type="text" name="kelas" class="form-control" placeholder="Contoh: 2A" value="{{ old('kelas') }}" required>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label for="kelompok">Kelompok</label>
+                                        <input type="number" name="kelompok" class="form-control" max="10" placeholder="Contoh: 1" value="{{ old('kelompok') }}" required>
+                                    </div>
+                                </div>
+
+                                <label for="anggota">Anggota (NIM)</label>
+                                <div id="anggota-container">
+                                    <div class="mb-3 d-flex">
+                                        <input type="text" name="anggota[]" class="form-control me-2"
+                                            placeholder="Masukkan NIM Anggota" required>
+                                        <button type="button" class="btn btn-sm btn-success add-anggota">+</button>
+                                    </div>
+                                </div>
+
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary w-100 mt-4 mb-0">Daftar</button>
+                                </div>
+                            </form>
                         </div>
 
-                        <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
-
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
+                        <div class="card-footer pt-0 px-sm-4 px-1">
+                            <p class="mb-4 mx-auto">
+                                Sudah Memiliki Akun?
+                                <a href="{{ route('login') }}" class="text-primary font-weight-bold">Masuk Disini</a>
+                            </p>
                         </div>
+                    </div>
+                </div>
 
-                        <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ __('Confirm Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
-                            </div>
-                        </div>
-
-                        <div class="row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Register') }}
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                <div
+                    class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 text-center justify-content-center flex-column">
+                    <div class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden"
+                        style="background-image: url('{{ asset('assets/img/login-image.png') }}'); background-size: unset;">
+                        <span class="mask bg-gradient-primary opacity-6"></span>
+                        <h4 class="mt-5 text-white font-weight-bolder position-relative bold">Sistem Informasi dan
+                            Monitoring</h4>
+                        <h4 class="text-white font-weight-bolder position-relative bold">Project Based Learning</h4>
+                        <p class="text-white position-relative">Program Studi Teknologi Rekayasa Perangkat Lunak</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 @endsection
+
+@push('js')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const container = document.getElementById('anggota-container');
+        document.querySelector('.add-anggota').addEventListener('click', function () {
+            const inputGroup = document.createElement('div');
+            inputGroup.classList.add('mb-3', 'd-flex');
+
+            inputGroup.innerHTML = `
+                <input type="text" name="anggota[]" class="form-control me-2" placeholder="Masukkan NIM Anggota" required>
+                <button type="button" class="btn btn-sm btn-danger remove-anggota">-</button>
+            `;
+
+            container.appendChild(inputGroup);
+        });
+
+        container.addEventListener('click', function (e) {
+            if (e.target && e.target.classList.contains('remove-anggota')) {
+                e.target.parentElement.remove();
+            }
+        });
+    });
+</script>
+@endpush

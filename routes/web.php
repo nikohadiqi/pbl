@@ -36,11 +36,12 @@ use App\Http\Controllers\Website\Mahasiswa\ProfilController as MahasiswaProfilCo
 |
 */
 
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
 Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login'])->name('login.post'); // Route untuk proses login
 Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
+// Register
+Route::get('/register', [MahasiswaRegisterController::class, 'showRegisterForm'])->name('register');
+Route::post('/register-tim', [MahasiswaRegisterController::class, 'register'])->name('register.tim');
 
 
 // Route Akun Admin
@@ -207,7 +208,7 @@ Route::prefix('mahasiswa/semester-4/logbook')
 
 
 
-    
+
     Route::prefix('semester-4/laporan-pbl')->middleware(['auth:mahasiswa', 'mahasiswa'])->group(function () {
 
 
@@ -218,7 +219,7 @@ Route::prefix('mahasiswa/semester-4/logbook')
         //     Route::get('logbook/{id}', [LogbookController::class, 'show'])->name('mahasiswa.semester4.logbook.index');
 
         // });
-        
+
 
     // Pelaporan PBL
     Route::prefix('mahasiswa/semester-4/laporan-pbl')->middleware(['auth:mahasiswa', 'mahasiswa'])->group(function () {

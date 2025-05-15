@@ -10,15 +10,9 @@ use App\Models\regMahasiswa;
 use App\Models\Anggota_Tim_Pbl; // Pastikan ini diimpor dengan benar
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use RealRashid\SweetAlert\Facades\Alert;
 
 class MahasiswaRegisterController extends Controller
 {
-    public function showRegisterForm()
-    {
-        return view('auth.register');
-    }
-
     public function register(Request $request)
     {
         // Validasi input anggota tim
@@ -62,18 +56,19 @@ class MahasiswaRegisterController extends Controller
 
             Log::info('Akun berhasil dibuat:', $akun->toArray());
 
-            // Simpan anggota ke tabel anggota_tim_pbl
+            // Setelah akun dibuat, simpan anggota tim ke tabel anggota_tim_pbl
             Anggota_Tim_Pbl::create([
                 'kode_tim' => $kode_tim,
                 'nim' => $nim,
-                'nama' => null,
+                'nama' => null, // Status bisa diset null jika tidak diisi
             ]);
         }
 
-        // ✅ Tampilkan SweetAlert sukses
-        Alert::success('Registrasi Berhasil', 'Akun mahasiswa dan tim berhasil dibuat!');
-
-        // Redirect ke halaman yang diinginkan
-        return redirect()->route('login');
+        // Mengirim respons JSON setelah registrasi berhasil
+        return response()->json([
+            'message' => 'Registrasi berhasil',
+            'kode_tim' => $kode_tim,
+            'anggota_nims' => $anggota_nims,
+        ], 201);
     }
 }
