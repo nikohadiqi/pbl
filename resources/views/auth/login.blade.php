@@ -47,13 +47,17 @@
                                     @enderror
                                 </div>
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" id="rememberMe">
-                                    <label class="form-check-label" for="rememberMe">Remember me</label>
+                                    <input class="form-check-input" type="checkbox" id="rememberMe" name="remember">
+                                    <label class="form-check-label" for="rememberMe">Ingat Saya</label>
                                 </div>
                                 <div class="text-center">
-                                    <button type="submit" class="btn btn-lg btn-primary w-100 mt-4 mb-0">Login</button>
+                                    <button type="submit" class="btn btn-lg btn-primary w-100 mt-4 mb-0">Masuk</button>
                                 </div>
                             </form>
+                            <p class="mt-3 mb-3 text-sm mx-auto">
+                                Mahasiswa yang belum memiliki akun tim?
+                                <a href="{{ route('register') }}" class="text-primary font-weight-bold">Daftar Disini</a>
+                            </p>
                         </div>
                     </div>
                 </div>

@@ -31,6 +31,10 @@
     <main class="main-content  mt-0">
         @yield('main-content')
     </main>
+    {{-- Sweetalert --}}
+    @include('sweetalert::alert')
+    <script src="{{ asset('assets/js/plugins/sweetalert.min.js') }}"></script>
+    
     <!--   Core JS Files   -->
     @stack('js')
 

@@ -41,6 +41,7 @@ return [
         'driver' => 'session',
         'provider' => 'akun_mahasiswa',
     ],
+
     'dosen' => [
         'driver' => 'session',
         'provider' => 'akun_dosen',
@@ -74,6 +75,7 @@ return [
         'driver' => 'eloquent',
         'model' => App\Models\AkunMahasiswa::class,
     ],
+
     'akun_dosen' => [
         'driver' => 'eloquent',
         'model' => App\Models\AkunDosen::class,
@@ -106,19 +108,21 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
+
         'mahasiswa' => [ // Konfigurasi password reset untuk mahasiswa
             'provider' => 'mahasiswa',
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,
         ],
+        
         'dosen' => [
             'provider' => 'akun_dosen',
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,
         ],
-        
+
     ],
 
     /*
