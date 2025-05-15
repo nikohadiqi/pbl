@@ -443,7 +443,7 @@
             <button type="submit" class="btn btn-success">Simpan</button>
         </div>
     </form>
-</div>
+</div> 
 
 <script>
     function addEstimasiRow() {
