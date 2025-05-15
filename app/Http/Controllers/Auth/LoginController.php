@@ -59,35 +59,45 @@ class LoginController extends Controller
         return back()->withErrors(['nim' => 'NIP atau password salah.']);
     }
 
-    public function loginMahasiswa(Request $request, $validated)
-    {
-        $remember = $request->has('remember'); // Remember Login
+   public function loginMahasiswa(Request $request, $validated)
+{
+    $remember = $request->has('remember');
 
-        $mahasiswa = AkunMahasiswa::where('nim', $validated['nim'])->first();
+    $mahasiswa = AkunMahasiswa::where('nim', $validated['nim'])->first();
 
-        if ($mahasiswa && Hash::check($validated['password'], $mahasiswa->password)) {
-            Auth::guard('mahasiswa')->login($mahasiswa, $remember); // Pakai remember
+    if ($mahasiswa && Hash::check($validated['password'], $mahasiswa->password) && $mahasiswa->role == 'mahasiswa') {
+        // Logout guard lain sebelum login mahasiswa
+        Auth::guard('web')->logout();
+        Auth::guard('dosen')->logout();
 
-            return redirect()->route('mahasiswa.dashboard');
-        }
+        Auth::guard('mahasiswa')->login($mahasiswa, $remember);
 
-        return back()->withErrors(['nim' => 'NIM atau password salah.']);
+        return redirect()->route('mahasiswa.dashboard');
     }
 
-    public function loginDosen(Request $request, $validated)
-    {
-        $remember = $request->has('remember'); // Remember Login
+    return back()->withErrors(['nim' => 'NIM atau password salah.']);
+}
 
-        $dosen = AkunDosen::where('nim', $validated['nim'])->first();
 
-        if ($dosen && Hash::check($validated['password'], $dosen->password)) {
-            Auth::guard('dosen')->login($dosen, $remember); // Pakai remember
+  public function loginDosen(Request $request, $validated)
+{
+    $remember = $request->has('remember');
 
-            return redirect()->route('dosen.dashboard');
-        }
+    $dosen = AkunDosen::where('nim', $validated['nim'])->first();
 
-        return back()->withErrors(['nim' => 'NIP atau password salah.']);
+    if ($dosen && Hash::check($validated['password'], $dosen->password) && $dosen->role == 'dosen') {
+        // Logout guard lain sebelum login dosen
+        Auth::guard('web')->logout();
+        Auth::guard('mahasiswa')->logout();
+
+        Auth::guard('dosen')->login($dosen, $remember);
+
+        return redirect()->route('dosen.dashboard');
     }
+
+    return back()->withErrors(['nim' => 'NIP atau password salah.']);
+}
+
 
     public function adminDashboard()
     {
@@ -104,22 +114,16 @@ class LoginController extends Controller
         return view('dosen.dashboard-dosen');
     }
 
-    public function logout(Request $request)
-    {
-        if (Auth::check()) {
-            Auth::logout();
-        }
+ public function logout(Request $request)
+{
+    Auth::guard('web')->logout();
+    Auth::guard('mahasiswa')->logout();
+    Auth::guard('dosen')->logout();
 
-        if (Auth::guard('mahasiswa')->check()) {
-            Auth::guard('mahasiswa')->logout();
-        }
-        if (Auth::guard('dosen')->check()) {
-            Auth::guard('dosen')->logout();
-        }
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+    return redirect()->route('login')->with('success', 'Logout berhasil.');
+}
 
-        return redirect()->route('login')->with('success', 'Logout berhasil.');
-    }
 }

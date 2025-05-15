@@ -22,13 +22,6 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
     ];
-    protected $routeMiddleware = [
-        // Middleware lainnya
-        'admin' => \App\Http\Middleware\AdminMiddleware::class,
-        'mahasiswa' => \App\Http\Middleware\MahasiswaMiddleware::class,
-        'dosen' => \App\Http\Middleware\DosenMiddleware::class, 
-    ];
-   
 
     /**
      * The application's route middleware groups.
@@ -73,5 +66,12 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+   
+     // Your custom guards
+        'admin' => \App\Http\Middleware\AdminMiddleware::class,
+        'mahasiswa' => \App\Http\Middleware\MahasiswaMiddleware::class,
+        'dosen' => \App\Http\Middleware\DosenMiddleware::class,
+        'role' => \App\Http\Middleware\RoleMiddleware::class,
+
     ];
 }

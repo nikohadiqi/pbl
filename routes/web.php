@@ -1,28 +1,31 @@
 <?php
 
-use App\Http\Controllers\Auth\MahasiswaRegisterController;
-use App\Http\Controllers\Auth\LoginMahasiswaController;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Website\Admin\DashboardController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Website\Admin\DosenController;
-use App\Http\Controllers\Website\Admin\KelasController;
-use App\Http\Controllers\Website\Admin\MahasiswaController;
-use App\Http\Controllers\Website\Admin\MataKuliahController;
-use App\Http\Controllers\Website\Admin\PengampuController;
-use App\Http\Controllers\Website\Admin\PeriodePBLController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\LoginMahasiswaController;
+use App\Http\Controllers\Auth\MahasiswaRegisterController;
+
+use App\Http\Controllers\Website\Admin\DashboardController;
 use App\Http\Controllers\Website\Admin\ProfilController;
+use App\Http\Controllers\Website\Admin\TimPBLController;
+use App\Http\Controllers\Website\Admin\PeriodePBLController;
 use App\Http\Controllers\Website\Admin\TPP4Controller;
 use App\Http\Controllers\Website\Admin\TPP5Controller;
-use App\Http\Controllers\Website\Admin\TimPBLController;
-use App\Http\Controllers\Website\Dosen\DashboardDosenController;
-use App\Http\Controllers\Website\Dosen\ProfilController as DosenProfilController;
+use App\Http\Controllers\Website\Admin\MataKuliahController;
+use App\Http\Controllers\Website\Admin\KelasController;
+use App\Http\Controllers\Website\Admin\MahasiswaController;
+use App\Http\Controllers\Website\Admin\DosenController;
+use App\Http\Controllers\Website\Admin\PengampuController;
+
 use App\Http\Controllers\Website\Mahasiswa\DashboardMahasiswaController;
+use App\Http\Controllers\Website\Mahasiswa\ProfilController as MahasiswaProfilController;
 use App\Http\Controllers\Website\Mahasiswa\RencanaProyekController;
 use App\Http\Controllers\Website\Mahasiswa\LogbookController;
-use App\Http\Controllers\Website\Mahasiswa\PelaporanUASController;
 use App\Http\Controllers\Website\Mahasiswa\PelaporanUTSController;
-use App\Http\Controllers\Website\Mahasiswa\ProfilController as MahasiswaProfilController;
+use App\Http\Controllers\Website\Mahasiswa\PelaporanUASController;
+
+use App\Http\Controllers\Website\Dosen\DashboardDosenController;
+use App\Http\Controllers\Website\Dosen\ProfilController as DosenProfilController;
 
 // use App\Http\Controllers\Auth\DashboardController;
 /*
@@ -45,7 +48,7 @@ Route::post('/register-tim', [MahasiswaRegisterController::class, 'register'])->
 
 
 // Route Akun Admin
-Route::middleware(['auth:sanctum'])->group(function () {
+Route::middleware(['auth:web', 'role:web,admin'])->group(function () {
     // Dashboard
     Route::get('admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
     // Profil
@@ -149,126 +152,96 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 });
 
+// ============================
 // Route Akun Mahasiswa
-// Dashboard Mahasiswa
+// ============================
 Route::middleware(['auth:mahasiswa'])->group(function () {
-    Route::get('/dashboard', [DashboardMahasiswaController::class, 'index'])->name('mahasiswa.dashboard');
 
-Route::middleware(['auth:mahasiswa'])->group(function () {
-    // Dashboard
+    // Dashboard Mahasiswa
     Route::get('mahasiswa/dashboard', [DashboardMahasiswaController::class, 'index'])->name('mahasiswa.dashboard');
 
-    // Profil
+    // Profil Mahasiswa
     Route::get('mahasiswa/profil', [MahasiswaProfilController::class, 'index'])->name('mahasiswa.profil');
     Route::get('mahasiswa/profil/ubah-password', [MahasiswaProfilController::class, 'editPassword'])->name('mahasiswa.profil.ubah-password');
     Route::post('mahasiswa/profil/ubah-password', [MahasiswaProfilController::class, 'updatePassword'])->name('mahasiswa.profil.update-password');
 
-    // Tahapan Pelaksanaan Proyek
-//     Route::prefix('menu/mahasiswa/semester4/rpp/rencana-proyek')->middleware(['auth:sanctum', 'mahasiswa'])->group(function () {
-//         Route::get('/', [RencanaProyekController::class, 'create'])->name('mahasiswa.rpp.rencana-proyek.create');
-//         Route::post('/', [RencanaProyekController::class, 'store'])->name('mahasiswa.rpp.rencana-proyek.store');
-//         Route::put('/{id}', [RencanaProyekController::class, 'update'])->name('mahasiswa.rpp.rencana-proyek.update');
-// });
-
- Route::prefix('mahasiswa/semester-4/rpp')
-    ->middleware(['auth:mahasiswa', 'mahasiswa'])
-    ->group(function () {
-        // Rencana Proyek
+    // RPP Semester 4 - Rencana Proyek
+    Route::prefix('mahasiswa/semester-4/rpp')->group(function () {
         Route::prefix('rencana-proyek')->group(function () {
             Route::get('/', [RencanaProyekController::class, 'create'])->name('mahasiswa.rpp.rencana-proyek.create');
             Route::post('/simpan', [RencanaProyekController::class, 'store'])->name('mahasiswa.rpp.rencana-proyek.store');
             Route::post('/tahapan', [RencanaProyekController::class, 'storeTahapanPelaksanaan'])->name('mahasiswa.rpp.tahapan-pelaksanaan.store');
             Route::post('/kebutuhan', [RencanaProyekController::class, 'storeKebutuhanPeralatan'])->name('mahasiswa.rpp.kebutuhan-peralatan.store');
             Route::post('/tantangan', [RencanaProyekController::class, 'storeTantangan'])->name('mahasiswa.rpp.tantangan.store');
-            Route::post('//biaya', [RencanaProyekController::class, 'storeBiaya'])->name('mahasiswa.rpp.biaya.store');
-            Route::post('//estimasi', [RencanaProyekController::class, 'storeEstimasi'])->name('mahasiswa.rpp.estimasi.store');
-
+            Route::post('/biaya', [RencanaProyekController::class, 'storeBiaya'])->name('mahasiswa.rpp.biaya.store');
+            Route::post('/estimasi', [RencanaProyekController::class, 'storeEstimasi'])->name('mahasiswa.rpp.estimasi.store');
         });
     });
 
-
-
-    // Logbook
-    // Route::prefix('semester-4/logbook')->middleware(['auth:mahasiswa', 'mahasiswa'])->group(function () {
-    //     Route::get('/logbook', [LogbookController::class, 'index'])->name('mahasiswa.logbook');
-    //     Route::get('/logbook/isi', [LogbookController::class, 'create'])->name('mahasiswa.logbook.create');
-    //     Route::post('/logbook', [LogbookController::class, 'store'])->name('mahasiswa.logbook.store');
-    //     Route::get('/logbook/{id}/edit', [LogbookController::class, 'edit'])->name('mahasiswa.logbook.edit');
-    //     Route::get('/{id}', [LogbookController::class, 'show'])->name('mahasiswa.logbook.show');
-    //     Route::put('/logbook/{id}', [LogbookController::class, 'update'])->name('mahasiswa.logbook.update');
-    // Pelaporan
-
-Route::prefix('mahasiswa/semester-4/logbook')
-    ->middleware(['auth:mahasiswa', 'mahasiswa'])
-    ->group(function () {
+    // Logbook Mahasiswa
+    Route::prefix('mahasiswa/semester-4/logbook')->group(function () {
         Route::get('/', [LogbookController::class, 'index'])->name('mahasiswa.logbook');
-        Route::get('/isi-logbook', [LogbookController::class, 'store'])->name('mahasiswa.semester4.logbook.logbook');
-        Route::post('/isi-logbook', [LogbookController::class, 'store'])->name('mahasiswa.semester4.logbook.logbook.store');
+        Route::get('/isi-logbook', [LogbookController::class, 'create'])->name('mahasiswa.semester4.logbook.create');
+        Route::post('/isi-logbook', [LogbookController::class, 'store'])->name('mahasiswa.semester4.logbook.store');
     });
-
-
-
-
-    Route::prefix('semester-4/laporan-pbl')->middleware(['auth:mahasiswa', 'mahasiswa'])->group(function () {
-
-
-        // Route::prefix('mahasiswa/semester-4/logbook')->middleware(['auth:mahasiswa', 'mahasiswa'])->group(function () {
-        //     Route::get('/', [LogbookController::class, 'index'])->name('mahasiswa.logbook');
-        //     Route::get('/isi-logbook', [LogbookController::class, 'create'])->name('mahasiswa.logbook.create');
-        //     Route::post('/isi-logbook', [LogbookController::class, 'store'])->name('mahasiswa.logbook.store'); // <- Tambahkan ini
-        //     Route::get('logbook/{id}', [LogbookController::class, 'show'])->name('mahasiswa.semester4.logbook.index');
-
-        // });
-
 
     // Pelaporan PBL
-    Route::prefix('mahasiswa/semester-4/laporan-pbl')->middleware(['auth:mahasiswa', 'mahasiswa'])->group(function () {
+    Route::prefix('mahasiswa/semester-4/laporan-pbl')->group(function () {
         Route::get('/', [DashboardMahasiswaController::class, 'laporan_pbl'])->name('mahasiswa.pelaporan-pbl');
-    // Rute untuk form laporan UTS
-    Route::get('/form-laporan-uts', [PelaporanUTSController::class, 'index'])->name('mahasiswa.pelaporan-pbl.laporan-uts');
-    Route::post('/form-laporan-uts', [PelaporanUTSController::class, 'store'])->name('mahasiswa.pelaporan-pbl.laporan-uts.store');
-    });
-    Route::middleware(['auth:mahasiswa'])->group(function () {
-        // Rute untuk form laporan UAS
+
+        // Form Laporan UTS
+        Route::get('/form-laporan-uts', [PelaporanUTSController::class, 'index'])->name('mahasiswa.pelaporan-pbl.laporan-uts');
+        Route::post('/form-laporan-uts', [PelaporanUTSController::class, 'store'])->name('mahasiswa.pelaporan-pbl.laporan-uts.store');
+
+        // Form Laporan UAS
         Route::get('/form-laporan-uas', [PelaporanUASController::class, 'index'])->name('mahasiswa.pelaporan-pbl.laporan-uas');
         Route::post('/form-laporan-uas', [PelaporanUASController::class, 'store'])->name('mahasiswa.pelaporan-pbl.laporan-uas.store');
     });
 });
- });
 
- Route::middleware(['auth:dosen'])->group(function () {
+// ============================
+// Route Akun Dosen
+// ============================
+Route::middleware(['auth:dosen'])->group(function () {
+
+    // Dashboard Dosen
     Route::get('/dosen/dashboard', [LoginController::class, 'dosenDashboard'])->name('dosen.dashboard');
 
-    // Profil
+    // Profil Dosen
     Route::get('dosen/profil', [DosenProfilController::class, 'index'])->name('dosen.profil');
     Route::get('dosen/profil/ubah-password', [DosenProfilController::class, 'editPassword'])->name('dosen.profil.ubah-password');
     Route::post('dosen/profil/ubah-password', [DosenProfilController::class, 'updatePassword'])->name('dosen.profil.update-password');
 
-    // Validasi Tim
+    // Validasi Tim PBL
     Route::get('/dosen/validasi-tim-pbl', function () {
         return view('dosen.validasi.validasi-tim');
     })->name('dosen.validasi-tim');
 
     // Daftar Tim PBL
-    Route::get('/dosen/daftar-tim-pbl', function () {
-        return view('dosen.daftar-tim.daftar-timpbl');
-    })->name('dosen.daftar-tim');
-    Route::get('/dosen/daftar-tim-pbl/logbook', function () {
-        return view('dosen.daftar-tim.logbook-timpbl');
-    })->name('dosen.daftar-tim.logbook');
-    Route::get('/dosen/daftar-tim-pbl/laporan', function () {
-        return view('dosen.daftar-tim.laporan-timpbl');
-    })->name('dosen.daftar-tim.laporan');
-    Route::get('/dosen/daftar-tim-pbl/penilaian-mahasiswa', function () {
-        return view('dosen.daftar-tim.penilaian-timpbl');
-    })->name('dosen.daftar-tim.penilaian');
+    Route::prefix('dosen/daftar-tim-pbl')->group(function () {
+        Route::get('/', function () {
+            return view('dosen.daftar-tim.daftar-timpbl');
+        })->name('dosen.daftar-tim');
+
+        Route::get('/logbook', function () {
+            return view('dosen.daftar-tim.logbook-timpbl');
+        })->name('dosen.daftar-tim.logbook');
+
+        Route::get('/laporan', function () {
+            return view('dosen.daftar-tim.laporan-timpbl');
+        })->name('dosen.daftar-tim.laporan');
+
+        Route::get('/penilaian-mahasiswa', function () {
+            return view('dosen.daftar-tim.penilaian-timpbl');
+        })->name('dosen.daftar-tim.penilaian');
+    });
 
     // Penilaian Mahasiswa
     Route::get('/dosen/penilaian-mahasiswa', function () {
         return view('dosen.penilaian.penilaian');
     })->name('dosen.penilaian');
+
     Route::get('/dosen/penilaian-mahasiswa/rubrik-penilaian', function () {
         return view('dosen.penilaian.form-nilai');
     })->name('dosen.penilaian.beri-nilai');
-});
 });

@@ -30,10 +30,10 @@
                     <div class="col-sm-auto col-8 my-auto">
                         <div class="h-100">
                             <h5 class="mb-1 font-weight-bolder">
-                                Admin
+                                Mahasiswa
                             </h5>
                             <p class="mb-0 font-weight-bold text-sm">
-                                {{ Auth::user()-> nim }}
+                                {{ Auth::guard('mahasiswa')->user()->nim }}
                             </p>
                         </div>
                     </div>
@@ -61,11 +61,11 @@
                 <div class="card-body pt-0">
                     <div class="form-group">
                         <label for="nim" class="form-control-label">NIM</label>
-                        <input class="form-control" name="nim" type="number" value="{{ Auth::user()->nim }}" readonly>
+                        <input class="form-control" name="nim" type="number" value="{{ Auth::guard('mahasiswa')->user()->nim }}" readonly>
                     </div>
                     <div class="form-group">
                         <label for="role" class="form-control-label">Role</label>
-                        <input class="form-control" name="role" type="text" required value="{{ Auth::user()->role }}" readonly>
+                        <input class="form-control" name="role" type="text" required value="{{ Auth::guard('mahasiswa')->user()->role }}" readonly>
                     </div>
                     <a href="{{ route('mahasiswa.profil.ubah-password') }}" class="btn btn-primary text-white fw-bold float-end mt-3 mb-1">Ubah Password Disini</a>
                 </div>

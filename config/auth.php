@@ -110,7 +110,7 @@ return [
         ],
 
         'mahasiswa' => [ // Konfigurasi password reset untuk mahasiswa
-            'provider' => 'mahasiswa',
+            'provider' => 'akun_mahasiswa',
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,

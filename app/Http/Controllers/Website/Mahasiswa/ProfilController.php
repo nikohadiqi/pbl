@@ -34,6 +34,7 @@ class ProfilController extends Controller
 
         $auth = Auth::guard('mahasiswa')->user();
 
+
         if (!Hash::check($request->get('old_password'), $auth->password)) {
             return back()->with('error', "Password lama salah!");
         }

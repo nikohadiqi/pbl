@@ -10,19 +10,25 @@ class RoleMiddleware
 {
     /**
      * Handle an incoming request.
-     *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
-     * @param  string  $role
+     * @param  string $guard
+     * @param  string $role
      * @return mixed
      */
-    public function handle(Request $request, Closure $next, $role)
+    public function handle(Request $request, Closure $next, $guard, $role)
     {
-        // Pastikan pengguna sudah login dan memiliki role yang sesuai
-        if (!Auth::check() || Auth::user()->role !== $role) {
-            abort(403, 'Unauthorized action.'); // Akses ditolak jika role tidak sesuai
+        if (!Auth::guard($guard)->check()) {
+            return redirect()->route('login');
         }
 
-        return $next($request); // Lanjutkan jika role sesuai
+        $user = Auth::guard($guard)->user();
+
+        if ($user->role !== $role) {
+            // Role tidak sesuai, bisa redirect atau abort 403
+            abort(403, 'Unauthorized action.');
+        }
+
+        return $next($request);
     }
 }
