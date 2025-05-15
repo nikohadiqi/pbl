@@ -12,9 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tim_pbl', function (Blueprint $table) {
-            $table->string('kode_tim')->primary(); // PRIMARY KEY
+            $table->string('kode_tim')->primary();
             $table->string('kelas');
             $table->integer('kelompok');
+            $table->string('manpro');
+            $table->string('periode');
             $table->timestamps();
         });
     }

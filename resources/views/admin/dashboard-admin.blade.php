@@ -14,7 +14,7 @@
                             <div class="numbers">
                                 <p class="text-sm mb-0 text-uppercase font-weight-bold">Total Proyek PBL</p>
                                 <h3 class="font-weight-bolder">
-                                    {{ $timPBLCount }}
+                                    
                                 </h3>
                             </div>
                         </div>
@@ -73,7 +73,7 @@
     {{-- End of Rekap Total Dashboard --}}
     {{-- Tabel Dashboard --}}
     {{-- Riwayat Tim PBL --}}
-    <div class="card mt-4">
+    {{-- <div class="card mt-4">
         <div class="card-header pb-0 p-3">
             <div class="d-flex justify-content-between">
                 <h6 class="mb-2">Riwayat Tim PBL</h6>
@@ -112,7 +112,7 @@
                 </tbody>
             </table>
         </div>
-    </div>
+    </div> --}}
     {{-- End of Riwayat Tim PBL --}}
 
     {{-- Data Dosen --}}

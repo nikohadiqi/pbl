@@ -19,6 +19,8 @@ class TimPbl extends Model
         'kode_tim',
         'kelas',
         'kelompok',
+        'manpro',
+        'periode',
     ];
 
     public function anggota(): HasMany

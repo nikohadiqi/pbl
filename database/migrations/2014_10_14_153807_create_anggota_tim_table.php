@@ -12,8 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('anggota_tim_pbl', function (Blueprint $table) {
+            $table->id();
             $table->string('kode_tim'); // foreign key
-            $table->string('nama')->nullable();
+            $table->string('periode');
+            $table->string('manpro');
             $table->string('nim')->unique();
             $table->string('status')->nullable();
             $table->timestamps();

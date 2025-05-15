@@ -79,12 +79,6 @@
                                 Mengampu MK / Mapro
                             </a>
                         </li>
-                        <li class="nav-item mt-2">
-                            <a class="nav-link {{ request()->routeIs('admin.timpbl*') ? 'active' : '' }}"
-                                href="{{ route('admin.timpbl') }}">
-                                Tim PBL
-                            </a>
-                        </li>
                     </ul>
                 </div>
             </li>

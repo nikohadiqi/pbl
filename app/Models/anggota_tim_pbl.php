@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Anggota_Tim_Pbl extends Model
+class AnggotaTimPbl extends Model
 {
     use HasFactory;
 
@@ -17,7 +17,8 @@ class Anggota_Tim_Pbl extends Model
     protected $fillable = [
         'kode_tim',
         'nim',
-        'nama', // Nama anggota tim
+        'mapro',
+        'periode',
         'status' // Kolom status yang nullable
     ];
 

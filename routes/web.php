@@ -56,17 +56,6 @@ Route::middleware(['auth:web', 'role:web,admin'])->group(function () {
     Route::get('/admin/profil/ubah-password', [ProfilController::class, 'editPassword'])->name('admin.profil.ubah-password');
     Route::post('/admin/profil/ubah-password', [ProfilController::class, 'updatePassword'])->name('admin.profil.update-password');
 
-    // TIM PBL
-    Route::prefix('admin/master-data/tim-pbl')->middleware(['auth:sanctum', 'admin'])->group(function () {
-        Route::get('/', [TimPBLController::class, 'index'])->name('admin.timpbl');
-        Route::get('/tambah', [TimPBLController::class, 'create'])->name('admin.timpbl.tambah');
-        Route::post('/store', [TimPBLController::class, 'store'])->name('admin.timpbl.store');
-        Route::get('/edit/{id_tim}', [TimPBLController::class, 'edit'])->name('admin.timpbl.edit');
-        Route::put('/update/{id_tim}', [TimPBLController::class, 'update'])->name('admin.timpbl.update');
-        Route::delete('/delete/{id_tim}', [TimPBLController::class, 'destroy'])->name('admin.timpbl.delete');
-        Route::get('/cari-ketua', [TimPBLController::class, 'cariKetua'])->name('admin.timpbl.cariKetua');
-    });
-
     // Periode PBL
     Route::prefix('menu/master-data/periode-pbl')->middleware(['auth:sanctum', 'admin'])->group(function () {
         Route::get('/', [PeriodePBLController::class, 'index'])->name('admin.periodepbl');
