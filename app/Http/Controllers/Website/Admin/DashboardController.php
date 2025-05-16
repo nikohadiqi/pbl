@@ -11,16 +11,27 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
+        $timCount = TimPBL::count();
         $mahasiswaCount = Mahasiswa::count();
         $dosenCount = Dosen::count();
+        // Menampilkan Data Tim
+        $timpbl = TimPBL::with(['anggota.mahasiswaFK']) // include nama mahasiswa
+            ->latest()
+            ->take(5)
+            ->get();
         // Menampilkan Data Dosen Pengampu Terbaru
         $datadosen = Pengampu::with(['kelasFk', 'dosenFk', 'matkulFK', 'periodeFK'])
             ->latest()
             ->take(5) // Mengambil 5 data terbaru
             ->get();
         return view('admin.dashboard-admin', compact(
-            'mahasiswaCount', 'dosenCount','datadosen'
+            'timCount',
+            'mahasiswaCount',
+            'dosenCount',
+            'timpbl',
+            'datadosen'
         ));
     }
 }

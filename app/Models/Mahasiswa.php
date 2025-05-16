@@ -34,4 +34,9 @@ class Mahasiswa extends Model
     {
         return $this->belongsTo(Kelas::class, 'kelas', 'kelas');
     }
+
+    public function tim_pbl()
+    {
+        return $this->hasMany(Anggota_Tim_Pbl::class, 'nim', 'nim');
+    }
 }

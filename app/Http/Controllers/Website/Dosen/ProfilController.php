@@ -13,7 +13,13 @@ class ProfilController extends Controller
 {
     public function index()
     {
-        return view('dosen.profil');
+        $akun = Auth::guard('dosen')->user();
+        $dosen = $akun->dosen;
+
+        // Ambil semua pengampu yang terkait dosen
+        $pengampuFK = $dosen ? $dosen->pengampuFK()->with(['kelasFk', 'matkulFK'])->get() : [];
+
+        return view('dosen.profil', compact('akun', 'dosen', 'pengampuFK'));
     }
 
     public function editPassword()

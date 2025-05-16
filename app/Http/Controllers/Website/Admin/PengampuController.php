@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Website\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AkunDosen;
 use App\Models\Dosen;
 use App\Models\Kelas;
 use App\Models\MataKuliah;
@@ -46,9 +47,22 @@ class PengampuController extends Controller
 
         Pengampu::create($request->all());
 
-        // Menampilkan SweetAlert
-        Alert::success('Berhasil!', 'Data Pengampu Berhasil Ditambahkan!');
+        // Ambil data dosen berdasarkan dosen_id
+        $dosen = Dosen::findOrFail($request->dosen_id);
 
+        // Cek apakah akun dosen dengan nim (berdasarkan nip) sudah ada
+        $existingAkun = AkunDosen::where('nim', $dosen->nip)->first();
+
+        if (!$existingAkun) {
+            // Jika belum ada, buat akun baru
+            AkunDosen::create([
+                'role' => 'dosen',
+                'nim' => $dosen->nip,
+                'password' => bcrypt($dosen->nip), // Enkripsi password
+            ]);
+        }
+
+        Alert::success('Berhasil!', 'Data Pengampu & Akun Dosen Pengampu berhasil ditambahkan!');
         return redirect()->route('admin.pengampu');
     }
 

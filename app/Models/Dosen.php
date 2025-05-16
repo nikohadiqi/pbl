@@ -28,4 +28,9 @@ class Dosen extends Model
         'jenis_kelamin',
         'status_dosen',
     ];
+
+    public function pengampuFK()
+    {
+        return $this->hasMany(Pengampu::class, 'dosen_id', 'nip');
+    }
 }

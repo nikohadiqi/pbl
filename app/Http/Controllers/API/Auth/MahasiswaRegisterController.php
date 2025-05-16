@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\AkunMahasiswa;
+use App\Models\Anggota_Tim_Pbl;
 use App\Models\regMahasiswa;
-use App\Models\Anggota_Tim_Pbl; // Pastikan ini diimpor dengan benar
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 

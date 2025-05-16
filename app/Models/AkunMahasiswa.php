@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\TimPbl;
 
 class AkunMahasiswa extends Authenticatable
 {
@@ -49,5 +50,10 @@ class AkunMahasiswa extends Authenticatable
     public function timPbl()
     {
         return $this->belongsTo(TimPbl::class, 'kode_tim', 'kode_tim');
+    }
+
+    public function mahasiswa()
+    {
+        return $this->hasOne(Mahasiswa::class, 'nim', 'nim');
     }
 }

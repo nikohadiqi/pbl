@@ -41,6 +41,29 @@
                                     </div>
                                 </div>
 
+                                <div class="form-group mb-3">
+                                    <label for="manpro" class="form-control-label">Manajer Proyek</label>
+                                    <input id="manpro" class="form-control @error('manpro') is-invalid @enderror"
+                                           name="manpro" placeholder="Masukkan NIP Manpro"
+                                           type="number" required value="{{ old('manpro') }}">
+                                    @error('manpro')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label for="periode" class="form-control-label">Periode</label>
+                                    <select name="periode" class="form-control @error('periode') is-invalid @enderror" required>
+                                        <option value="" disabled {{ old('periode') ? '' : 'selected' }} hidden>Pilih Periode</option>
+                                        <option value="Semester 4 - 2025" {{ old('periode') == 'Semester 4 - 2025' ? 'selected' : '' }}>Semester 4 - 2025</option>
+                                        <option value="Semester 5 - 2025" {{ old('periode') == 'Semester 5 - 2025' ? 'selected' : '' }}>Semester 5 - 2025</option>
+                                    </select>
+                                    @error('periode')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+
                                 <label for="anggota">Anggota (NIM)</label>
                                 <div id="anggota-container">
                                     <div class="mb-3 d-flex">

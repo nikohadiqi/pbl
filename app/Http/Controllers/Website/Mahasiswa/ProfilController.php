@@ -13,7 +13,15 @@ class ProfilController extends Controller
 {
     public function index()
     {
-        return view('mahasiswa.profil');
+        $akun = Auth::guard('mahasiswa')->user(); // akun_mahasiswa
+        $mahasiswa = $akun->mahasiswa; // relasi ke data_mahasiswa
+
+        // Ambil data anggota tim berdasarkan nim
+        $anggotaTim = \App\Models\Anggota_Tim_Pbl::with('tim')
+            ->where('nim', $akun->nim)
+            ->first();
+
+        return view('mahasiswa.profil', compact('akun', 'mahasiswa', 'anggotaTim'));
     }
 
     public function editPassword()

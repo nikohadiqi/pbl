@@ -4,10 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\AkunMahasiswa;
+use App\Models\Anggota_Tim_Pbl;
 use App\Models\regMahasiswa;
-use App\Models\Anggota_Tim_Pbl; // Pastikan ini diimpor dengan benar
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -25,55 +24,46 @@ class MahasiswaRegisterController extends Controller
         $request->validate([
             'kelas' => 'required|string',
             'kelompok' => 'required|integer',
-            'anggota' => 'required|array',
-            'anggota.*' => 'string|unique:akun_mahasiswa,nim', // Validasi setiap nim
+            'manpro' => 'required|string',
+            'periode' => 'required|string',
+            'anggota' => 'required|array|min:1',
+            'anggota.*' => 'string|distinct|unique:akun_mahasiswa,nim',
         ]);
 
-        // Buat kode tim berdasarkan kelas dan kelompok
         $kode_tim = strtoupper($request->kelas) . $request->kelompok;
 
-        // Logging kode tim
-        Log::info('Kode tim yang dibuat:', ['kode_tim' => $kode_tim]);
+        Log::info('Membuat kode tim baru', ['kode_tim' => $kode_tim]);
 
-        // Buat data tim jika belum ada
+        // Buat data tim
         $tim = regMahasiswa::firstOrCreate([
             'kode_tim' => $kode_tim,
+        ], [
             'kelas' => $request->kelas,
             'kelompok' => $request->kelompok,
+            'manpro' => $request->manpro,
+            'periode' => $request->periode,
         ]);
 
-        // Ambil anggota yang telah dimasukkan dalam request
-        $anggota_nims = $request->anggota;
+        foreach ($request->anggota as $nim) {
+            Log::info('Membuat akun dan anggota tim untuk NIM', ['nim' => $nim]);
 
-        // Loop untuk membuat akun mahasiswa baru
-        foreach ($anggota_nims as $nim) {
-            Log::info('Membuat akun mahasiswa:', [
+            AkunMahasiswa::create([
                 'kode_tim' => $kode_tim,
                 'nim' => $nim,
-            ]);
-
-            // Membuat akun mahasiswa baru
-            $akun = AkunMahasiswa::create([
-                'kode_tim' => $kode_tim, // Foreign key ke tim
-                'nim' => $nim,
-                'password' => Hash::make($nim), // Set password dengan NIM yang di-hash
+                'password' => Hash::make($nim),
                 'role' => 'mahasiswa',
             ]);
 
-            Log::info('Akun berhasil dibuat:', $akun->toArray());
-
-            // Simpan anggota ke tabel anggota_tim_pbl
             Anggota_Tim_Pbl::create([
                 'kode_tim' => $kode_tim,
                 'nim' => $nim,
-                'nama' => null,
+                'manpro' => $request->manpro,
+                'periode' => $request->periode,
+                'status' => null, // Atau default status tertentu
             ]);
         }
 
-        // ✅ Tampilkan SweetAlert sukses
         Alert::success('Registrasi Berhasil', 'Akun mahasiswa dan tim berhasil dibuat!');
-
-        // Redirect ke halaman yang diinginkan
         return redirect()->route('login');
     }
 }

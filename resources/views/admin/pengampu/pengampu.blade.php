@@ -6,7 +6,7 @@
 <div class="container-fluid py-4">
     <div class="card p-4">
         <div class="d-flex justify-content-between align-items-center">
-            <h4 class="fw-bold">Daftar Dosen Pengampu MK / Manpro</h4>
+            <h4 class="fw-bold">Daftar Dosen Pengampu Mata Kuliah / Manajer Proyek</h4>
             <a href="{{ route('admin.pengampu.tambah') }}" class="btn btn-primary fw-bold">
                 <i class="bi bi-plus me-2"></i>Tambah Tim
             </a>

@@ -21,21 +21,21 @@
 </div>
 
 <div class="form-group">
-    <label for="status" class="form-control-label">Status</label>
-    <select name="status" class="form-control">
-        <option value="" disabled selected hidden>Pilih Status Pengampu</option>
-        <option value="Manajer Proyek" {{ (old('status', $pengampu->status ?? '') == 'Manajer Proyek') ? 'selected' : '' }}>Manajer Proyek</option>
-        <option value="Dosen Mata Kuliah" {{ (old('status', $pengampu->status ?? '') == 'Dosen Mata Kuliah') ? 'selected' : '' }}>Dosen Mata Kuliah</option>
-    </select>
-</div>
-
-<div class="form-group">
     <label for="matkul_id" class="form-control-label">Mata Kuliah</label>
     <select name="matkul_id" class="form-control">
         <option value="" disabled selected hidden>Pilih Mata Kuliah</option>
         @foreach($matkuls as $m)
             <option value="{{ $m->id }}" {{ (old('matkul_id', $pengampu->matkul_id ?? '') == $m->id) ? 'selected' : '' }}>{{ $m->kode }} - {{ $m->matakuliah }}</option>
         @endforeach
+    </select>
+</div>
+
+<div class="form-group">
+    <label for="status" class="form-control-label">Status</label>
+    <select name="status" class="form-control">
+        <option value="" disabled selected hidden>Pilih Status Pengampu</option>
+        <option value="Manajer Proyek" {{ (old('status', $pengampu->status ?? '') == 'Manajer Proyek') ? 'selected' : '' }}>Manajer Proyek</option>
+        <option value="Dosen Mata Kuliah" {{ (old('status', $pengampu->status ?? '') == 'Dosen Mata Kuliah') ? 'selected' : '' }}>Dosen Mata Kuliah</option>
     </select>
 </div>
 

@@ -12,9 +12,9 @@
                     <div class="row">
                         <div class="col-8">
                             <div class="numbers">
-                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Total Proyek PBL</p>
+                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Total Tim Proyek PBL</p>
                                 <h3 class="font-weight-bolder">
-                                    
+                                    {{ $timCount }}
                                 </h3>
                             </div>
                         </div>
@@ -73,7 +73,7 @@
     {{-- End of Rekap Total Dashboard --}}
     {{-- Tabel Dashboard --}}
     {{-- Riwayat Tim PBL --}}
-    {{-- <div class="card mt-4">
+    <div class="card mt-4">
         <div class="card-header pb-0 p-3">
             <div class="d-flex justify-content-between">
                 <h6 class="mb-2">Riwayat Tim PBL</h6>
@@ -85,20 +85,26 @@
                     <tr>
                         <th>Kode Tim</th>
                         <th>Judul Proyek PBL</th>
-                        <th>Nama Ketua</th>
-                        <th>Kelas</th>
+                        <th>Anggota Tim PBL</th>
                         <th>Manajer Proyek</th>
+                        <th>Kelas</th>
                         <th>Progres Proyek</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($timpbl as $index => $item)
+                    @foreach ($timpbl as $item)
                     <tr>
-                        <td>{{ $item->id_tim ?? '-' }}</td>
-                        <td>Aplikasi ...</td>
-                        <td>{{ $item->ketua->nama ?? '-' }}</td>
-                        <td>{{ $item->ketua->kelas ?? '-' }}</td>
-                        <td>{{ $item->manajer_proyek->nama ?? '-' }}</td>
+                        <td>{{ $item->kode_tim ?? '-' }}</td>
+                        <td>Judul Aplikasi</td>
+                        <td>
+                            <ul class="mb-0 ps-3">
+                                @foreach ($item->anggota as $anggota)
+                                <li>{{ $anggota->nim }} - {{ $anggota->mahasiswaFK->nama ?? '-' }}</li>
+                                @endforeach
+                            </ul>
+                        </td>
+                        <td>{{ $item->manpro ?? '-' }}</td>
+                        <td>{{ $item->kelas ?? '-' }}</td>
                         <td class="align-middle text-center">
                             <div class="d-flex align-items-center">
                                 <span class="me-2 text-xs">60%</span>
@@ -112,7 +118,7 @@
                 </tbody>
             </table>
         </div>
-    </div> --}}
+    </div>
     {{-- End of Riwayat Tim PBL --}}
 
     {{-- Data Dosen --}}

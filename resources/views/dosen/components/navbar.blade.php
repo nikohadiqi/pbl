@@ -30,9 +30,9 @@
                     <a class="nav-link text-dark d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <img src="{{ asset('assets/img/logo-poliwangi.png') }}" alt="User Avatar" class="rounded-circle me-2" width="40" height="40">
                         <span class="d-flex flex-column">
-                            <span class="fw-bold">Dosen</span>
+                            <span class="fw-bold">{{ Auth::guard('dosen')->check() && Auth::guard('dosen')->user()->dosen ? Auth::guard('dosen')->user()->dosen->nama : '-' }}</span>
                             <span class="fw-bold">
-                                {{ Auth::guard('dosen')->check() ? Auth::guard('dosen')->user()->nim : '-' }}
+                                {{ Auth::guard('dosen')->check() && Auth::guard('dosen')->user()->dosen ? Auth::guard('dosen')->user()->dosen->nip : '-' }}
                             </span>
                         </span>
                     </a>

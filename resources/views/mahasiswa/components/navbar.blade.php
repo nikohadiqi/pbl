@@ -30,8 +30,10 @@
                     <a class="nav-link text-dark d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <img src="{{ asset('assets/img/logo-poliwangi.png') }}" alt="User Avatar" class="rounded-circle me-2" width="40" height="40">
                         <span class="d-flex flex-column">
-                            <span class="fw-bold">Mahasiswa</span>
-                            <span class="fw-bold">{{ Auth::guard('mahasiswa')->user()-> nim }}</span>
+                            <span class="fw-bold">{{ Auth::guard('mahasiswa')->check() && Auth::guard('mahasiswa')->user()->mahasiswa ? Auth::guard('mahasiswa')->user()->mahasiswa->nama : '-' }}</span>
+                            <span class="fw-bold">
+                                {{ Auth::guard('mahasiswa')->check() && Auth::guard('mahasiswa')->user()->mahasiswa ? Auth::guard('mahasiswa')->user()->mahasiswa->nim : '-' }}
+                            </span>
                         </span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
