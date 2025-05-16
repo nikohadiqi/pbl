@@ -45,6 +45,8 @@ Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth')->
 // Register
 Route::get('/register', [MahasiswaRegisterController::class, 'showRegisterForm'])->name('register');
 Route::post('/register-tim', [MahasiswaRegisterController::class, 'register'])->name('register.tim');
+Route::get('register/search/mahasiswa', [MahasiswaController::class, 'searchMahasiswa'])->middleware(['throttle:10,1']);
+Route::get('register/search/manpro', [PengampuController::class, 'searchManpro'])->middleware(['throttle:10,1']);
 
 
 // Route Akun Admin

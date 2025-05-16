@@ -29,4 +29,16 @@ class AkunDosen extends Authenticatable
     {
         return $this->hasOne(Dosen::class, 'nip', 'nim');
     }
+
+    // accesor manpro
+    public function getIsManajerProyekAttribute()
+    {
+        return $this->dosen && $this->dosen->pengampuFK->contains('status', 'Manajer Proyek');
+    }
+
+    // accesor dosen mk
+    public function getIsDosenMatkulAttribute()
+    {
+        return $this->dosen && $this->dosen->pengampuFK->contains('status', 'Dosen Mata Kuliah');
+    }
 }

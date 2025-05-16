@@ -105,4 +105,18 @@ class MahasiswaController extends Controller
 
         return redirect()->route('admin.mahasiswa');
     }
+
+    // search mahasiswa
+    public function searchMahasiswa(Request $request)
+    {
+        $search = $request->q;
+        $data = Mahasiswa::where('nim', 'like', "%$search%")
+            ->orWhere('nama', 'like', "%$search%")
+            ->limit(10)
+            ->get();
+
+        return response()->json($data->map(function ($item) {
+            return ['id' => $item->nim, 'text' => $item->nim . ' - ' . $item->nama];
+        }));
+    }
 }

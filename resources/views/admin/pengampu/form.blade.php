@@ -50,21 +50,70 @@
 </div>
 
 @push('css')
-    <!-- Select2 Bootstrap 4 Theme jika belum dimuat -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css"
+    rel="stylesheet" />
+<style>
+    .select2-container--bootstrap-5 .select2-selection {
+        border: 1px solid #dee2e6 !important;
+        border-radius: 0.5rem !important;
+        padding: 0.5rem 1rem !important;
+        font-size: 0.875rem;
+        height: auto !important;
+        transition: all 0.2s ease-in-out;
+        position: relative;
+        z-index: 1050;
+        /* agar dropdown tidak tertutup elemen lain */
+    }
+
+    /* Efek focus */
+    .select2-container--bootstrap-5.select2-container--focus .select2-selection {
+        border-color: #F7CD07 !important;
+        box-shadow: 0 0 0 2px rgba(247, 205, 7, 0.1);
+        outline: none;
+    }
+
+    /* Dropdown dengan rounded full, selalu sama */
+    .select2-container--bootstrap-5 .select2-dropdown {
+        border: 1px solid #F7CD07 !important;
+        border-radius: 0.5rem !important;
+        box-shadow: 0 4px 10px rgba(247, 205, 7, 0.1);
+        margin-top: 2px;
+        /* beri sedikit jarak dari select */
+        overflow: hidden;
+    }
+
+    /* Agar dropdown yang muncul di atas juga rounded */
+    .select2-container--bootstrap-5.select2-container--above .select2-dropdown {
+        margin-top: 0;
+        margin-bottom: 2px;
+    }
+
+    /* Render teks dan panah */
+    .select2-container--bootstrap-5 .select2-selection__rendered {
+        line-height: 1.5 !important;
+        padding-left: 0 !important;
+    }
+
+    .select2-container--bootstrap-5 .select2-selection__arrow {
+        top: 50% !important;
+        transform: translateY(-50%);
+        right: 1rem;
+        position: absolute;
+    }
+</style>
 @endpush
 
 @push('script')
 <!-- jQuery (required by Select2) -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <!-- Select2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
     $(document).ready(function () {
         $('.select2').select2({
+            theme: 'bootstrap-5',
             placeholder: 'Pilih Dosen',
-            allowClear: true
         });
     });
 </script>

@@ -61,14 +61,20 @@
                         </div>
                     </div>
                 </div>
-                <div
-                    class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 text-center justify-content-center flex-column">
-                    <div class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden" style="background-image: url('{{ asset('assets/img/login-image.png') }}'); background-size: unset;">
+                {{-- Side Picture --}}
+                <div class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 text-center justify-content-center flex-column">
+                    <div class="position-relative bg-gradient-primary h-100 m-3 px-7 pt-5 border-radius-lg d-flex flex-column justify-content-start overflow-hidden"
+                        style="
+                            background-image: url('{{ asset('assets/img/login-image.png') }}');
+                            background-repeat: no-repeat;
+                            background-position: center;
+                            background-size: contain;
+                            background-position: bottom center;
+                        ">
                         <span class="mask bg-gradient-primary opacity-6"></span>
-                        <h4 class="mt-5 text-white font-weight-bolder position-relative bold">Sistem Informasi dan Monitoring
-                        </h4>
-                        <h4 class="text-white font-weight-bolder position-relative bold">Project Based Learning
-                        </h4>
+                        <h3 class="mt-5 text-white font-weight-bolder position-relative bold">Sistem Informasi dan
+                            Monitoring</h2>
+                        <h3 class="text-white font-weight-bolder position-relative bold">Project Based Learning</h2>
                         <p class="text-white position-relative">Program Studi Teknologi Rekayasa Perangkat Lunak</p>
                     </div>
                 </div>

@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\AkunMahasiswa;
 use App\Models\Anggota_Tim_Pbl;
+use App\Models\Kelas;
+use App\Models\PeriodePBL;
 use App\Models\regMahasiswa;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -15,19 +17,26 @@ class MahasiswaRegisterController extends Controller
 {
     public function showRegisterForm()
     {
-        return view('auth.register');
+        $kelas = Kelas::all();
+        $periode = PeriodePBL::select('id', 'semester', 'tahun')->get();
+
+        return view('auth.register', compact('kelas', 'periode'));
     }
 
     public function register(Request $request)
     {
-        // Validasi input anggota tim
+        // Validasi inputan agar sesuai
         $request->validate([
             'kelas' => 'required|string',
             'kelompok' => 'required|integer',
-            'manpro' => 'required|string',
+            'manpro' => 'required|string|exists:pengampu,dosen_id',
             'periode' => 'required|string',
             'anggota' => 'required|array|min:1',
-            'anggota.*' => 'string|distinct|unique:akun_mahasiswa,nim',
+            'anggota.*' => 'string|distinct|exists:data_mahasiswa,nim|unique:anggota_tim_pbl,nim',
+        ], [
+            'anggota.*.unique' => 'Mahasiswa dengan NIM :input sudah terdaftar di tim lain.',
+            'anggota.*.exists' => 'Mahasiswa dengan NIM :input tidak ditemukan.',
+            'anggota.*.distinct' => 'Mahasiswa dengan NIM :input duplikat di daftar anggota.',
         ]);
 
         $kode_tim = strtoupper($request->kelas) . $request->kelompok;

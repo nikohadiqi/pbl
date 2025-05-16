@@ -8,7 +8,7 @@
         <div class="d-flex justify-content-between align-items-center">
             <h4 class="fw-bold">Daftar Dosen Pengampu Mata Kuliah / Manajer Proyek</h4>
             <a href="{{ route('admin.pengampu.tambah') }}" class="btn btn-primary fw-bold">
-                <i class="bi bi-plus me-2"></i>Tambah Tim
+                <i class="bi bi-plus me-2"></i>Tambah Data
             </a>
         </div>
         <p class="text-sm">Pengaturan Dosen sebagai Manajer Proyek atau Dosen Pengampu Mata Kuliah</p>

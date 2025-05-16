@@ -116,4 +116,22 @@ class PengampuController extends Controller
 
         return redirect()->route('admin.pengampu');
     }
+
+    // Search Manpro
+    public function searchManpro(Request $request)
+    {
+        $search = $request->q;
+        $data = Pengampu::where('status', 'Manajer Proyek')
+            ->whereHas('dosenFk', function ($query) use ($search) {
+                $query->where('nama', 'like', "%$search%")
+                    ->orWhere('nip', 'like', "%$search%");
+            })
+            ->with('dosenFk')
+            ->limit(10)
+            ->get();
+
+        return response()->json($data->map(function ($item) {
+            return ['id' => $item->dosenFk->nip, 'text' => $item->dosenFk->nip . ' - ' . $item->dosenFk->nama];
+        }));
+    }
 }

@@ -28,6 +28,7 @@
             <li class="nav-item mt-4">
                 <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">MENU</h6>
             </li>
+            @if (auth()->user()->is_manajer_proyek)
             <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('dosen.validasi-tim') ? 'active' : '' }}"
                     href="{{ route('dosen.validasi-tim') }}">
@@ -38,6 +39,7 @@
                     <span class="nav-link-text ms-1">Validasi Pendaftaran Tim PBL</span>
                 </a>
             </li>
+            @endif
             <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('dosen.daftar-tim*') ? 'active' : '' }}"
                     href="{{ route('dosen.daftar-tim') }}">
