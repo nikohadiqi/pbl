@@ -39,7 +39,8 @@
             <div class="tab-content" id="formTabsContent">
 
                 <!-- STEP 1 -->
-                <div class="tab-pane fade show active" id="step1" role="tabpanel">
+               <!-- STEP 1 -->
+<div class="tab-pane fade {{ session('active_step', 'step1') == 'step1' ? 'show active' : '' }}" id="step1" role="tabpanel">
                     <form method="POST" action="{{ route('mahasiswa.rpp.rencana-proyek.store') }}">
                         @csrf
                         <h4>Step 1: Deskripsi Proyek</h4>

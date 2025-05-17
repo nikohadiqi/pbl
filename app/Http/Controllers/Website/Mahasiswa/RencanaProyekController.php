@@ -61,7 +61,8 @@ class RencanaProyekController extends Controller
         $rencanaProyek->kode_tim = $kodeTim;
         $rencanaProyek->save();
 
-        return redirect()->route('mahasiswa.rpp.rencana-proyek.create')->with('success', 'Data berhasil disimpan atau diperbarui!');
+        return redirect()->route('mahasiswa.rpp.rencana-proyek.create') ->with('success', 'Data berhasil disimpan atau diperbarui!')
+    ->with('active_step', 'step1');
     }
 
     public function storeTahapanPelaksanaan(Request $request)
