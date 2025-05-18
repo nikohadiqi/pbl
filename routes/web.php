@@ -26,6 +26,7 @@ use App\Http\Controllers\Website\Mahasiswa\PelaporanUASController;
 
 use App\Http\Controllers\Website\Dosen\DashboardDosenController;
 use App\Http\Controllers\Website\Dosen\ProfilController as DosenProfilController;
+use App\Http\Controllers\Website\Dosen\ValidasiController;
 
 // use App\Http\Controllers\Auth\DashboardController;
 /*
@@ -47,16 +48,26 @@ Route::get('/register', [MahasiswaRegisterController::class, 'showRegisterForm']
 Route::post('/register-tim', [MahasiswaRegisterController::class, 'register'])->name('register.tim');
 Route::get('register/search/mahasiswa', [MahasiswaController::class, 'searchMahasiswa'])->middleware(['throttle:10,1']);
 Route::get('register/search/manpro', [PengampuController::class, 'searchManpro'])->middleware(['throttle:10,1']);
+Route::get('register/tunggu-validasi', function () {
+    $tim = session('tim');
+    if (!$tim) {
+        return redirect()->route('register')->with('error', 'Data tidak ditemukan. Silakan daftar ulang.');
+    }
+    return view('auth.tunggu-validasi', compact('tim'));
+})->name('register.tunggu-validasi');
 
-
+// ============================
 // Route Akun Admin
+// ============================
 Route::middleware(['auth:web', 'role:web,admin'])->group(function () {
     // Dashboard
     Route::get('admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
     // Profil
-    Route::get('admin/profil', [ProfilController::class, 'index'])->name('admin.profil');
-    Route::get('/admin/profil/ubah-password', [ProfilController::class, 'editPassword'])->name('admin.profil.ubah-password');
-    Route::post('/admin/profil/ubah-password', [ProfilController::class, 'updatePassword'])->name('admin.profil.update-password');
+    Route::prefix('admin/profil')->group(function () {
+        Route::get('/', [ProfilController::class, 'index'])->name('admin.profil');
+        Route::get('/ubah-password', [ProfilController::class, 'editPassword'])->name('admin.profil.ubah-password');
+        Route::post('/ubah-password', [ProfilController::class, 'updatePassword'])->name('admin.profil.update-password');
+    });
 
     // Periode PBL
     Route::prefix('menu/master-data/periode-pbl')->middleware(['auth:sanctum', 'admin'])->group(function () {
@@ -67,6 +78,8 @@ Route::middleware(['auth:web', 'role:web,admin'])->group(function () {
         Route::PUT('/update/{id}', [PeriodePBLController::class, 'update'])->name('admin.periodepbl.update');
         Route::delete('/hapus/{id}', [PeriodePBLController::class, 'destroy'])->name('admin.periodepbl.delete');
         Route::delete('/hapus-massal', [PeriodePBLController::class, 'bulkDelete'])->name('admin.periodepbl.bulk-delete');
+        Route::patch('/selesai/{id}', [PeriodePBLController::class, 'selesai'])->name('admin.periodepbl.selesai');
+        Route::patch('/aktifkan/{id}', [PeriodePBLController::class, 'aktifkan'])->name('admin.periodepbl.aktifkan');
     });
 
     // TPP SEMESTER 4
@@ -152,9 +165,11 @@ Route::middleware(['auth:mahasiswa'])->group(function () {
     Route::get('mahasiswa/dashboard', [DashboardMahasiswaController::class, 'index'])->name('mahasiswa.dashboard');
 
     // Profil Mahasiswa
-    Route::get('mahasiswa/profil', [MahasiswaProfilController::class, 'index'])->name('mahasiswa.profil');
-    Route::get('mahasiswa/profil/ubah-password', [MahasiswaProfilController::class, 'editPassword'])->name('mahasiswa.profil.ubah-password');
-    Route::post('mahasiswa/profil/ubah-password', [MahasiswaProfilController::class, 'updatePassword'])->name('mahasiswa.profil.update-password');
+    Route::prefix('mahasiswa/profil')->group(function () {
+        Route::get('/', [MahasiswaProfilController::class, 'index'])->name('mahasiswa.profil');
+        Route::get('/ubah-password', [MahasiswaProfilController::class, 'editPassword'])->name('mahasiswa.profil.ubah-password');
+        Route::post('/ubah-password', [MahasiswaProfilController::class, 'updatePassword'])->name('mahasiswa.profil.update-password');
+    });
 
     // RPP Semester 4 - Rencana Proyek
     Route::prefix('mahasiswa/semester-4/rpp')->group(function () {
@@ -199,14 +214,18 @@ Route::middleware(['auth:dosen'])->group(function () {
     Route::get('/dosen/dashboard', [LoginController::class, 'dosenDashboard'])->name('dosen.dashboard');
 
     // Profil Dosen
-    Route::get('dosen/profil', [DosenProfilController::class, 'index'])->name('dosen.profil');
-    Route::get('dosen/profil/ubah-password', [DosenProfilController::class, 'editPassword'])->name('dosen.profil.ubah-password');
-    Route::post('dosen/profil/ubah-password', [DosenProfilController::class, 'updatePassword'])->name('dosen.profil.update-password');
+    Route::prefix('dosen/profil')->group(function () {
+        Route::get('/', [DosenProfilController::class, 'index'])->name('dosen.profil');
+        Route::get('/ubah-password', [DosenProfilController::class, 'editPassword'])->name('dosen.profil.ubah-password');
+        Route::post('/ubah-password', [DosenProfilController::class, 'updatePassword'])->name('dosen.profil.update-password');
+    });
 
     // Validasi Tim PBL
-    Route::get('/dosen/validasi-tim-pbl', function () {
-        return view('dosen.validasi.validasi-tim');
-    })->name('dosen.validasi-tim');
+    Route::prefix('/dosen/validasi-tim-pbl')->group(function () {
+        Route::get('/', [ValidasiController::class, 'index'])->name('dosen.validasi-tim');
+        Route::post('/approve/{kode_tim}', [ValidasiController::class, 'approve'])->name('dosen.validasi-tim.approve');
+        Route::post('/reject/{kode_tim}', [ValidasiController::class, 'reject'])->name('dosen.validasi-tim.reject');
+    });
 
     // Daftar Tim PBL
     Route::prefix('dosen/daftar-tim-pbl')->group(function () {

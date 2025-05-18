@@ -28,7 +28,7 @@ class PengampuController extends Controller
         $kelas = Kelas::all();
         $dosen = Dosen::all();
         $matkuls = MataKuliah::all();
-        $periodes = PeriodePBL::all();
+        $periodes = PeriodePBL::where('status', 'Aktif')->get();
         return view('admin.pengampu.tambah-pengampu', compact('kelas', 'dosen', 'matkuls', 'periodes'));
     }
 
@@ -76,7 +76,7 @@ class PengampuController extends Controller
         $kelas = Kelas::all();
         $dosen = Dosen::all();
         $matkuls = MataKuliah::all();
-        $periodes = PeriodePBL::all();
+        $periodes = PeriodePBL::where('status', 'Aktif')->get();
         return view('admin.pengampu.edit-pengampu', compact('pengampu', 'kelas', 'dosen', 'matkuls', 'periodes'));
     }
 

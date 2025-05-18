@@ -18,27 +18,27 @@
             <h4 class="font-weight-bolder text-white mb-0 mt-3">@yield('page-title')</h4>
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
-            <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-                <div class="input-group">
-                    <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-                    <input type="text" class="form-control" placeholder="Cari...">
-                </div>
-            </div>
-            <ul class="navbar-nav justify-content-end">
+            <ul class="navbar-nav ms-auto justify-content-end">
                 <!-- User Profile Dropdown -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link text-dark d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="{{ asset('assets/img/logo-poliwangi.png') }}" alt="User Avatar" class="rounded-circle me-2" width="40" height="40">
+                    <a class="nav-link text-dark d-flex align-items-center" href="#" id="userDropdown" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="{{ asset('assets/img/logo-poliwangi.png') }}" alt="User Avatar"
+                            class="rounded-circle me-2 border border-2 border-light p-1" width="40" height="40">
                         <span class="d-flex flex-column">
-                            <span class="fw-bold">{{ Auth::guard('dosen')->check() && Auth::guard('dosen')->user()->dosen ? Auth::guard('dosen')->user()->dosen->nama : '-' }}</span>
                             <span class="fw-bold">
-                                {{ Auth::guard('dosen')->check() && Auth::guard('dosen')->user()->dosen ? Auth::guard('dosen')->user()->dosen->nip : '-' }}
+                                {{ Auth::guard('dosen')->check() && Auth::guard('dosen')->user()->dosen ?
+                                Auth::guard('dosen')->user()->dosen->nama : '-' }}
+                            </span>
+                            <span class="fw-bold">
+                                {{ Auth::guard('dosen')->check() && Auth::guard('dosen')->user()->dosen ?
+                                Auth::guard('dosen')->user()->dosen->nip : '-' }}
                             </span>
                         </span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                        <li><a class="dropdown-item" href="{{ route('dosen.profil') }}"><i class="fas fa-user me-2"></i> Profil</a></li>
-                        <li>
+                        <li><a class="dropdown-item" href="{{ route('dosen.profil') }}"><i class="fas fa-user me-2"></i>
+                                Profil</a></li><li>
                             <a class="dropdown-item fixed-plugin-button-nav" href="javascript:;">
                                 <i class="fas fa-cog me-2"></i> Pengaturan
                             </a>

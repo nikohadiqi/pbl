@@ -30,6 +30,9 @@
                         <th>Nomor</th>
                         <th>Semester</th>
                         <th>Tahun</th>
+                        <th>Tanggal Mulai</th>
+                        <th>Tanggal Selesai</th>
+                        <th>Status</th>
                         <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -37,10 +40,49 @@
                     @foreach($periodePBL as $key => $periode)
                     <tr>
                         <td>{{ $key + 1 }}</td>
-                        <td>Semester {{ $periode->semester }}</td>
+                        <td>{{ $periode->semester }}</td>
                         <td>{{ $periode->tahun }}</td>
+                        <td>{{ $periode->tanggal_mulai->format('d-m-Y') }}</td>
+                        <td>{{ $periode->tanggal_selesai->format('d-m-Y') }}</td>
+                        <td>
+                            <span class="badge
+                                @if($periode->status == 'Aktif') bg-success
+                                @elseif($periode->status == 'Selesai') bg-danger
+                                @else bg-secondary @endif">
+                                {{ $periode->status }}
+                            </span>
+                            @if($periode->status === 'Selesai')
+                            <div class="mt-1 small text-muted">
+                                Riwayat:<br>
+                                Ditutup oleh: {{ $periode->penutup->nim ?? 'Tidak diketahui' }}<br>
+                                Pada: {{ $periode->closed_at ? $periode->closed_at->format('d M Y H:i') : '-' }}
+                            </div>
+                            @endif
+                        </td>
                         <td class="text-center">
                             <div class="d-flex justify-content-center gap-2">
+                                {{-- Tombol jika statusnya Aktif --}}
+                                @if($periode->status === 'Aktif')
+                                <form action="{{ route('admin.periodepbl.selesai', $periode->id) }}" method="POST"
+                                    class="form-selesai">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button class="btn btn-sm btn-warning text-white" title="Tandai Selesai">
+                                        <i class="bi bi-flag-fill"></i>
+                                    </button>
+                                </form>
+                                {{-- Tombol jika statusnya Selesai atau Tidak Aktif --}}
+                                @elseif(in_array($periode->status, ['Selesai', 'Tidak Aktif']))
+                                <form action="{{ route('admin.periodepbl.aktifkan', $periode->id) }}" method="POST"
+                                    class="form-aktifkan">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button class="btn btn-sm btn-success text-white" title="Aktifkan">
+                                        <i class="bi bi-check-circle-fill"></i>
+                                    </button>
+                                </form>
+                                @endif
+                                {{-- Edit --}}
                                 <a href="{{ route('admin.periodepbl.edit', $periode->id) }}">
                                     <button class="btn btn-sm btn-info text-white">
                                         <i class="bi bi-pencil-square"></i>
@@ -48,7 +90,8 @@
                                 </a>
                                 <!-- Delete Button -->
                                 <form id="delete-form-{{ $periode->id }}"
-                                    action="{{route('admin.periodepbl.delete', $periode->id)}}" method="POST" class="d-inline">
+                                    action="{{route('admin.periodepbl.delete', $periode->id)}}" method="POST"
+                                    class="d-inline">
                                     @csrf
                                     @method('DELETE')
                                     <button type="button" class="btn btn-sm btn-danger text-white"
@@ -88,5 +131,45 @@
         }
     })
 }
+</script>
+{{-- Script Konfirmasi Status --}}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    // Konfirmasi form selesai
+    document.querySelectorAll('.form-selesai').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Tandai periode ini sebagai selesai?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, selesai!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+
+    // Konfirmasi form aktifkan
+    document.querySelectorAll('.form-aktifkan').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Aktifkan periode ini?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, aktifkan!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+});
 </script>
 @endpush

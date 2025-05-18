@@ -30,9 +30,9 @@
             </li>
             <!-- Master Data -->
             <li class="nav-item mt-2">
-                <a class="nav-link {{ request()->routeIs('admin.periodepbl*') || request()->routeIs('admin.matkul*') || request()->routeIs('admin.kelas*') || request()->routeIs('admin.dosen*') || request()->routeIs('admin.mahasiswa*') || request()->routeIs('admin.pengampu*') || request()->routeIs('admin.timpbl*') ? 'active' : '' }}"
+                <a class="nav-link {{ request()->routeIs('admin.periodepbl*') || request()->routeIs('admin.matkul*') || request()->routeIs('admin.kelas*') || request()->routeIs('admin.dosen*') || request()->routeIs('admin.mahasiswa*') ? 'active' : '' }}"
                     data-bs-toggle="collapse" href="#masterData" role="button"
-                    aria-expanded="{{ request()->routeIs('admin.periodepbl*') || request()->routeIs('admin.matkul*') || request()->routeIs('admin.kelas*') || request()->routeIs('admin.dosen*') || request()->routeIs('admin.mahasiswa*') || request()->routeIs('admin.pengampu*') || request()->routeIs('admin.timpbl*') ? 'true' : 'false' }}"
+                    aria-expanded="{{ request()->routeIs('admin.periodepbl*') || request()->routeIs('admin.matkul*') || request()->routeIs('admin.kelas*') || request()->routeIs('admin.dosen*') || request()->routeIs('admin.mahasiswa*') ? 'true' : 'false' }}"
                     aria-controls="masterData">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -40,7 +40,7 @@
                     </div>
                     <span class="nav-link-text ms-1">Master Data</span>
                 </a>
-                <div class="collapse {{ request()->routeIs('admin.periodepbl*') || request()->routeIs('admin.matkul*') || request()->routeIs('admin.kelas*') || request()->routeIs('admin.dosen*') || request()->routeIs('admin.mahasiswa*') || request()->routeIs('admin.pengampu*') || request()->routeIs('admin.timpbl*') ? 'show' : '' }}"
+                <div class="collapse {{ request()->routeIs('admin.periodepbl*') || request()->routeIs('admin.matkul*') || request()->routeIs('admin.kelas*') || request()->routeIs('admin.dosen*') || request()->routeIs('admin.mahasiswa*') ? 'show' : '' }}"
                     id="masterData">
                     <ul class="nav flex-column ms-4">
                         <li class="nav-item mt-2">
@@ -73,16 +73,20 @@
                                 Data Mahasiswa
                             </a>
                         </li>
-                        <li class="nav-item mt-2">
-                            <a class="nav-link {{ request()->routeIs('admin.pengampu*') ? 'active' : '' }}"
-                                href="{{ route('admin.pengampu') }}">
-                                Mengampu MK / Mapro
-                            </a>
-                        </li>
                     </ul>
                 </div>
             </li>
-
+            {{-- Dosen Pengampu --}}
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('admin.pengampu*') ? 'active' : '' }}"
+                    href="{{ route('admin.pengampu') }}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="ni ni-hat-3 text-primary text-sm opacity-10"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Dosen Pengampu</span>
+                </a>
+            </li>
             <!-- Tahapan Pelaksanaan Proyek -->
             <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('admin.tahapanpelaksanaan-sem4*') || request()->routeIs('admin.tahapanpelaksanaan-sem5*') ? 'active' : '' }}"

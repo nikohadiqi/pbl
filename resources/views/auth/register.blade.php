@@ -13,7 +13,12 @@
                             <h4 class="font-weight-bolder">Pendaftaran Tim PBL</h4>
                             <p class="mb-0 text-sm">
                                 Masukan data yang diperlukan untuk pendaftaran tim dan tunggu akun divalidasi oleh
-                                Manajer Proyek untuk Login
+                                Manajer Proyek untuk Login.
+                                @if($timPendingRejected->count())
+                                <!-- trigger modal -->
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#statusTimModal" class="text-primary text-decoration-underline">
+                                    Lihat status pendaftaran tim disini.
+                                </a>
                             </p>
                         </div>
                         <div class="card-body pb-3">
@@ -120,6 +125,57 @@
         </div>
     </div>
 </section>
+<!-- Modal -->
+<div class="modal fade" id="statusTimModal" tabindex="-1" aria-labelledby="statusTimModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="statusTimModalLabel">Status Pendaftaran Tim</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle text-sm">
+                        <thead class="text-center">
+                            <tr>
+                                <th>Kelas</th>
+                                <th>Kelompok</th>
+                                <th>Status</th>
+                                <th>Keterangan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($timPendingRejected as $tim)
+                            <tr>
+                                <td class="text-center">{{ $tim->kelas }}</td>
+                                <td class="text-center">{{ $tim->kelompok }}</td>
+                                <td>
+                                    @if($tim->status == 'pending')
+                                        <span class="badge bg-warning">Menunggu Validasi</span>
+                                    @elseif($tim->status == 'rejected')
+                                        <span class="badge bg-danger">Ditolak</span>
+                                            @if($tim->alasan_reject)
+                                                <br><div class="text-danger text-sm text-wrap mt-2">Alasan:<br>{{ $tim->alasan_reject }}</div>
+                                            @endif
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($tim->status == 'rejected')
+                                        <em class="text-muted">Silakan registrasi kembali.</em>
+                                    @elseif($tim->status == 'pending')
+                                        <em class="text-muted">Tim ini masih menunggu validasi Manajer Proyek.</em>
+                                    @endif
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
 @endsection
 
 @push('css')

@@ -16,11 +16,17 @@ class PeriodeSeeder extends Seeder
         PeriodePBL::create([
             'semester' => '4',
             'tahun' => '2025',
+            'tanggal_mulai' => '2025-01-01',
+            'tanggal_selesai' => '2025-06-30',
+            'status' => 'Aktif',
         ]);
 
         PeriodePBL::create([
             'semester' => '5',
             'tahun' => '2025',
+            'tanggal_mulai' => '2025-08-01',
+            'tanggal_selesai' => '2025-12-30',
+            'status' => 'Tidak Aktif',
         ]);
     }
 }

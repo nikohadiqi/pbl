@@ -18,12 +18,12 @@ return new class extends Migration
                 $table->string('nim')->unique();
                 $table->string('password');
                 $table->timestamps();
-    
+
                 // Foreign key dari mahasiswa.kode_tim
                 $table->foreign('kode_tim')->references('kode_tim')->on('tim_pbl')->onDelete('cascade');
             });
         }
-    
+
         public function down(): void {
             Schema::dropIfExists('akun_mahasiswa');
         }

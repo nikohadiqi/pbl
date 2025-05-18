@@ -12,35 +12,54 @@
 
         <!-- Flash Message -->
         @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         @endif
         @if($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
+        <div class="alert alert-danger">
+            <ul>
+                @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
         @endif
 
         <!-- Form Ubah Periode PBL -->
         <form class="mt-1" method="POST" action="{{ route('admin.periodepbl.update', $periode->id) }}">
             @csrf
             @method('PUT')
-            <div class="form-group mb-3">
-                <label for="semester" class="form-control-label">Semester Pelaksanaan PBL</label>
-                <input class="form-control @error('semester') is-invalid @enderror" type="number" name="semester" id="semester" value="{{ old('semester', $periode->semester) }}" min="1" max="6">
-                @error('semester')
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="semester" class="form-control-label">Semester Pelaksanaan PBL</label>
+                    <input class="form-control @error('semester') is-invalid @enderror" type="number" name="semester"
+                        id="semester" value="{{ old('semester', $periode->semester) }}" min="1" max="6">
+                    @error('semester')
                     <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
+                    @enderror
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label for="tahun_pelaksanaan" class="form-control-label">Tahun Pelaksanaan PBL</label>
+                    <input class="form-control" placeholder="Masukan Tahun Periode Pelaksanaan PBL" type="text"
+                        name="tahun" value="{{ $periode->tahun }}">
+                </div>
             </div>
-            <div class="form-group mt-3">
-                <label for="tahun_pelaksanaan" class="form-control-label">Tahun Pelaksanaan PBL</label>
-                <input class="form-control" placeholder="Masukan Tahun Periode Pelaksanaan PBL" type="text" name="tahun" value="{{ $periode->tahun }}">
+
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="tanggal_mulai" class="form-control-label">Tanggal Mulai</label>
+                    <input type="date" name="tanggal_mulai" class="form-control"
+                        value="{{ $periode->tanggal_mulai ? \Carbon\Carbon::parse($periode->tanggal_mulai)->format('Y-m-d') : '' }}">
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label for="tanggal_selesai" class="form-control-label">Tanggal Selesai</label>
+                    <input type="date" name="tanggal_selesai" class="form-control"
+                        value="{{ $periode->tanggal_selesai ? \Carbon\Carbon::parse($periode->tanggal_selesai)->format('Y-m-d') : '' }}">
+                </div>
             </div>
 
             <div class="form-group mt-4">

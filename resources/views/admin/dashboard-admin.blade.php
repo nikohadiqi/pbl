@@ -95,7 +95,7 @@
                     @foreach ($timpbl as $item)
                     <tr>
                         <td>{{ $item->kode_tim ?? '-' }}</td>
-                        <td>Judul Aplikasi</td>
+                        <td class="text-wrap">{{ $item->rencanaProyek->judul_proyek ?? 'Judul Aplikasi' }}</td>
                         <td>
                             <ul class="mb-0 ps-3">
                                 @foreach ($item->anggota as $anggota)
@@ -107,15 +107,17 @@
                         <td>{{ $item->kelas ?? '-' }}</td>
                         <td class="align-middle text-center">
                             <div class="d-flex align-items-center">
-                                <span class="me-2 text-xs">60%</span>
+                                <span class="me-2 text-xs">{{ $item->progress_percent }}%</span>
                                 <div class="progress w-100">
-                                    <div class="progress-bar bg-info" role="progressbar" style="width: 60%"></div>
+                                    <div class="progress-bar bg-info" role="progressbar"
+                                        style="width: {{ $item->progress_percent }}%"></div>
                                 </div>
                             </div>
                         </td>
                     </tr>
                     @endforeach
                 </tbody>
+
             </table>
         </div>
     </div>

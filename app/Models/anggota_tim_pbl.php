@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\TimPbl;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Anggota_Tim_Pbl extends Model
 {
@@ -18,9 +19,6 @@ class Anggota_Tim_Pbl extends Model
     protected $fillable = [
         'kode_tim',
         'nim',
-        'manpro',
-        'periode',
-        'status' // Kolom status yang nullable
     ];
 
     public function tim()

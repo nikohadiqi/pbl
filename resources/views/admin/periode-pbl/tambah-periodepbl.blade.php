@@ -12,45 +12,67 @@
 
         {{-- Flash Message --}}
         @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         @endif
 
         @if($errors->any())
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <ul class="mb-0">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <ul class="mb-0">
+                @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         @endif
 
         {{-- Form Tambah Periode PBL --}}
         <form class="mt-1" method="POST" action="{{ route('admin.periodepbl.store') }}">
             @csrf
-            <div class="form-group">
-                <label for="semester" class="form-control-label">Semester Pelaksanaan PBL</label>
-                <input type="number" name="semester" class="form-control @error('semester') is-invalid @enderror" min="1" max="6" placeholder="Masukkan Semester (Angka)" value="{{ old('semester') }}" required>
-                @error('semester')
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="semester" class="form-control-label">Semester Pelaksanaan PBL</label>
+                    <input type="number" name="semester" class="form-control @error('semester') is-invalid @enderror"
+                        min="1" max="6" placeholder="Masukkan Semester (Angka)" value="{{ old('semester') }}" required>
+                    @error('semester')
                     <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
+                    @enderror
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label for="tahun" class="form-control-label">Tahun Pelaksanaan PBL</label>
+                    <input class="form-control @error('tahun') is-invalid @enderror"
+                        placeholder="Masukkan Tahun (contoh: 2024)" type="text" name="tahun" id="tahun" maxlength="4"
+                        pattern="\d{4}" value="{{ old('tahun') }}" required>
+                    @error('tahun')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
             </div>
 
-            <div class="form-group mt-3">
-                <label for="tahun" class="form-control-label">Tahun Pelaksanaan PBL</label>
-                <input class="form-control"
-                       placeholder="Masukkan Tahun (contoh: 2024)"
-                       type="text"
-                       name="tahun"
-                       id="tahun"
-                       maxlength="4"
-                       pattern="\d{4}"
-                       value="{{ old('tahun') }}"
-                       required>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="tanggal_mulai" class="form-control-label">Tanggal Mulai</label>
+                    <input type="date" name="tanggal_mulai"
+                        class="form-control @error('tanggal_mulai') is-invalid @enderror"
+                        value="{{ old('tanggal_mulai') }}" required>
+                    @error('tanggal_mulai')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label for="tanggal_selesai" class="form-control-label">Tanggal Selesai</label>
+                    <input type="date" name="tanggal_selesai"
+                        class="form-control @error('tanggal_selesai') is-invalid @enderror"
+                        value="{{ old('tanggal_selesai') }}" required>
+                    @error('tanggal_selesai')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
             </div>
 
             <div class="form-group mt-4">

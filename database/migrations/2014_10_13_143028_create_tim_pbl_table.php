@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('kelompok');
             $table->string('manpro');
             $table->string('periode');
+            $table->string('status')->default('pending'); // status akun = 'pending', 'approved', 'rejected'
             $table->timestamps();
         });
     }

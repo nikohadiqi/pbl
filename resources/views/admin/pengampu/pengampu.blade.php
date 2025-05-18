@@ -34,7 +34,7 @@
                         <td>{{ $item->dosenFk->nama ?? '-' }}</td>
                         <td>{{ $item->status }}</td>
                         <td>{{ $item->kelasFk->kelas ?? '-' }}</td>
-                        <td>Semester{{ $item->periodeFK->semester ?? '-' }} - {{ $item->periodeFK->tahun ?? '-' }}</td>
+                        <td>Semester {{ $item->periodeFK->semester ?? '-' }} - {{ $item->periodeFK->tahun ?? '-' }}</td>
                         <td class="text-center">
                             <div class="d-flex justify-content-center gap-2">
                                 <a href="{{ route('admin.pengampu.edit', $item->id) }}">

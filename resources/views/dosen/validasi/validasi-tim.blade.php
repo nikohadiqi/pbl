@@ -8,40 +8,136 @@
         <div class="d-flex justify-content-between align-items-center">
             <h4 class="fw-bold">Validasi Tim PBL Yang Diampu</h4>
         </div>
-        <p class="text-sm">Validasi Tim PBL yang diampu dalam periode saat ini (validasi saat tim pbl sesuai dengan kelas yang diampu)</p>
+        <p class="text-sm">Berikut daftar seluruh tim yang diampu oleh Anda sebagai Manajer Proyek pada periode aktif.
+        </p>
 
         <div class="table-responsive mt-2">
-            <table class="table table-hover" id="datatable-search">
+            <table class="table table-hover" id="datatable-basic">
                 <thead class="table-light">
                     <tr>
-                        <th>No</th>
-                        <th>ID Tim Proyek</th>
-                        <th>Ketua Tim</th>
-                        <th>Periode PBL</th>
-                        <th>Manajer Proyek</th>
+                        <th>Kode Tim</th>
+                        <th>Anggota</th>
+                        <th>Manpro</th>
+                        <th>Periode</th>
+                        <th>Status</th>
                         <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {{-- @foreach ($timPBL as $index => $tim) --}}
+                    @forelse($timPBL as $tim)
                     <tr>
-                        <td>1</td>
-                        <td>2A1</td>
-                        <td>Ketua</td>
-                        <td>Semester 4</td>
-                        <td>Ruth Ema</td>
-                        <td class="text-center">
-                            <div class="d-flex justify-content-center gap-2">
-                                <a href="#" class="btn btn-sm btn-primary text-white">
-                                    <i class="bi bi-check2-square"> Validasi Tim</i>
-                                </a>
-                            </div>
+                        <td>{{ $tim->kode_tim }}</td>
+                        <td>
+                            <ul class="mb-0 ps-3">
+                                @foreach ($tim->anggota as $anggota)
+                                <li>{{ $anggota->nim }} - {{ $anggota->mahasiswaFK->nama ?? '-' }}</li>
+                                @endforeach
+                            </ul>
+                        </td>
+                        <td>{{ $tim->manproFK->nama }}</td>
+                        <td>Semester {{ $tim->periodeFK->semester }}<br>Tahun {{ $tim->periodeFK->tahun }}</td>
+                        <td>
+                            @if ($tim->status === 'approved')
+                            <span class="badge bg-success">Disetujui</span>
+                            @elseif ($tim->status === 'rejected')
+                            <span class="badge bg-danger">Ditolak</span>
+                                @if($tim->alasan_reject)
+                                    <br><div class="text-danger text-sm text-wrap mt-2">Alasan:<br>{{ $tim->alasan_reject }}</div>
+                                @endif
+                            @else
+                            <span class="badge bg-warning">Menunggu</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if ($tim->status == 'pending')
+                            <form id="approve-form-{{ $tim->kode_tim }}"
+                                action="{{ route('dosen.validasi-tim.approve', $tim->kode_tim) }}" method="POST"
+                                class="d-inline">
+                                @csrf
+                                <button type="button" class="btn btn-success btn-sm"
+                                    onclick="confirmApprove('{{ $tim->kode_tim }}')">
+                                    Validasi
+                                </button>
+                            </form>
+                            <br>
+                            <form id="reject-form-{{ $tim->kode_tim }}"
+                                action="{{ route('dosen.validasi-tim.reject', $tim->kode_tim) }}" method="POST"
+                                class="d-inline">
+                                @csrf
+                                <button type="button" class="btn btn-danger btn-sm"
+                                    onclick="confirmReject('{{ $tim->kode_tim }}')">
+                                    Tolak
+                                </button>
+                            </form>
+                            @elseif ($tim->status == 'approved')
+                            <button class="btn btn-secondary btn-sm" disabled>Divalidasi</button>
+                            @elseif ($tim->status == 'rejected')
+                            <button class="btn btn-dark btn-sm" disabled>Ditolak</button>
+                            @endif
                         </td>
                     </tr>
-                    {{-- @endforeach --}}
+                    @empty
+                    <tr>
+                        <td colspan="6" class="text-center">Belum ada tim yang terdaftar.</td>
+                    </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
     </div>
 </div>
 @endsection
+
+@push('script')
+<script>
+    function confirmApprove(kodeTim) {
+        Swal.fire({
+            title: 'Validasi Tim ini?',
+            text: "Tim akan disetujui dan mahasiswa dapat menggunakan akun mereka.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#198754',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Validasi!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('approve-form-' + kodeTim).submit();
+            }
+        });
+    }
+
+    function confirmReject(kodeTim) {
+    Swal.fire({
+        title: 'Tolak Tim?',
+        input: 'textarea',
+        inputLabel: 'Alasan Penolakan',
+        inputPlaceholder: 'Tulis alasan penolakan tim ini...',
+        inputAttributes: {
+            'aria-label': 'Alasan penolakan'
+        },
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Ya, Tolak!',
+        preConfirm: (alasan) => {
+            if (!alasan) {
+                Swal.showValidationMessage('Alasan penolakan wajib diisi');
+            }
+            return alasan;
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const form = document.getElementById('reject-form-' + kodeTim);
+
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'alasan_reject';
+            input.value = result.value;
+
+            form.appendChild(input);
+            form.submit();
+        }
+    });
+}
+</script>
+@endpush

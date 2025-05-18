@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\AkunMahasiswa;
 use App\Models\AkunDosen;
+use App\Models\Anggota_Tim_Pbl;
+use App\Models\TimPbl;
 use Illuminate\Support\Facades\Session;
 
 class LoginController extends Controller
@@ -59,44 +61,62 @@ class LoginController extends Controller
         return back()->withErrors(['nim' => 'NIP atau password salah.']);
     }
 
-   public function loginMahasiswa(Request $request, $validated)
-{
-    $remember = $request->has('remember');
+    public function loginMahasiswa(Request $request, $validated)
+    {
+        $remember = $request->has('remember');
 
-    $mahasiswa = AkunMahasiswa::where('nim', $validated['nim'])->first();
+        // Cari akun mahasiswa sesuai nim
+        $mahasiswa = AkunMahasiswa::where('nim', $validated['nim'])->first();
 
-    if ($mahasiswa && Hash::check($validated['password'], $mahasiswa->password) && $mahasiswa->role == 'mahasiswa') {
-        // Logout guard lain sebelum login mahasiswa
-        Auth::guard('web')->logout();
-        Auth::guard('dosen')->logout();
+        if ($mahasiswa && Hash::check($validated['password'], $mahasiswa->password) && $mahasiswa->role == 'mahasiswa') {
 
-        Auth::guard('mahasiswa')->login($mahasiswa, $remember);
+            // Cari anggota_tim_pbl yang punya nim tersebut, ambil anggota terbaru (misal by created_at)
+            $anggota = \App\Models\Anggota_Tim_Pbl::where('nim', $validated['nim'])
+                ->orderBy('created_at', 'desc')
+                ->first();
 
-        return redirect()->route('mahasiswa.dashboard');
+            if (!$anggota) {
+                return back()->withErrors(['nim' => 'Anda belum terdaftar dalam tim PBL manapun.']);
+            }
+
+            // Dari anggota ambil kode_tim, lalu cek status timnya di tim_pbl
+            $statusTim = TimPbl::where('kode_tim', $anggota->kode_tim)
+                ->value('status');
+
+            if ($statusTim !== 'approved') {
+                return back()->withErrors(['nim' => 'Akun Anda belum divalidasi oleh Manajer Proyek.']);
+            }
+
+            // Logout guard lain sebelum login mahasiswa
+            Auth::guard('web')->logout();
+            Auth::guard('dosen')->logout();
+
+            Auth::guard('mahasiswa')->login($mahasiswa, $remember);
+
+            return redirect()->route('mahasiswa.dashboard');
+        }
+
+        return back()->withErrors(['nim' => 'NIM atau password salah.']);
     }
 
-    return back()->withErrors(['nim' => 'NIM atau password salah.']);
-}
+    public function loginDosen(Request $request, $validated)
+    {
+        $remember = $request->has('remember');
 
+        $dosen = AkunDosen::where('nim', $validated['nim'])->first();
 
-  public function loginDosen(Request $request, $validated)
-{
-    $remember = $request->has('remember');
+        if ($dosen && Hash::check($validated['password'], $dosen->password) && $dosen->role == 'dosen') {
+            // Logout guard lain sebelum login dosen
+            Auth::guard('web')->logout();
+            Auth::guard('mahasiswa')->logout();
 
-    $dosen = AkunDosen::where('nim', $validated['nim'])->first();
+            Auth::guard('dosen')->login($dosen, $remember);
 
-    if ($dosen && Hash::check($validated['password'], $dosen->password) && $dosen->role == 'dosen') {
-        // Logout guard lain sebelum login dosen
-        Auth::guard('web')->logout();
-        Auth::guard('mahasiswa')->logout();
+            return redirect()->route('dosen.dashboard');
+        }
 
-        Auth::guard('dosen')->login($dosen, $remember);
-
-        return redirect()->route('dosen.dashboard');
+        return back()->withErrors(['nim' => 'NIP atau password salah.']);
     }
-
-    return back()->withErrors(['nim' => 'NIP atau password salah.']);
-}
 
 
     public function adminDashboard()
@@ -114,16 +134,15 @@ class LoginController extends Controller
         return view('dosen.dashboard-dosen');
     }
 
- public function logout(Request $request)
-{
-    Auth::guard('web')->logout();
-    Auth::guard('mahasiswa')->logout();
-    Auth::guard('dosen')->logout();
+    public function logout(Request $request)
+    {
+        Auth::guard('web')->logout();
+        Auth::guard('mahasiswa')->logout();
+        Auth::guard('dosen')->logout();
 
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
-    return redirect()->route('login')->with('success', 'Logout berhasil.');
-}
-
+        return redirect()->route('login')->with('success', 'Logout berhasil.');
+    }
 }

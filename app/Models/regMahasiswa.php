@@ -28,4 +28,9 @@ class regMahasiswa extends Model
     {
         return $this->hasMany(AkunMahasiswa::class, 'kode_tim', 'kode_tim');
     }
+
+    public function manproFK()
+    {
+        return $this->belongsTo(Dosen::class, 'manpro', 'nip');
+    }
 }

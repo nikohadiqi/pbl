@@ -13,8 +13,13 @@ return new class extends Migration
     {
         Schema::create('periodepbl', function (Blueprint $table) {
             $table->id();
-            $table->string('semester');
-            $table->string('tahun');
+            $table->string('semester')->unique;
+            $table->string('tahun')->unique;
+            $table->date('tanggal_mulai');
+            $table->date('tanggal_selesai');
+            $table->enum('status', ['Aktif', 'Tidak Aktif', 'Selesai'])->default('Tidak Aktif');
+            $table->timestamp('closed_at')->nullable();
+            $table->unsignedBigInteger('closed_by')->nullable();
             $table->timestamps();
         });
     }
