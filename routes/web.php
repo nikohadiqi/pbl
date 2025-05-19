@@ -23,6 +23,7 @@ use App\Http\Controllers\Website\Mahasiswa\RencanaProyekController;
 use App\Http\Controllers\Website\Mahasiswa\LogbookController;
 use App\Http\Controllers\Website\Mahasiswa\PelaporanUTSController;
 use App\Http\Controllers\Website\Mahasiswa\PelaporanUASController;
+use App\Http\Controllers\Website\Mahasiswa\PelaporanController;
 
 use App\Http\Controllers\Website\Dosen\DashboardDosenController;
 use App\Http\Controllers\Website\Dosen\ProfilController as DosenProfilController;
@@ -197,11 +198,11 @@ Route::middleware(['auth:mahasiswa'])->group(function () {
 
         // Form Laporan UTS
         Route::get('/form-laporan-uts', [PelaporanUTSController::class, 'index'])->name('mahasiswa.pelaporan-pbl.laporan-uts');
-        Route::post('/form-laporan-uts', [PelaporanUTSController::class, 'store'])->name('mahasiswa.pelaporan-pbl.laporan-uts.store');
+        Route::post('/form-laporan-uts', [PelaporanController::class, 'storeUTS'])->name('mahasiswa.pelaporan-pbl.laporan-uts.store');
 
         // Form Laporan UAS
         Route::get('/form-laporan-uas', [PelaporanUASController::class, 'index'])->name('mahasiswa.pelaporan-pbl.laporan-uas');
-        Route::post('/form-laporan-uas', [PelaporanUASController::class, 'store'])->name('mahasiswa.pelaporan-pbl.laporan-uas.store');
+        Route::post('/form-laporan-uas', [PelaporanController::class, 'storeUAS'])->name('mahasiswa.pelaporan-pbl.laporan-uas.store');
     });
 });
 

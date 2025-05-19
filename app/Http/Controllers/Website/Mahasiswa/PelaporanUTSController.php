@@ -29,6 +29,9 @@ class PelaporanUTSController extends Controller
 
   public function store(Request $request)
 {
+     $nim = Auth::guard('mahasiswa')->user()->nim;
+        $anggota = Anggota_Tim_Pbl::where('nim', $nim)->first();
+
     $validator = Validator::make($request->all(), [
         'keterangan' => 'nullable|string',
         'link_drive' => 'nullable|string',
@@ -74,7 +77,7 @@ class PelaporanUTSController extends Controller
         ]);
     }
 
-    return redirect()->route('mahasiswa.pelaporan-pbl.laporan-uts')->with('success', 'Laporan UTS berhasil disimpan!');
+    return redirect()->route('mahasiswa.pelaporan-pbl')->with('success', 'Laporan UTS berhasil disimpan!');
 }
 
 }

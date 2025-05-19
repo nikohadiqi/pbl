@@ -29,6 +29,10 @@ class PelaporanUASController extends Controller
 
  public function store(Request $request)
 {
+
+    
+     $nim = Auth::guard('mahasiswa')->user()->nim;
+        $anggota = Anggota_Tim_Pbl::where('nim', $nim)->first();
 $validator = Validator::make($request->all(), [
         'keterangan' => 'nullable|string',
         'link_drive' => 'nullable|string',
@@ -74,20 +78,7 @@ $validator = Validator::make($request->all(), [
         ]);
     }
 
-    return redirect()->route('mahasiswa.pelaporan-pbl.laporan-uas')->with('success', 'Laporan UAS berhasil disimpan!');
+    return redirect()->route('mahasiswa.pelaporan-pbl')->with('success', 'Laporan UAS berhasil disimpan!');
 }
 
-
-    public function destroy($id)
-    {
-        $pelaporan = PelaporanUAS::find($id);
-
-        if (!$pelaporan) {
-            return response()->json(['success' => false, 'message' => 'UAS Report not found'], 404);
-        }
-
-        $pelaporan->delete();
-
-        return response()->json(['success' => true, 'message' => 'UAS Report deleted successfully'], 200);
-    }
 }
