@@ -21,79 +21,62 @@ class PelaporanUASController extends Controller
         }
 
         $kode_tim = $anggota->kode_tim;
-        // Check if the student already has a report
-        $laporan = PelaporanUAS::where('kode_tim', $kode_tim)->first();
+        // Check if the student already has a UTS report
+        $pelaporan = PelaporanUAS::where('kode_tim', $kode_tim)->first();
 
-        return view('mahasiswa.semester4.pelaporan.form-laporan-uas', compact('kode_tim', 'laporan'));
+        return view('mahasiswa.semester4.pelaporan.form-laporan-uas', compact('pelaporan', 'kode_tim'));
     }
 
-    public function store(Request $request)
-    {
-        $nim = Auth::guard('mahasiswa')->user()->nim;
-        $anggota = Anggota_Tim_Pbl::where('nim', $nim)->first();
+ public function store(Request $request)
+{
+$validator = Validator::make($request->all(), [
+        'keterangan' => 'nullable|string',
+        'link_drive' => 'nullable|string',
+        'link_youtube' => 'nullable|string',
+        'laporan_pdf' => 'nullable|file|mimes:pdf|max:2048',
+    ]);
 
-        if (!$anggota) {
-            return response()->json(['success' => false, 'message' => 'Tidak ditemukan tim untuk mahasiswa ini.'], 400);
+    if ($validator->fails()) {
+        return redirect()->back()->withErrors($validator)->withInput();
+    }
+
+    $kode_tim = $request->kode_tim;
+
+    $pelaporan = PelaporanUAS::where('kode_tim', $kode_tim)->first();
+
+    if ($pelaporan) {
+        // Update existing
+        $pelaporan->keterangan = $request->keterangan;
+        $pelaporan->link_drive = $request->link_drive;
+        $pelaporan->link_youtube = $request->link_youtube;
+
+        if ($request->hasFile('laporan_pdf')) {
+            $file = $request->file('laporan_pdf');
+            $filePath = $file->store('laporan_pbl', 'public');
+            $pelaporan->laporan_pdf = $filePath;
         }
 
-        $request->merge(['kode_tim' => $anggota->kode_tim]);
-
-        // Validasi input
-        $validator = Validator::make($request->all(), [
-            'keterangan' => 'nullable|string',
-            'link_drive' => 'nullable|string',
-            'link_youtube' => 'nullable|string',
-            'laporan_pdf' => 'nullable|file|mimes:pdf|max:2048',
-            'kode_tim' => 'required|string|exists:tim_pbl,kode_tim'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation Error',
-                'errors' => $validator->errors(),
-            ], 400);
+        $pelaporan->save();
+    } else {
+        // Create new
+        $filePath = null;
+        if ($request->hasFile('laporan_pdf')) {
+            $file = $request->file('laporan_pdf');
+            $filePath = $file->store('laporan_pbl', 'public');
         }
 
-        // Check if the report already exists
-        $laporan = PelaporanUAS::where('kode_tim', $anggota->kode_tim)->first();
-
-        // If the report exists, update it; otherwise, create a new one
-        if ($laporan) {
-            $laporan->update([
-                'keterangan' => $request->keterangan,
-                'link_drive' => $request->link_drive,
-                'link_youtube' => $request->link_youtube,
-                'kode_tim' => $request->kode_tim,
-            ]);
-            // Update the file if it is uploaded
-            if ($request->hasFile('laporan_pdf')) {
-                $file = $request->file('laporan_pdf');
-                $filePath = $file->store('laporan_pbl', 'public');
-                $laporan->update(['laporan_pdf' => $filePath]);
-            }
-        } else {
-            // Create new report
-            $filePath = null;
-            if ($request->hasFile('laporan_pdf')) {
-                $file = $request->file('laporan_pdf');
-                $filePath = $file->store('laporan_pbl', 'public');
-            }
-
-            $laporan = PelaporanUAS::create([
-                'keterangan' => $request->keterangan,
-                'link_drive' => $request->link_drive,
-                'link_youtube' => $request->link_youtube,
-                'laporan_pdf' => $filePath,
-                'kode_tim' => $request->kode_tim,
-            ]);
-        }
-
-        return redirect()->route('mahasiswa.pelaporan-pbl.laporan-uas')->with([
-            'success' => 'Laporan UAS berhasil disimpan!',
-            'laporan' => $laporan,
+        $pelaporan = PelaporanUAS::create([
+            'kode_tim' => $kode_tim,
+            'keterangan' => $request->keterangan,
+            'link_drive' => $request->link_drive,
+            'link_youtube' => $request->link_youtube,
+            'laporan_pdf' => $filePath,
         ]);
     }
+
+    return redirect()->route('mahasiswa.pelaporan-pbl.laporan-uas')->with('success', 'Laporan UAS berhasil disimpan!');
+}
+
 
     public function destroy($id)
     {
