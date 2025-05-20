@@ -32,7 +32,7 @@
                         <td>{{ $item->pic }}</td>
                         <td>{{ $item->score }}%</td>
                         <td>
-                            <a href="{{ route('admin.tahapanpelaksanaan-sem4.edit', $item->id) }}" class="btn btn-sm btn-info text-white">
+                            <a href="{{ route('admin.tahapanpelaksanaan-sem4.edit', $item->id) }}" class="btn btn-sm btn-info text-white" title="Ubah">
                                 <i class="bi bi-pencil-square"></i>
                             </a>
                             <!-- Delete Button -->
@@ -41,7 +41,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="button" class="btn btn-sm btn-danger text-white"
-                                    onclick="confirmDelete({{ $item->id }})">
+                                    onclick="confirmDelete({{ $item->id }})" title="Hapus">
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </form>

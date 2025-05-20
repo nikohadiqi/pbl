@@ -30,15 +30,15 @@
                     @foreach ($pengampus as $index => $item)
                     <tr>
                         <td>{{ $index + 1 }}</td>
-                        <td>{{ $item->matkulFK->kode ?? '-' }} - {{ $item->matkulFK->matakuliah ?? '-' }}</td>
-                        <td>{{ $item->dosenFk->nama ?? '-' }}</td>
+                        <td>{{ $item->matkulFK->kode ?? '-' }} <br> {{ $item->matkulFK->matakuliah ?? '-' }}</td>
+                        <td>{{ $item->dosenFk->nip ?? '-' }} <br> {{ $item->dosenFk->nama ?? '-' }}</td>
                         <td>{{ $item->status }}</td>
                         <td>{{ $item->kelasFk->kelas ?? '-' }}</td>
-                        <td>Semester {{ $item->periodeFK->semester ?? '-' }} - {{ $item->periodeFK->tahun ?? '-' }}</td>
+                        <td>Semester {{ $item->periodeFK->semester ?? '-' }} <br>Tahun {{ $item->periodeFK->tahun ?? '-' }}</td>
                         <td class="text-center">
                             <div class="d-flex justify-content-center gap-2">
                                 <a href="{{ route('admin.pengampu.edit', $item->id) }}">
-                                    <button class="btn btn-sm btn-info text-white">
+                                    <button class="btn btn-sm btn-info text-white" title="Ubah">
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
                                 </a>
@@ -48,7 +48,7 @@
                                     @csrf
                                     @method('DELETE')
                                     <button type="button" class="btn btn-sm btn-danger text-white"
-                                        onclick="confirmDelete({{ $item->id }})">
+                                        onclick="confirmDelete({{ $item->id }})" title="Hapus">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>

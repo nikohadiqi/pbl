@@ -23,7 +23,9 @@ class MahasiswaRegisterController extends Controller
         $kelas = Kelas::all();
         $periode = PeriodePBL::where('status', 'Aktif')->get();
         // menampilkan tim yang sedang divalidasi
-        $timPendingRejected = TimPbl::whereIn('status', ['pending', 'rejected'])->get();
+        $timPendingRejected = TimPbl::whereIn('status', ['pending', 'rejected'])
+                            ->select('kelas', 'kelompok', 'status')
+                            ->get();
 
         return view('auth.register', compact('kelas', 'periode', 'timPendingRejected'));
     }

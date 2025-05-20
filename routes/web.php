@@ -16,7 +16,7 @@ use App\Http\Controllers\Website\Admin\KelasController;
 use App\Http\Controllers\Website\Admin\MahasiswaController;
 use App\Http\Controllers\Website\Admin\DosenController;
 use App\Http\Controllers\Website\Admin\PengampuController;
-
+use App\Http\Controllers\Website\Dosen\DaftarTimController;
 use App\Http\Controllers\Website\Mahasiswa\DashboardMahasiswaController;
 use App\Http\Controllers\Website\Mahasiswa\ProfilController as MahasiswaProfilController;
 use App\Http\Controllers\Website\Mahasiswa\RencanaProyekController;
@@ -212,7 +212,7 @@ Route::middleware(['auth:mahasiswa'])->group(function () {
 Route::middleware(['auth:dosen'])->group(function () {
 
     // Dashboard Dosen
-    Route::get('/dosen/dashboard', [LoginController::class, 'dosenDashboard'])->name('dosen.dashboard');
+    Route::get('/dosen/dashboard', [DashboardDosenController::class, 'index'])->name('dosen.dashboard');
 
     // Profil Dosen
     Route::prefix('dosen/profil')->group(function () {
@@ -229,11 +229,8 @@ Route::middleware(['auth:dosen'])->group(function () {
     });
 
     // Daftar Tim PBL
-    Route::prefix('dosen/daftar-tim-pbl')->group(function () {
-        Route::get('/', function () {
-            return view('dosen.daftar-tim.daftar-timpbl');
-        })->name('dosen.daftar-tim');
-
+    Route::prefix('/dosen/daftar-tim-pbl')->group(function () {
+        Route::get('/', [DaftarTimController::class, 'index'])->name('dosen.daftar-tim');
         Route::get('/logbook', function () {
             return view('dosen.daftar-tim.logbook-timpbl');
         })->name('dosen.daftar-tim.logbook');
@@ -248,11 +245,13 @@ Route::middleware(['auth:dosen'])->group(function () {
     });
 
     // Penilaian Mahasiswa
-    Route::get('/dosen/penilaian-mahasiswa', function () {
-        return view('dosen.penilaian.penilaian');
-    })->name('dosen.penilaian');
+    Route::prefix('/dosen/penilaian-mahasiswa')->group(function () {
+        Route::get('/', function () {
+            return view('dosen.penilaian.penilaian');
+        })->name('dosen.penilaian');
 
-    Route::get('/dosen/penilaian-mahasiswa/rubrik-penilaian', function () {
-        return view('dosen.penilaian.form-nilai');
-    })->name('dosen.penilaian.beri-nilai');
+        Route::get('/rubrik-penilaian', function () {
+            return view('dosen.penilaian.form-nilai');
+        })->name('dosen.penilaian.beri-nilai');
+    });
 });
