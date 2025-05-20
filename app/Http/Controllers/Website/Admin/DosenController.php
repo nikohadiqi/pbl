@@ -28,7 +28,7 @@ class DosenController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nip'            => 'required|unique:dosen,nip|max:50',
+            'nip'            => 'required|unique:data_dosen,nip|max:50',
             'nama'           => 'required|string|max:100',
             'no_telp'        => 'required|string|max:15',
             'email'          => 'required|email',
@@ -56,7 +56,7 @@ class DosenController extends Controller
         $dosen = Dosen::findOrFail($nip);
 
         $request->validate([
-            'nip'            => 'required|string|max:50|unique:dosen,nip,' . $nip . ',nip',
+            'nip'            => 'required|string|max:50|unique:data_dosen,nip,' . $nip . ',nip',
             'nama'           => 'required|string|max:100',
             'no_telp'        => 'required|string|max:15',
             'email'          => 'required|email',

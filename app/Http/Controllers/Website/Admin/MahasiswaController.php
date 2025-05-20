@@ -31,7 +31,7 @@ class MahasiswaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nim' => 'required|string|max:15|unique:mahasiswa,nim',
+            'nim' => 'required|string|max:15|unique:data_mahasiswa,nim',
             'nama' => 'required|string|max:100',
             'kelas' => 'required',
             'program_studi' => 'required',
@@ -63,7 +63,7 @@ class MahasiswaController extends Controller
         $mahasiswa = Mahasiswa::findOrFail($nim);
 
         $request->validate([
-            'nim' => 'required|string|max:15|unique:mahasiswa,nim,' . $nim . ',nim',
+            'nim' => 'required|string|max:15|unique:data_mahasiswa,nim,' . $nim . ',nim',
             'nama' => 'required|string|max:100',
             'kelas' => 'required',
             'program_studi' => 'required',

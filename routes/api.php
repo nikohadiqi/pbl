@@ -18,6 +18,7 @@ use App\Http\Controllers\API\Mahasiswa\BiayaProyekController;
 use App\Http\Controllers\API\Mahasiswa\TimProyekController;
 use App\Http\Controllers\API\Mahasiswa\CapaianPembelajaranController;
 use App\Http\Controllers\API\Mahasiswa\LogbookController;
+use App\Http\Controllers\Website\Dosen\PenilaianController;
 
 
 // Registrasi mahasiswa
@@ -26,6 +27,11 @@ Route::post('/mahasiswa/register', [MahasiswaRegisterController::class, 'registe
 // Login mahasiswa
 Route::post('/ /login', [MahasiswaLoginController::class, 'login']);
 Route::post('/login', [LoginController::class, 'login']);
+
+Route::post('/rubrik-penilaian', [PenilaianController::class, 'createRubrik']);
+Route::post('/beri-nilai', [PenilaianController::class, 'beriNilai']);
+Route::get('/nilai-mahasiswa/{nim}', [PenilaianController::class, 'getNilaiMahasiswa']);
+
 
 Route::prefix('admin')->middleware(['auth:sanctum', 'admin'])->group(function () {
 
