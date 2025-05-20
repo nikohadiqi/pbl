@@ -6,26 +6,38 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Logbook;
 use App\Models\Tpp_sem4;
+use App\Models\Anggota_Tim_Pbl;
 use Illuminate\Support\Facades\Auth;
 
 class LogbookController extends Controller
 {
-   public function index(Request $request)
+ public function index(Request $request)
 {
     $mahasiswa = Auth::guard('mahasiswa')->user();
-    $logbooks = Logbook::where('kode_tim', $mahasiswa->kode_tim)->get();
-    $tahapans = Tpp_sem4::all(); // Ambil data tahapan
+    $anggota = Anggota_Tim_Pbl::where('nim', $mahasiswa->nim)->first();
 
-    // Select the logbook for the week
+    if (!$anggota) {
+        return redirect()->back()->with('error', 'Data tim tidak ditemukan.');
+    }
+
+    $logbooks = Logbook::where('kode_tim', $anggota->kode_tim)->get();
+    $tahapans = Tpp_sem4::all();
+
+    $scores = [];
+    foreach ($tahapans as $index => $tahapan) {
+        $scores[$index + 1] = $tahapan->score ?? 100;
+    }
+
     $selectedLogbook = null;
-    if ($request->has('selectedId')) {
-        $selectedLogbook = Logbook::where('kode_tim', $mahasiswa->kode_tim)
+    if ($request->has('selectedId')) { 
+        $selectedLogbook = Logbook::where('kode_tim', $anggota->kode_tim)
                                   ->where('minggu', $request->input('selectedId'))
                                   ->first();
     }
 
-    return view('mahasiswa.semester4.logbook.logbook', compact('logbooks', 'selectedLogbook', 'tahapans'));
+    return view('mahasiswa.semester4.logbook.logbook', compact('logbooks', 'selectedLogbook', 'tahapans', 'scores'));
 }
+
 public function create()
 {
     // Ensure you are creating a logbook for a specific week. 
@@ -48,17 +60,32 @@ public function store(Request $request)
         'anggota4' => 'nullable|string|max:255',     // Anggota4 nullable
         'anggota5' => 'nullable|string|max:255',     // Anggota5 nullable
     ]);
-
-    // Ambil data mahasiswa yang sedang login
+// Ambil data mahasiswa yang sedang login
     $mahasiswa = Auth::guard('mahasiswa')->user();
 
-    // Cek apakah logbook untuk minggu ini sudah ada, jika ada update, jika tidak buat baru
+    // Ambil score maksimal dari Tpp_sem4 sesuai tahapan_id
+    $tahapan = Tpp_sem4::find($request->tahapan_id);
+    if (!$tahapan) {
+        return redirect()->back()->withErrors(['tahapan_id' => 'Tahapan tidak ditemukan']);
+    }
+
+    $maxProgress = intval($tahapan->score); // misal score disimpan dalam persen seperti 5 (untuk 5%)
+
+    // Batasi progress input user supaya tidak lebih dari score
+    $inputProgress = intval($request->progress);
+    if ($inputProgress > $maxProgress) {
+        return redirect()->back()
+            ->withInput()
+            ->withErrors(['progress' => "Progress tidak boleh lebih dari {$maxProgress}% sesuai score tahapan."]);
+    }
+
+    // Update atau create logbook
     $logbook = Logbook::updateOrCreate(
         ['kode_tim' => $mahasiswa->kode_tim, 'minggu' => $request->minggu],
         [
             'aktivitas' => $request->aktivitas,
             'hasil' => $request->hasil,
-            'progress' => $request->progress,
+            'progress' => $inputProgress,
             'anggota1' => $request->anggota1,
             'anggota2' => $request->anggota2,
             'anggota3' => $request->anggota3,
@@ -67,16 +94,15 @@ public function store(Request $request)
         ]
     );
 
-    // Cek apakah ada file foto kegiatan yang di-upload
+    // Upload foto kegiatan jika ada
     if ($request->hasFile('foto_kegiatan')) {
         $file = $request->file('foto_kegiatan');
         $filePath = $file->store('foto_kegiatan', 'public');
-        // Update field foto_kegiatan jika ada file yang di-upload
         $logbook->foto_kegiatan = $filePath;
         $logbook->save();
     }
 
-    // Redirect kembali ke halaman logbook dengan pesan sukses
     return redirect()->route('mahasiswa.logbook')->with('success', 'Logbook berhasil disimpan!');
 }
+
 }

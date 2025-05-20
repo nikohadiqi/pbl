@@ -1,21 +1,21 @@
 @extends('layouts.dashboardmahasiswa-template')
 
-@section('title', 'Form Laporan UAS | Sistem Informasi dan Monitoring Project Based Learning')
-@section('page-title', 'Form Laporan UAS')
+@section('title', 'Form Laporan UTS | Sistem Informasi dan Monitoring Project Based Learning')
+@section('page-title', 'Form Laporan UTS')
 @section('content')
 <div class="container-fluid py-4">
     <div class="card p-4">
-        <h5 class="fw-bold">Form Laporan UAS</h5>
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="fw-bold">Form Laporan UAS</h5>
+        </div>
         <p class="text-sm">Sistem Informasi dan Monitoring Project Based Learning - TRPL Poliwangi</p>
 
-        @if(session('error'))
-            <div class="alert alert-danger">{{ session('error') }}</div>
-        @endif
-
+        {{-- Menampilkan pesan sukses --}}
         @if(session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
 
+        {{-- Menampilkan error validasi --}}
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul>
@@ -26,32 +26,28 @@
             </div>
         @endif
 
-        @if(isset($kode_tim))
-            <div class="alert alert-info">
-                <strong>Kode Tim Anda:</strong> {{ $kode_tim }}
-            </div>
-        @endif
-
-        {{-- Form untuk laporan UAS --}}
-        <form class="mt-1" method="POST" action="{{ route('mahasiswa.pelaporan-pbl.laporan-uas.store') }}" enctype="multipart/form-data">
-            @csrf
+    <form class="mt-1" method="POST" action="{{ route('mahasiswa.pelaporan-pbl.laporan-uas.store') }}" enctype="multipart/form-data">
+    @csrf
+  <input type="hidden" name="kode_tim" value="{{ $kode_tim }}">
             <div class="form-group">
                 <label for="keterangan" class="form-control-label">Keterangan</label>
-                <textarea name="keterangan" id="keterangan" class="form-control" rows="5" placeholder="Jelaskan kegiatan UAS...">{{ old('keterangan', $laporan->keterangan ?? '') }}</textarea>
+                <textarea name="keterangan" id="keterangan" class="form-control" rows="5" placeholder="Jelaskan mengenai kegiatan PBL yang dikerjakan..">{{ old('keterangan', $pelaporan->keterangan ?? '') }}</textarea>
             </div>
             <div class="form-group">
-                <label for="link_drive" class="form-control-label">Link Drive (Dokumentasi)</label>
-                <input class="form-control" name="link_drive" placeholder="Masukan Link Drive" type="text" value="{{ old('link_drive', $laporan->link_drive ?? '') }}">
+                <label for="link_drive" class="form-control-label">Link Drive Laporan</label>
+                <input class="form-control" name="link_drive" placeholder="Masukan Link Drive" type="text" value="{{ old('link_drive', $pelaporan->link_drive ?? '') }}">
             </div>
             <div class="form-group">
-                <label for="link_youtube" class="form-control-label">Link YouTube</label>
-                <input class="form-control" name="link_youtube" placeholder="Masukan Link Youtube" type="text" value="{{ old('link_youtube', $laporan->link_youtube ?? '') }}">
+                <label for="link_youtube" class="form-control-label">Link Youtube Proyek PBL</label>
+                <input class="form-control" name="link_youtube" placeholder="Masukan Link Youtube" type="text" value="{{ old('link_youtube', $pelaporan->link_youtube ?? '') }}">
             </div>
             <div class="form-group">
                 <label for="laporan_pdf" class="form-control-label">Unggah Laporan (PDF)</label>
-                <input class="form-control" name="laporan_pdf" type="file" accept="application/pdf">
-                @if(isset($laporan) && $laporan->laporan_pdf)
-                    <p><a href="{{ asset('storage/' . $laporan->laporan_pdf) }}" target="_blank">Lihat Laporan PDF</a></p>
+                <input class="form-control" name="laporan_pdf" placeholder="Masukkan File Laporan UTS" type="file">
+                @if($pelaporan && $pelaporan->laporan_pdf)
+                    <div class="mt-2">
+                        <a href="{{ asset('storage/' . $pelaporan->laporan_pdf) }}" target="_blank">Lihat Laporan UTS</a>
+                    </div>
                 @endif
             </div>
             <div class="form-group mt-4">
