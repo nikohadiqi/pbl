@@ -1,7 +1,5 @@
 <?php
 
-// app/Models/NilaiMahasiswa.php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,19 +13,31 @@ class NilaiMahasiswa extends Model
 
     protected $fillable = [
         'nim',
-        'rubrik_id',
         'pengampu_id',
-        'score',
+        'critical_thinking',
+        'kolaborasi',
+        'kreativitas',
+        'komunikasi',
+        'fleksibilitas',
+        'kepemimpinan',
+        'produktifitas',
+        'social_skill',
+        'konten',
+        'tampilan_visual_presentasi',
+        'kosakata',
+        'tanya_jawab',
+        'mata_gerak_tubuh',
+        'penulisan_laporan',
+        'pilihan_kata',
+        'konten_2',
+        'sikap_kerja',
+        'proses',
+        'kualitas',
     ];
 
     public function mahasiswa()
     {
         return $this->belongsTo(Mahasiswa::class, 'nim', 'nim');
-    }
-
-    public function rubrik()
-    {
-        return $this->belongsTo(RubrikPenilaian::class, 'rubrik_id');
     }
 
     public function pengampu()
