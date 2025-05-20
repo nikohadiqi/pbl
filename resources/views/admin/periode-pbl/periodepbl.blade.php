@@ -84,7 +84,7 @@
                                 @endif
                                 {{-- Edit --}}
                                 <a href="{{ route('admin.periodepbl.edit', $periode->id) }}">
-                                    <button class="btn btn-sm btn-info text-white">
+                                    <button class="btn btn-sm btn-info text-white" title="Ubah">
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
                                 </a>
@@ -95,7 +95,7 @@
                                     @csrf
                                     @method('DELETE')
                                     <button type="button" class="btn btn-sm btn-danger text-white"
-                                        onclick="confirmDelete({{ $periode->id }})">
+                                        onclick="confirmDelete({{ $periode->id }})" title="Hapus">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>

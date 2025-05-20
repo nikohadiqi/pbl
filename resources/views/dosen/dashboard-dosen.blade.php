@@ -12,9 +12,9 @@
                     <div class="row">
                         <div class="col-8">
                             <div class="numbers">
-                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Total Proyek PBL</p>
+                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Total Tim Proyek PBL</p>
                                 <h3 class="font-weight-bolder">
-                                    70
+                                    {{ $timCount }}
                                 </h3>
                             </div>
                         </div>
@@ -35,13 +35,13 @@
                             <div class="numbers">
                                 <p class="text-sm mb-0 text-uppercase font-weight-bold">Total Mahasiswa</p>
                                 <h3 class="font-weight-bolder">
-                                    350
+                                    {{ $mahasiswaCount }}
                                 </h3>
                             </div>
                         </div>
                         <div class="col-4 text-end">
                             <div class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle">
-                                <i class="ni ni-user-run text-lg opacity-10" aria-hidden="true"></i>
+                                <i class="ni ni-single-02 text-lg opacity-10" aria-hidden="true"></i>
                             </div>
                         </div>
                     </div>
@@ -56,13 +56,13 @@
                             <div class="numbers">
                                 <p class="text-sm mb-0 text-uppercase font-weight-bold">Total Dosen</p>
                                 <h3 class="font-weight-bolder">
-                                    40
+                                    {{ $dosenCount }}
                                 </h3>
                             </div>
                         </div>
                         <div class="col-4 text-end">
                             <div class="icon icon-shape bg-gradient-success shadow-success text-center rounded-circle">
-                                <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
+                                <i class="ni ni-hat-3 text-lg opacity-10" aria-hidden="true"></i>
                             </div>
                         </div>
                     </div>

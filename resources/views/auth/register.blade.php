@@ -14,11 +14,11 @@
                             <p class="mb-0 text-sm">
                                 Masukan data yang diperlukan untuk pendaftaran tim dan tunggu akun divalidasi oleh
                                 Manajer Proyek untuk Login.
-                                @if($timPendingRejected->count())
+                                {{-- @if($timPendingRejected->count())
                                 <!-- trigger modal -->
                                 <a href="#" data-bs-toggle="modal" data-bs-target="#statusTimModal" class="text-primary text-decoration-underline">
                                     Lihat status pendaftaran tim disini.
-                                </a>
+                                </a> --}}
                             </p>
                         </div>
                         <div class="card-body pb-3">
@@ -126,7 +126,7 @@
     </div>
 </section>
 <!-- Modal -->
-<div class="modal fade" id="statusTimModal" tabindex="-1" aria-labelledby="statusTimModalLabel" aria-hidden="true">
+{{-- <div class="modal fade" id="statusTimModal" tabindex="-1" aria-labelledby="statusTimModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -175,7 +175,7 @@
         </div>
     </div>
 </div>
-@endif
+@endif --}}
 @endsection
 
 @push('css')

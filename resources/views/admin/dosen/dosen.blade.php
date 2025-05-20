@@ -55,13 +55,13 @@
                         <td class="text-center">
                             <div class="d-flex justify-content-center gap-2">
                                 <a href="{{ route('admin.dosen.edit', $data->nip) }}">
-                                    <button class="btn btn-sm btn-info text-white"><i class="bi bi-pencil-square"></i></button>
+                                    <button class="btn btn-sm btn-info text-white" title="Ubah"><i class="bi bi-pencil-square"></i></button>
                                 </a>
                                 <!-- Delete Button -->
                                 <form id="delete-form-{{ $data->nip }}" action="{{route('admin.dosen.delete', $data->nip)}}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="button" class="btn btn-sm btn-danger text-white" onclick="confirmDelete({{ $data->nip }})">
+                                    <button type="button" class="btn btn-sm btn-danger text-white" onclick="confirmDelete({{ $data->nip }})" title="Hapus">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
