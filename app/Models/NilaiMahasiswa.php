@@ -38,7 +38,8 @@ class NilaiMahasiswa extends Model
         'angka_nilai',              // tambahkan
         'huruf_nilai',              // tambahkan
         'nilai_aspek_json',         // tambahkan
-        'dosen_id',          
+        'dosen_id',
+        'pengampu_id',          
     ];
 
     // Jika kamu ingin mendefinisikan relasi ke model DataMahasiswa

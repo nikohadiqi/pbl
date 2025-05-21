@@ -49,11 +49,8 @@
                             <td>
                                 <input 
                                     type="number" 
-                                    name="bobot[]" 
                                     class="form-control bobot" 
-                                    min="0" max="100" step="0.1" 
-                                    value="{{ old("bobot.$index", $bobot[$namaAspek] ?? 0) }}" 
-                                    onchange="hitungTotal()" 
+                                    value="{{ $bobot[$namaAspek] }}" 
                                     readonly
                                 >
                             </td>
@@ -123,7 +120,6 @@
         return "E";
     }
 
-    // Hitung nilai langsung saat halaman dimuat
     window.addEventListener('load', hitungTotal);
 </script>
 @endpush
