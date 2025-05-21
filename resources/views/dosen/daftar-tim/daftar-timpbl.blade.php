@@ -10,21 +10,19 @@
             <form method="GET" action="{{ route('dosen.daftar-tim') }}">
                 <div class="row">
                     <div class="col-md-4 mb-2">
-                        <select name="kelas" class="form-control">
+                        <select name="kelas" class="form-select">
                             <option value="">-- Pilih Kelas --</option>
-                            @foreach ($kelasList as $kelas)
-                            <option value="{{ $kelas }}" {{ request('kelas')==$kelas ? 'selected' : '' }}>
-                                {{ $kelas }}
-                            </option>
+                            @foreach($kelasList as $k)
+                            <option value="{{ $k }}" {{ (old('kelas', $kelas ?? '' )==$k) ? 'selected' : '' }}>{{ $k }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="col-md-4 mb-2">
-                        <select name="tahun" class="form-control">
-                            <option value="">-- Pilih Periode PBL --</option>
-                            @foreach ($periodeList as $periode)
-                            <option value="{{ $periode->id }}" {{ request('tahun')==$periode->id ? 'selected' : '' }}>
-                                Semester {{ $periode->semester }} / Tahun {{ $periode->tahun }}
+                        <select name="tahun" class="form-select">
+                            <option value="">-- Pilih Periode --</option>
+                            @foreach($periodeList as $periode)
+                            <option value="{{ $periode->id }}" {{ (old('tahun', $tahun ?? '' )==$periode->id) ? 'selected' : '' }}>
+                                Semester {{ $periode->semester }} - {{ $periode->tahun }}
                             </option>
                             @endforeach
                         </select>
@@ -33,7 +31,7 @@
                         <button type="submit" class="btn btn-primary w-100">Tampilkan</button>
                     </div>
                 </div>
-            </form>
+                </form>
 
             <hr class="horizontal dark mt-2">
         </div>

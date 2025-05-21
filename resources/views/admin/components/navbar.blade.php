@@ -3,7 +3,12 @@
     <div class="container-fluid py-1 px-3">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-                <li class="breadcrumb-item text-sm"><a class="opacity-5 text-white" href="{{ route('admin.dashboard') }}">Halaman</a></li>
+                <li class="breadcrumb-item text-sm"><a class="opacity-5 text-white" href="{{ route('admin.dashboard') }}">Dasbor</a></li>
+                @hasSection('page-title-1')
+                <li class="breadcrumb-item text-sm">
+                    <a class="opacity-5 text-white" href="@yield('page-title-1-url')">@yield('page-title-1')</a>
+                </li>
+                @endif
                 <li class="breadcrumb-item text-sm text-white active" aria-current="page">@yield('page-title')</li>
                 <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
                     <a href="javascript:;" class="nav-link text-white p-0" id="iconNavbarSidenav">
@@ -21,22 +26,17 @@
             <ul class="navbar-nav ms-auto justify-content-end">
                 <!-- User Profile Dropdown -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link text-dark d-flex align-items-center" href="#" id="userDropdown" role="button"
+                    <a class="nav-link d-flex align-items-center" href="#" id="userDropdown" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         <img src="{{ asset('assets/img/logo-poliwangi.png') }}" alt="User Avatar"
                             class="rounded-circle me-2 border border-2 border-light p-1" width="40" height="40">
-                        <span class="d-flex flex-column">
+                        <span class="d-flex flex-column text-white">
                             <span class="fw-bold">Admin</span>
                             <span class="fw-bold">{{ Auth::user()-> nim }}</span>
                         </span>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item" href="{{ route('admin.profil') }}"><i class="fas fa-user me-2"></i> Profil</a></li>
-                        <li>
-                            <a class="dropdown-item fixed-plugin-button-nav" href="javascript:;">
-                                <i class="fas fa-cog me-2"></i> Pengaturan
-                            </a>
-                        </li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <a id="logout-btn" class="dropdown-item text-danger">

@@ -147,12 +147,8 @@ Route::middleware(['auth:web', 'role:web,admin'])->group(function () {
 
     // Pengampu MK / Manpro
     Route::prefix('menu/master-data/pengampu')->middleware(['auth:sanctum', 'admin'])->group(function () {
-        Route::get('/', [PengampuController::class, 'index'])->name('admin.pengampu');
-        Route::get('/tambah', [PengampuController::class, 'create'])->name('admin.pengampu.tambah');
-        Route::post('/simpan', [PengampuController::class, 'store'])->name('admin.pengampu.store');
-        Route::get('/edit/{id}', [PengampuController::class, 'edit'])->name('admin.pengampu.edit');
-        Route::PUT('/update/{id}', [PengampuController::class, 'update'])->name('admin.pengampu.update');
-        Route::delete('/hapus/{id}', [PengampuController::class, 'destroy'])->name('admin.pengampu.delete');
+        Route::get('/', [PengampuController::class, 'manage'])->name('admin.pengampu');
+        Route::post('/manage', [PengampuController::class, 'manageStore'])->name('admin.pengampu.manage.store');
     });
 
 });
@@ -172,8 +168,8 @@ Route::middleware(['auth:mahasiswa'])->group(function () {
         Route::post('/ubah-password', [MahasiswaProfilController::class, 'updatePassword'])->name('mahasiswa.profil.update-password');
     });
 
-    // RPP Semester 4 - Rencana Proyek
-    Route::prefix('mahasiswa/semester-4/rpp')->group(function () {
+    // RPP
+    Route::prefix('mahasiswa/rpp')->group(function () {
         Route::prefix('rencana-proyek')->group(function () {
             Route::get('/', [RencanaProyekController::class, 'create'])->name('mahasiswa.rpp.rencana-proyek.create');
             Route::post('/simpan', [RencanaProyekController::class, 'store'])->name('mahasiswa.rpp.rencana-proyek.store');
@@ -186,22 +182,18 @@ Route::middleware(['auth:mahasiswa'])->group(function () {
     });
 
     // Logbook Mahasiswa
-    Route::prefix('mahasiswa/semester-4/logbook')->group(function () {
+    Route::prefix('mahasiswa/logbook')->group(function () {
         Route::get('/', [LogbookController::class, 'index'])->name('mahasiswa.logbook');
-        Route::get('/isi-logbook', [LogbookController::class, 'create'])->name('mahasiswa.semester4.logbook.create');
-        Route::post('/isi-logbook', [LogbookController::class, 'store'])->name('mahasiswa.semester4.logbook.store');
+        Route::get('/isi-logbook', [LogbookController::class, 'create'])->name('mahasiswa.logbook.create');
+        Route::post('/isi-logbook', [LogbookController::class, 'store'])->name('mahasiswa.logbook.store');
     });
 
     // Pelaporan PBL
-    Route::prefix('mahasiswa/semester-4/laporan-pbl')->group(function () {
-        Route::get('/', [DashboardMahasiswaController::class, 'laporan_pbl'])->name('mahasiswa.pelaporan-pbl');
-
+    Route::prefix('mahasiswa/laporan-pbl')->group(function () {
+        Route::get('/', [PelaporanController::class, 'index'])->name('mahasiswa.pelaporan-pbl');
         // Form Laporan UTS
-        Route::get('/form-laporan-uts', [PelaporanUTSController::class, 'index'])->name('mahasiswa.pelaporan-pbl.laporan-uts');
         Route::post('/form-laporan-uts', [PelaporanController::class, 'storeUTS'])->name('mahasiswa.pelaporan-pbl.laporan-uts.store');
-
         // Form Laporan UAS
-        Route::get('/form-laporan-uas', [PelaporanUASController::class, 'index'])->name('mahasiswa.pelaporan-pbl.laporan-uas');
         Route::post('/form-laporan-uas', [PelaporanController::class, 'storeUAS'])->name('mahasiswa.pelaporan-pbl.laporan-uas.store');
     });
 });
@@ -231,13 +223,8 @@ Route::middleware(['auth:dosen'])->group(function () {
     // Daftar Tim PBL
     Route::prefix('/dosen/daftar-tim-pbl')->group(function () {
         Route::get('/', [DaftarTimController::class, 'index'])->name('dosen.daftar-tim');
-        Route::get('/logbook', function () {
-            return view('dosen.daftar-tim.logbook-timpbl');
-        })->name('dosen.daftar-tim.logbook');
-
-        Route::get('/laporan', function () {
-            return view('dosen.daftar-tim.laporan-timpbl');
-        })->name('dosen.daftar-tim.laporan');
+        Route::get('/logbook/{tim}', [DaftarTimController::class, 'lihatLogbookTim'])->name('dosen.daftar-tim.logbook');
+        Route::get('/laporan/{tim}', [DaftarTimController::class, 'lihatLaporanTim'])->name('dosen.daftar-tim.laporan');
 
         Route::get('/penilaian-mahasiswa', function () {
             return view('dosen.daftar-tim.penilaian-timpbl');

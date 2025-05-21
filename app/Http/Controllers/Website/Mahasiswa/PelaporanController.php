@@ -9,6 +9,7 @@ use App\Models\PelaporanUAS;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class PelaporanController extends Controller
 {
@@ -27,7 +28,7 @@ class PelaporanController extends Controller
         $pelaporanUTS = PelaporanUTS::where('kode_tim', $kode_tim)->first();
         $pelaporanUAS = PelaporanUAS::where('kode_tim', $kode_tim)->first();
 
-        return view('mahasiswa.semester4.pelaporan', compact('kode_tim', 'pelaporanUTS', 'pelaporanUAS'));
+        return view('mahasiswa.pelaporan.pelaporan-pbl', compact('kode_tim', 'pelaporanUTS', 'pelaporanUAS'));
     }
 
     public function storeUTS(Request $request)
@@ -36,10 +37,10 @@ class PelaporanController extends Controller
         $anggota = Anggota_Tim_Pbl::where('nim', $nim)->first();
 
         $validator = Validator::make($request->all(), [
-            'keterangan' => 'nullable|string',
-            'link_drive' => 'nullable|string',
-            'link_youtube' => 'nullable|string',
-            'laporan_pdf' => 'nullable|file|mimes:pdf|max:2048',
+            'keterangan' => 'required|string',
+            'link_drive' => 'required|url',
+            'link_youtube' => 'nullable|url',
+            'laporan_pdf' => 'nullable|file|mimes:pdf|max:10240', // max 10MB
         ]);
 
         if ($validator->fails()) {
@@ -80,7 +81,8 @@ class PelaporanController extends Controller
             ]);
         }
 
-        return redirect()->route('mahasiswa.pelaporan-pbl')->with('success', 'Laporan UTS berhasil disimpan!');
+        Alert::success('Berhasil!', 'Laporan UTS berhasil disimpan!');
+        return redirect()->route('mahasiswa.pelaporan-pbl');
     }
 
     public function storeUAS(Request $request)
@@ -89,10 +91,10 @@ class PelaporanController extends Controller
         $anggota = Anggota_Tim_Pbl::where('nim', $nim)->first();
 
         $validator = Validator::make($request->all(), [
-            'keterangan' => 'nullable|string',
-            'link_drive' => 'nullable|string',
-            'link_youtube' => 'nullable|string',
-            'laporan_pdf' => 'nullable|file|mimes:pdf|max:2048',
+            'keterangan' => 'required|string',
+            'link_drive' => 'required|url',
+            'link_youtube' => 'nullable|url',
+            'laporan_pdf' => 'nullable|file|mimes:pdf|max:10240', // max 10MB
         ]);
 
         if ($validator->fails()) {
@@ -133,6 +135,7 @@ class PelaporanController extends Controller
             ]);
         }
 
-        return redirect()->route('mahasiswa.pelaporan-pbl')->with('success', 'Laporan UAS berhasil disimpan!');
+        Alert::success('Berhasil!', 'Laporan UAS berhasil disimpan!');
+        return redirect()->route('mahasiswa.pelaporan-pbl');
     }
 }

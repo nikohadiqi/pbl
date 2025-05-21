@@ -2,6 +2,8 @@
 
 @section('title','Ubah Periode PBL | Sistem Informasi dan Monitoring Project Based Learning')
 @section('page-title', 'Ubah Data Periode PBL')
+@section('page-title-1', 'Data Dosen Pengampu')
+@section('page-title-1-url', route('admin.pengampu'))
 @section('content')
 <div class="container-fluid py-4">
     <div class="card p-4">

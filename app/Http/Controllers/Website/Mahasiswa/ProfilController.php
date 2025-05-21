@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Website\Mahasiswa;
 
 use App\Http\Controllers\Controller;
 use App\Models\AkunMahasiswa;
+use App\Models\TimPbl;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -16,12 +17,12 @@ class ProfilController extends Controller
         $akun = Auth::guard('mahasiswa')->user(); // akun_mahasiswa
         $mahasiswa = $akun->mahasiswa; // relasi ke data_mahasiswa
 
-        // Ambil data anggota tim berdasarkan nim
-        $anggotaTim = \App\Models\Anggota_Tim_Pbl::with('tim')
-            ->where('nim', $akun->nim)
-            ->first();
+        // Ambil data dari tim
+        $timPbl = TimPbl::with(['manproFK'])
+                ->where('kode_tim', $akun->kode_tim)
+                ->first();
 
-        return view('mahasiswa.profil', compact('akun', 'mahasiswa', 'anggotaTim'));
+        return view('mahasiswa.profil', compact('akun', 'mahasiswa', 'timPbl'));
     }
 
     public function editPassword()

@@ -2,6 +2,8 @@
 
 @section('title', 'Tambah Data Dosen | Sistem Informasi dan Monitoring Project Based Learning')
 @section('page-title', 'Tambah Data Dosen')
+@section('page-title-1', 'Data Dosen')
+@section('page-title-1-url', route('admin.dosen'))
 @section('content')
 <div class="container-fluid py-4">
     <div class="card p-4">

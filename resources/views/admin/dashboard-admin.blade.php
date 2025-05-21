@@ -76,7 +76,7 @@
     <div class="card mt-4">
         <div class="card-header pb-0 p-3">
             <div class="d-flex justify-content-between">
-                <h6 class="mb-2">Riwayat Tim PBL</h6>
+                <h6 class="mb-2">Data Terbaru Tim PBL</h6>
             </div>
         </div>
         <div class="table-responsive mt-2">
@@ -109,7 +109,7 @@
                             <div class="d-flex align-items-center">
                                 <span class="me-2 text-xs">{{ $item->progress_percent }}%</span>
                                 <div class="progress w-100">
-                                    <div class="progress-bar bg-info" role="progressbar"
+                                    <div class="progress-bar bg-primary" role="progressbar"
                                         style="width: {{ $item->progress_percent }}%"></div>
                                 </div>
                             </div>
@@ -127,7 +127,7 @@
     <div class="card mt-4">
         <div class="card-header pb-0 p-3">
             <div class="d-flex justify-content-between">
-                <h6 class="mb-2">Data Dosen</h6>
+                <h6 class="mb-2">Data Terbaru Dosen Pengampu Mata Kuliah atau Manpro</h6>
             </div>
         </div>
         <div class="table-responsive mt-2">

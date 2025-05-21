@@ -2,6 +2,8 @@
 
 @section('title', 'Tambah Mata Kuliah')
 @section('page-title', 'Tambah Data Mata Kuliah')
+@section('page-title-1', 'Data Mata Kuliah')
+@section('page-title-1-url', route('admin.matkul'))
 @section('content')
 <div class="container-fluid py-4">
     <div class="card p-4">

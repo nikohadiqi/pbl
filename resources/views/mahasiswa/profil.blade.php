@@ -79,7 +79,7 @@
                     <div class="card mb-2 p-3 border">
                         <p><strong>Kode Tim:</strong> {{ $akun->kode_tim ?? '-' }}</p>
                         <p><strong>Kelas:</strong> {{ $mahasiswa->kelas ?? '-' }}</p>
-                        <p><strong>Manajer Proyek:</strong> {{ $anggotaTim->manpro ?? '-' }}</p>
+                        <p><strong>Manajer Proyek:</strong> {{ $timPbl->manproFk->nama ?? '-' }}</p>
                     </div>
 
                     <a href="{{ route('mahasiswa.profil.ubah-password') }}"

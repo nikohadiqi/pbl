@@ -1,7 +1,9 @@
 @extends('layouts.dashboarddosen-template')
 
 @section('title','Penilaian Mahasiswa | Sistem Informasi dan Monitoring Project Based Learning')
-@section('page-title', 'Daftar Tim PBL / Penilaian Mahasiswa')
+@section('page-title', 'Penilaian Mahasiswa dalam Tim')
+@section('page-title-1', 'Daftar Tim PBL')
+@section('page-title-1-url', route('dosen.daftar-tim'))
 @section('content')
 <div class="container py-4">
     <div class="card p-4 shadow-sm rounded-3" style="background-color: #fff;">

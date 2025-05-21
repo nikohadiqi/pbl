@@ -14,109 +14,6 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class PengampuController extends Controller
 {
-    public function index()
-    {
-        $pengampus = Pengampu::with(['kelasFk', 'dosenFk', 'matkulFK', 'periodeFK'])->get();
-        return view('admin.pengampu.pengampu', compact('pengampus'));
-    }
-
-    /**
-     * Menampilkan halaman tambah
-     */
-    public function create()
-    {
-        $kelas = Kelas::all();
-        $dosen = Dosen::all();
-        $matkuls = MataKuliah::all();
-        $periodes = PeriodePBL::where('status', 'Aktif')->get();
-        return view('admin.pengampu.tambah-pengampu', compact('kelas', 'dosen', 'matkuls', 'periodes'));
-    }
-
-    /**
-     * Proses tambah Tim PBL
-     */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'kelas_id' => 'required',
-            'dosen_id' => 'required',
-            'status' => 'required|in:Manajer Proyek,Dosen Mata Kuliah',
-            'matkul_id' => 'required',
-            'periode_id' => 'required',
-        ]);
-
-        Pengampu::create($request->all());
-
-        // Ambil data dosen berdasarkan dosen_id
-        $dosen = Dosen::findOrFail($request->dosen_id);
-
-        // Cek apakah akun dosen dengan nim (berdasarkan nip) sudah ada
-        $existingAkun = AkunDosen::where('nim', $dosen->nip)->first();
-
-        if (!$existingAkun) {
-            // Jika belum ada, buat akun baru
-            AkunDosen::create([
-                'role' => 'dosen',
-                'nim' => $dosen->nip,
-                'password' => bcrypt($dosen->nip), // Enkripsi password
-            ]);
-        }
-
-        Alert::success('Berhasil!', 'Data Pengampu & Akun Dosen Pengampu berhasil ditambahkan!');
-        return redirect()->route('admin.pengampu');
-    }
-
-
-    /**
-     * Menampilkan halaman edit
-     */
-    public function edit($id)
-    {
-        $pengampu = Pengampu::findOrFail($id);
-        $kelas = Kelas::all();
-        $dosen = Dosen::all();
-        $matkuls = MataKuliah::all();
-        $periodes = PeriodePBL::where('status', 'Aktif')->get();
-        return view('admin.pengampu.edit-pengampu', compact('pengampu', 'kelas', 'dosen', 'matkuls', 'periodes'));
-    }
-
-    /**
-     * Proses perbarui
-     */
-    public function update(Request $request, $id)
-    {
-        $pengampu = Pengampu::findOrFail($id);
-
-        $request->validate([
-            'kelas_id' => 'required',
-            'dosen_id' => 'required',
-            'status' => 'required|in:Manajer Proyek,Dosen Mata Kuliah',
-            'matkul_id' => 'required',
-            'periode_id' => 'required',
-        ]);
-
-        $pengampu->update($request->all());
-
-        // Menampilkan SweetAlert
-        Alert::success('Berhasil!', 'Data Pengampu Berhasil Diperbarui!');
-
-        return redirect()->route('admin.pengampu');
-    }
-
-
-    /**
-     * Hapus
-     */
-    public function destroy($id)
-    {
-        $pengampu = Pengampu::findOrFail($id);
-        $pengampu->delete();
-        // Menampilkan SweetAlert
-        Alert::success('Berhasil!', 'Data Pengampu Berhasil Dihapus!');
-
-        return redirect()->route('admin.pengampu');
-    }
-
     // Search Manpro
     public function searchManpro(Request $request)
     {
@@ -133,5 +30,88 @@ class PengampuController extends Controller
         return response()->json($data->map(function ($item) {
             return ['id' => $item->dosenFk->nip, 'text' => $item->dosenFk->nip . ' - ' . $item->dosenFk->nama];
         }));
+    }
+
+    public function manage(Request $request)
+    {
+        $kelas = Kelas::all();
+        $periodes = PeriodePBL::where('status', 'Aktif')->get();
+        $dosen = Dosen::all();
+        $matkuls = MataKuliah::all();
+
+        // Ambil dari session jika tidak ada request baru
+        $selectedKelas = $request->input('kelas', session('filter_kelas'));
+        $selectedPeriode = $request->input('periode_id', session('filter_periode'));
+
+        // Simpan ke session jika ada input baru
+        if ($request->filled('kelas')) {
+            session(['filter_kelas' => $selectedKelas]);
+        }
+        if ($request->filled('periode_id')) {
+            session(['filter_periode' => $selectedPeriode]);
+        }
+
+        $pengampus = collect();
+        if ($selectedKelas && $selectedPeriode) {
+            $pengampus = Pengampu::where('kelas_id', $selectedKelas)
+                ->where('periode_id', $selectedPeriode)
+                ->get()
+                ->keyBy('matkul_id');
+        }
+
+        return view('admin.pengampu.pengampu', compact('kelas', 'periodes', 'dosen', 'matkuls', 'pengampus', 'selectedKelas', 'selectedPeriode'));
+    }
+
+    public function manageStore(Request $request)
+    {
+        $kelasId = $request->input('kelas_id');
+        $periodeId = $request->input('periode_id');
+        $data = $request->input('data'); // format: ['matkul_id' => ['dosen_id' => ..., 'status' => ...]]
+
+        // Ambil semua pengampu yang sudah ada untuk periode dan kelas tersebut
+        $existing = Pengampu::where('kelas_id', $kelasId)
+            ->where('periode_id', $periodeId)
+            ->get();
+
+        // Validasi: satu dosen hanya bisa mengampu satu matkul di kelas dan periode yang sama
+        $dosenDipakai = [];
+        foreach ($data as $matkulId => $pengampuData) {
+            $dosenId = $pengampuData['dosen_id'];
+            if (in_array($dosenId, $dosenDipakai)) {
+                Alert::error('Gagal', 'Satu dosen hanya boleh mengampu satu mata kuliah untuk kelas dan periode yang sama.');
+                session()->flash('filter_kelas', $kelasId);
+                session()->flash('filter_periode', $periodeId);
+                return redirect()->back()->withInput();
+            }
+            $dosenDipakai[] = $dosenId;
+        }
+
+        // Simpan/update data
+        foreach ($data as $matkulId => $pengampuData) {
+            $pengampu = Pengampu::updateOrCreate(
+                [
+                    'kelas_id' => $kelasId,
+                    'periode_id' => $periodeId,
+                    'matkul_id' => $matkulId,
+                ],
+                [
+                    'dosen_id' => $pengampuData['dosen_id'],
+                    'status' => $pengampuData['status'],
+                ]
+            );
+
+            // Buat akun dosen jika belum ada
+            $dosen = Dosen::find($pengampuData['dosen_id']);
+            if ($dosen && !AkunDosen::where('nim', $dosen->nip)->exists()) {
+                AkunDosen::create([
+                    'role' => 'dosen',
+                    'nim' => $dosen->nip,
+                    'password' => bcrypt($dosen->nip),
+                ]);
+            }
+        }
+
+        Alert::success('Berhasil', 'Data Pengampu berhasil disimpan!');
+        return redirect()->route('admin.pengampu');
     }
 }

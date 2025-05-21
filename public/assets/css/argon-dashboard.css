@@ -2439,7 +2439,7 @@ progress {
 }
 
 .table-primary {
-  --bs-table-bg: #fee0d9;
+  --bs-table-bg: #F7CD07;
   --bs-table-striped-bg: #f1d5ce;
   --bs-table-striped-color: #000;
   --bs-table-active-bg: #e5cac3;
@@ -2850,7 +2850,7 @@ textarea.form-control-lg {
   }
 }
 .form-select:focus {
-  border-color: #fb6340;
+  border-color: #F7CD07;
   outline: 0;
   box-shadow: 0 3px 9px rgba(50, 50, 9, 0), 3px 4px 8px rgba(94, 114, 228, 0.1);
 }
@@ -3736,8 +3736,8 @@ textarea.form-control-lg {
 }
 
 .btn-outline-primary {
-  color: #fb6340;
-  border-color: #fb6340;
+  color: #F7CD07;
+  border-color: #F7CD07;
 }
 .btn-outline-primary:hover {
   color: #000;
@@ -5284,7 +5284,7 @@ textarea.form-control-lg {
 .breadcrumb-item + .breadcrumb-item::before {
   float: left;
   padding-right: 0.5rem;
-  color: #6c757d;
+  color: #ffffff;
   content: var(--bs-breadcrumb-divider, "/") /* rtl: var(--bs-breadcrumb-divider, "/") */;
 }
 .breadcrumb-item.active {
@@ -7600,7 +7600,7 @@ textarea.form-control-lg {
 }
 
 .border-primary {
-  border-color: #fb6340 !important;
+  border-color: #F7CD07 !important;
 }
 
 .border-secondary {

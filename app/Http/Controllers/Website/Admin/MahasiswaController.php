@@ -7,6 +7,7 @@ use App\Imports\MahasiswaImport;
 use App\Models\Kelas;
 use Illuminate\Http\Request;
 use App\Models\Mahasiswa;
+use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -31,7 +32,7 @@ class MahasiswaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nim' => 'required|string|max:15|unique:mahasiswa,nim',
+            'nim' => 'required|string|max:15|unique:data_mahasiswa,nim',
             'nama' => 'required|string|max:100',
             'kelas' => 'required',
             'program_studi' => 'required',
@@ -63,7 +64,7 @@ class MahasiswaController extends Controller
         $mahasiswa = Mahasiswa::findOrFail($nim);
 
         $request->validate([
-            'nim' => 'required|string|max:15|unique:mahasiswa,nim,' . $nim . ',nim',
+            'nim' => 'required|string|max:15|unique:data_mahasiswa,nim,' . $nim . ',nim',
             'nama' => 'required|string|max:100',
             'kelas' => 'required',
             'program_studi' => 'required',
@@ -98,12 +99,18 @@ class MahasiswaController extends Controller
             'file' => 'required|mimes:xlsx,csv,xls'
         ]);
 
-        Excel::import(new MahasiswaImport, $request->file('file'));
+        try {
+            Excel::import(new MahasiswaImport, $request->file('file'));
 
-        // Menampilkan SweetAlert
-        Alert::success('Berhasil!', 'Data Mahasiswa Berhasil Diimpor!');
-
-        return redirect()->route('admin.mahasiswa');
+            Alert::success('Berhasil!', 'Data Mahasiswa Berhasil Diimpor!');
+            return redirect()->route('admin.mahasiswa');
+        } catch (ValidationException $e) {
+            Alert::error('Format Salah!', $e->validator->errors()->first());
+            return back();
+        } catch (\Exception $e) {
+            Alert::error('Gagal!', 'Terjadi kesalahan saat impor. Pastikan format file sesuai.');
+            return back();
+        }
     }
 
     // search mahasiswa

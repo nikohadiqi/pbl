@@ -62,13 +62,11 @@ class TimPbl extends Model
 
         // Asumsi progress disimpan sebagai angka string, misal "60"
         $total = 0;
-        $count = 0;
         foreach ($progressValues as $progress) {
             // bersihkan jika ada %, dan cast ke int
             $num = (int) rtrim($progress, '% ');
             $total += $num;
-            $count++;
         }
-        return round($total / $count);
+        return round($total);
     }
 }

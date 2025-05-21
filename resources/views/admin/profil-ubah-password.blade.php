@@ -2,6 +2,8 @@
 
 @section('title','Ubah Password | Sistem Informasi dan Monitoring Project Based Learning')
 @section('page-title', 'Ubah Password')
+@section('page-title-1', 'Profil')
+@section('page-title-1-url', route('admin.profil'))
 @section('content')
 <div class="container-fluid my-5 py-2">
     <div class="row justify-content-center">

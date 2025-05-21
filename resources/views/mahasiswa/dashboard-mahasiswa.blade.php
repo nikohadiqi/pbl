@@ -8,48 +8,32 @@
     <div class="card p-4 mb-3 shadow-sm">
         <div class="d-flex justify-content-between align-items-center">
             <div>
-                <h5><strong>Judul Proyek</strong></h5>
-            <p>Manajer Proyek: Nama</p>
-            <p>Tim:</p>
-            <ol>
-                <li>Anggota 1</li>
-                <li>Anggota 2</li>
-                <li>Anggota 3</li>
-                <li>Anggota 4</li>
-                <li>Anggota 5</li>
-            </ol>
+                <p class="mb-1"><strong>Nomor ID:</strong> {{ $tim->kode_tim }}</p>
+                <h5><strong>{{ $tim->rencanaProyek->judul_proyek ?? 'Belum Ada Judul PBL' }}</strong></h5>
+                <p>Manajer Proyek: {{ $tim->manproFK->nama ?? '-' }}</p>
+                <p>Anggota Tim:</p>
+                <ol>
+                    @foreach($tim->anggota as $anggota)
+                    <li>{{ $anggota->mahasiswaFK->nama }}</li>
+                    @endforeach
+                </ol>
             </div>
 
-            <div class="progress-circle position-relative" style="width: 150px; height: 150px;">
-                <svg viewBox="0 0 36 36" class="circular-chart">
-                    <path class="circle-bg"
-                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                        fill="none" stroke="#eee" stroke-width="3.8"></path>
-                    <path class="circle" stroke-dasharray="80, 100"
-                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                        fill="none" stroke="#ffcc00" stroke-width="3.8"></path>
-                </svg>
-                <div class="progress-text">80%</div>
+            <div class="text-center mt-3 mt-md-0" style="width: 150px;">
+                <div class="position-relative">
+                    <svg width="120" height="120">
+                        <circle cx="60" cy="60" r="50" stroke="#eee" stroke-width="10" fill="none" />
+                        <circle cx="60" cy="60" r="50" stroke="#F7CD07" stroke-width="10" fill="none"
+                            stroke-dasharray="{{ 2 * 3.14 * 50 }}"
+                            stroke-dashoffset="{{ 2 * 3.14 * 50 * (1 - $tim->progress_percent / 100) }}"
+                            stroke-linecap="round" transform="rotate(-90 60 60)" />
+                    </svg>
+                    <div class="position-absolute top-50 start-50 translate-middle text-center">
+                        <strong style="font-size: 1.5rem;">{{ $tim->progress_percent
+                            }}%</strong><br><small>Progres</small>
+                    </div>
+                </div>
             </div>
-
-            <style>
-                .progress-circle {
-                    position: relative;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-
-                .progress-text {
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    font-size: 18px;
-                    font-weight: bold;
-                    color: #333;
-                }
-            </style>
         </div>
     </div>
     <!-- End Project Card -->

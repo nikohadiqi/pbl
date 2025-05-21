@@ -1,7 +1,9 @@
 @extends('layouts.dashboardadmin-template')
 
 @section('title', 'Tahapan Pelaksanaan Semester 5 | Sistem Informasi dan Monitoring Project Based Learning')
-@section('page-title', 'Tahapan Pelaksanaan Semester 5')
+@section('page-title', 'Ubah Tahapan Pelaksanaan Semester 5')
+@section('page-title-1', 'Tahapan Pelaksanaan Semester 5')
+@section('page-title-1-url', route('admin.tahapanpelaksanaan-sem5'))
 @section('content')
 <div class="container-fluid py-4">
 

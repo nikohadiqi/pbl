@@ -12,6 +12,7 @@ use App\Models\Tantangan;
 use App\Models\Estimasi;
 use App\Models\Biaya;
 use App\Models\Anggota_Tim_Pbl;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class RencanaProyekController extends Controller
 {
@@ -26,14 +27,20 @@ class RencanaProyekController extends Controller
         $biaya = $kodeTim ? Biaya::where('kode_tim', $kodeTim)->get() : collect();
         $estimasi = $kodeTim ? Estimasi::where('kode_tim', $kodeTim)->get() : collect();
 
+        $tim = $kodeTim ? \App\Models\TimPbl::with('manproFK')->where('kode_tim', $kodeTim)->first() : null;
+        $manajerProyek = $tim && $tim->manproFK ? [
+            'nip' => $tim->manpro,
+            'nama' => $tim->manproFK->nama,
+        ] : null;
 
-        return view('mahasiswa.semester4.rpp.rencana-proyek', compact(
+        return view('mahasiswa.rpp.rencana-proyek', compact(
             'rencanaProyek',
             'tahapanPelaksanaan',
             'kebutuhanPeralatan',
             'tantangan',
             'biaya',
-            'estimasi'
+            'estimasi',
+            'manajerProyek' // kirim ke view
         ));
     }
 
@@ -57,12 +64,17 @@ class RencanaProyekController extends Controller
         if (!$kodeTim) return back()->with('error', 'Tim tidak ditemukan!');
 
         $rencanaProyek = RencanaProyek::firstOrNew(['kode_tim' => $kodeTim]);
+        // Ambil data tim dan nama manajer proyek dari relasi
+        $tim = \App\Models\TimPbl::with('manproFK')->where('kode_tim', $kodeTim)->first();
+        $namaManpro = $tim && $tim->manproFK ? $tim->manproFK->nama : null;
+
         $rencanaProyek->fill($validated);
+        $rencanaProyek->manajer_proyek = $namaManpro; // simpan nama manpro
         $rencanaProyek->kode_tim = $kodeTim;
         $rencanaProyek->save();
 
-        return redirect()->route('mahasiswa.rpp.rencana-proyek.create') ->with('success', 'Data berhasil disimpan atau diperbarui!')
-    ->with('active_step', 'step1');
+        Alert::success('Berhasil!', 'Deskripsi Proyek Berhasil Disimpan!');
+        return redirect()->route('mahasiswa.rpp.rencana-proyek.create')->with('active_step', 'step1');
     }
 
     public function storeTahapanPelaksanaan(Request $request)
@@ -89,7 +101,8 @@ class RencanaProyekController extends Controller
             ]);
         }
 
-        return redirect()->back()->with(['success' => 'Tahapan Pelaksanaan disimpan.', 'active_step' => 'step2']);
+        Alert::success('Berhasil!', 'Tahapan Pelaksanaan Berhasil Disimpan!');
+        return redirect()->route('mahasiswa.rpp.rencana-proyek.create')->with('active_step', 'step2');
     }
 
     public function storeKebutuhanPeralatan(Request $request)
@@ -116,7 +129,8 @@ class RencanaProyekController extends Controller
             ]);
         }
 
-        return redirect()->back()->with(['success' => 'Kebutuhan Peralatan berhasil disimpan.', 'active_step' => 'step3']);
+        Alert::success('Berhasil!', 'Kebutuhan Peralatan Berhasil Disimpan!');
+        return redirect()->route('mahasiswa.rpp.rencana-proyek.create')->with('active_step', 'step3');
     }
 
     public function storeTantangan(Request $request)
@@ -145,60 +159,65 @@ class RencanaProyekController extends Controller
             ]);
         }
 
-        return redirect()->back()->with(['success' => 'Tantangan berhasil disimpan.', 'active_step' => 'step4']);
+        Alert::success('Berhasil!', 'Tantangan dan Isu Berhasil Disimpan!');
+        return redirect()->route('mahasiswa.rpp.rencana-proyek.create')->with('active_step', 'step4');
     }
+
     public function storeBiaya(Request $request)
-{
-    $validated = $request->validate([
-        'fase.*' => 'required|integer',
-        'uraian_pekerjaan.*' => 'nullable|string',
-        'perkiraan_biaya.*' => 'nullable|string',
-        'catatan.*' => 'nullable|string',
-    ]);
-
-    $kodeTim = $this->getKodeTimByAuth();
-    if (!$kodeTim) return back()->with('error', 'Tim tidak ditemukan!');
-
-    Biaya::where('kode_tim', $kodeTim)->delete();
-
-    foreach ($request->fase as $i => $fase) {
-        Biaya::create([
-            'kode_tim' => $kodeTim,
-            'fase' => $fase,
-            'uraian_pekerjaan' => $request->uraian_pekerjaan[$i],
-            'perkiraan_biaya' => $request->perkiraan_biaya[$i],
-            'catatan' => $request->catatan[$i] ?? null,
+    {
+        $validated = $request->validate([
+            'fase.*' => 'required|integer',
+            'uraian_pekerjaan.*' => 'nullable|string',
+            'perkiraan_biaya.*' => 'nullable|string',
+            'catatan.*' => 'nullable|string',
         ]);
+
+        $kodeTim = $this->getKodeTimByAuth();
+        if (!$kodeTim) return back()->with('error', 'Tim tidak ditemukan!');
+
+        Biaya::where('kode_tim', $kodeTim)->delete();
+
+        foreach ($request->fase as $i => $fase) {
+            Biaya::create([
+                'kode_tim' => $kodeTim,
+                'fase' => $fase,
+                'uraian_pekerjaan' => $request->uraian_pekerjaan[$i],
+                'perkiraan_biaya' => $request->perkiraan_biaya[$i],
+                'catatan' => $request->catatan[$i] ?? null,
+            ]);
+        }
+
+        Alert::success('Berhasil!', 'Biaya Proyek Berhasil Disimpan!');
+        return redirect()->route('mahasiswa.rpp.rencana-proyek.create')->with('active_step', 'step5');
     }
 
-    return redirect()->back()->with(['success' => 'Data Biaya berhasil disimpan.', 'active_step' => 'step5']);
-}
-public function storeEstimasi(Request $request)
-{
-    $validated = $request->validate([
-        'fase.*' => 'required|integer',
-        'uraian_pekerjaan.*' => 'nullable|string',
-        'estimasi_waktu.*' => 'nullable|string',
-        'catatan.*' => 'nullable|string',
-    ]);
-
-    $kodeTim = $this->getKodeTimByAuth();
-    if (!$kodeTim) return back()->with('error', 'Tim tidak ditemukan!');
-
-    Estimasi::where('kode_tim', $kodeTim)->delete();
-
-    foreach ($request->fase as $i => $fase) {
-        Estimasi::create([
-            'kode_tim' => $kodeTim,
-            'fase' => $fase,
-            'uraian_pekerjaan' => $request->uraian_pekerjaan[$i],
-            'estimasi_waktu' => $request->estimasi_waktu[$i],
-            'catatan' => $request->catatan[$i] ?? null,
+    public function storeEstimasi(Request $request)
+    {
+        $validated = $request->validate([
+            'fase.*' => 'required|integer',
+            'uraian_pekerjaan.*' => 'nullable|string',
+            'estimasi_waktu.*' => 'nullable|string',
+            'catatan.*' => 'nullable|string',
         ]);
-    }
 
-    return redirect()->back()->with(['success' => 'Data Estimasi berhasil disimpan.', 'active_step' => 'step6']);
-}
+        $kodeTim = $this->getKodeTimByAuth();
+        if (!$kodeTim) return back()->with('error', 'Tim tidak ditemukan!');
+
+        Estimasi::where('kode_tim', $kodeTim)->delete();
+
+        foreach ($request->fase as $i => $fase) {
+            Estimasi::create([
+                'kode_tim' => $kodeTim,
+                'fase' => $fase,
+                'uraian_pekerjaan' => $request->uraian_pekerjaan[$i],
+                'estimasi_waktu' => $request->estimasi_waktu[$i],
+                'catatan' => $request->catatan[$i] ?? null,
+            ]);
+        }
+
+        Alert::success('Berhasil!', 'Estimasi Waktu Pekerjaan Berhasil Disimpan!');
+        return redirect()->route('mahasiswa.rpp.rencana-proyek.create')->with('active_step', 'step6');
+    }
 
     /**
      * Private helper to get kode_tim for current authenticated mahasiswa

@@ -1,7 +1,9 @@
 @extends('layouts.dashboardadmin-template')
 
 @section('title', 'Dosen Pengampu MK / Manpro | Sistem Informasi dan Monitoring Project Based Learning')
-@section('page-title', 'Ubah Dosen Pengampu MK / Manpro')
+@section('page-title', 'Ubah Dosen Pengampu MK atau Manpro')
+@section('page-title-1', 'Data Dosen Pengampu')
+@section('page-title-1-url', route('admin.pengampu'))
 @section('content')
 <div class="container-fluid py-4">
     <div class="card p-4">

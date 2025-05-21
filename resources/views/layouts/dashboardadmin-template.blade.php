@@ -48,7 +48,7 @@
 
     {{-- Sweetalert --}}
     @include('sweetalert::alert')
-    <script src="{{ asset('assets/js/plugins/sweetalert.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     {{-- Logout --}}
     <script>
@@ -106,9 +106,8 @@
     </script>
     <script>
         const dataTableBasic = new simpleDatatables.DataTable("#datatable-basic", {
-            searchable: false,
+        searchable: false,
             sortable: true,
-            perPage: 5,
             perPageSelect: [5, 10, 20, 50],
             fixedHeight: true,
             labels: {
@@ -116,14 +115,13 @@
                 perPage: "{select} data per halaman",
                 noRows: "Tidak ada data",
                 info: "Menampilkan {start} sampai {end} dari {rows} data"
-            }
-        });
+        }
+    });
     </script>
     <script>
         const dataTableNormal = new simpleDatatables.DataTable("#datatable-normal", {
-            searchable: false,
+        searchable: false,
             sortable: true,
-            perPage: 5,
             perPageSelect: [5, 10, 20, 50],
             fixedHeight: true,
             labels: {
@@ -131,8 +129,8 @@
                 perPage: "{select} data per halaman",
                 noRows: "Tidak ada data",
                 info: "Menampilkan {start} sampai {end} dari {rows} data"
-            }
-        });
+        }
+    });
     </script>
     <!-- Github buttons -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Imports\DosenImport;
 use Illuminate\Http\Request;
 use App\Models\Dosen;
+use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -28,7 +29,7 @@ class DosenController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nip'            => 'required|unique:dosen,nip|max:50',
+            'nip'            => 'required|unique:data_dosen,nip|max:50',
             'nama'           => 'required|string|max:100',
             'no_telp'        => 'required|string|max:15',
             'email'          => 'required|email',
@@ -56,7 +57,7 @@ class DosenController extends Controller
         $dosen = Dosen::findOrFail($nip);
 
         $request->validate([
-            'nip'            => 'required|string|max:50|unique:dosen,nip,' . $nip . ',nip',
+            'nip'            => 'required|string|max:50|unique:data_dosen,nip,' . $nip . ',nip',
             'nama'           => 'required|string|max:100',
             'no_telp'        => 'required|string|max:15',
             'email'          => 'required|email',
@@ -89,11 +90,17 @@ class DosenController extends Controller
             'file' => 'required|mimes:xlsx,csv,xls'
         ]);
 
-        Excel::import(new DosenImport, $request->file('file'));
+        try {
+            Excel::import(new DosenImport, $request->file('file'));
 
-        // Menampilkan SweetAlert
-        Alert::success('Berhasil!', 'Data Dosen Berhasil Diimpor!');
-
-        return redirect()->route('admin.dosen');
+            Alert::success('Berhasil!', 'Data Dosen Berhasil Diimpor!');
+            return redirect()->route('admin.dosen');
+        } catch (ValidationException $e) {
+            Alert::error('Format Salah!', $e->validator->errors()->first());
+            return back();
+        } catch (\Exception $e) {
+            Alert::error('Gagal!', 'Terjadi kesalahan saat impor. Pastikan format file sudah sesuai.');
+            return back();
+        }
     }
 }
