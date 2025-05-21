@@ -29,11 +29,10 @@ class PenilaianController extends Controller
         $auth = Auth::guard('dosen')->user();
         $mahasiswa = Mahasiswa::where('nim', $nim)->firstOrFail();
 
-        // Pastikan hanya dosen yang mengampu kelas mahasiswa tersebut yang bisa menilai
-        $pengampu = Pengampu::where('dosen_id', $auth->nim)
-        ->where('kelas_id', $mahasiswa->kelas)
-        ->first();
-
+        // Pastikan dosen adalah pengampu kelas mahasiswa
+        $pengampu = Pengampu::where('dosen_id', $auth->nim)  // biasanya dosen id pakai nip, bukan nim
+            ->where('kelas_id', $mahasiswa->kelas)
+            ->first();
 
         if (!$pengampu) {
             abort(403, 'Anda tidak memiliki akses menilai mahasiswa ini.');
@@ -75,14 +74,12 @@ class PenilaianController extends Controller
 
             foreach ($aspek as $index => $namaAspek) {
                 $nilai = $request->input("nilai$index");
+                $nilai = $nilai !== null ? intval($nilai) : 0;
                 $bobotValue = $bobot[$namaAspek] ?? 0;
 
-                if ($nilai !== null) {
-                    $nilai = intval($nilai);
-                    $total += $bobotValue * $nilai;
-                    $totalBobot += $bobotValue;
-                    $nilaiPerAspek[$index] = $nilai;
-                }
+                $total += $bobotValue * $nilai;
+                $totalBobot += $bobotValue;
+                $nilaiPerAspek[$index] = $nilai;
             }
 
             $skorSkala = $totalBobot > 0 ? $total / $totalBobot : 0;
@@ -104,7 +101,6 @@ class PenilaianController extends Controller
                 ->with('success', 'Nilai berhasil disimpan.');
         }
 
-        // Ambil nilai mahasiswa jika sudah ada
         $nilaiMahasiswa = NilaiMahasiswa::where('nim', $nim)
             ->where('pengampu_id', $pengampu->id)
             ->first();

@@ -5,10 +5,10 @@
 
 @section('content')
 <div class="container-fluid py-4">
-    <div class="card">
-        <div class="card-header">
-            <h4>Rubrik Penilaian</h4>
-            <p>Nama Mahasiswa: <strong>{{ $mahasiswa->nama }}</strong></p>
+    <div class="card shadow">
+        <div class="card-header bg-white">
+            <h4 class="mb-0">Rubrik Penilaian</h4>
+            <small class="text-muted">Nama Mahasiswa: <strong>{{ $mahasiswa->nama }}</strong></small>
         </div>
         <div class="card-body">
 
@@ -35,26 +35,26 @@
             <form method="POST" action="{{ route('dosen.penilaian.beri-nilai', $mahasiswa->nim) }}" id="rubrikForm">
                 @csrf
                 <table class="table table-bordered text-center align-middle">
-                    <thead class="table-info">
+                    <thead class="table-warning text-dark">
                         <tr>
                             <th>Aspek Penilaian</th>
-                            <th>Bobot</th>
+                            <th>Bobot (%)</th>
                             <th>Nilai (1-4)</th>
                         </tr>
                     </thead>
                     <tbody id="rubrikTable">
                         @foreach($aspek as $index => $namaAspek)
                         <tr>
-                            <td>{{ ucwords(str_replace('_', ' ', $namaAspek)) }}</td>
-                            <td>
+                            <td class="bg-white text-dark">{{ ucwords(str_replace('_', ' ', $namaAspek)) }}</td>
+                            <td class="bg-white text-warning fw-semibold">
                                 <input 
                                     type="number" 
-                                    class="form-control bobot" 
+                                    class="form-control form-control-sm bobot text-center fw-bold text-warning border-warning" 
                                     value="{{ $bobot[$namaAspek] }}" 
                                     readonly
                                 >
                             </td>
-                            <td>
+                            <td class="bg-white">
                                 @for($nilaiOpt = 1; $nilaiOpt <= 4; $nilaiOpt++)
                                 <label class="me-2">
                                     <input 
@@ -63,6 +63,7 @@
                                         value="{{ $nilaiOpt }}" 
                                         onclick="hitungTotal()"
                                         {{ old("nilai$index", $nilaiAspek[$index] ?? null) == $nilaiOpt ? 'checked' : '' }}
+                                        required
                                     > {{ $nilaiOpt }}
                                 </label>
                                 @endfor
@@ -72,54 +73,81 @@
                     </tbody>
                 </table>
 
-                <div class="bg-info text-white p-3 mt-2">
-                    <p><strong>Total Bobot:</strong> {{ array_sum($bobot) }}</p>
-                    <p><strong>Total Nilai (0-4):</strong> <span id="totalNilai">0</span></p>
-                    <p><strong>Angka Nilai:</strong> <span id="angkaNilai">0</span></p>
-                    <p><strong>Huruf Nilai:</strong> <span id="hurufNilai">-</span></p>
+                <div class="card mt-4 border-0 shadow-sm">
+                    <div class="card-body bg-light">
+                        <div class="row text-center">
+                            <div class="col-md-3">
+                                <p class="fw-bold text-dark mb-1">Total Bobot</p>
+                                <h5 class="text-warning">{{ array_sum($bobot) }}%</h5>
+                            </div>
+                            <div class="col-md-3">
+                                <p class="fw-bold text-dark mb-1">Total Nilai (0-4)</p>
+                                <h5 id="totalNilai" class="text-primary">0</h5>
+                            </div>
+                            <div class="col-md-3">
+                                <p class="fw-bold text-dark mb-1">Angka Nilai</p>
+                                <h5 id="angkaNilai" class="text-success">0</h5>
+                            </div>
+                            <div class="col-md-3">
+                                <p class="fw-bold text-dark mb-1">Huruf Nilai</p>
+                                <h5 id="hurufNilai" class="text-danger">-</h5>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary fw-bold mt-2">Simpan Nilai</button>
+                <div class="mt-3 text-end">
+                    <button type="submit" class="btn btn-primary fw-bold">Simpan Nilai</button>
+                </div>
             </form>
         </div>
     </div>
 </div>
-@endsection
 
-@push('script')
+{{-- Script untuk update nilai total secara otomatis --}}
 <script>
+    const aspek = @json($aspek);
+    const bobot = @json($bobot);
+    const konversiHuruf = (nilai) => {
+        if (nilai >= 85) return 'A';
+        if (nilai >= 80) return 'A-';
+        if (nilai >= 75) return 'B+';
+        if (nilai >= 70) return 'B';
+        if (nilai >= 65) return 'B-';
+        if (nilai >= 60) return 'C+';
+        if (nilai >= 55) return 'C';
+        if (nilai >= 50) return 'D';
+        return 'E';
+    };
+
     function hitungTotal() {
-        let totalNilai = 0;
+        let total = 0;
         let totalBobot = 0;
 
-        document.querySelectorAll("#rubrikTable tr").forEach((row, index) => {
-            const bobot = parseFloat(row.querySelector(".bobot").value) || 0;
-            const nilai = row.querySelector('input[name="nilai' + index + '"]:checked');
-            const nilaiVal = nilai ? parseInt(nilai.value) : 0;
-            totalNilai += bobot * nilaiVal;
-            totalBobot += bobot;
+        aspek.forEach((namaAspek, index) => {
+            const nilaiElems = document.getElementsByName(`nilai${index}`);
+            let nilaiTerpilih = 0;
+            for (const elem of nilaiElems) {
+                if (elem.checked) {
+                    nilaiTerpilih = parseInt(elem.value);
+                    break;
+                }
+            }
+            const bobotValue = bobot[namaAspek] || 0;
+            total += bobotValue * nilaiTerpilih;
+            totalBobot += bobotValue;
         });
 
-        const nilaiSkala = totalBobot ? (totalNilai / totalBobot) : 0;
-        const angkaNilai = (nilaiSkala * 25).toFixed(2);
-        document.getElementById("totalNilai").textContent = nilaiSkala.toFixed(2);
-        document.getElementById("angkaNilai").textContent = angkaNilai;
-        document.getElementById("hurufNilai").textContent = konversiHuruf(angkaNilai);
+        const skorSkala = totalBobot > 0 ? total / totalBobot : 0;
+        const angkaNilai = skorSkala * 25;
+        const hurufNilai = konversiHuruf(angkaNilai);
+
+        document.getElementById('totalNilai').innerText = skorSkala.toFixed(2);
+        document.getElementById('angkaNilai').innerText = angkaNilai.toFixed(2);
+        document.getElementById('hurufNilai').innerText = hurufNilai;
     }
 
-    function konversiHuruf(nilai) {
-        nilai = parseFloat(nilai);
-        if (nilai >= 85) return "A";
-        if (nilai >= 80) return "A-";
-        if (nilai >= 75) return "B+";
-        if (nilai >= 70) return "B";
-        if (nilai >= 65) return "B-";
-        if (nilai >= 60) return "C+";
-        if (nilai >= 55) return "C";
-        if (nilai >= 50) return "D";
-        return "E";
-    }
-
-    window.addEventListener('load', hitungTotal);
+    // Hitung nilai saat halaman dimuat jika sudah ada nilai tersimpan
+    document.addEventListener('DOMContentLoaded', hitungTotal);
 </script>
-@endpush
+@endsection
