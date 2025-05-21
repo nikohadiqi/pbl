@@ -41,5 +41,8 @@ class Pengampu extends Model
     {
         return $this->belongsTo(PeriodePBL::class, 'periode_id', 'id');
     }
-
+public function nilaiMahasiswa()
+    {
+        return $this->hasMany(NilaiMahasiswa::class, 'pengampu_id');
+    }
 }

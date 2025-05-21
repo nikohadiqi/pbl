@@ -39,4 +39,9 @@ class Mahasiswa extends Model
     {
         return $this->hasMany(Anggota_Tim_Pbl::class, 'nim', 'nim');
     }
+     // Tambahkan relasi nilai mahasiswa
+    public function nilaiMahasiswa()
+    {
+        return $this->hasMany(\App\Models\NilaiMahasiswa::class, 'nim', 'nim');
+    }
 }

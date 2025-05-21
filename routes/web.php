@@ -28,6 +28,7 @@ use App\Http\Controllers\Website\Mahasiswa\PelaporanController;
 use App\Http\Controllers\Website\Dosen\DashboardDosenController;
 use App\Http\Controllers\Website\Dosen\ProfilController as DosenProfilController;
 use App\Http\Controllers\Website\Dosen\ValidasiController;
+use App\Http\Controllers\Website\Dosen\PenilaianController;
 
 // use App\Http\Controllers\Auth\DashboardController;
 /*
@@ -231,14 +232,8 @@ Route::middleware(['auth:dosen'])->group(function () {
         })->name('dosen.daftar-tim.penilaian');
     });
 
-    // Penilaian Mahasiswa
-    Route::prefix('/dosen/penilaian-mahasiswa')->group(function () {
-        Route::get('/', function () {
-            return view('dosen.penilaian.penilaian');
-        })->name('dosen.penilaian');
-
-        Route::get('/rubrik-penilaian', function () {
-            return view('dosen.penilaian.form-nilai');
-        })->name('dosen.penilaian.beri-nilai');
-    });
+   Route::prefix('/dosen/penilaian-mahasiswa')->group(function () {
+    Route::get('/', [PenilaianController::class, 'index'])->name('dosen.penilaian');
+    Route::match(['get', 'post'], '/rubrik-penilaian/{nim}', [PenilaianController::class, 'formNilai'])->name('dosen.penilaian.beri-nilai');
+});
 });

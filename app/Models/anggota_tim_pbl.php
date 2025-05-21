@@ -30,4 +30,8 @@ class Anggota_Tim_Pbl extends Model
     {
         return $this->belongsTo(Mahasiswa::class, 'nim', 'nim');
     }
+      public function mahasiswa()
+    {
+        return $this->belongsTo(Mahasiswa::class, 'nim', 'nim');
+    }
 }
