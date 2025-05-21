@@ -12,10 +12,6 @@ class CreateNilaiMahasiswaTable extends Migration
             $table->id();
             $table->string('nim');
             $table->foreign('nim')->references('nim')->on('data_mahasiswa')->onDelete('cascade');
-
-            $table->unsignedBigInteger('pengampu_id');
-            $table->foreign('pengampu_id')->references('id')->on('pengampu')->onDelete('cascade');
-
             // Semua aspek penilaian disimpan sebagai string
             $table->string('critical_thinking')->nullable();
             $table->string('kolaborasi')->nullable();
@@ -36,7 +32,11 @@ class CreateNilaiMahasiswaTable extends Migration
             $table->string('sikap_kerja')->nullable();
             $table->string('proses')->nullable();
             $table->string('kualitas')->nullable();
-
+            $table->integer('total_nilai')->nullable();        // tambahkan
+            $table->float('angka_nilai')->nullable();          // tambahkan
+            $table->string('huruf_nilai')->nullable();         // tambahkan
+            $table->json('nilai_aspek_json')->nullable();      // tambahkan
+            $table->string('dosen_id')->nullable();            // tambahkan
             $table->timestamps();
         });
     }

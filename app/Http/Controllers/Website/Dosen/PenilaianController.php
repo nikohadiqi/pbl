@@ -4,20 +4,39 @@ namespace App\Http\Controllers\Website\Dosen;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\NilaiMahasiswa;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Mahasiswa;
-use App\Models\Pengampu;
+use App\Models\NilaiMahasiswa;
+// use App\Models\Pengampu; // sudah tidak digunakan
 
 class PenilaianController extends Controller
 {
-    private $aspek = [
+    public function index(Request $request)
+    {
+        $auth = Auth::guard('dosen')->user();
+        $kelas = $request->input('kelas');
+        $mahasiswa = collect();
+
+        if ($kelas) {
+            $mahasiswa = Mahasiswa::where('kelas', $kelas)->get();
+        }
+
+        return view('dosen.penilaian.penilaian', compact('mahasiswa', 'auth', 'kelas'));
+    }
+
+ public function formNilai(Request $request, $nim)
+{
+    $auth = Auth::guard('dosen')->user();
+    $mahasiswa = Mahasiswa::where('nim', $nim)->firstOrFail();
+
+    $aspek = [
         'critical_thinking', 'kolaborasi', 'kreativitas', 'komunikasi', 'fleksibilitas',
         'kepemimpinan', 'produktifitas', 'social_skill', 'konten', 'tampilan_visual_presentasi',
         'kosakata', 'tanya_jawab', 'mata_gerak_tubuh', 'penulisan_laporan', 'pilihan_kata',
         'konten_2', 'sikap_kerja', 'proses', 'kualitas'
     ];
 
-    private $bobot = [
+    $bobot = [
         'critical_thinking' => 5,
         'kolaborasi' => 5,
         'kreativitas' => 5,
@@ -25,7 +44,7 @@ class PenilaianController extends Controller
         'fleksibilitas' => 5,
         'kepemimpinan' => 5,
         'produktifitas' => 10,
-        'social_skill' => 2,
+        'social_skill' => 5,
         'konten' => 2,
         'tampilan_visual_presentasi' => 2,
         'kosakata' => 2,
@@ -39,96 +58,61 @@ class PenilaianController extends Controller
         'kualitas' => 15
     ];
 
-    /**
-     * Simpan nilai mahasiswa
-     */
-    public function beriNilai(Request $request)
-    {
-        $rules = [
-            'nim' => 'required|string|exists:data_mahasiswa,nim',
-            'pengampu_id' => 'required|exists:pengampu,id',
-        ];
+    if ($request->isMethod('post')) {
+        $total = 0;
+        $totalBobot = 0;
+        $nilaiPerAspek = [];
 
-        foreach ($this->aspek as $item) {
-            $rules[$item] = 'required|numeric|min:1|max:4';
+        foreach ($aspek as $index => $namaAspek) {
+            $nilai = $request->input("nilai$index");
+            $bobotValue = $bobot[$namaAspek] ?? 0;
+            if ($nilai !== null) {
+                $nilai = intval($nilai);
+                $total += $bobotValue * $nilai;
+                $totalBobot += $bobotValue;
+                $nilaiPerAspek[$index] = $nilai;
+            }
         }
 
-        $validated = $request->validate($rules);
+        $skorSkala = $totalBobot > 0 ? $total / $totalBobot : 0;
+        $angka = $skorSkala * 25;
+        $huruf = $this->konversiHuruf($angka);
 
-        // Pastikan tidak ada duplikat penilaian (opsional)
-        $existing = NilaiMahasiswa::where('nim', $validated['nim'])
-            ->where('pengampu_id', $validated['pengampu_id'])
-            ->first();
+        NilaiMahasiswa::updateOrCreate(
+            ['nim' => $nim],
+            [
+                'total_nilai' => $total,
+                'angka_nilai' => $angka,
+                'huruf_nilai' => $huruf,
+                'nilai_aspek_json' => json_encode($nilaiPerAspek),
+                'dosen_id' => $auth->nip,
+            ]
+        );
 
-        if ($existing) {
-            return response()->json([
-                'message' => 'Nilai sudah pernah diberikan untuk NIM dan pengampu ini.'
-            ], 409);
-        }
-
-        $nilai = NilaiMahasiswa::create(array_map('strval', $validated));
-
-        return response()->json([
-            'message' => 'Nilai berhasil disimpan',
-            'data' => $nilai
-        ]);
+        return redirect()->route('dosen.penilaian.beri-nilai', $nim)
+            ->with('success', 'Nilai berhasil disimpan.');
     }
 
-    /**
-     * Ambil nilai mahasiswa dan hitung rekap
-     */
-    public function getNilaiMahasiswa($nim)
+    $nilaiMahasiswa = NilaiMahasiswa::where('nim', $nim)->first();
+    $nilaiAspek = [];
+
+    if ($nilaiMahasiswa && $nilaiMahasiswa->nilai_aspek_json) {
+        $nilaiAspek = json_decode($nilaiMahasiswa->nilai_aspek_json, true);
+    }
+
+    return view('dosen.penilaian.form-nilai', compact('mahasiswa', 'auth', 'aspek', 'bobot', 'nilaiAspek', 'nilaiMahasiswa'));
+}
+
+    private function konversiHuruf($nilai)
     {
-        $mahasiswa = Mahasiswa::where('nim', $nim)->first();
-
-        if (!$mahasiswa) {
-            return response()->json([
-                'message' => 'Mahasiswa tidak ditemukan',
-                'nim' => $nim
-            ], 404);
-        }
-
-        $data = NilaiMahasiswa::where('nim', $nim)->with('pengampu')->get();
-
-        if ($data->isEmpty()) {
-            return response()->json([
-                'message' => 'Belum ada nilai untuk mahasiswa ini',
-                'nim' => $nim
-            ], 404);
-        }
-
-        $rekap = $data->map(function ($item) {
-            $totalBobot = 0;
-            $totalSkor = 0;
-            $rincian = [];
-
-            foreach ($this->bobot as $aspek => $bobot) {
-                $nilai = (int) $item->$aspek;
-                $skor = $nilai * $bobot;
-                $totalSkor += $skor;
-                $totalBobot += $bobot;
-
-                $rincian[$aspek] = [
-                    'nilai' => $nilai,
-                    'bobot' => $bobot,
-                    'skor' => round($skor / 4, 2)
-                ];
-            }
-
-            $nilaiAkhir = round($totalSkor / $totalBobot * 100, 2); // Skor akhir sebagai persentase
-
-            return [
-                'pengampu_id' => $item->pengampu_id,
-                'mata_kuliah' => $item->pengampu->mata_kuliah ?? null,
-                'nilai_akhir' => $nilaiAkhir,
-                'detail' => $rincian
-            ];
-        });
-
-        return response()->json([
-            'nim' => $nim,
-            'nama' => $mahasiswa->nama,
-            'rekap' => $rekap
-        ]);
+        if ($nilai >= 85) return 'A';
+        if ($nilai >= 80) return 'A-';
+        if ($nilai >= 75) return 'B+';
+        if ($nilai >= 70) return 'B';
+        if ($nilai >= 65) return 'B-';
+        if ($nilai >= 60) return 'C+';
+        if ($nilai >= 55) return 'C';
+        if ($nilai >= 50) return 'D';
+        return 'E';
     }
 }

@@ -1,71 +1,60 @@
 @extends('layouts.dashboarddosen-template')
 
-@section('title','Penilaian Mahasiswa | Sistem Informasi dan Monitoring Project Based Learning')
+@section('title','Penilaian Mahasiswa')
 @section('page-title', 'Penilaian Mahasiswa')
+
 @section('content')
 <div class="container-fluid py-4">
-    <div class="card p-4 shadow-sm rounded-3" style="background-color: #fff;">
-        {{-- FORM FILTER --}}
-        <div class="mb-2">
-            <form method="POST" action="#">
-                @csrf
-                <div class="row">
-                    <div class="col-md-4 mb-2">
-                        <select name="kelas" class="form-control">
-                            <option value="">-- Pilih Kelas --</option>
-                            <option value="4A">4A</option>
-                            <option value="4B">4B</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4 mb-2">
-                        <select name="tahun" class="form-control">
-                            <option value="">-- Pilih Periode PBL --</option>
-                            <option value="1">Semester 4 / Tahun 2025</option>
-                            <option value="2">Semester 5 / Tahun 2025</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4 mb-2">
-                        <button type="submit" class="btn btn-primary w-100">Tampilkan</button>
-                    </div>
+    <div class="card p-4 shadow-sm rounded-3">
+        <form method="GET" action="{{ route('dosen.penilaian') }}">
+            <div class="row">
+                <div class="col-md-4 mb-2">
+                    <select name="kelas" class="form-control">
+                        <option value="">-- Pilih Kelas --</option>
+                        <option value="2A" {{ request('kelas') == '2A' ? 'selected' : '' }}>2A</option>
+                        <option value="4B" {{ request('kelas') == '4B' ? 'selected' : '' }}>4B</option>
+                        <option value="4C" {{ request('kelas') == '4C' ? 'selected' : '' }}>4C</option>
+                    </select>
                 </div>
-            </form>
-            <hr class="horizontal dark mt-2">
-        </div>
+                <div class="col-md-4 mb-2">
+                    <button type="submit" class="btn btn-primary w-100">Tampilkan</button>
+                </div>
+            </div>
+        </form>
+        <hr>
 
-        {{-- Tabel Mahasiswa --}}
-        {{-- <div class="d-flex justify-content-between align-items-center">
-            <h4 class="fw-bold">Penilaian Mahasiswa</h4>
-        </div>
-        <p class="text-sm">Penilaian mahasiswa sesuai kelas yang diampu</p> --}}
+        <p>Kelas terpilih: {{ $kelas }}</p>
+        <p>Jumlah mahasiswa: {{ $mahasiswa->count() }}</p>
+
         <div class="table-responsive">
-            <table class="table table-hover" id="datatable-search">
+            <table class="table table-hover">
                 <thead class="table-light">
                     <tr>
                         <th>No</th>
                         <th>NIM</th>
                         <th>Nama Mahasiswa</th>
                         <th>Kelas</th>
-                        <th>Tim PBL</th>
                         <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {{-- @foreach ($timPBL as $index => $tim) --}}
-                    <tr>
-                        <td>1</td>
-                        <td>362355401085</td>
-                        <td>Rio Adjie Wiguna</td>
-                        <td>2C</td>
-                        <td>2C 1</td>
-                        <td class="text-center">
-                            <div class="d-flex justify-content-center gap-2">
-                                <a href="{{ route('dosen.penilaian.beri-nilai') }}" class="btn btn-sm btn-primary text-white">
-                                    <i class="bi bi-highlighter"> Beri Nilai</i>
+                    @forelse ($mahasiswa as $index => $mhs)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $mhs->nim }}</td>
+                            <td>{{ $mhs->nama }}</td>
+                            <td>{{ $mhs->kelas }}</td>
+                            <td class="text-center">
+                                <a href="{{ route('dosen.penilaian.beri-nilai', $mhs->nim) }}" class="btn btn-sm btn-primary">
+                                    Beri Nilai
                                 </a>
-                            </div>
-                        </td>
-                    </tr>
-                    {{-- @endforeach --}}
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="text-center">Pilih kelas untuk melihat mahasiswa.</td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

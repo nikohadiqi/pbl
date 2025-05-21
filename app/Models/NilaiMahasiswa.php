@@ -9,11 +9,12 @@ class NilaiMahasiswa extends Model
 {
     use HasFactory;
 
-    protected $table = 'nilai_mahasiswa';
+    protected $table = 'nilai_mahasiswa'; // nama tabel sesuai migration
+
+    protected $primaryKey = 'id';
 
     protected $fillable = [
         'nim',
-        'pengampu_id',
         'critical_thinking',
         'kolaborasi',
         'kreativitas',
@@ -33,7 +34,18 @@ class NilaiMahasiswa extends Model
         'sikap_kerja',
         'proses',
         'kualitas',
+         'total_nilai',              // tambahkan
+        'angka_nilai',              // tambahkan
+        'huruf_nilai',              // tambahkan
+        'nilai_aspek_json',         // tambahkan
+        'dosen_id',          
     ];
+
+    // Jika kamu ingin mendefinisikan relasi ke model DataMahasiswa
+    public function dataMahasiswa()
+    {
+        return $this->belongsTo(DataMahasiswa::class, 'nim', 'nim');
+    }
 
     public function mahasiswa()
     {
