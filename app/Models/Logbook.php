@@ -35,8 +35,9 @@ class Logbook extends Model
    {
        return $this->belongsTo(TimPbl::class, 'kode_tim', 'kode_tim');
    }
+
     public function tahapan()
     {
-        return $this->belongsTo(Tpp_sem4::class, 'tahapan_id');
+        return $this->belongsTo(TahapanPelaksanaanProyek::class, 'tahapan_id');
     }
 }

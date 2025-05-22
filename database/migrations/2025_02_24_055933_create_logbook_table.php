@@ -24,7 +24,7 @@ return new class extends Migration {
             $table->timestamps();
 
             $table->foreign('kode_tim')->references('kode_tim')->on('tim_pbl')->onDelete('cascade');
-            $table->foreign('tahapan_id')->references('id')->on('tpp_sem4')->onDelete('set null'); // ✅ foreign key ke tpp_sem4
+            $table->foreign('tahapan_id')->references('id')->on('tahapan_pelaksanaan_proyeks')->onDelete('set null'); // ✅ foreign key ke tahapan pelaksanaan proyek
         });
 
     }

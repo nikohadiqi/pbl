@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tpp_sem4', function (Blueprint $table) {
+        Schema::create('tahapan_pelaksanaan_proyeks', function (Blueprint $table) {
             $table->id();
+            $table->string('periode_id');
             $table->string('tahapan');
-            $table->string('pic');
             $table->integer('score');
             $table->timestamps();
         });
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tpp_sem4');
+        Schema::dropIfExists('tahapan_pelaksanaan_proyeks');
     }
 };

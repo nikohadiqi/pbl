@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Website\Mahasiswa;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Logbook;
-use App\Models\Tpp_sem4;
 use App\Models\Anggota_Tim_Pbl;
+use App\Models\TahapanPelaksanaanProyek;
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -22,7 +22,12 @@ class LogbookController extends Controller
         }
 
         $logbooks = Logbook::where('kode_tim', $anggota->kode_tim)->get();
-        $tahapans = Tpp_sem4::all();
+        $timPbl = $anggota->tim; // relasi ke TimPbl
+
+        $tahapans = TahapanPelaksanaanProyek::where('periode_id', $timPbl->periode)
+            ->orderBy('id')
+            ->take(16) // batas maksimal 16
+            ->get();
 
         $scores = [];
         foreach ($tahapans as $index => $tahapan) {
@@ -57,8 +62,8 @@ class LogbookController extends Controller
         // Ambil data mahasiswa yang sedang login
         $mahasiswa = Auth::guard('mahasiswa')->user();
 
-        // Ambil score maksimal dari Tpp_sem4 sesuai tahapan_id
-        $tahapan = Tpp_sem4::find($request->tahapan_id);
+        // Ambil score maksimal dari TPP sesuai tahapan_id
+        $tahapan = TahapanPelaksanaanProyek::find($request->tahapan_id);
         if (!$tahapan) {
             return redirect()->back()->withErrors(['tahapan_id' => 'Tahapan tidak ditemukan']);
         }

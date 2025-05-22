@@ -1,86 +1,89 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Website\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Imports\TahapanPelaksanaanImport;
 use Illuminate\Http\Request;
 use App\Models\TahapanPelaksanaanProyek;
 use App\Models\PeriodePBL;
+use Maatwebsite\Excel\Facades\Excel;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class TahapanPelaksanaanProyekController extends Controller
 {
-    // **Tampilkan Semua Data**
-    public function index()
+    public function index(Request $request)
     {
-        $data = TahapanPelaksanaanProyek::with('periodePBL')->get();
-        return response()->json($data);
+        $periodes = PeriodePBL::orderBy('tahun', 'desc')->get();
+        $selectedPeriode = $request->periode_id;
+
+        $tahapan = collect();
+        $periodepbl = null;
+
+        if ($selectedPeriode) {
+            $periodepbl = PeriodePBL::find($selectedPeriode);
+            $tahapan = TahapanPelaksanaanProyek::where('periode_id', $selectedPeriode)->get();
+        }
+
+        return view('admin.tahapan-pelaksanaan.tahapan-pelaksanaan-proyek', compact('periodes', 'selectedPeriode', 'tahapan', 'periodepbl'));
     }
 
-    // **Tambah Data Baru**
     public function store(Request $request)
     {
         $request->validate([
-            'semester_id' => 'required|exists:periodepbl,id',
-            'tahapan' => 'required|string|max:255',
-            'score' => 'required|integer',
+            'periode_id' => 'required|exists:periodepbl,id',
+            'tahapan.*' => 'nullable|string|max:255',
+            'score.*' => 'nullable|numeric|min:5|max:10',
         ]);
 
-        $data = TahapanPelaksanaanProyek::create($request->all());
-
-        return response()->json(['message' => 'Data berhasil ditambahkan', 'data' => $data], 201);
-    }
-
-    // **Tampilkan Data Berdasarkan ID**
-    public function show($id)
-    {
-        $data = TahapanPelaksanaanProyek::with('periodePBL')->find($id);
-        if (!$data) {
-            return response()->json(['message' => 'Data tidak ditemukan'], 404);
-        }
-        return response()->json($data);
-    }
-
-    // **Update Data Berdasarkan ID**
-    public function update(Request $request, $id)
-    {
-        $data = TahapanPelaksanaanProyek::find($id);
-        if (!$data) {
-            return response()->json(['message' => 'Data tidak ditemukan'], 404);
+        $totalScore = collect($request->score)->filter()->sum();
+        if ($totalScore > 100) {
+            Alert::error('Gagal', 'Total score tidak boleh lebih dari 100%');
+            return back()->withInput();
         }
 
-        $request->validate([
-            'semester_id' => 'exists:periodepbl,id',
-            'tahapan' => 'string|max:255',
-            'score' => 'integer',
-        ]);
+        TahapanPelaksanaanProyek::where('periode_id', $request->periode_id)->delete();
 
-        $data->update($request->all());
-
-        return response()->json(['message' => 'Data berhasil diperbarui', 'data' => $data]);
-    }
-
-    // **Hapus Data Berdasarkan ID**
-    public function destroy($id)
-    {
-        $data = TahapanPelaksanaanProyek::find($id);
-        if (!$data) {
-            return response()->json(['message' => 'Data tidak ditemukan'], 404);
+        foreach ($request->tahapan as $index => $tahapan) {
+            if ($tahapan && $request->score[$index]) {
+                TahapanPelaksanaanProyek::create([
+                    'periode_id' => $request->periode_id,
+                    'tahapan' => $tahapan,
+                    'score' => $request->score[$index],
+                ]);
+            }
         }
 
-        $data->delete();
-        return response()->json(['message' => 'Data berhasil dihapus']);
+        Alert::success('Berhasil', 'Data tahapan berhasil disimpan.');
+        return redirect()->route('admin.tpp', ['periode_id' => $request->periode_id]);
     }
 
-    // **Bulk Delete (Hapus Banyak Data)**
-    public function bulkDelete(Request $request)
+    public function reset(Request $request)
     {
         $request->validate([
-            'ids' => 'required|array',
-            'ids.*' => 'integer|exists:tahapan_pelaksanaan_proyek,id',
+            'periode_id' => 'required|exists:periodepbl,id',
         ]);
 
-        TahapanPelaksanaanProyek::whereIn('id', $request->ids)->delete();
+        TahapanPelaksanaanProyek::where('periode_id', $request->periode_id)->delete();
 
-        return response()->json(['message' => 'Data berhasil dihapus']);
+        Alert::success('Berhasil', 'Semua tahapan untuk periode berhasil di-reset.');
+        return redirect()->route('admin.tpp', ['periode_id' => $request->periode_id]);
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'periode_id' => 'required|exists:periodepbl,id',
+            'file' => 'required|mimes:xlsx,xls'
+        ]);
+
+        try {
+            Excel::import(new TahapanPelaksanaanImport($request->periode_id), $request->file('file'));
+            Alert::success('Berhasil', 'Tahapan berhasil diimpor!');
+        } catch (\Exception $e) {
+            Alert::error('Gagal', $e->getMessage());
+        }
+
+        return redirect()->route('admin.tpp', ['periode_id' => $request->periode_id]);
     }
 }

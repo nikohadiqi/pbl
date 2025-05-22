@@ -2,46 +2,33 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\LoginMahasiswaController;
 use App\Http\Controllers\Auth\MahasiswaRegisterController;
 
 use App\Http\Controllers\Website\Admin\DashboardController;
 use App\Http\Controllers\Website\Admin\ProfilController;
-use App\Http\Controllers\Website\Admin\TimPBLController;
 use App\Http\Controllers\Website\Admin\PeriodePBLController;
-use App\Http\Controllers\Website\Admin\TPP4Controller;
-use App\Http\Controllers\Website\Admin\TPP5Controller;
 use App\Http\Controllers\Website\Admin\MataKuliahController;
 use App\Http\Controllers\Website\Admin\KelasController;
 use App\Http\Controllers\Website\Admin\MahasiswaController;
 use App\Http\Controllers\Website\Admin\DosenController;
 use App\Http\Controllers\Website\Admin\PengampuController;
-use App\Http\Controllers\Website\Dosen\DaftarTimController;
+use App\Http\Controllers\Website\Admin\TahapanPelaksanaanProyekController;
+
 use App\Http\Controllers\Website\Mahasiswa\DashboardMahasiswaController;
 use App\Http\Controllers\Website\Mahasiswa\ProfilController as MahasiswaProfilController;
 use App\Http\Controllers\Website\Mahasiswa\RencanaProyekController;
 use App\Http\Controllers\Website\Mahasiswa\LogbookController;
-use App\Http\Controllers\Website\Mahasiswa\PelaporanUTSController;
-use App\Http\Controllers\Website\Mahasiswa\PelaporanUASController;
 use App\Http\Controllers\Website\Mahasiswa\PelaporanController;
 
 use App\Http\Controllers\Website\Dosen\DashboardDosenController;
 use App\Http\Controllers\Website\Dosen\ProfilController as DosenProfilController;
+use App\Http\Controllers\Website\Dosen\DaftarTimController;
 use App\Http\Controllers\Website\Dosen\ValidasiController;
 use App\Http\Controllers\Website\Dosen\PenilaianController;
 
-// use App\Http\Controllers\Auth\DashboardController;
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
-
+// ============================
+// Route
+// ============================
 Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login'])->name('login.post'); // Route untuk proses login
 Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
@@ -84,25 +71,14 @@ Route::middleware(['auth:web', 'role:web,admin'])->group(function () {
         Route::patch('/aktifkan/{id}', [PeriodePBLController::class, 'aktifkan'])->name('admin.periodepbl.aktifkan');
     });
 
-    // TPP SEMESTER 4
-    Route::prefix('admin/tahapan-pelaksanaan/semester4')->middleware(['auth:sanctum', 'admin'])->group(function () {
-        Route::get('/', [TPP4Controller::class, 'index'])->name('admin.tahapanpelaksanaan-sem4');
-        Route::get('/tambah', [TPP4Controller::class, 'create'])->name('admin.tahapanpelaksanaan-sem4.tambah');
-        Route::post('/store', [TPP4Controller::class, 'store'])->name('admin.tahapanpelaksanaan-sem4.store');
-        Route::get('/edit/{id}', [TPP4Controller::class, 'edit'])->name('admin.tahapanpelaksanaan-sem4.edit');
-        Route::put('/update/{id}', [TPP4Controller::class, 'update'])->name('admin.tahapanpelaksanaan-sem4.update');
-        Route::delete('/delete/{id}', [TPP4Controller::class, 'destroy'])->name('admin.tahapanpelaksanaan-sem4.delete');
+    // Tahapan Pelaksanaan Proyek
+    Route::prefix('admin/tahapan-pelaksanaan-proyek')->middleware(['auth:sanctum', 'admin'])->group(function () {
+        Route::get('/', [TahapanPelaksanaanProyekController::class, 'index'])->name('admin.tpp');
+        Route::post('/simpan', [TahapanPelaksanaanProyekController::class, 'store'])->name('admin.tpp.store');
+        Route::delete('/reset', [TahapanPelaksanaanProyekController::class, 'reset'])->name('admin.tpp.reset');
+        Route::post('/import', [TahapanPelaksanaanProyekController::class, 'import'])->name('admin.tpp.import');
     });
 
-    // TPP SEMESTER 5
-    Route::prefix('admin/tahapan-pelaksanaan/semester5')->middleware(['auth:sanctum', 'admin'])->group(function () {
-        Route::get('/', [TPP5Controller::class, 'index'])->name('admin.tahapanpelaksanaan-sem5');
-        Route::get('/tambah', [TPP5Controller::class, 'create'])->name('admin.tahapanpelaksanaan-sem5.tambah');
-        Route::post('/store', [TPP5Controller::class, 'store'])->name('admin.tahapanpelaksanaan-sem5.store');
-        Route::get('/edit/{id}', [TPP5Controller::class, 'edit'])->name('admin.tahapanpelaksanaan-sem5.edit');
-        Route::put('/update/{id}', [TPP5Controller::class, 'update'])->name('admin.tahapanpelaksanaan-sem5.update');
-        Route::delete('/delete/{id}', [TPP5Controller::class, 'destroy'])->name('admin.tahapanpelaksanaan-sem5.delete');
-    });
 
     // Mata Kuliah
     Route::prefix('menu/master-data/mata-kuliah')->middleware(['auth:sanctum', 'admin'])->group(function () {
@@ -151,7 +127,6 @@ Route::middleware(['auth:web', 'role:web,admin'])->group(function () {
         Route::get('/', [PengampuController::class, 'manage'])->name('admin.pengampu');
         Route::post('/manage', [PengampuController::class, 'manageStore'])->name('admin.pengampu.manage.store');
     });
-
 });
 
 // ============================
@@ -232,8 +207,8 @@ Route::middleware(['auth:dosen'])->group(function () {
         })->name('dosen.daftar-tim.penilaian');
     });
 
-   Route::prefix('/dosen/penilaian-mahasiswa')->group(function () {
-    Route::get('/', [PenilaianController::class, 'index'])->name('dosen.penilaian');
-    Route::match(['get', 'post'], '/rubrik-penilaian/{nim}', [PenilaianController::class, 'formNilai'])->name('dosen.penilaian.beri-nilai');
-});
+    Route::prefix('/dosen/penilaian-mahasiswa')->group(function () {
+        Route::get('/', [PenilaianController::class, 'index'])->name('dosen.penilaian');
+        Route::match(['get', 'post'], '/rubrik-penilaian/{nim}', [PenilaianController::class, 'formNilai'])->name('dosen.penilaian.beri-nilai');
+    });
 });

@@ -72,7 +72,7 @@
 @push('script')
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-    const allCollapseIds = ['#viewLaporanUTS', '#viewLaporanUAS'];
+    const allCollapseIds = ['#viewLaporanUTS', '#viewLaporanUAS'].filter(id => document.querySelector(id) !== null);
     const toggleButtons = document.querySelectorAll('.toggle-laporan');
 
     toggleButtons.forEach(button => {
@@ -80,15 +80,20 @@
             const targetSelector = this.getAttribute('data-target');
             const targetEl = document.querySelector(targetSelector);
 
-            // Tutup semua collapse lain kecuali target
+            // Pastikan target ada
+            if (!targetEl) return;
+
+            // Tutup semua collapse lain kecuali target yang diklik
             allCollapseIds.forEach(id => {
                 if (id !== targetSelector) {
                     const el = document.querySelector(id);
-                    const bsCollapse = bootstrap.Collapse.getInstance(el);
-                    if (bsCollapse) {
-                        bsCollapse.hide();
-                    } else {
-                        new bootstrap.Collapse(el, { toggle: false }).hide();
+                    if (el) {
+                        const bsCollapse = bootstrap.Collapse.getInstance(el);
+                        if (bsCollapse) {
+                            bsCollapse.hide();
+                        } else {
+                            new bootstrap.Collapse(el, { toggle: false }).hide();
+                        }
                     }
                 }
             });

@@ -8,8 +8,8 @@ use App\Models\Logbook;
 use App\Models\PelaporanUAS;
 use App\Models\PelaporanUTS;
 use App\Models\PeriodePBL;
+use App\Models\TahapanPelaksanaanProyek;
 use App\Models\TimPbl;
-use App\Models\Tpp_sem4;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -81,7 +81,11 @@ class DaftarTimController extends Controller
 
         // Ambil semua logbook dan tahapan
         $logbooks = Logbook::where('kode_tim', $kode_tim)->get();
-        $tahapans = Tpp_sem4::all();
+
+        $tahapans = TahapanPelaksanaanProyek::where('periode_id', $tim->periode)
+            ->orderBy('id')
+            ->take(16) // batas maksimal 16
+            ->get();
 
         $scores = [];
         foreach ($tahapans as $index => $tahapan) {

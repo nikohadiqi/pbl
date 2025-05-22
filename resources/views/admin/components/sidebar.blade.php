@@ -87,35 +87,16 @@
                     <span class="nav-link-text ms-1">Kelola Dosen Pengampu</span>
                 </a>
             </li>
-            <!-- Tahapan Pelaksanaan Proyek -->
+            {{-- Tahapan Pelaksanaan Proyek --}}
             <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.tahapanpelaksanaan-sem4*') || request()->routeIs('admin.tahapanpelaksanaan-sem5*') ? 'active' : '' }}"
-                    data-bs-toggle="collapse" href="#tahapanPelaksanaan" role="button"
-                    aria-expanded="{{ request()->routeIs('admin.tahapanpelaksanaan-sem4*') || request()->routeIs('admin.tahapanpelaksanaan-sem5*') ? 'true' : 'false' }}"
-                    aria-controls="tahapanPelaksanaan">
+                <a class="nav-link {{ request()->routeIs('admin.tpp*') ? 'active' : '' }}"
+                    href="{{ route('admin.tpp') }}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="bi bi-file-earmark-text-fill text-success text-sm opacity-10"></i>
                     </div>
                     <span class="nav-link-text ms-1">Tahapan Pelaksanaan Proyek</span>
                 </a>
-                <div class="collapse {{ request()->routeIs('admin.tahapanpelaksanaan-sem4*') || request()->routeIs('admin.tahapanpelaksanaan-sem5*') ? 'show' : '' }}"
-                    id="tahapanPelaksanaan">
-                    <ul class="nav flex-column ms-4">
-                        <li class="nav-item mt-2">
-                            <a class="nav-link {{ request()->routeIs('admin.tahapanpelaksanaan-sem4*') ? 'active' : '' }}"
-                                href="{{ route('admin.tahapanpelaksanaan-sem4') }}">
-                                Semester 4
-                            </a>
-                        </li>
-                        <li class="nav-item mt-2">
-                            <a class="nav-link {{ request()->routeIs('admin.tahapanpelaksanaan-sem5*') ? 'active' : '' }}"
-                                href="{{ route('admin.tahapanpelaksanaan-sem5') }}">
-                                Semester 5
-                            </a>
-                        </li>
-                    </ul>
-                </div>
             </li>
         </ul>
     </div>
