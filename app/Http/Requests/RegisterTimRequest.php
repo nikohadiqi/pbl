@@ -11,7 +11,7 @@ class RegisterTimRequest extends FormRequest
 {
     public function authorize()
     {
-        return true; // Ubah jika pakai policy
+        return true; // Sesuaikan jika perlu otorisasi tambahan
     }
 
     public function rules()
@@ -26,18 +26,6 @@ class RegisterTimRequest extends FormRequest
                 'string',
                 'distinct',
                 'exists:data_mahasiswa,nim',
-                function ($attribute, $value, $fail) {
-                    $timAnggota = Anggota_Tim_Pbl::where('nim', $value)->first();
-                    if (!$timAnggota) return;
-
-                    $tim = regMahasiswa::where('kode_tim', $timAnggota->kode_tim)->first();
-                    if (!$tim) return;
-
-                    $periode = PeriodePBL::find($tim->periode);
-                    if ($tim->status !== 'rejected' && $periode && $periode->status !== 'Selesai') {
-                        $fail("Mahasiswa dengan NIM $value sudah terdaftar di tim aktif pada periode berjalan.");
-                    }
-                }
             ],
         ];
     }
@@ -54,14 +42,42 @@ class RegisterTimRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            $kode_tim = strtoupper($this->kelas) . $this->kelompok;
+            $kelas = strtoupper($this->kelas);
+            $kelompok = $this->kelompok;
+            $kode_tim = $kelas . $kelompok;
+            $periodeId = $this->periode;
 
+            // 1. Cek jika tim dengan kode ini sudah approved
             $exists = regMahasiswa::where('kode_tim', $kode_tim)
                 ->where('status', 'approved')
                 ->exists();
 
             if ($exists) {
                 $validator->errors()->add('kelompok', 'Tim ini sudah disetujui sebelumnya dan tidak bisa didaftarkan ulang.');
+            }
+
+            // 2. Validasi NIM hanya boleh tergabung di 1 tim per periode aktif (tidak 'rejected', dan periode belum selesai)
+            $anggota = $this->anggota ?? [];
+            if (empty($anggota)) return;
+
+            // Ambil semua periode yang belum 'Selesai'
+            $periodeAktif = PeriodePBL::where('status', '!=', 'Selesai')->pluck('id')->toArray();
+
+            // Ambil kode_tim yang masih aktif di periode yang belum selesai dan bukan rejected
+            $timAktif = regMahasiswa::whereIn('periode', $periodeAktif)
+                ->where('status', '!=', 'rejected')
+                ->pluck('kode_tim');
+
+            // Cari semua NIM yang terdaftar di tim-tim tersebut
+            $nimSudahTerdaftar = Anggota_Tim_Pbl::whereIn('kode_tim', $timAktif)->pluck('nim')->toArray();
+
+            // Cek jika ada nim dari request yang bentrok
+            $nimBentrok = array_intersect($anggota, $nimSudahTerdaftar);
+            if (!empty($nimBentrok)) {
+                $validator->errors()->add(
+                    'anggota',
+                    'NIM ' .implode(', ', $nimBentrok) .' sudah tergabung di tim lain pada periode aktif.'
+                );
             }
         });
     }

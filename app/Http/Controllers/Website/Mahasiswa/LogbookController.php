@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Logbook;
 use App\Models\Anggota_Tim_Pbl;
+use App\Models\PeriodePBL;
 use App\Models\TahapanPelaksanaanProyek;
+use App\Models\TimPbl;
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -15,18 +17,19 @@ class LogbookController extends Controller
     public function index(Request $request)
     {
         $mahasiswa = Auth::guard('mahasiswa')->user();
-        $anggota = Anggota_Tim_Pbl::where('nim', $mahasiswa->nim)->first();
+        $kodeTim = getKodeTimByAuth();
 
-        if (!$anggota) {
-            return redirect()->back()->with('error', 'Data tim tidak ditemukan.');
+        if (!$kodeTim) {
+            return redirect()->back()->with('error', 'Data tim periode aktif tidak ditemukan.');
         }
 
-        $logbooks = Logbook::where('kode_tim', $anggota->kode_tim)->get();
-        $timPbl = $anggota->tim; // relasi ke TimPbl
+        $logbooks = Logbook::where('kode_tim', $kodeTim)->get();
+
+        $timPbl = TimPbl::where('kode_tim', $kodeTim)->first();
 
         $tahapans = TahapanPelaksanaanProyek::where('periode_id', $timPbl->periode)
             ->orderBy('id')
-            ->take(16) // batas maksimal 16
+            ->take(16)
             ->get();
 
         $scores = [];
@@ -36,7 +39,7 @@ class LogbookController extends Controller
 
         $selectedLogbook = null;
         if ($request->has('selectedId')) {
-            $selectedLogbook = Logbook::where('kode_tim', $anggota->kode_tim)
+            $selectedLogbook = Logbook::where('kode_tim', $kodeTim)
                 ->where('minggu', $request->input('selectedId'))
                 ->first();
         }
@@ -46,54 +49,51 @@ class LogbookController extends Controller
 
     public function store(Request $request)
     {
-        // Validasi input dari form
         $validated = $request->validate([
-            'minggu' => 'nullable|integer|min:1|max:16', // Minggu wajib diisi
-            'aktivitas' => 'required|string|max:255',   // Aktivitas wajib diisi
-            'hasil' => 'required|string|max:255',       // Hasil wajib diisi
-            'progress' => 'required|integer|between:0,100', // Progress wajib diisi
-            'foto_kegiatan' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Foto kegiatan nullable
-            'anggota1' => 'nullable|string|max:255',     // Anggota1 nullable
-            'anggota2' => 'nullable|string|max:255',     // Anggota2 nullable
-            'anggota3' => 'nullable|string|max:255',     // Anggota3 nullable
-            'anggota4' => 'nullable|string|max:255',     // Anggota4 nullable
-            'anggota5' => 'nullable|string|max:255',     // Anggota5 nullable
+            'minggu' => 'nullable|integer|min:1|max:16',
+            'aktivitas' => 'required|string|max:255',
+            'hasil' => 'required|string|max:255',
+            'progress' => 'required|integer|between:0,100',
+            'foto_kegiatan' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'anggota1' => 'nullable|string|max:255',
+            'anggota2' => 'nullable|string|max:255',
+            'anggota3' => 'nullable|string|max:255',
+            'anggota4' => 'nullable|string|max:255',
+            'anggota5' => 'nullable|string|max:255',
         ]);
-        // Ambil data mahasiswa yang sedang login
-        $mahasiswa = Auth::guard('mahasiswa')->user();
 
-        // Ambil score maksimal dari TPP sesuai tahapan_id
+        $kodeTim = $this->getKodeTimByAuth();
+        if (!$kodeTim) {
+            return redirect()->back()->with('error', 'Data tim periode aktif tidak ditemukan.');
+        }
+
         $tahapan = TahapanPelaksanaanProyek::find($request->tahapan_id);
         if (!$tahapan) {
             return redirect()->back()->withErrors(['tahapan_id' => 'Tahapan tidak ditemukan']);
         }
 
-        $maxProgress = intval($tahapan->score); // misal score disimpan dalam persen seperti 5 (untuk 5%)
+        $maxProgress = intval($tahapan->score);
 
-        // Batasi progress input user supaya tidak lebih dari score
-        $inputProgress = intval($request->progress);
-        if ($inputProgress > $maxProgress) {
+        if ($validated['progress'] > $maxProgress) {
             return redirect()->back()
                 ->withInput()
                 ->withErrors(['progress' => "Progress tidak boleh lebih dari {$maxProgress}% sesuai score tahapan."]);
         }
 
-        // Update atau create logbook
         $logbook = Logbook::updateOrCreate(
-            ['kode_tim' => $mahasiswa->kode_tim, 'minggu' => $request->minggu],
+            ['kode_tim' => $kodeTim, 'minggu' => $validated['minggu']],
             [
-                'aktivitas' => $request->aktivitas,
-                'hasil' => $request->hasil,
-                'progress' => $inputProgress,
-                'anggota1' => $request->anggota1,
-                'anggota2' => $request->anggota2,
-                'anggota3' => $request->anggota3,
-                'anggota4' => $request->anggota4,
-                'anggota5' => $request->anggota5,
+                'aktivitas' => $validated['aktivitas'],
+                'hasil' => $validated['hasil'],
+                'progress' => $validated['progress'],
+                'anggota1' => $validated['anggota1'] ?? null,
+                'anggota2' => $validated['anggota2'] ?? null,
+                'anggota3' => $validated['anggota3'] ?? null,
+                'anggota4' => $validated['anggota4'] ?? null,
+                'anggota5' => $validated['anggota5'] ?? null,
             ]
         );
 
-        // Upload foto kegiatan jika ada
         if ($request->hasFile('foto_kegiatan')) {
             $file = $request->file('foto_kegiatan');
             $filePath = $file->store('foto_kegiatan', 'public');

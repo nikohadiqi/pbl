@@ -12,13 +12,14 @@ use App\Models\Tantangan;
 use App\Models\Estimasi;
 use App\Models\Biaya;
 use App\Models\Anggota_Tim_Pbl;
+use App\Models\PeriodePBL;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class RencanaProyekController extends Controller
 {
     public function create()
     {
-        $kodeTim = $this->getKodeTimByAuth();
+        $kodeTim = getKodeTimByAuth();
 
         $rencanaProyek = $kodeTim ? RencanaProyek::where('kode_tim', $kodeTim)->first() : null;
         $tahapanPelaksanaan = $kodeTim ? TahapanPelaksanaan::where('kode_tim', $kodeTim)->get() : collect();
@@ -217,14 +218,5 @@ class RencanaProyekController extends Controller
 
         Alert::success('Berhasil!', 'Estimasi Waktu Pekerjaan Berhasil Disimpan!');
         return redirect()->route('mahasiswa.rpp.rencana-proyek.create')->with('active_step', 'step6');
-    }
-
-    /**
-     * Private helper to get kode_tim for current authenticated mahasiswa
-     */
-    private function getKodeTimByAuth()
-    {
-        $nim = Auth::guard('mahasiswa')->user()->nim ?? null;
-        return Anggota_Tim_Pbl::where('nim', $nim)->value('kode_tim');
     }
 }

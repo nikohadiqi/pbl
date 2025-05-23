@@ -12,16 +12,8 @@
                     <div class="col-sm-auto col-4">
                         <div class="avatar avatar-xl position-relative">
                             <div>
-                                {{-- <label for="file-input"
-                                    class="btn btn-sm btn-icon-only bg-gradient-light position-absolute bottom-0 end-0 mb-n2 me-n2">
-                                    <i class="fa fa-pen top-0" data-bs-toggle="tooltip" data-bs-placement="top" title=""
-                                        aria-hidden="true" data-bs-original-title="Edit Image"
-                                        aria-label="Edit Image"></i>
-                                    <span class="sr-only">Edit Image</span>
-                                </label> --}}
-
                                 <span class="h-12 w-12 rounded-full overflow-hidden bg-gray-100">
-                                    <img src="{{ asset('assets/img/logo-poliwangi.png') }}" alt="bruce"
+                                    <img src="{{ asset('assets/img/logo-poliwangi.png') }}" alt="logo"
                                         class="w-100 border-radius-lg shadow-sm">
                                 </span>
                             </div>
@@ -33,20 +25,12 @@
                                 Mahasiswa
                             </h5>
                             <p class="mb-0 font-weight-bold text-sm">
-                                {{ Auth::guard('mahasiswa')->user()->nim }}
+                                {{ $mahasiswa->nim ?? 'NIM tidak tersedia' }}
                             </p>
                         </div>
                     </div>
                     <div class="col-sm-auto ms-sm-auto mt-sm-0 mt-3 d-flex">
-                        {{-- <label class="form-check-label mb-0">
-                            <small id="profileVisibility">
-                                Switch to invisible
-                            </small>
-                        </label>
-                        <div class="form-check form-switch ms-2">
-                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault23" checked=""
-                                onchange="visible()">
-                        </div> --}}
+                        {{-- Optional toggle or other controls --}}
                     </div>
                 </div>
             </div>
@@ -59,27 +43,25 @@
                 <div class="card-body pt-0">
                     <!-- Informasi Dasar -->
                     <div class="form-group">
-                        <label for="nip" class="form-control-label">NIM</label>
-                        <input class="form-control" name="nip" type="text" value="{{ $mahasiswa->nim ?? '-' }}"
-                            readonly>
+                        <label for="nim" class="form-control-label">NIM</label>
+                        <input class="form-control" name="nim" type="text" value="{{ $mahasiswa->nim ?? '-' }}" readonly>
                     </div>
                     <div class="form-group">
                         <label for="nama" class="form-control-label">Nama</label>
-                        <input class="form-control" name="nama" type="text" value="{{ $mahasiswa->nama ?? '-' }}"
-                            readonly>
+                        <input class="form-control" name="nama" type="text" value="{{ $mahasiswa->nama ?? '-' }}" readonly>
                     </div>
                     <div class="form-group">
                         <label for="role" class="form-control-label">Role</label>
-                        <input class="form-control" name="role" type="text" value="{{ $akun->role }}" readonly>
+                        <input class="form-control" name="role" type="text" value="{{ $akun->role ?? '-' }}" readonly>
                     </div>
 
                     <!-- Informasi Tim -->
                     <hr class="horizontal dark">
                     <h6 class="mt-4">Informasi Tim</h6>
                     <div class="card mb-2 p-3 border">
-                        <p><strong>Kode Tim:</strong> {{ $akun->kode_tim ?? '-' }}</p>
+                        <p><strong>Kode Tim:</strong> {{ $timPbl->kode_tim ?? '-' }}</p>
                         <p><strong>Kelas:</strong> {{ $mahasiswa->kelas ?? '-' }}</p>
-                        <p><strong>Manajer Proyek:</strong> {{ $timPbl->manproFk->nama ?? '-' }}</p>
+                        <p><strong>Manajer Proyek:</strong> {{ $timPbl->manproFK->nama ?? '-' }}</p>
                     </div>
 
                     <a href="{{ route('mahasiswa.profil.ubah-password') }}"

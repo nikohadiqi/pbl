@@ -6,6 +6,7 @@
 <div class="container-fluid py-4">
     <!-- Project Card -->
     <div class="card p-4 mb-3 shadow-sm">
+        @if($tim)
         <div class="d-flex justify-content-between align-items-center">
             <div>
                 <p class="mb-1"><strong>Nomor ID:</strong> {{ $tim->kode_tim }}</p>
@@ -35,6 +36,11 @@
                 </div>
             </div>
         </div>
+        @else
+        <div class="alert alert-warning">
+            Anda belum tergabung dalam tim pada periode aktif saat ini.
+        </div>
+    @endif
     </div>
     <!-- End Project Card -->
 

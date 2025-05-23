@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\AkunMahasiswa;
 use App\Models\AkunDosen;
 use App\Models\Anggota_Tim_Pbl;
+use App\Models\regMahasiswa;
 use App\Models\TimPbl;
 use Illuminate\Support\Facades\Session;
 
@@ -62,42 +63,43 @@ class LoginController extends Controller
     }
 
     public function loginMahasiswa(Request $request, $validated)
-    {
-        $remember = $request->has('remember');
+{
+    $remember = $request->has('remember');
 
-        // Cari akun mahasiswa sesuai nim
-        $mahasiswa = AkunMahasiswa::where('nim', $validated['nim'])->first();
+    // Cari akun mahasiswa
+    $mahasiswa = AkunMahasiswa::where('nim', $validated['nim'])->first();
 
-        if ($mahasiswa && Hash::check($validated['password'], $mahasiswa->password) && $mahasiswa->role == 'mahasiswa') {
+    if ($mahasiswa && Hash::check($validated['password'], $mahasiswa->password) && $mahasiswa->role === 'mahasiswa') {
 
-            // Cari anggota_tim_pbl yang punya nim tersebut, ambil anggota terbaru (misal by created_at)
-            $anggota = \App\Models\Anggota_Tim_Pbl::where('nim', $validated['nim'])
-                ->orderBy('created_at', 'desc')
-                ->first();
+        // Ambil semua kode_tim dari mahasiswa
+        $kodeTimList = Anggota_Tim_Pbl::where('nim', $validated['nim'])->pluck('kode_tim');
 
-            if (!$anggota) {
-                return back()->withErrors(['nim' => 'Anda belum terdaftar dalam tim PBL manapun.']);
-            }
+        // Cari tim aktif yang sesuai
+        $timAktif = regMahasiswa::whereIn('kode_tim', $kodeTimList)
+            ->where('status', 'approved')
+            ->whereHas('periodeFK', function ($query) {
+                $query->where('status', '!=', 'Selesai');
+            })
+            ->latest('created_at')
+            ->first();
 
-            // Dari anggota ambil kode_tim, lalu cek status timnya di tim_pbl
-            $statusTim = TimPbl::where('kode_tim', $anggota->kode_tim)
-                ->value('status');
-
-            if ($statusTim !== 'approved') {
-                return back()->withErrors(['nim' => 'Akun Anda belum divalidasi oleh Manajer Proyek.']);
-            }
-
-            // Logout guard lain sebelum login mahasiswa
-            Auth::guard('web')->logout();
-            Auth::guard('dosen')->logout();
-
-            Auth::guard('mahasiswa')->login($mahasiswa, $remember);
-
-            return redirect()->route('mahasiswa.dashboard');
+        if (!$timAktif) {
+            return back()->withErrors(['nim' => 'Anda belum terdaftar di tim aktif yang valid pada periode berjalan.']);
         }
 
-        return back()->withErrors(['nim' => 'NIM atau password salah.']);
+        // Login
+        Auth::guard('web')->logout();
+        Auth::guard('dosen')->logout();
+        Auth::guard('mahasiswa')->login($mahasiswa, $remember);
+
+        // Simpan informasi tim ke session jika perlu
+        session(['tim' => $timAktif]);
+
+        return redirect()->route('mahasiswa.dashboard');
     }
+
+    return back()->withErrors(['nim' => 'NIM atau password salah.']);
+}
 
     public function loginDosen(Request $request, $validated)
     {

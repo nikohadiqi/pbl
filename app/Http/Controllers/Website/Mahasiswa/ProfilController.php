@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Website\Mahasiswa;
 
 use App\Http\Controllers\Controller;
 use App\Models\AkunMahasiswa;
+use App\Models\PeriodePBL;
 use App\Models\TimPbl;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,13 +15,23 @@ class ProfilController extends Controller
 {
     public function index()
     {
-        $akun = Auth::guard('mahasiswa')->user(); // akun_mahasiswa
-        $mahasiswa = $akun->mahasiswa; // relasi ke data_mahasiswa
+        $akun = Auth::guard('mahasiswa')->user();
+        $mahasiswa = $akun->mahasiswa;
 
-        // Ambil data dari tim
-        $timPbl = TimPbl::with(['manproFK'])
-                ->where('kode_tim', $akun->kode_tim)
+        // Ambil periode aktif
+        $periodeAktif = PeriodePBL::where('status', 'Aktif')->first();
+
+        // Pakai helper untuk ambil kode_tim
+        $kode_tim = getKodeTimByAuth();
+
+        $timPbl = null;
+
+        if ($kode_tim && $periodeAktif) {
+            $timPbl = TimPbl::with(['manproFK'])
+                ->where('kode_tim', $kode_tim)
+                ->where('periode', $periodeAktif->id)
                 ->first();
+        }
 
         return view('mahasiswa.profil', compact('akun', 'mahasiswa', 'timPbl'));
     }

@@ -15,7 +15,13 @@ class regMahasiswa extends Model
     protected $primaryKey = 'kode_tim'; // Primary key
 
     protected $fillable = [
-        'kode_tim', 'kelas', 'kelompok', 'manpro', 'periode'
+        'kode_tim',
+        'kelas',
+        'kelompok',
+        'manpro',
+        'periode',
+        'status',
+        'alasan_reject'
     ];
 
     // Relasi: Tim memiliki banyak anggota
@@ -32,5 +38,10 @@ class regMahasiswa extends Model
     public function manproFK()
     {
         return $this->belongsTo(Dosen::class, 'manpro', 'nip');
+    }
+
+    public function periodeFK()
+    {
+        return $this->belongsTo(PeriodePBL::class, 'periode', 'id');
     }
 }

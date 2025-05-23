@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Anggota_Tim_Pbl;
 use App\Models\PelaporanUTS;
 use App\Models\PelaporanUAS;
+use App\Models\PeriodePBL;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -15,16 +16,12 @@ class PelaporanController extends Controller
 {
     public function index()
     {
-        $nim = Auth::guard('mahasiswa')->user()->nim;
-        $anggota = Anggota_Tim_Pbl::where('nim', $nim)->first();
+        $kode_tim = getKodeTimByAuth();
 
-        if (!$anggota) {
-            return redirect()->back()->with('error', 'Anda belum tergabung dalam tim PBL.');
+        if (!$kode_tim) {
+            return redirect()->back()->with('error', 'Data tim periode aktif tidak ditemukan.');
         }
 
-        $kode_tim = $anggota->kode_tim;
-
-        // Ambil data laporan UTS dan UAS berdasarkan kode_tim jika ada
         $pelaporanUTS = PelaporanUTS::where('kode_tim', $kode_tim)->first();
         $pelaporanUAS = PelaporanUAS::where('kode_tim', $kode_tim)->first();
 
@@ -33,26 +30,26 @@ class PelaporanController extends Controller
 
     public function storeUTS(Request $request)
     {
-        $nim = Auth::guard('mahasiswa')->user()->nim;
-        $anggota = Anggota_Tim_Pbl::where('nim', $nim)->first();
+        $kode_tim = $this->getKodeTimByAuth();
+
+        if (!$kode_tim) {
+            return redirect()->back()->with('error', 'Data tim periode aktif tidak ditemukan.');
+        }
 
         $validator = Validator::make($request->all(), [
             'keterangan' => 'required|string',
             'link_drive' => 'required|url',
             'link_youtube' => 'nullable|url',
-            'laporan_pdf' => 'nullable|file|mimes:pdf|max:10240', // max 10MB
+            'laporan_pdf' => 'nullable|file|mimes:pdf|max:10240',
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $kode_tim = $request->kode_tim;
-
         $pelaporan = PelaporanUTS::where('kode_tim', $kode_tim)->first();
 
         if ($pelaporan) {
-            // Update existing
             $pelaporan->keterangan = $request->keterangan;
             $pelaporan->link_drive = $request->link_drive;
             $pelaporan->link_youtube = $request->link_youtube;
@@ -65,14 +62,13 @@ class PelaporanController extends Controller
 
             $pelaporan->save();
         } else {
-            // Create new
             $filePath = null;
             if ($request->hasFile('laporan_pdf')) {
                 $file = $request->file('laporan_pdf');
                 $filePath = $file->store('laporan_pbl', 'public');
             }
 
-            $pelaporan = PelaporanUTS::create([
+            PelaporanUTS::create([
                 'kode_tim' => $kode_tim,
                 'keterangan' => $request->keterangan,
                 'link_drive' => $request->link_drive,
@@ -85,28 +81,29 @@ class PelaporanController extends Controller
         return redirect()->route('mahasiswa.pelaporan-pbl');
     }
 
+
     public function storeUAS(Request $request)
     {
-        $nim = Auth::guard('mahasiswa')->user()->nim;
-        $anggota = Anggota_Tim_Pbl::where('nim', $nim)->first();
+        $kode_tim = $this->getKodeTimByAuth();
+
+        if (!$kode_tim) {
+            return redirect()->back()->with('error', 'Data tim periode aktif tidak ditemukan.');
+        }
 
         $validator = Validator::make($request->all(), [
             'keterangan' => 'required|string',
             'link_drive' => 'required|url',
             'link_youtube' => 'nullable|url',
-            'laporan_pdf' => 'nullable|file|mimes:pdf|max:10240', // max 10MB
+            'laporan_pdf' => 'nullable|file|mimes:pdf|max:10240',
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $kode_tim = $request->kode_tim;
-
         $pelaporan = PelaporanUAS::where('kode_tim', $kode_tim)->first();
 
         if ($pelaporan) {
-            // Update existing
             $pelaporan->keterangan = $request->keterangan;
             $pelaporan->link_drive = $request->link_drive;
             $pelaporan->link_youtube = $request->link_youtube;
@@ -119,14 +116,13 @@ class PelaporanController extends Controller
 
             $pelaporan->save();
         } else {
-            // Create new
             $filePath = null;
             if ($request->hasFile('laporan_pdf')) {
                 $file = $request->file('laporan_pdf');
                 $filePath = $file->store('laporan_pbl', 'public');
             }
 
-            $pelaporan = PelaporanUAS::create([
+            PelaporanUAS::create([
                 'kode_tim' => $kode_tim,
                 'keterangan' => $request->keterangan,
                 'link_drive' => $request->link_drive,
