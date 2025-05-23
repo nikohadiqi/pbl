@@ -15,7 +15,6 @@
             <div class="d-flex gap-2 flex-wrap">
                 <a href="{{ route('dosen.daftar-tim.logbook', $tim->kode_tim) }}" class="btn btn-outline-primary btn-sm">Lihat Logbook</a>
                 <a href="{{ route('dosen.daftar-tim.laporan', $tim->kode_tim) }}" class="btn btn-outline-primary btn-sm">Lihat Laporan</a>
-                <a href="{{ route('dosen.daftar-tim.penilaian', ['kode_tim' => $tim->kode_tim]) }}" class="btn btn-outline-primary btn-sm">Penilaian Mahasiswa</a>
             </div>
         </div>
         <div class="text-center mt-3 mt-md-0" style="width: 150px;">

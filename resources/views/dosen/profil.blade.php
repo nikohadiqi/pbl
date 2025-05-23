@@ -62,6 +62,7 @@
                         <p><strong>Kelas:</strong> {{ $pengampu->kelasFk->kelas ?? '-' }}</p>
                         <p><strong>Mata Kuliah:</strong> {{ $pengampu->matkulFK->kode ?? '-' }} - {{ $pengampu->matkulFK->matakuliah ?? '-' }} </p>
                         <p><strong>Status Pengampu:</strong> {{ $pengampu->status }}</p>
+                        <p><strong>Periode PBL:</strong> Semester {{ $pengampu->periodeFK->semester }} / {{ $pengampu->periodeFK->tahun }}</p>
                     </div>
                     @empty
                     <p class="text-muted">Belum mengampu kelas apapun.</p>

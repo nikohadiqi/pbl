@@ -18,7 +18,17 @@ class PengampuController extends Controller
     public function searchManpro(Request $request)
     {
         $search = $request->q;
+
+        // Ambil periode yang sedang aktif
+        $periodeAktif = PeriodePBL::where('status', 'Aktif')->first();
+
+        if (!$periodeAktif) {
+            return response()->json([]); // Tidak ada periode aktif, kembalikan kosong
+        }
+
+        // Cari dosen pengampu Manajer Proyek pada periode aktif
         $data = Pengampu::where('status', 'Manajer Proyek')
+            ->where('periode_id', $periodeAktif->id)
             ->whereHas('dosenFk', function ($query) use ($search) {
                 $query->where('nama', 'like', "%$search%")
                     ->orWhere('nip', 'like', "%$search%");
@@ -27,8 +37,12 @@ class PengampuController extends Controller
             ->limit(10)
             ->get();
 
+        // Format response JSON
         return response()->json($data->map(function ($item) {
-            return ['id' => $item->dosenFk->nip, 'text' => $item->dosenFk->nip . ' - ' . $item->dosenFk->nama];
+            return [
+                'id' => $item->dosenFk->nip,
+                'text' => $item->dosenFk->nip . ' - ' . $item->dosenFk->nama
+            ];
         }));
     }
 

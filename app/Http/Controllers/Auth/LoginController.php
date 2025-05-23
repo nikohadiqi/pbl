@@ -63,43 +63,43 @@ class LoginController extends Controller
     }
 
     public function loginMahasiswa(Request $request, $validated)
-{
-    $remember = $request->has('remember');
+    {
+        $remember = $request->has('remember');
 
-    // Cari akun mahasiswa
-    $mahasiswa = AkunMahasiswa::where('nim', $validated['nim'])->first();
+        // Cari akun mahasiswa
+        $mahasiswa = AkunMahasiswa::where('nim', $validated['nim'])->first();
 
-    if ($mahasiswa && Hash::check($validated['password'], $mahasiswa->password) && $mahasiswa->role === 'mahasiswa') {
+        if ($mahasiswa && Hash::check($validated['password'], $mahasiswa->password) && $mahasiswa->role === 'mahasiswa') {
 
-        // Ambil semua kode_tim dari mahasiswa
-        $kodeTimList = Anggota_Tim_Pbl::where('nim', $validated['nim'])->pluck('kode_tim');
+            // Ambil semua kode_tim dari mahasiswa
+            $kodeTimList = Anggota_Tim_Pbl::where('nim', $validated['nim'])->pluck('kode_tim');
 
-        // Cari tim aktif yang sesuai
-        $timAktif = regMahasiswa::whereIn('kode_tim', $kodeTimList)
-            ->where('status', 'approved')
-            ->whereHas('periodeFK', function ($query) {
-                $query->where('status', '!=', 'Selesai');
-            })
-            ->latest('created_at')
-            ->first();
+            // Cari tim aktif yang sesuai
+            $timAktif = regMahasiswa::whereIn('kode_tim', $kodeTimList)
+                ->where('status', 'approved')
+                ->whereHas('periodeFK', function ($query) {
+                    $query->where('status', '!=', 'Selesai');
+                })
+                ->latest('created_at')
+                ->first();
 
-        if (!$timAktif) {
-            return back()->withErrors(['nim' => 'Anda belum terdaftar di tim aktif yang valid pada periode berjalan.']);
+            if (!$timAktif) {
+                return back()->withErrors(['nim' => 'Anda belum terdaftar di tim aktif yang valid pada periode berjalan.']);
+            }
+
+            // Login
+            Auth::guard('web')->logout();
+            Auth::guard('dosen')->logout();
+            Auth::guard('mahasiswa')->login($mahasiswa, $remember);
+
+            // Simpan informasi tim ke session jika perlu
+            session(['tim' => $timAktif]);
+
+            return redirect()->route('mahasiswa.dashboard');
         }
 
-        // Login
-        Auth::guard('web')->logout();
-        Auth::guard('dosen')->logout();
-        Auth::guard('mahasiswa')->login($mahasiswa, $remember);
-
-        // Simpan informasi tim ke session jika perlu
-        session(['tim' => $timAktif]);
-
-        return redirect()->route('mahasiswa.dashboard');
+        return back()->withErrors(['nim' => 'NIM atau password salah.']);
     }
-
-    return back()->withErrors(['nim' => 'NIM atau password salah.']);
-}
 
     public function loginDosen(Request $request, $validated)
     {

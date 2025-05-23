@@ -7,6 +7,9 @@
     <div class="card p-4">
         <div class="d-flex justify-content-between align-items-center">
             <h4 class="fw-bold">Validasi Tim PBL Yang Diampu</h4>
+            <a href="{{ route('dosen.validasi-tim.riwayat-tim-pbl') }}">
+                <button class="btn btn-primary text-white fw-bold"><i class="bi bi-journal-bookmark"></i> Riwayat Tim PBL Yang Diampu</button>
+            </a>
         </div>
         <p class="text-sm">Berikut daftar seluruh tim yang diampu oleh Anda sebagai Manajer Proyek pada periode aktif.
         </p>

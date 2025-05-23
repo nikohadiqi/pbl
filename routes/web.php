@@ -194,6 +194,7 @@ Route::middleware(['auth:dosen'])->group(function () {
         Route::get('/', [ValidasiController::class, 'index'])->name('dosen.validasi-tim');
         Route::post('/approve/{kode_tim}', [ValidasiController::class, 'approve'])->name('dosen.validasi-tim.approve');
         Route::post('/reject/{kode_tim}', [ValidasiController::class, 'reject'])->name('dosen.validasi-tim.reject');
+        Route::get('/riwayat-tim-pbl', [ValidasiController::class, 'history'])->name('dosen.validasi-tim.riwayat-tim-pbl');
     });
 
     // Daftar Tim PBL
