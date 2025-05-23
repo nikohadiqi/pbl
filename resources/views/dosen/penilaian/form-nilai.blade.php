@@ -8,16 +8,18 @@
     <div class="card shadow">
         <div class="card-header bg-white">
             <h4 class="mb-0">Rubrik Penilaian</h4>
-            <small class="text-muted">Nama Mahasiswa: <strong>{{ $mahasiswa->nama }}</strong></small>
+            <small class="text-muted">Nama Mahasiswa: <strong>{{ $mahasiswa->nama }}</strong></small><br>
+            <small class="text-muted">Status Pengampu:
+                <strong class="text-primary">{{ $pengampu->status ?? '-' }}</strong>
+            </small>
         </div>
         <div class="card-body">
 
-            {{-- Alert sukses --}}
+            {{-- Alert --}}
             @if(session('success'))
                 <div class="alert alert-success">{{ session('success') }}</div>
             @endif
 
-            {{-- Alert error --}}
             @if(session('error'))
                 <div class="alert alert-danger">{{ session('error') }}</div>
             @endif
@@ -32,81 +34,93 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('dosen.penilaian.beri-nilai', $mahasiswa->nim) }}" id="rubrikForm">
-                @csrf
-                <table class="table table-bordered text-center align-middle">
-                    <thead class="table-warning text-dark">
-                        <tr>
-                            <th>Aspek Penilaian</th>
-                            <th>Bobot (%)</th>
-                            <th>Nilai (1-4)</th>
-                        </tr>
-                    </thead>
-                    <tbody id="rubrikTable">
-                        @foreach($aspek as $index => $namaAspek)
-                        <tr>
-                            <td class="bg-white text-dark">{{ ucwords(str_replace('_', ' ', $namaAspek)) }}</td>
-                            <td class="bg-white text-warning fw-semibold">
-                                <input 
-                                    type="number" 
-                                    class="form-control form-control-sm bobot text-center fw-bold text-warning border-warning" 
-                                    value="{{ $bobot[$namaAspek] }}" 
-                                    readonly
-                                >
-                            </td>
-                            <td class="bg-white">
-                                @for($nilaiOpt = 1; $nilaiOpt <= 4; $nilaiOpt++)
-                                <label class="me-2">
-                                    <input 
-                                        type="radio" 
-                                        name="nilai{{ $index }}" 
-                                        value="{{ $nilaiOpt }}" 
-                                        onclick="hitungTotal()"
-                                        {{ old("nilai$index", $nilaiAspek[$index] ?? null) == $nilaiOpt ? 'checked' : '' }}
-                                        required
-                                    > {{ $nilaiOpt }}
-                                </label>
-                                @endfor
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+            @php
+                $status = $pengampu->status ?? null;
+                $isManajer = $status === 'Manajer Proyek';
+                $aspekAktif = $isManajer ? $aspekSoftSkill : $aspekAkademik;
+            @endphp
 
-                <div class="card mt-4 border-0 shadow-sm">
-                    <div class="card-body bg-light">
-                        <div class="row text-center">
-                            <div class="col-md-3">
-                                <p class="fw-bold text-dark mb-1">Total Bobot</p>
-                                <h5 class="text-warning">{{ array_sum($bobot) }}%</h5>
-                            </div>
-                            <div class="col-md-3">
-                                <p class="fw-bold text-dark mb-1">Total Nilai (0-4)</p>
-                                <h5 id="totalNilai" class="text-primary">0</h5>
-                            </div>
-                            <div class="col-md-3">
-                                <p class="fw-bold text-dark mb-1">Angka Nilai</p>
-                                <h5 id="angkaNilai" class="text-success">0</h5>
-                            </div>
-                            <div class="col-md-3">
-                                <p class="fw-bold text-dark mb-1">Huruf Nilai</p>
-                                <h5 id="hurufNilai" class="text-danger">-</h5>
+            @if(in_array($status, ['Manajer Proyek', 'Dosen Mata Kuliah']))
+                <form method="POST" action="{{ route('dosen.penilaian.beri-nilai', $mahasiswa->nim) }}" id="rubrikForm">
+                    @csrf
+                    <table class="table table-bordered text-center align-middle">
+                        <thead class="table-warning text-dark">
+                            <tr>
+                                <th>Aspek Penilaian</th>
+                                <th>Bobot (%)</th>
+                                <th>Nilai (1-4)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($aspekAktif as $index => $namaAspek)
+                                <tr>
+                                    <td class="bg-white text-dark">{{ ucwords(str_replace('_', ' ', $namaAspek)) }}</td>
+                                    <td class="bg-white text-warning fw-semibold">
+                                        <input
+                                            type="number"
+                                            class="form-control form-control-sm bobot text-center fw-bold text-warning border-warning"
+                                            value="{{ $bobot[$namaAspek] }}"
+                                            readonly
+                                        >
+                                    </td>
+                                    <td class="bg-white">
+                                       @for($nilaiOpt = 1; $nilaiOpt <= 4; $nilaiOpt++)
+                    <label class="me-2">
+                        <input
+                            type="radio"
+                            name="nilai{{ $index }}"
+                            value="{{ $nilaiOpt }}"
+                            onclick="hitungTotal()"
+                            {{ old("nilai$index", $nilaiAspekGabungan[$namaAspek] ?? null) == $nilaiOpt ? 'checked' : '' }}
+                            required
+                        > {{ $nilaiOpt }}
+                    </label>
+                @endfor
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+
+                    <div class="card mt-4 border-0 shadow-sm">
+                        <div class="card-body bg-light">
+                            <div class="row text-center">
+                                <div class="col-md-3">
+                                    <p class="fw-bold text-dark mb-1">Total Bobot</p>
+                                    <h5 class="text-warning">{{ array_sum($bobot) }}%</h5>
+                                </div>
+                                <div class="col-md-3">
+                                    <p class="fw-bold text-dark mb-1">Total Nilai (0-4)</p>
+                                    <h5 id="totalNilai" class="text-primary">0</h5>
+                                </div>
+                                <div class="col-md-3">
+                                    <p class="fw-bold text-dark mb-1">Angka Nilai</p>
+                                    <h5 id="angkaNilai" class="text-success">0</h5>
+                                </div>
+                                <div class="col-md-3">
+                                    <p class="fw-bold text-dark mb-1">Huruf Nilai</p>
+                                    <h5 id="hurufNilai" class="text-danger">-</h5>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="mt-3 text-end">
-                    <button type="submit" class="btn btn-primary fw-bold">Simpan Nilai</button>
+                    <div class="mt-3 text-end">
+                        <button type="submit" class="btn btn-primary fw-bold">Simpan Nilai</button>
+                    </div>
+                </form>
+            @else
+                <div class="alert alert-warning">
+                    Status pengampu <strong>{{ $status }}</strong> tidak dapat melakukan penilaian.
                 </div>
-            </form>
+            @endif
         </div>
     </div>
 </div>
 
-{{-- Script untuk update nilai total secara otomatis --}}
+{{-- Script --}}
 <script>
-    const aspek = @json($aspek);
+    const aspek = @json($aspekAktif);
     const bobot = @json($bobot);
     const konversiHuruf = (nilai) => {
         if (nilai >= 85) return 'A';
@@ -147,7 +161,6 @@
         document.getElementById('hurufNilai').innerText = hurufNilai;
     }
 
-    // Hitung nilai saat halaman dimuat jika sudah ada nilai tersimpan
     document.addEventListener('DOMContentLoaded', hitungTotal);
 </script>
 @endsection

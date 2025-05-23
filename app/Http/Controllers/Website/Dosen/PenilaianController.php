@@ -31,19 +31,23 @@ class PenilaianController extends Controller
 
         // Pastikan dosen adalah pengampu kelas mahasiswa
         $pengampu = Pengampu::where('dosen_id', $auth->nim)  // biasanya dosen id pakai nip, bukan nim
-            ->where('kelas_id', $mahasiswa->kelas)
-            ->first();
+             ->where('kelas_id', $mahasiswa->kelas)
+    ->first();
 
-        if (!$pengampu) {
-            abort(403, 'Anda tidak memiliki akses menilai mahasiswa ini.');
-        }
+if (!$pengampu) {
+    abort(403, 'Anda tidak memiliki akses menilai mahasiswa ini.');
+}
 
-        $aspek = [
-            'critical_thinking', 'kolaborasi', 'kreativitas', 'komunikasi', 'fleksibilitas',
-            'kepemimpinan', 'produktifitas', 'social_skill', 'konten', 'tampilan_visual_presentasi',
-            'kosakata', 'tanya_jawab', 'mata_gerak_tubuh', 'penulisan_laporan', 'pilihan_kata',
-            'konten_2', 'sikap_kerja', 'proses', 'kualitas'
-        ];
+// Pisahkan aspek berdasarkan status
+$aspekSoftSkill = [
+    'critical_thinking', 'kolaborasi', 'kreativitas', 'komunikasi', 'fleksibilitas',
+    'kepemimpinan', 'produktifitas', 'social_skill'
+];
+
+$aspekAkademik = [
+    'konten', 'tampilan_visual_presentasi', 'kosakata', 'tanya_jawab', 'mata_gerak_tubuh',
+    'penulisan_laporan', 'pilihan_kata', 'konten_2', 'sikap_kerja', 'proses', 'kualitas'
+];
 
         $bobot = [
             'critical_thinking' => 5,
@@ -66,55 +70,57 @@ class PenilaianController extends Controller
             'proses' => 15,
             'kualitas' => 15
         ];
+// Ambil nilai dari dosen saat ini (pengampu)
+$nilaiMahasiswa = NilaiMahasiswa::where('nim', $nim)
+    ->where('pengampu_id', $pengampu->id)
+    ->first();
 
-        if ($request->isMethod('post')) {
-            $total = 0;
-            $totalBobot = 0;
-            $nilaiPerAspek = [];
+$nilaiAspekGabungan = $nilaiMahasiswa ? json_decode($nilaiMahasiswa->nilai_aspek_json, true) : [];
 
-            foreach ($aspek as $index => $namaAspek) {
-                $nilai = $request->input("nilai$index");
-                $nilai = $nilai !== null ? intval($nilai) : 0;
-                $bobotValue = $bobot[$namaAspek] ?? 0;
+$isManajer = $pengampu->status === 'Manajer Proyek';
+$isDosenMatkul = $pengampu->status === 'Dosen Mata Kuliah';
 
-                $total += $bobotValue * $nilai;
-                $totalBobot += $bobotValue;
-                $nilaiPerAspek[$index] = $nilai;
-            }
+$aspekAktif = $isManajer ? $aspekSoftSkill : $aspekAkademik;
 
-            $skorSkala = $totalBobot > 0 ? $total / $totalBobot : 0;
-            $angka = $skorSkala * 25;
-            $huruf = $this->konversiHuruf($angka);
+if ($request->isMethod('post')) {
+    $total = 0;
+    $totalBobot = 0;
+    $nilaiPerAspek = [];
 
-            NilaiMahasiswa::updateOrCreate(
-                ['nim' => $nim, 'pengampu_id' => $pengampu->id],
-                [
-                    'total_nilai' => $total,
-                    'angka_nilai' => $angka,
-                    'huruf_nilai' => $huruf,
-                    'nilai_aspek_json' => json_encode($nilaiPerAspek),
-                    'dosen_id' => $auth->nip,
-                ]
-            );
+    foreach ($aspekAktif as $index => $namaAspek) {
+        $nilai = $request->input("nilai$index");
+        $nilai = $nilai !== null ? intval($nilai) : 0;
+        $bobotValue = $bobot[$namaAspek] ?? 0;
 
-            return redirect()->route('dosen.penilaian.beri-nilai', $nim)
-                ->with('success', 'Nilai berhasil disimpan.');
-        }
-
-        $nilaiMahasiswa = NilaiMahasiswa::where('nim', $nim)
-            ->where('pengampu_id', $pengampu->id)
-            ->first();
-
-        $nilaiAspek = [];
-        if ($nilaiMahasiswa && $nilaiMahasiswa->nilai_aspek_json) {
-            $nilaiAspek = json_decode($nilaiMahasiswa->nilai_aspek_json, true);
-        }
-
-        return view('dosen.penilaian.form-nilai', compact(
-            'mahasiswa', 'auth', 'aspek', 'bobot', 'nilaiAspek', 'nilaiMahasiswa'
-        ));
+        $total += $bobotValue * $nilai;
+        $totalBobot += $bobotValue;
+        $nilaiPerAspek[$namaAspek] = $nilai;
     }
 
+    $skorSkala = $totalBobot > 0 ? $total / $totalBobot : 0;
+    $angka = $skorSkala * 25;
+    $huruf = $this->konversiHuruf($angka);
+
+    NilaiMahasiswa::updateOrCreate(
+        ['nim' => $nim, 'pengampu_id' => $pengampu->id],
+        [
+            'total_nilai' => $total,
+            'angka_nilai' => $angka,
+            'huruf_nilai' => $huruf,
+            'nilai_aspek_json' => json_encode($nilaiPerAspek),
+            'dosen_id' => $auth->nim,
+        ]
+    );
+
+    return redirect()->route('dosen.penilaian.beri-nilai', $nim)
+        ->with('success', 'Nilai berhasil disimpan.');
+}
+
+return view('dosen.penilaian.form-nilai', compact(
+    'mahasiswa', 'auth', 'aspekSoftSkill', 'aspekAkademik', 'bobot',
+    'nilaiAspekGabungan', 'pengampu'
+));
+    }
     private function konversiHuruf($nilai)
     {
         if ($nilai >= 85) return 'A';
