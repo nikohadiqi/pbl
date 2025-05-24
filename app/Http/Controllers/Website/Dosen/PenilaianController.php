@@ -101,16 +101,39 @@ if ($request->isMethod('post')) {
     $angka = $skorSkala * 25;
     $huruf = $this->konversiHuruf($angka);
 
-    NilaiMahasiswa::updateOrCreate(
-        ['nim' => $nim, 'pengampu_id' => $pengampu->id],
-        [
-            'total_nilai' => $total,
-            'angka_nilai' => $angka,
-            'huruf_nilai' => $huruf,
-            'nilai_aspek_json' => json_encode($nilaiPerAspek),
-            'dosen_id' => $auth->nim,
-        ]
-    );
+     NilaiMahasiswa::updateOrCreate(
+                ['nim' => $nim, 'pengampu_id' => $pengampu->id],
+                array_merge(
+                    [
+                        'critical_thinking' => $nilaiPerAspek['critical_thinking'] ?? null,
+                        'kolaborasi' => $nilaiPerAspek['kolaborasi'] ?? null,
+                        'kreativitas' => $nilaiPerAspek['kreativitas'] ?? null,
+                        'komunikasi' => $nilaiPerAspek['komunikasi'] ?? null,
+                        'fleksibilitas' => $nilaiPerAspek['fleksibilitas'] ?? null,
+                        'kepemimpinan' => $nilaiPerAspek['kepemimpinan'] ?? null,
+                        'produktifitas' => $nilaiPerAspek['produktifitas'] ?? null,
+                        'social_skill' => $nilaiPerAspek['social_skill'] ?? null,
+                        'konten' => $nilaiPerAspek['konten'] ?? null,
+                        'tampilan_visual_presentasi' => $nilaiPerAspek['tampilan_visual_presentasi'] ?? null,
+                        'kosakata' => $nilaiPerAspek['kosakata'] ?? null,
+                        'tanya_jawab' => $nilaiPerAspek['tanya_jawab'] ?? null,
+                        'mata_gerak_tubuh' => $nilaiPerAspek['mata_gerak_tubuh'] ?? null,
+                        'penulisan_laporan' => $nilaiPerAspek['penulisan_laporan'] ?? null,
+                        'pilihan_kata' => $nilaiPerAspek['pilihan_kata'] ?? null,
+                        'konten_2' => $nilaiPerAspek['konten_2'] ?? null,
+                        'sikap_kerja' => $nilaiPerAspek['sikap_kerja'] ?? null,
+                        'proses' => $nilaiPerAspek['proses'] ?? null,
+                        'kualitas' => $nilaiPerAspek['kualitas'] ?? null,
+                    ],
+                    [
+                        'nilai_total' => $skorSkala,
+                        'nilai_angka' => $angka,
+                        'nilai_huruf' => $huruf,
+                        'nilai_aspek_json' => json_encode($nilaiPerAspek),
+                        'dosen_id' => $auth->nim,
+                    ]
+                )
+            );
 
     return redirect()->route('dosen.penilaian.beri-nilai', $nim)
         ->with('success', 'Nilai berhasil disimpan.');
