@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Website\Dosen;
 
 use App\Http\Controllers\Controller;
 use App\Models\Anggota_Tim_Pbl;
+use App\Models\PeriodePBL;
 use App\Models\TimPbl;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,6 +18,9 @@ class ValidasiController extends Controller
 
         $timPBL = TimPbl::with(['anggota.mahasiswaFK', 'manproFK', 'periodeFK'])
             ->where('manpro', $nip)
+            ->whereHas('periodeFK', function ($query) {
+                $query->where('status', 'Aktif');
+            })
             ->get();
 
         return view('dosen.validasi.validasi-tim', compact('timPBL'));
@@ -70,4 +74,26 @@ class ValidasiController extends Controller
         Alert::success('Berhasil!', 'Tim PBL telah ditolak.');
         return redirect()->route('dosen.validasi-tim');
     }
+
+    public function history(Request $request)
+    {
+        $nip = Auth::guard('dosen')->user()->nim;
+
+        $periodes = PeriodePBL::where('status', 'Selesai')->orderByDesc('created_at')->get();
+
+        $periodeId = $request->get('periode_id') ?? null;
+
+        if ($periodeId) {
+            $timPBL = TimPbl::with(['anggota.mahasiswaFK', 'manproFK', 'periodeFK'])
+                ->where('manpro', $nip)
+                ->where('periode', $periodeId)
+                ->orderByDesc('created_at')
+                ->get();
+        } else {
+            $timPBL = collect(); // kosongkan jika belum pilih periode
+        }
+
+        return view('dosen.validasi.history-tim-pbl', compact('timPBL', 'periodes', 'periodeId'));
+    }
+
 }

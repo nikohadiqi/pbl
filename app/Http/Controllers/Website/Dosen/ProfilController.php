@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Website\Dosen;
 
 use App\Http\Controllers\Controller;
 use App\Models\AkunDosen;
+use App\Models\PeriodePBL;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -16,8 +17,16 @@ class ProfilController extends Controller
         $akun = Auth::guard('dosen')->user();
         $dosen = $akun->dosen;
 
-        // Ambil semua pengampu yang terkait dosen
-        $pengampuFK = $dosen ? $dosen->pengampuFK()->with(['kelasFk', 'matkulFK'])->get() : [];
+        // Ambil periode yang sedang aktif
+        $periodeAktif = PeriodePBL::where('status', 'Aktif')->first();
+
+        // Ambil data pengampu berdasarkan periode aktif
+        $pengampuFK = $dosen && $periodeAktif
+            ? $dosen->pengampuFK()
+            ->where('periode_id', $periodeAktif->id)
+            ->with(['kelasFk', 'matkulFK', 'periodeFK'])
+            ->get()
+            : collect();
 
         return view('dosen.profil', compact('akun', 'dosen', 'pengampuFK'));
     }

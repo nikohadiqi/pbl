@@ -16,16 +16,23 @@ class DashboardController extends Controller
         $timCount = TimPBL::count();
         $mahasiswaCount = Mahasiswa::count();
         $dosenCount = Dosen::count();
-        // Menampilkan Data Tim dengan status 'approved'
+        // Menampilkan Data Tim dengan status 'approved' dan periode Aktif
         $timpbl = TimPBL::with(['anggota.mahasiswaFK', 'rencanaProyek', 'logbooks'])
             ->where('status', 'approved')
+            ->whereHas('periodeFK', function ($query) {
+                $query->where('status', 'Aktif');
+            })
             ->latest()
             ->take(5)
             ->get();
-        // Menampilkan Data Dosen Pengampu Terbaru
+
+        // Menampilkan Data Dosen Pengampu Terbaru dari periode Aktif
         $datadosen = Pengampu::with(['kelasFk', 'dosenFk', 'matkulFK', 'periodeFK'])
+            ->whereHas('periodeFK', function ($query) {
+                $query->where('status', 'Aktif');
+            })
             ->latest()
-            ->take(5) // Mengambil 5 data terbaru
+            ->take(5)
             ->get();
         return view('admin.dashboard-admin', compact(
             'timCount',

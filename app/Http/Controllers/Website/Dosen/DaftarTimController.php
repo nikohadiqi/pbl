@@ -39,7 +39,10 @@ class DaftarTimController extends Controller
         // Jika dosen adalah manpro
         if ($user && $user->is_manajer_proyek) {
             $query = TimPbl::with(['anggota.mahasiswaFK', 'manproFK', 'periodeFK', 'rencanaProyek'])
-                ->where('status', 'approved');
+                ->where('status', 'approved')
+                ->whereHas('periodeFK', function ($q) {
+                    $q->where('status', 'aktif');
+                });
 
             if (!empty($kelas)) {
                 $query->where('kelas', $kelas);
@@ -62,6 +65,9 @@ class DaftarTimController extends Controller
                 ->where('status', 'approved')
                 ->where('kelas', $kelas)
                 ->where('periode', $tahun)
+                ->whereHas('periodeFK', function ($q) {
+                    $q->where('status', 'aktif');
+                })
                 ->get();
         }
 
