@@ -30,7 +30,9 @@ class PelaporanController extends Controller
 
     public function storeUTS(Request $request)
     {
-        $kode_tim = $this->getKodeTimByAuth();
+        $mahasiswa = Auth::guard('mahasiswa')->user();
+
+        $kode_tim = getKodeTimByAuth();
 
         if (!$kode_tim) {
             return redirect()->back()->with('error', 'Data tim periode aktif tidak ditemukan.');
@@ -53,6 +55,7 @@ class PelaporanController extends Controller
             $pelaporan->keterangan = $request->keterangan;
             $pelaporan->link_drive = $request->link_drive;
             $pelaporan->link_youtube = $request->link_youtube;
+            $pelaporan->updated_by = $mahasiswa->mahasiswa->nama;
 
             if ($request->hasFile('laporan_pdf')) {
                 $file = $request->file('laporan_pdf');
@@ -74,6 +77,7 @@ class PelaporanController extends Controller
                 'link_drive' => $request->link_drive,
                 'link_youtube' => $request->link_youtube,
                 'laporan_pdf' => $filePath,
+                'updated_by' => $mahasiswa->mahasiswa->nama,
             ]);
         }
 
@@ -84,7 +88,9 @@ class PelaporanController extends Controller
 
     public function storeUAS(Request $request)
     {
-        $kode_tim = $this->getKodeTimByAuth();
+        $mahasiswa = Auth::guard('mahasiswa')->user();
+
+        $kode_tim = getKodeTimByAuth();
 
         if (!$kode_tim) {
             return redirect()->back()->with('error', 'Data tim periode aktif tidak ditemukan.');
@@ -107,6 +113,7 @@ class PelaporanController extends Controller
             $pelaporan->keterangan = $request->keterangan;
             $pelaporan->link_drive = $request->link_drive;
             $pelaporan->link_youtube = $request->link_youtube;
+            $pelaporan->updated_by = $mahasiswa->mahasiswa->nama;
 
             if ($request->hasFile('laporan_pdf')) {
                 $file = $request->file('laporan_pdf');
@@ -128,6 +135,7 @@ class PelaporanController extends Controller
                 'link_drive' => $request->link_drive,
                 'link_youtube' => $request->link_youtube,
                 'laporan_pdf' => $filePath,
+                'updated_by' => $mahasiswa->mahasiswa->nama,
             ]);
         }
 

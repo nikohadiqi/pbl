@@ -49,6 +49,8 @@ class LogbookController extends Controller
 
     public function store(Request $request)
     {
+        $mahasiswa = Auth::guard('mahasiswa')->user();
+
         $validated = $request->validate([
             'minggu' => 'nullable|integer|min:1|max:16',
             'aktivitas' => 'required|string|max:255',
@@ -62,7 +64,7 @@ class LogbookController extends Controller
             'anggota5' => 'nullable|string|max:255',
         ]);
 
-        $kodeTim = $this->getKodeTimByAuth();
+        $kodeTim = getKodeTimByAuth();
         if (!$kodeTim) {
             return redirect()->back()->with('error', 'Data tim periode aktif tidak ditemukan.');
         }
@@ -91,6 +93,7 @@ class LogbookController extends Controller
                 'anggota3' => $validated['anggota3'] ?? null,
                 'anggota4' => $validated['anggota4'] ?? null,
                 'anggota5' => $validated['anggota5'] ?? null,
+                'updated_by' => $mahasiswa->mahasiswa->nama,
             ]
         );
 

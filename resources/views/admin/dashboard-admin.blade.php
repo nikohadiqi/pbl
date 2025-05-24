@@ -103,7 +103,7 @@
                                 @endforeach
                             </ul>
                         </td>
-                        <td>{{ $item->manpro ?? '-' }}</td>
+                        <td class="text-wrap">{{ $item->manproFK->nip ?? '-' }}<br>{{ $item->manproFK->nama ?? '-' }}</td>
                         <td>{{ $item->kelas ?? '-' }}</td>
                         <td class="align-middle text-center">
                             <div class="d-flex align-items-center">

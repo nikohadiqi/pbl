@@ -45,7 +45,6 @@ class RegisterTimRequest extends FormRequest
             $kelas = strtoupper($this->kelas);
             $kelompok = $this->kelompok;
             $kode_tim = $kelas . $kelompok;
-            $periodeId = $this->periode;
 
             // 1. Cek jika tim dengan kode ini sudah approved
             $exists = regMahasiswa::where('kode_tim', $kode_tim)

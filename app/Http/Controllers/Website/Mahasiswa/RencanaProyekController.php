@@ -61,7 +61,7 @@ class RencanaProyekController extends Controller
             'evaluasi' => 'nullable|string',
         ]);
 
-        $kodeTim = $this->getKodeTimByAuth();
+        $kodeTim = getKodeTimByAuth();
         if (!$kodeTim) return back()->with('error', 'Tim tidak ditemukan!');
 
         $rencanaProyek = RencanaProyek::firstOrNew(['kode_tim' => $kodeTim]);
@@ -87,7 +87,7 @@ class RencanaProyekController extends Controller
             'keterangan.*' => 'nullable|string',
         ]);
 
-        $kodeTim = $this->getKodeTimByAuth();
+        $kodeTim = getKodeTimByAuth();
         if (!$kodeTim) return back()->with('error', 'Tim tidak ditemukan!');
 
         TahapanPelaksanaan::where('kode_tim', $kodeTim)->delete();
@@ -115,7 +115,7 @@ class RencanaProyekController extends Controller
             'bahan.*' => 'nullable|string',
         ]);
 
-        $kodeTim = $this->getKodeTimByAuth();
+        $kodeTim = getKodeTimByAuth();
         if (!$kodeTim) return back()->with('error', 'Tim tidak ditemukan!');
 
         KebutuhanPeralatan::where('kode_tim', $kodeTim)->delete();
@@ -144,7 +144,7 @@ class RencanaProyekController extends Controller
             'catatan.*' => 'nullable|string',
         ]);
 
-        $kodeTim = $this->getKodeTimByAuth();
+        $kodeTim = getKodeTimByAuth();
         if (!$kodeTim) return back()->with('error', 'Tim tidak ditemukan!');
 
         Tantangan::where('kode_tim', $kodeTim)->delete();
@@ -173,7 +173,7 @@ class RencanaProyekController extends Controller
             'catatan.*' => 'nullable|string',
         ]);
 
-        $kodeTim = $this->getKodeTimByAuth();
+        $kodeTim = getKodeTimByAuth();
         if (!$kodeTim) return back()->with('error', 'Tim tidak ditemukan!');
 
         Biaya::where('kode_tim', $kodeTim)->delete();
@@ -201,7 +201,7 @@ class RencanaProyekController extends Controller
             'catatan.*' => 'nullable|string',
         ]);
 
-        $kodeTim = $this->getKodeTimByAuth();
+        $kodeTim = getKodeTimByAuth();
         if (!$kodeTim) return back()->with('error', 'Tim tidak ditemukan!');
 
         Estimasi::where('kode_tim', $kodeTim)->delete();

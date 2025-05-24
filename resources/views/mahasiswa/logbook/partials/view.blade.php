@@ -28,6 +28,10 @@
                 @endfor
         </ul>
         <p><strong>Progress:</strong> {{ $logbook->progress ?? 0 }}%</p>
+        <p class="text-muted mt-2">
+            <i class="bi bi-person-circle me-1"></i>
+            <strong>Terakhir diperbarui oleh:</strong> {{ $logbook->updated_by }}
+        </p>
     </div>
 </div>
 @endif

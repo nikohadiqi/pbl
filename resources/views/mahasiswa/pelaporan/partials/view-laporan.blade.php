@@ -16,7 +16,7 @@
         <div class="form-group mt-2">
             <h6><i class="bi bi-youtube me-1 text-danger"></i> Link Youtube Proyek PBL</h6>
             <a href="{{ $pelaporan->link_youtube }}" target="_blank" class="text-decoration-none text-info">
-                {{ $pelaporan->link_youtube }}
+                {{ $pelaporan->link_youtube ?? 'Belum ada link Youtube yang di unggah' }}
             </a>
         </div>
 
@@ -31,6 +31,10 @@
         @else
         <p class="text-muted fst-italic">Tidak ada laporan PDF yang diupload.</p>
         @endif
+        <p class="text-muted mt-2">
+            <i class="bi bi-person-circle me-1"></i>
+            <strong>Terakhir diperbarui oleh:</strong> {{ $pelaporan->updated_by ?? '-' }}
+        </p>
     </div>
     @endif
 </div>

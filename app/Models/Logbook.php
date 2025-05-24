@@ -23,6 +23,7 @@ class Logbook extends Model
         'anggota5',
         'progress',
         'kode_tim',
+        'updated_by'
     ];
 
     public function mahasiswa()

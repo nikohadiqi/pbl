@@ -16,7 +16,8 @@ class PelaporanUTS extends Model
         'keterangan',
         'link_drive',
         'link_youtube',
-        'laporan_pdf'
+        'laporan_pdf',
+        'updated_by'
     ];
 
 

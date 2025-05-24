@@ -17,7 +17,7 @@ class DashboardController extends Controller
         $mahasiswaCount = Mahasiswa::count();
         $dosenCount = Dosen::count();
         // Menampilkan Data Tim dengan status 'approved' dan periode Aktif
-        $timpbl = TimPBL::with(['anggota.mahasiswaFK', 'rencanaProyek', 'logbooks'])
+        $timpbl = TimPBL::with(['anggota.mahasiswaFK', 'manproFK','rencanaProyek', 'logbooks'])
             ->where('status', 'approved')
             ->whereHas('periodeFK', function ($query) {
                 $query->where('status', 'Aktif');

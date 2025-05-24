@@ -40,7 +40,7 @@
         <div class="alert alert-warning">
             Anda belum tergabung dalam tim pada periode aktif saat ini.
         </div>
-    @endif
+        @endif
     </div>
     <!-- End Project Card -->
 
@@ -50,16 +50,29 @@
             <div class="card p-3 shadow-sm">
                 <small>Pengisian Logbook</small>
                 <h5><strong>Logbook</strong></h5>
-                <p>Minggu ke 5</p>
+                <p>
+                    @if($logbookTerakhir)
+                    Terakhir diisi pada minggu ke {{ $logbookTerakhir->minggu }}
+                    @else
+                    Belum ada pengisian logbook
+                    @endif
+                </p>
             </div>
         </div>
         <div class="col-md-6">
             <div class="card p-3 shadow-sm">
                 <small>Pengisian Laporan</small>
-                <h5><strong>Laporan UTS</strong></h5>
-                <p>Minggu ke 8</p>
+                <h5><strong>Laporan</strong></h5>
+                <p>
+                    @if($laporanTerakhir)
+                    Terakhir diisi: {{ $laporanTerakhir }}
+                    @else
+                    Belum ada pengisian laporan
+                    @endif
+                </p>
             </div>
         </div>
     </div>
+
 </div>
 @endsection

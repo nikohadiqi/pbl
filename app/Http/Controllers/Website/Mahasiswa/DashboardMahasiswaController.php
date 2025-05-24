@@ -17,15 +17,13 @@ class DashboardMahasiswaController extends Controller
     public function index()
     {
         $mahasiswa = Auth::guard('mahasiswa')->user();
-
-        // Ambil periode aktif
         $periodeAktif = PeriodePBL::where('status', 'Aktif')->first();
-
-        // Pakai helper untuk ambil kode_tim
         $kode_tim = getKodeTimByAuth();
 
         $tim = null;
         $timMembers = collect();
+        $logbookTerakhir = null;
+        $laporanTerakhir = null;
 
         if ($kode_tim && $periodeAktif) {
             $tim = TimPbl::with(['anggota.mahasiswaFK', 'manproFK', 'rencanaProyek', 'logbooks'])
@@ -35,6 +33,19 @@ class DashboardMahasiswaController extends Controller
 
             if ($tim) {
                 $timMembers = $tim->anggota;
+
+                // Logbook terakhir
+                $logbookTerakhir = $tim->logbooks->sortByDesc('minggu')->first();
+
+                // Cek laporan terakhir
+                $hasUAS = PelaporanUAS::where('kode_tim', $kode_tim)->exists();
+                $hasUTS = PelaporanUTS::where('kode_tim', $kode_tim)->exists();
+
+                if ($hasUAS) {
+                    $laporanTerakhir = 'Laporan UAS';
+                } elseif ($hasUTS) {
+                    $laporanTerakhir = 'Laporan UTS';
+                }
             }
         }
 
@@ -42,6 +53,8 @@ class DashboardMahasiswaController extends Controller
             'kode_tim' => $kode_tim,
             'tim_members' => $timMembers,
             'tim' => $tim,
+            'logbookTerakhir' => $logbookTerakhir,
+            'laporanTerakhir' => $laporanTerakhir,
         ]);
     }
 }
