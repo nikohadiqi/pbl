@@ -16,8 +16,12 @@ class MahasiswaController extends Controller
     // Menampilkan daftar mahasiswa
     public function index()
     {
-        $mahasiswa = Mahasiswa::all();
+        $mahasiswa = Mahasiswa::orderBy('kelas', 'asc')
+                      ->orderBy('nama', 'asc')
+                      ->get();
+
         $kelas = Kelas::all();
+        
         return view('admin.mahasiswa.mahasiswa', compact('mahasiswa', 'kelas'));
     }
 

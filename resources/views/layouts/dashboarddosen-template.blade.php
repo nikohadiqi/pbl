@@ -75,10 +75,11 @@
 
     <script src="{{ asset('assets/js/core/popper.min.js')}}"></script>
     <script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>
-    {{-- <script src="{{ asset('') }}/assets/js/core/bootstrap.bundle.min.js"></script> --}}
+    {{-- <script src="{{ asset('assets/js/core/bootstrap.bundle.min.js') }}"></script> --}}
     <script src="{{ asset('assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/smooth-scrollbar.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/fullcalendar.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/chartjs.min.js') }}"></script>
     <script>
         var win = navigator.platform.indexOf('Win') > -1;
         if (win && document.querySelector('#sidenav-scrollbar')) {
@@ -94,6 +95,7 @@
         const dataTableSearch = new simpleDatatables.DataTable("#datatable-search", {
             searchable: true,
             sortable: true,
+            perPage: 50, // tampilkan semua data
             perPageSelect: [5, 10, 20, 50],
             fixedHeight: true,
             labels: {

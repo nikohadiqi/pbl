@@ -14,39 +14,33 @@ class NilaiMahasiswa extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = [
-        'nim',
-        'critical_thinking',
-        'kolaborasi',
-        'kreativitas',
-        'komunikasi',
-        'fleksibilitas',
-        'kepemimpinan',
-        'produktifitas',
-        'social_skill',
-        'konten',
-        'tampilan_visual_presentasi',
-        'kosakata',
-        'tanya_jawab',
-        'mata_gerak_tubuh',
-        'penulisan_laporan',
-        'pilihan_kata',
-        'konten_2',
-        'sikap_kerja',
-        'proses',
-        'kualitas',
-         'total_nilai',              // tambahkan
-        'angka_nilai',              // tambahkan
-        'huruf_nilai',              // tambahkan
-        'nilai_aspek_json',         // tambahkan
+        'nim', // relasi mahasiswa
+        'pengampu_id', // relasi dosen pengampu
+        'critical_thinking', // nilai manpro mulai sini // bobot 5%
+        'kolaborasi', // bobot 5%
+        'kreativitas', // bobot 5%
+        'komunikasi', // bobot 5%
+        'fleksibilitas', // bobot 5%
+        'kepemimpinan', // bobot 5%
+        'produktifitas', // bobot 10%
+        'social_skill', // nilai manpro sampai sini // bobot 5%
+        'konten_presentasi', // nilai dosen mk mulai sini // bobot 2%
+        'tampilan_visual_presentasi', // bobot 2%
+        'kosakata', // bobot 2%
+        'tanya_jawab', // bobot 2%
+        'mata_gerak_tubuh', // bobot 2%
+        'penulisan_laporan', // bobot 3%
+        'pilihan_kata', // bobot 2%
+        'konten_laporan', // bobot 2%
+        'sikap_kerja', // bobot 8%
+        'proses', // bobot 15%
+        'kualitas', // nilai dosen mk sampai sini // bobot 15%
+        'total_nilai',
+        'angka_nilai',
+        'huruf_nilai',
+        'nilai_aspek_json',
         'dosen_id',
-        'pengampu_id',          
     ];
-
-    // Jika kamu ingin mendefinisikan relasi ke model DataMahasiswa
-    public function dataMahasiswa()
-    {
-        return $this->belongsTo(DataMahasiswa::class, 'nim', 'nim');
-    }
 
     public function mahasiswa()
     {
@@ -55,6 +49,6 @@ class NilaiMahasiswa extends Model
 
     public function pengampu()
     {
-        return $this->belongsTo(Pengampu::class, 'pengampu_id');
+        return $this->belongsTo(Pengampu::class, 'pengampu_id', 'id');
     }
 }

@@ -40,13 +40,13 @@
                         <td class="text-center">
                             <div class="d-flex justify-content-center gap-2">
                                 <a href="{{ route('admin.matkul.edit', $mataKuliah->id) }}">
-                                    <button class="btn btn-sm btn-info text-white" title="Ubah"><i class="bi bi-pencil-square"></i></button>
+                                    <button class="btn btn-sm btn-info text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Ubah" data-container="body" data-animation="true"><i class="bi bi-pencil-square"></i></button>
                                 </a>
                                 <!-- Delete Button -->
                                 <form id="delete-form-{{ $mataKuliah->id }}" action="{{route('admin.matkul.delete', $mataKuliah->id)}}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="button" class="btn btn-sm btn-danger text-white" onclick="confirmDelete({{ $mataKuliah->id }})" title="Hapus">
+                                    <button type="button" class="btn btn-sm btn-danger text-white" onclick="confirmDelete({{ $mataKuliah->id }})" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus" data-container="body" data-animation="true">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>

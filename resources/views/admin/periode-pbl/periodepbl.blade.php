@@ -45,10 +45,10 @@
                         <td>{{ $periode->tanggal_mulai->format('d-m-Y') }}</td>
                         <td>{{ $periode->tanggal_selesai->format('d-m-Y') }}</td>
                         <td>
-                            <span class="badge
-                                @if($periode->status == 'Aktif') bg-success
-                                @elseif($periode->status == 'Selesai') bg-danger
-                                @else bg-secondary @endif">
+                            <span class="badge 
+                                @if($periode->status == 'Aktif') bg-gradient-success
+                                @elseif($periode->status == 'Selesai') bg-gradient-danger
+                                @else bg-gradient-secondary @endif">
                                 {{ $periode->status }}
                             </span>
                             @if($periode->status === 'Selesai')
@@ -67,7 +67,7 @@
                                     class="form-selesai">
                                     @csrf
                                     @method('PATCH')
-                                    <button class="btn btn-sm btn-warning text-white" title="Tandai Selesai">
+                                    <button class="btn btn-sm btn-warning text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Tandai Selesai" data-container="body" data-animation="true">
                                         <i class="bi bi-flag-fill"></i>
                                     </button>
                                 </form>
@@ -77,14 +77,14 @@
                                     class="form-aktifkan">
                                     @csrf
                                     @method('PATCH')
-                                    <button class="btn btn-sm btn-success text-white" title="Aktifkan">
+                                    <button class="btn btn-sm btn-success text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Aktifkan" data-container="body" data-animation="true">
                                         <i class="bi bi-check-circle-fill"></i>
                                     </button>
                                 </form>
                                 @endif
                                 {{-- Edit --}}
                                 <a href="{{ route('admin.periodepbl.edit', $periode->id) }}">
-                                    <button class="btn btn-sm btn-info text-white" title="Ubah">
+                                    <button class="btn btn-sm btn-info text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Ubah" data-container="body" data-animation="true">
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
                                 </a>
@@ -95,7 +95,7 @@
                                     @csrf
                                     @method('DELETE')
                                     <button type="button" class="btn btn-sm btn-danger text-white"
-                                        onclick="confirmDelete({{ $periode->id }})" title="Hapus">
+                                        onclick="confirmDelete({{ $periode->id }})" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus" data-container="body" data-animation="true">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>

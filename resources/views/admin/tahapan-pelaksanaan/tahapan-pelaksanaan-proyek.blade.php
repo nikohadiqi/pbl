@@ -47,23 +47,23 @@
             @csrf
             <input type="hidden" name="periode_id" value="{{ $selectedPeriode }}">
             <div class="table-responsive">
-                <table class="table align-middle table-hover border border-light shadow-sm rounded-3 overflow-hidden">
-                    <thead style="background-color: #F7CD07;" class="text-sm fw-semibold text-white">
+                <table class="table align-middle table-hover table-borderless border border-light shadow-sm rounded-3 overflow-hidden">
+                    <thead class="text-sm fw-semibold text-white bg-primary">
                         <tr>
-                            <th style="width: 5%">No</th>
+                            <th style="width: 5%">No.</th>
                             <th>Nama Tahapan</th>
-                            <th style="width: 15%">Score (%)</th>
+                            <th style="width: 10%">Score (%)</th>
                         </tr>
                     </thead>
                     <tbody>
                         @for ($i = 0; $i < 16; $i++) <tr>
-                            <td>{{ $i + 1 }}</td>
+                            <td class="text-center">{{ $i + 1 }}</td>
                             <td>
                                 <input type="text" name="tahapan[]" class="form-control"
                                     value="{{ old('tahapan.' . $i, $tahapan[$i]->tahapan ?? '') }}">
                             </td>
                             <td>
-                                <input type="number" name="score[]" class="form-control"
+                                <input type="number" name="score[]" class="form-control text-center"
                                     value="{{ old('score.' . $i, $tahapan[$i]->score ?? '') }}" min="5" max="10">
                             </td>
                             </tr>

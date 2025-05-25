@@ -31,13 +31,13 @@
                         <td>{{ $object->kelas }}</td>
                         <td class="text-center">
                             <div class="d-flex justify-content-center gap-2">
-                                <a href="{{ route('admin.kelas.edit', $object->kelas) }}" class="btn btn-sm btn-info text-white" title="Ubah">
+                                <a href="{{ route('admin.kelas.edit', $object->kelas) }}" class="btn btn-sm btn-info text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Ubah" data-container="body" data-animation="true">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
                                 <form id="delete-form-{{ $object->kelas_encoded }}" action="{{ route('admin.kelas.delete', $object->kelas) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="button" class="btn btn-sm btn-danger text-white" title="Hapus" onclick="confirmDelete('{{ $object->kelas_encoded }}')" title="Hapus">
+                                    <button type="button" class="btn btn-sm btn-danger text-white" onclick="confirmDelete('{{ $object->kelas_encoded }}')" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus" data-container="body" data-animation="true">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>

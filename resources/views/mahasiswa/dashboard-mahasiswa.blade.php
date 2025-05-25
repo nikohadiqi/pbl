@@ -46,6 +46,7 @@
 
     <!-- Logbook & Report Cards -->
     <div class="row mt-3">
+        {{-- Logbook --}}
         <div class="col-md-6">
             <div class="card p-3 shadow-sm">
                 <small>Pengisian Logbook</small>
@@ -59,6 +60,7 @@
                 </p>
             </div>
         </div>
+        {{-- Laporan --}}
         <div class="col-md-6">
             <div class="card p-3 shadow-sm">
                 <small>Pengisian Laporan</small>

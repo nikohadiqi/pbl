@@ -10,7 +10,7 @@ class CreateNilaiMahasiswaTable extends Migration
     {
         Schema::create('nilai_mahasiswa', function (Blueprint $table) {
             $table->id();
-            
+
             // Relasi ke mahasiswa
             $table->string('nim');
             $table->foreign('nim')->references('nim')->on('data_mahasiswa')->onDelete('cascade');
@@ -19,7 +19,7 @@ class CreateNilaiMahasiswaTable extends Migration
             $table->unsignedBigInteger('pengampu_id');
             $table->foreign('pengampu_id')->references('id')->on('pengampu')->onDelete('cascade');
 
-            // Aspek penilaian (lebih baik gunakan tipe numerik, misal integer)
+            // Aspek penilaian manpro
             $table->integer('critical_thinking')->nullable();
             $table->integer('kolaborasi')->nullable();
             $table->integer('kreativitas')->nullable();
@@ -28,21 +28,22 @@ class CreateNilaiMahasiswaTable extends Migration
             $table->integer('kepemimpinan')->nullable();
             $table->integer('produktifitas')->nullable();
             $table->integer('social_skill')->nullable();
-            $table->integer('konten')->nullable();
+            // aspek penilaian dosen matkul
+            $table->integer('konten_presentasi')->nullable();
             $table->integer('tampilan_visual_presentasi')->nullable();
             $table->integer('kosakata')->nullable();
             $table->integer('tanya_jawab')->nullable();
             $table->integer('mata_gerak_tubuh')->nullable();
             $table->integer('penulisan_laporan')->nullable();
             $table->integer('pilihan_kata')->nullable();
-            $table->integer('konten_2')->nullable();
+            $table->integer('konten_laporan')->nullable();
             $table->integer('sikap_kerja')->nullable();
             $table->integer('proses')->nullable();
             $table->integer('kualitas')->nullable();
 
             // Nilai akhir
             $table->integer('total_nilai')->nullable();
-            $table->float('angka_nilai')->nullable();
+            $table->decimal('angka_nilai')->nullable();
             $table->string('huruf_nilai')->nullable();
             $table->json('nilai_aspek_json')->nullable(); // JSON backup/komposit nilai
 

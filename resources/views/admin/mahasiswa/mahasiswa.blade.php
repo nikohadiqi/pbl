@@ -45,14 +45,14 @@
                         <td>{{ $mhs->program_studi }}</td>
                         <td class="text-center">
                             <div class="d-flex justify-content-center gap-2">
-                                <a href="{{ route('admin.mahasiswa.edit', $mhs->nim) }}" class="btn btn-sm btn-info text-white" title="Ubah">
+                                <a href="{{ route('admin.mahasiswa.edit', $mhs->nim) }}" class="btn btn-sm btn-info text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Ubah" data-container="body" data-animation="true">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
                                 <!-- Delete Button -->
                                 <form id="delete-form-{{ $mhs->nim }}" action="{{route('admin.mahasiswa.delete', $mhs->nim)}}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="button" class="btn btn-sm btn-danger text-white" onclick="confirmDelete({{ $mhs->nim }})" title="Hapus">
+                                    <button type="button" class="btn btn-sm btn-danger text-white" onclick="confirmDelete({{ $mhs->nim }})" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus" data-container="body" data-animation="true">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>

@@ -15,7 +15,9 @@ class DosenController extends Controller
     // Menampilkan daftar dosen
     public function index()
     {
-        $dosen = Dosen::all();
+        $dosen = Dosen::orderBy('nama', 'asc')
+                      ->get();
+
         return view('admin.dosen.dosen', compact('dosen'));
     }
 
