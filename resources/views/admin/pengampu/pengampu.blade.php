@@ -47,7 +47,7 @@
             <input type="hidden" name="periode_id" value="{{ $selectedPeriode }}">
 
             <div class="table-responsive mt-2">
-                <table class="table align-middle table-hover border border-light shadow-sm rounded-3 overflow-hidden">
+                <table class="table align-middle table-hover table-borderless border border-light shadow-sm rounded-3 overflow-hidden">
                     <thead class="text-sm fw-semibold text-white bg-primary">
                         <tr>
                             <th class="px-3 py-2">Mata Kuliah</th>
@@ -58,8 +58,8 @@
                     <tbody class="text-sm">
                         @foreach($matkuls as $m)
                         <tr>
-                            <td class="px-3 py-2">{{ $m->kode }} - {{ $m->matakuliah }}</td>
-                            <td class="px-3 py-2">
+                            <td class="px-3 py-3">{{ $m->kode }} - {{ $m->matakuliah }}</td>
+                            <td class="px-3 py-3">
                                 <select name="data[{{ $m->id }}][dosen_id]" class="select2"
                                     required>
                                     <option value="" disabled selected hidden>Pilih Dosen</option>
@@ -71,7 +71,7 @@
                                     @endforeach
                                 </select>
                             </td>
-                            <td class="px-3 py-2">
+                            <td class="px-3 py-3">
                                 <select name="data[{{ $m->id }}][status]" class="form-select" required>
                                     <option value="" disabled selected hidden>Pilih Status</option>
                                     <option value="Dosen Mata Kuliah" {{ ($pengampus[$m->id]->status ?? '') == 'Dosen Mata Kuliah' ? 'selected' : ''

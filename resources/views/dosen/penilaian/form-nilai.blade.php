@@ -154,12 +154,18 @@
                                         ? 'checked' : '' }} required>
                                     {{ $nilai }}
                                     </label>
-                                    @endfor
-                                    @elseif($isDosenMatkul)
-                                    <strong>{{ $nilaiAspekGabungan[$namaAspek] ?? '-' }}</strong>
-                                    <input type="hidden" name="nilai_{{ $namaAspek }}"
-                                        value="{{ $nilaiAspekGabungan[$namaAspek] ?? 0 }}">
-                                    @endif
+                                @endfor
+                                @elseif($isDosenMatkul)
+                                    @for($nilai = 1; $nilai <= 4; $nilai++) <label
+                                    class="me-4 d-inline-flex align-items-center" style="font-size: 0.9rem;">
+                                    <input type="radio" name="nilai_{{ $namaAspek }}" value="{{ $nilai }}"
+                                        onclick="hitungTotal()" style="transform: scale(1.25); margin-right: 4px;" {{
+                                        old("nilai_$namaAspek", $nilaiDosenMatkul[$namaAspek] ?? null)==$nilai
+                                        ? 'checked' : '' }} required>
+                                    {{ $nilai }}
+                                    </label>
+                                @endfor
+                                @endif
                             </td>
                         </tr>
                         @endforeach
