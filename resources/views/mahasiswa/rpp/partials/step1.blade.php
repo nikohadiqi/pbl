@@ -1,6 +1,7 @@
 <div class="tab-pane fade {{ session('active_step', 'step1') == 'step1' ? 'show active' : '' }}" id="step1"
     role="tabpanel">
     <form method="POST" action="{{ route('mahasiswa.rpp.rencana-proyek.store') }}">
+        
         @csrf
         <h4 class="mb-4">Deskripsi Proyek</h4>
 
@@ -86,6 +87,10 @@
         <div class="d-flex justify-content-between">
             <button type="submit" class="btn btn-success">Simpan</button>
             <button type="button" class="btn btn-primary btn-next" data-next="#step2">Next</button>
+            <a href="{{ route('mahasiswa.rpp.rencana-proyek.export') }}" class="btn btn-primary mb-3">
+    <i class="fas fa-file-word"></i> Export ke Word
+</a>
+
         </div>
     </form>
 </div>

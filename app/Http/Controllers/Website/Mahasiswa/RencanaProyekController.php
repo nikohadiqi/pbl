@@ -14,6 +14,8 @@ use App\Models\Biaya;
 use App\Models\Anggota_Tim_Pbl;
 use App\Models\PeriodePBL;
 use RealRashid\SweetAlert\Facades\Alert;
+use PhpOffice\PhpWord\TemplateProcessor;
+use Illuminate\Support\Facades\Response;
 
 class RencanaProyekController extends Controller
 {
@@ -219,4 +221,84 @@ class RencanaProyekController extends Controller
         Alert::success('Berhasil!', 'Estimasi Waktu Pekerjaan Berhasil Disimpan!');
         return redirect()->route('mahasiswa.rpp.rencana-proyek.create')->with('active_step', 'step6');
     }
+    public function exportWord()
+{
+    $kodeTim = getKodeTimByAuth();
+    if (!$kodeTim) return back()->with('error', 'Tim tidak ditemukan!');
+
+    $rencanaProyek = RencanaProyek::where('kode_tim', $kodeTim)->first();
+    $tahapan = TahapanPelaksanaan::where('kode_tim', $kodeTim)->get();
+    $peralatan = KebutuhanPeralatan::where('kode_tim', $kodeTim)->get();
+    $tantangan = Tantangan::where('kode_tim', $kodeTim)->get();
+    $estimasi = Estimasi::where('kode_tim', $kodeTim)->get();
+    $biaya = Biaya::where('kode_tim', $kodeTim)->get();
+
+    // Path ke template word dengan placeholders
+    $templatePath = storage_path('app/templates/rencana_proyek_template.docx');
+    $templateProcessor = new TemplateProcessor($templatePath);
+
+    // Set single value placeholders
+    $templateProcessor->setValue('kode_tim', $kodeTim ?? '-'); 
+    $templateProcessor->setValue('judul_proyek', $rencanaProyek->judul_proyek ?? '-');
+    $templateProcessor->setValue('manajer_proyek', $rencanaProyek->manajer_proyek ?? '-');
+    $templateProcessor->setValue('pengusul_proyek', $rencanaProyek->pengusul_proyek ?? '-');
+    $templateProcessor->setValue('waktu', $rencanaProyek->waktu ?? '-');
+    $templateProcessor->setValue('ruang_lingkup', $rencanaProyek->ruang_lingkup ?? '-');
+    $templateProcessor->setValue('evaluasi', $rencanaProyek->evaluasi ?? '-');
+    $templateProcessor->setValue('sponsor', $rencanaProyek->sponsor ?? '-');
+    $templateProcessor->setValue('biaya', $rencanaProyek->biaya ?? '-');
+    $templateProcessor->setValue('klien', $rencanaProyek->klien ?? '-');
+    $templateProcessor->setValue('rancangan_sistem', $rencanaProyek->rancangan_sistem ?? '-');
+    $templateProcessor->setValue('luaran' , $rencanaProyek->luaran ?? '-');
+
+    // Buat string tabel untuk Tahapan Pelaksanaan
+    $tahapanString = "";
+    foreach ($tahapan as $item) {
+        $tahapanString .= "Minggu {$item->minggu} : {$item->tahapan}, PIC: {$item->pic}";
+        if ($item->keterangan) {
+            $tahapanString .= ", Keterangan: {$item->keterangan}";
+        }
+        $tahapanString .= "\n";
+    }
+    $templateProcessor->setValue('tahapan_pelaksanaan', $tahapanString ?: '-');
+
+    // Buat string tabel untuk Kebutuhan Peralatan
+    $peralatanString = "";
+    foreach ($peralatan as $item) {
+        $peralatanString .= "Nomor {$item->nomor}, Fase: {$item->fase}, Peralatan: {$item->peralatan}, Bahan: {$item->bahan}\n";
+    }
+    $templateProcessor->setValue('kebutuhan_peralatan', $peralatanString ?: '-');
+
+    // Buat string tabel untuk Tantangan dan Isu
+    $tantanganString = "";
+    foreach ($tantangan as $item) {
+        $tantanganString .= "Nomor {$item->nomor}, Proses: {$item->proses}, Isu: {$item->isu}, Level Resiko: {$item->level_resiko}, Catatan: {$item->catatan}\n";
+    }
+    $templateProcessor->setValue('tantangan', $tantanganString ?: '-');
+
+    // Buat string tabel untuk Estimasi Waktu Pekerjaan
+    $estimasiString = "";
+    foreach ($estimasi as $item) {
+        $estimasiString .= "Fase {$item->fase}, Uraian: {$item->uraian_pekerjaan}, Estimasi Waktu: {$item->estimasi_waktu}, Catatan: {$item->catatan}\n";
+    }
+    $templateProcessor->setValue('estimasi_waktu', $estimasiString ?: '-');
+
+    // Buat string tabel untuk Biaya Proyek
+    $biayaString = "";
+    foreach ($biaya as $item) {
+        $biayaString .= "Fase {$item->fase}, Uraian Pekerjaan: {$item->uraian_pekerjaan}, Perkiraan Biaya: {$item->perkiraan_biaya}, Catatan: {$item->catatan}\n";
+    }
+    $templateProcessor->setValue('biaya_proyek', $biayaString ?: '-');
+
+    // Generate file
+    $fileName = "Rencana_Proyek_" . $kodeTim . ".docx";
+
+    // Simpan sementara file
+    $tempFile = tempnam(sys_get_temp_dir(), 'word');
+    $templateProcessor->saveAs($tempFile);
+
+    // Kirim file sebagai download response
+    return response()->download($tempFile, $fileName)->deleteFileAfterSend(true);
+}
+
 }

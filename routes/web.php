@@ -154,6 +154,8 @@ Route::middleware(['auth:mahasiswa'])->group(function () {
             Route::post('/tantangan', [RencanaProyekController::class, 'storeTantangan'])->name('mahasiswa.rpp.tantangan.store');
             Route::post('/biaya', [RencanaProyekController::class, 'storeBiaya'])->name('mahasiswa.rpp.biaya.store');
             Route::post('/estimasi', [RencanaProyekController::class, 'storeEstimasi'])->name('mahasiswa.rpp.estimasi.store');
+            Route::get('/rencana-proyek/export', [RencanaProyekController::class, 'exportWord'])->name('mahasiswa.rpp.rencana-proyek.export');
+
         });
     });
 
@@ -210,6 +212,7 @@ Route::middleware(['auth:dosen'])->group(function () {
 
     Route::prefix('/dosen/penilaian-mahasiswa')->group(function () {
         Route::get('/', [PenilaianController::class, 'index'])->name('dosen.penilaian');
-        Route::match(['get', 'post'], '/rubrik-penilaian/{nim}', [PenilaianController::class, 'formNilai'])->name('dosen.penilaian.beri-nilai');
-    });
+        Route::get('/rubrik-penilaian/{nim}', [PenilaianController::class, 'formNilai'])->name('dosen.penilaian.beri-nilai');
+        Route::post('/rubrik-penilaian/{nim}', [PenilaianController::class, 'storeNilai'])->name('dosen.penilaian.simpan-nilai');
+});
 });
