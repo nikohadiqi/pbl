@@ -66,16 +66,34 @@
                         <td>{{ $mhs->nama }}</td>
                         <td>
                             @if($nilai)
-                            <span class="text-sm">Angka Nilai: {{ number_format($nilai->angka_nilai, 2) }}</span><br>
-                            <span class="text-sm">Huruf Nilai: {{ $nilai->huruf_nilai }}</span>
+                            @php
+                            $angka = $nilai->angka_nilai;
+                            $huruf = $nilai->huruf_nilai;
+
+                            // Warna berdasarkan angka (opsional, bisa digabung dengan huruf)
+                            $warnaAngka = $angka >= 75 ? 'text-success' :
+                            ($angka >= 60 ? 'text-warning' : 'text-danger');
+
+                            // Warna berdasarkan huruf nilai (lebih akurat sesuai konversiHuruf js)
+                            $warnaHuruf = in_array($huruf, ['A', 'A-', 'B+']) ? 'text-success' :
+                            (in_array($huruf, ['B', 'B-', 'C+']) ? 'text-warning' : 'text-danger');
+                            @endphp
+
+                            <span class="text-sm">Angka Nilai:
+                                <strong class="{{ $warnaAngka }}">{{ number_format($angka, 2) }}</strong>
+                            </span><br>
+                            <span class="text-sm">Huruf Nilai:
+                                <strong class="{{ $warnaHuruf }}">{{ $huruf }}</strong>
+                            </span>
                             @else
                             <span class="text-muted">Belum Dinilai</span>
                             @endif
                         </td>
                         <td class="text-center">
                             <a href="{{ route('dosen.penilaian.beri-nilai', $mhs->nim) }}"
-                                class="btn btn-sm btn-primary">
-                                Beri Nilai
+                                class="btn btn-sm {{ $nilai ? 'btn-secondary' : 'btn-primary' }}">
+                                <i class="bi {{ $nilai ? 'bi-pencil' : 'bi-pencil-square' }}"></i>
+                                {{ $nilai ? 'Ubah Nilai' : 'Beri Nilai' }}
                             </a>
                         </td>
                     </tr>

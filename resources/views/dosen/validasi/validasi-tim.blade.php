@@ -41,14 +41,14 @@
                         <td>Semester {{ $tim->periodeFK->semester }}<br>Tahun {{ $tim->periodeFK->tahun }}</td>
                         <td>
                             @if ($tim->status === 'approved')
-                            <span class="badge bg-success">Disetujui</span>
+                            <span class="badge bg-gradient-success">Disetujui</span>
                             @elseif ($tim->status === 'rejected')
-                            <span class="badge bg-danger">Ditolak</span>
+                            <span class="badge bg-gradient-danger">Ditolak</span>
                                 @if($tim->alasan_reject)
                                     <br><div class="text-danger text-sm text-wrap mt-2">Alasan:<br>{{ $tim->alasan_reject }}</div>
                                 @endif
                             @else
-                            <span class="badge bg-warning">Menunggu</span>
+                            <span class="badge bg-gradient-warning">Menunggu</span>
                             @endif
                         </td>
                         <td>
