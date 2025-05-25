@@ -48,7 +48,7 @@
 
             <div class="table-responsive mt-2">
                 <table class="table align-middle table-hover border border-light shadow-sm rounded-3 overflow-hidden">
-                    <thead style="background-color: #F7CD07;" class="text-sm fw-semibold text-white">
+                    <thead class="text-sm fw-semibold text-white bg-primary">
                         <tr>
                             <th class="px-3 py-2">Mata Kuliah</th>
                             <th class="px-3 py-2">Dosen</th>

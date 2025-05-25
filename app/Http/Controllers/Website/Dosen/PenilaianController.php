@@ -8,46 +8,92 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Mahasiswa;
 use App\Models\NilaiMahasiswa;
 use App\Models\Pengampu;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class PenilaianController extends Controller
 {
     public function index(Request $request)
     {
         $auth = Auth::guard('dosen')->user();
-        $kelas = $request->input('kelas');
-        $mahasiswa = collect();
 
-        if ($kelas) {
-            $mahasiswa = Mahasiswa::where('kelas', $kelas)->get();
+        // Ambil dari input jika ada, kalau tidak ambil dari session
+        $selectedKelas = $request->input('kelas', session('selected_kelas'));
+
+        // Jika user memilih kelas baru, simpan ke session
+        if ($request->has('kelas')) {
+            session(['selected_kelas' => $selectedKelas]);
         }
 
-        return view('dosen.penilaian.penilaian', compact('mahasiswa', 'auth', 'kelas'));
+        $kelasList = Pengampu::where('dosen_id', $auth->nim)
+            ->with('kelasFk')
+            ->get()
+            ->pluck('kelasFk.kelas', 'kelasFk.kelas')
+            ->unique();
+
+        $mahasiswa = collect();
+        $pengampu = collect();
+        $nilaiMahasiswa = collect();
+
+        if ($selectedKelas) {
+            $mahasiswa = Mahasiswa::where('kelas', $selectedKelas)->get();
+
+            $pengampu = Pengampu::where('dosen_id', $auth->nim)
+                ->where('kelas_id', $selectedKelas)
+                ->get();
+
+            $pengampuIds = $pengampu->pluck('id');
+
+            $nilaiMahasiswa = NilaiMahasiswa::whereIn('pengampu_id', $pengampuIds)->get();
+        }
+
+        return view('dosen.penilaian.penilaian', compact(
+            'mahasiswa',
+            'auth',
+            'kelasList',
+            'selectedKelas',
+            'pengampu',
+            'nilaiMahasiswa'
+        ));
     }
 
-    public function formNilai(Request $request, $nim)
+    // Menampilkan form penilaian
+    public function showFormNilai($nim)
     {
         $auth = Auth::guard('dosen')->user();
         $mahasiswa = Mahasiswa::where('nim', $nim)->firstOrFail();
 
-        // Pastikan dosen adalah pengampu kelas mahasiswa
-        $pengampu = Pengampu::where('dosen_id', $auth->nim)  // biasanya dosen id pakai nip, bukan nim
-             ->where('kelas_id', $mahasiswa->kelas)
-    ->first();
+        // Cek dosen sebagai pengampu
+        $pengampu = Pengampu::where('dosen_id', $auth->nim)
+            ->where('kelas_id', $mahasiswa->kelas)
+            ->firstOrFail();
 
-if (!$pengampu) {
-    abort(403, 'Anda tidak memiliki akses menilai mahasiswa ini.');
-}
+        $isManajer = $pengampu->status === 'Manajer Proyek';
+        $isDosenMatkul = $pengampu->status === 'Dosen Mata Kuliah';
 
-// Pisahkan aspek berdasarkan status
-$aspekSoftSkill = [
-    'critical_thinking', 'kolaborasi', 'kreativitas', 'komunikasi', 'fleksibilitas',
-    'kepemimpinan', 'produktifitas', 'social_skill'
-];
+        $aspekSoftSkill = [
+            'critical_thinking',
+            'kolaborasi',
+            'kreativitas',
+            'komunikasi',
+            'fleksibilitas',
+            'kepemimpinan',
+            'produktifitas',
+            'social_skill'
+        ];
 
-$aspekAkademik = [
-    'konten', 'tampilan_visual_presentasi', 'kosakata', 'tanya_jawab', 'mata_gerak_tubuh',
-    'penulisan_laporan', 'pilihan_kata', 'konten_2', 'sikap_kerja', 'proses', 'kualitas'
-];
+        $aspekAkademik = [
+            'konten_presentasi',
+            'tampilan_visual_presentasi',
+            'kosakata',
+            'tanya_jawab',
+            'mata_gerak_tubuh',
+            'penulisan_laporan',
+            'pilihan_kata',
+            'konten_laporan',
+            'sikap_kerja',
+            'proses',
+            'kualitas'
+        ];
 
         $bobot = [
             'critical_thinking' => 5,
@@ -58,102 +104,257 @@ $aspekAkademik = [
             'kepemimpinan' => 5,
             'produktifitas' => 10,
             'social_skill' => 5,
-            'konten' => 2,
+            'konten_presentasi' => 2,
             'tampilan_visual_presentasi' => 2,
             'kosakata' => 2,
             'tanya_jawab' => 2,
             'mata_gerak_tubuh' => 2,
             'penulisan_laporan' => 3,
             'pilihan_kata' => 2,
-            'konten_2' => 2,
+            'konten_laporan' => 2,
             'sikap_kerja' => 8,
             'proses' => 15,
             'kualitas' => 15
         ];
-// Ambil nilai dari dosen saat ini (pengampu)
-$nilaiMahasiswa = NilaiMahasiswa::where('nim', $nim)
-    ->where('pengampu_id', $pengampu->id)
-    ->first();
 
-$nilaiAspekGabungan = $nilaiMahasiswa ? json_decode($nilaiMahasiswa->nilai_aspek_json, true) : [];
+        // Ambil nilai dosen ini
+        $nilaiMahasiswa = NilaiMahasiswa::where('nim', $nim)
+            ->where('pengampu_id', $pengampu->id)
+            ->first();
 
-$isManajer = $pengampu->status === 'Manajer Proyek';
-$isDosenMatkul = $pengampu->status === 'Dosen Mata Kuliah';
+        // Ambil nilai softskill dari Manajer Proyek untuk dosen matkul
+        $nilaiSoftSkillManpro = [];
+        if ($isDosenMatkul) {
+            $pengampuManpro = Pengampu::where('kelas_id', $mahasiswa->kelas)
+                ->where('status', 'Manajer Proyek')
+                ->first();
 
-$aspekAktif = $isManajer ? $aspekSoftSkill : $aspekAkademik;
+            if ($pengampuManpro) {
+                $nilaiSoft = NilaiMahasiswa::where('nim', $nim)
+                    ->where('pengampu_id', $pengampuManpro->id)
+                    ->first();
 
-if ($request->isMethod('post')) {
-    $total = 0;
-    $totalBobot = 0;
-    $nilaiPerAspek = [];
+                if ($nilaiSoft) {
+                    $nilaiSoftSkillManpro = json_decode($nilaiSoft->nilai_aspek_json, true);
+                }
+            }
+        }
 
-    foreach ($aspekAktif as $index => $namaAspek) {
-        $nilai = $request->input("nilai$index");
-        $nilai = $nilai !== null ? intval($nilai) : 0;
-        $bobotValue = $bobot[$namaAspek] ?? 0;
+        // Nilai Dosen MK
+        $nilaiDosenMatkul = [];
+        if ($isDosenMatkul && $nilaiMahasiswa) {
+            $nilaiDecoded = json_decode($nilaiMahasiswa->nilai_aspek_json, true);
+            foreach ($aspekAkademik as $aspek) {
+                if (isset($nilaiDecoded[$aspek])) {
+                    $nilaiDosenMatkul[$aspek] = $nilaiDecoded[$aspek];
+                }
+            }
+        }
 
-        $total += $bobotValue * $nilai;
-        $totalBobot += $bobotValue;
-        $nilaiPerAspek[$namaAspek] = $nilai;
+        // Prepare nilai gabungan untuk form (softskill + akademik)
+        $nilaiAspekGabungan = [];
+
+        if ($isManajer && $nilaiMahasiswa) {
+            $nilaiAspekGabungan = json_decode($nilaiMahasiswa->nilai_aspek_json, true);
+        } elseif ($isDosenMatkul) {
+            // SoftSkill dari Manpro
+            $nilaiAspekGabungan = $nilaiSoftSkillManpro;
+
+            // Tambahkan nilai akademik dari dosen matkul
+            if ($nilaiMahasiswa) {
+                $nilaiAkademik = json_decode($nilaiMahasiswa->nilai_aspek_json, true);
+                foreach ($aspekAkademik as $aspek) {
+                    $nilaiAspekGabungan[$aspek] = $nilaiAkademik[$aspek] ?? null;
+                }
+            }
+        }
+
+        return view('dosen.penilaian.form-nilai', compact(
+            'mahasiswa',
+            'auth',
+            'aspekSoftSkill',
+            'aspekAkademik',
+            'bobot',
+            'nilaiMahasiswa',
+            'nilaiSoftSkillManpro',
+            'nilaiAspekGabungan',
+            'isManajer',
+            'isDosenMatkul',
+            'nilaiDosenMatkul',
+            'pengampu'
+        ));
     }
 
-    $skorSkala = $totalBobot > 0 ? $total / $totalBobot : 0;
-    $angka = $skorSkala * 25;
-    $huruf = $this->konversiHuruf($angka);
-
-     NilaiMahasiswa::updateOrCreate(
-                ['nim' => $nim, 'pengampu_id' => $pengampu->id],
-                array_merge(
-                    [
-                        'critical_thinking' => $nilaiPerAspek['critical_thinking'] ?? null,
-                        'kolaborasi' => $nilaiPerAspek['kolaborasi'] ?? null,
-                        'kreativitas' => $nilaiPerAspek['kreativitas'] ?? null,
-                        'komunikasi' => $nilaiPerAspek['komunikasi'] ?? null,
-                        'fleksibilitas' => $nilaiPerAspek['fleksibilitas'] ?? null,
-                        'kepemimpinan' => $nilaiPerAspek['kepemimpinan'] ?? null,
-                        'produktifitas' => $nilaiPerAspek['produktifitas'] ?? null,
-                        'social_skill' => $nilaiPerAspek['social_skill'] ?? null,
-                        'konten' => $nilaiPerAspek['konten'] ?? null,
-                        'tampilan_visual_presentasi' => $nilaiPerAspek['tampilan_visual_presentasi'] ?? null,
-                        'kosakata' => $nilaiPerAspek['kosakata'] ?? null,
-                        'tanya_jawab' => $nilaiPerAspek['tanya_jawab'] ?? null,
-                        'mata_gerak_tubuh' => $nilaiPerAspek['mata_gerak_tubuh'] ?? null,
-                        'penulisan_laporan' => $nilaiPerAspek['penulisan_laporan'] ?? null,
-                        'pilihan_kata' => $nilaiPerAspek['pilihan_kata'] ?? null,
-                        'konten_2' => $nilaiPerAspek['konten_2'] ?? null,
-                        'sikap_kerja' => $nilaiPerAspek['sikap_kerja'] ?? null,
-                        'proses' => $nilaiPerAspek['proses'] ?? null,
-                        'kualitas' => $nilaiPerAspek['kualitas'] ?? null,
-                    ],
-                    [
-                        'nilai_total' => $skorSkala,
-                        'nilai_angka' => $angka,
-                        'nilai_huruf' => $huruf,
-                        'nilai_aspek_json' => json_encode($nilaiPerAspek),
-                        'dosen_id' => $auth->nim,
-                    ]
-                )
-            );
-
-    return redirect()->route('dosen.penilaian.beri-nilai', $nim)
-        ->with('success', 'Nilai berhasil disimpan.');
-}
-
-return view('dosen.penilaian.form-nilai', compact(
-    'mahasiswa', 'auth', 'aspekSoftSkill', 'aspekAkademik', 'bobot',
-    'nilaiAspekGabungan', 'pengampu'
-));
-    }
-    private function konversiHuruf($nilai)
+    public function storeNilai(Request $request, $nim)
     {
-        if ($nilai >= 85) return 'A';
-        if ($nilai >= 80) return 'A-';
-        if ($nilai >= 75) return 'B+';
-        if ($nilai >= 70) return 'B';
-        if ($nilai >= 65) return 'B-';
-        if ($nilai >= 60) return 'C+';
-        if ($nilai >= 55) return 'C';
-        if ($nilai >= 50) return 'D';
-        return 'E';
+        $auth = Auth::guard('dosen')->user();
+        $mahasiswa = Mahasiswa::where('nim', $nim)->firstOrFail();
+
+        $pengampu = Pengampu::where('dosen_id', $auth->nim)
+            ->where('kelas_id', $mahasiswa->kelas)
+            ->firstOrFail();
+
+        $isManajer = $pengampu->status === 'Manajer Proyek';
+        $isDosenMatkul = $pengampu->status === 'Dosen Mata Kuliah';
+
+        $aspekSoftSkill = [
+            'critical_thinking',
+            'kolaborasi',
+            'kreativitas',
+            'komunikasi',
+            'fleksibilitas',
+            'kepemimpinan',
+            'produktifitas',
+            'social_skill'
+        ];
+
+        $aspekAkademik = [
+            'konten_presentasi',
+            'tampilan_visual_presentasi',
+            'kosakata',
+            'tanya_jawab',
+            'mata_gerak_tubuh',
+            'penulisan_laporan',
+            'pilihan_kata',
+            'konten_laporan',
+            'sikap_kerja',
+            'proses',
+            'kualitas'
+        ];
+
+        $bobot = [
+            'critical_thinking' => 5,
+            'kolaborasi' => 5,
+            'kreativitas' => 5,
+            'komunikasi' => 5,
+            'fleksibilitas' => 5,
+            'kepemimpinan' => 5,
+            'produktifitas' => 10,
+            'social_skill' => 5,
+            'konten_presentasi' => 2,
+            'tampilan_visual_presentasi' => 2,
+            'kosakata' => 2,
+            'tanya_jawab' => 2,
+            'mata_gerak_tubuh' => 2,
+            'penulisan_laporan' => 3,
+            'pilihan_kata' => 2,
+            'konten_laporan' => 2,
+            'sikap_kerja' => 8,
+            'proses' => 15,
+            'kualitas' => 15
+        ];
+
+        $nilaiPerAspek = [];
+        $total = 0;
+        $totalBobot = 0;
+
+        if ($isManajer) {
+            // Manajer proyek input semua aspek
+            $allAspek = array_merge($aspekSoftSkill, $aspekAkademik);
+
+            foreach ($allAspek as $index => $aspek) {
+                $nilai = $request->input("nilai_$aspek");
+                $nilai = $nilai !== null ? intval($nilai) : 0;
+
+                $nilaiPerAspek[$aspek] = $nilai;
+
+                $bobotValue = $bobot[$aspek] ?? 0;
+                $total += $bobotValue * $nilai;
+                $totalBobot += $bobotValue;
+            }
+        } elseif ($isDosenMatkul) {
+            // Dosen Matkul input akademik, softskill dari Manpro
+
+            // Ambil nilai softskill dari Manpro
+            $pengampuManpro = Pengampu::where('kelas_id', $mahasiswa->kelas)
+                ->where('status', 'Manajer Proyek')
+                ->first();
+
+            $nilaiSoftSkillManpro = [];
+            if ($pengampuManpro) {
+                $nilaiSoft = NilaiMahasiswa::where('nim', $nim)
+                    ->where('pengampu_id', $pengampuManpro->id)
+                    ->first();
+
+                if ($nilaiSoft) {
+                    $nilaiSoftSkillManpro = json_decode($nilaiSoft->nilai_aspek_json, true);
+                }
+            }
+
+            // Input nilai akademik dari form
+            foreach ($aspekAkademik as $aspek) {
+                $nilai = $request->input("nilai_$aspek");
+                $nilai = $nilai !== null ? intval($nilai) : 0;
+
+                $nilaiPerAspek[$aspek] = $nilai;
+
+                $bobotValue = $bobot[$aspek] ?? 0;
+                $total += $bobotValue * $nilai;
+                $totalBobot += $bobotValue;
+            }
+
+            // Tambahkan nilai softskill dari manpro
+            foreach ($aspekSoftSkill as $aspek) {
+                $nilai = $nilaiSoftSkillManpro[$aspek] ?? 0;
+                $nilaiPerAspek[$aspek] = $nilai;
+
+                $bobotValue = $bobot[$aspek] ?? 0;
+                $total += $bobotValue * $nilai;
+                $totalBobot += $bobotValue;
+            }
+        } else {
+            // Jika status lain (tidak boleh input), bisa return error atau kosong
+            return redirect()->back()->with('error', 'Anda tidak berhak memberi nilai.');
+        }
+
+        $skorSkala = $totalBobot > 0 ? $total / $totalBobot : 0;
+        $angka = $skorSkala * 25;
+        $huruf = $this->konversiHuruf($angka);
+
+        $data = [
+            'nilai_aspek_json' => json_encode($nilaiPerAspek),
+            'total_nilai' => $skorSkala,
+            'angka_nilai' => $angka,
+            'huruf_nilai' => $huruf,
+            'dosen_id' => $auth->nip,
+        ];
+
+        // Simpan juga per aspek agar lebih cepat query
+        foreach ($nilaiPerAspek as $aspek => $nilai) {
+            $data[$aspek] = $nilai;
+        }
+
+        NilaiMahasiswa::updateOrCreate(
+            ['nim' => $nim, 'pengampu_id' => $pengampu->id],
+            $data
+        );
+
+        Alert::success('Berhasil!', 'Nilai berhasil disimpan.');
+        return redirect()->route('dosen.penilaian');
+    }
+
+    private function konversiHuruf($angka)
+    {
+        if ($angka >= 85) {
+            return 'A';
+        } elseif ($angka >= 80) {
+            return 'A-';
+        } elseif ($angka >= 75) {
+            return 'B+';
+        } elseif ($angka >= 70) {
+            return 'B';
+        } elseif ($angka >= 65) {
+            return 'B-';
+        } elseif ($angka >= 60) {
+            return 'C+';
+        } elseif ($angka >= 55) {
+            return 'C';
+        } elseif ($angka >= 50) {
+            return 'C-';
+        } elseif ($angka >= 40) {
+            return 'D';
+        } else {
+            return 'E';
+        }
     }
 }

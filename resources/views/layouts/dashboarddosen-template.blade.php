@@ -94,6 +94,7 @@
         const dataTableSearch = new simpleDatatables.DataTable("#datatable-search", {
             searchable: true,
             sortable: true,
+            perPage: 50, // tampilkan semua data
             perPageSelect: [5, 10, 20, 50],
             fixedHeight: true,
             labels: {

@@ -210,6 +210,7 @@ Route::middleware(['auth:dosen'])->group(function () {
 
     Route::prefix('/dosen/penilaian-mahasiswa')->group(function () {
         Route::get('/', [PenilaianController::class, 'index'])->name('dosen.penilaian');
-        Route::match(['get', 'post'], '/rubrik-penilaian/{nim}', [PenilaianController::class, 'formNilai'])->name('dosen.penilaian.beri-nilai');
+        Route::get('/rubrik-penilaian/{nim}', [PenilaianController::class, 'showFormNilai'])->name('dosen.penilaian.beri-nilai');
+        Route::post('/rubrik-penilaian/{nim}', [PenilaianController::class, 'storeNilai'])->name('dosen.penilaian.simpan-nilai');
     });
 });

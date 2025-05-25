@@ -12,7 +12,18 @@ class PeriodePBLController extends Controller
 {
     public function index()
     {
-        $periodePBL = PeriodePBL::all();
+        $periodePBL = PeriodePBL::orderByRaw("
+            CASE
+                WHEN status = 'Aktif' THEN 0
+                WHEN status = 'Tidak Aktif' THEN 1
+                WHEN status = 'Selesai' THEN 2
+                ELSE 3
+            END
+        ")
+        ->orderBy('tahun', 'desc') // urutan tambahan jika diperlukan
+        ->orderBy('semester', 'desc') // opsional
+        ->get();
+
         return view('admin.periode-pbl.periodepbl', compact('periodePBL'));
     }
 

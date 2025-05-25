@@ -48,7 +48,7 @@
             <input type="hidden" name="periode_id" value="{{ $selectedPeriode }}">
             <div class="table-responsive">
                 <table class="table align-middle table-hover border border-light shadow-sm rounded-3 overflow-hidden">
-                    <thead style="background-color: #F7CD07;" class="text-sm fw-semibold text-white">
+                    <thead class="text-sm fw-semibold text-white bg-primary">
                         <tr>
                             <th style="width: 5%">No</th>
                             <th>Nama Tahapan</th>

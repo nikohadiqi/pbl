@@ -6,54 +6,83 @@
 @section('content')
 <div class="container-fluid py-4">
     <div class="card p-4 shadow-sm rounded-3">
-        <form method="GET" action="{{ route('dosen.penilaian') }}">
-            <div class="row">
-                <div class="col-md-4 mb-2">
-                    <select name="kelas" class="form-control">
-                        <option value="">-- Pilih Kelas --</option>
-                        <option value="2A" {{ request('kelas') == '2A' ? 'selected' : '' }}>2A</option>
-                        <option value="4B" {{ request('kelas') == '4B' ? 'selected' : '' }}>4B</option>
-                        <option value="4C" {{ request('kelas') == '4C' ? 'selected' : '' }}>4C</option>
-                    </select>
-                </div>
-                <div class="col-md-4 mb-2">
-                    <button type="submit" class="btn btn-primary w-100">Tampilkan</button>
-                </div>
+        {{-- Filter Kelas --}}
+        <form method="GET" action="{{ route('dosen.penilaian') }}" class="mb-3">
+            <label for="kelas" class="form-label">Pilih Kelas</label>
+            <div class="input-group">
+                <select name="kelas" class="form-select" onchange="this.form.submit()">
+                    <option value="">-- Pilih Kelas --</option>
+                    @foreach ($kelasList as $kelas)
+                    <option value="{{ $kelas }}" {{ $selectedKelas==$kelas ? 'selected' : '' }}>
+                        {{ $kelas }}
+                    </option>
+                    @endforeach
+                </select>
             </div>
+            <hr class="horizontal dark mt-4">
         </form>
-        <hr>
 
-        <p>Kelas terpilih: {{ $kelas }}</p>
-        <p>Jumlah mahasiswa: {{ $mahasiswa->count() }}</p>
+        @if ($selectedKelas)
+        <div class="d-flex justify-content-between align-items-center">
+            <h4 class="fw-bold">
+                Penilaian Mahasiswa Kelas {{ $selectedKelas }}
+            </h4>
+            <!-- Ekspor -->
+            <!-- Tombol Trigger -->
+            <button type="button" class="btn btn-primary fw-bold mb-3" onclick=" " {{ !$selectedKelas ? 'disabled' : ''
+                }}>
+                <i class="bi bi-download me-2"></i>Ekspor Nilai
+            </button>
+        </div>
+        <!-- Tampilkan mata kuliah dari pengampu -->
+        @foreach ($pengampu as $p)
+        <p class="text-sm"><strong>Mata Kuliah :</strong> {{ $p->matkulFK->matakuliah ?? '-' }}</p>
+        <p class="text-sm"><strong>Status Dosen :</strong> {{ $p->status }}</p>
+        @endforeach
+        <p class="text-sm"><strong>Jumlah Mahasiswa :</strong> {{ $mahasiswa->count() }}</p>
+        @endif
 
         <div class="table-responsive">
-            <table class="table table-hover">
+            <table class="table table-hover" id="datatable-search">
                 <thead class="table-light">
                     <tr>
                         <th>No</th>
                         <th>NIM</th>
                         <th>Nama Mahasiswa</th>
-                        <th>Kelas</th>
+                        <th>Nilai</th>
                         <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($mahasiswa as $index => $mhs)
-                        <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $mhs->nim }}</td>
-                            <td>{{ $mhs->nama }}</td>
-                            <td>{{ $mhs->kelas }}</td>
-                            <td class="text-center">
-                                <a href="{{ route('dosen.penilaian.beri-nilai', $mhs->nim) }}" class="btn btn-sm btn-primary">
-                                    Beri Nilai
-                                </a>
-                            </td>
-                        </tr>
+                    @php
+                    $nilai = $nilaiMahasiswa->first(function ($n) use ($mhs, $pengampu) {
+                    return $n->nim === $mhs->nim && $pengampu->contains('id', $n->pengampu_id);
+                    });
+                    @endphp
+                    <tr>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $mhs->nim }}</td>
+                        <td>{{ $mhs->nama }}</td>
+                        <td>
+                            @if($nilai)
+                            <span class="text-sm">Angka Nilai: {{ number_format($nilai->angka_nilai, 2) }}</span><br>
+                            <span class="text-sm">Huruf Nilai: {{ $nilai->huruf_nilai }}</span>
+                            @else
+                            <span class="text-muted">Belum Dinilai</span>
+                            @endif
+                        </td>
+                        <td class="text-center">
+                            <a href="{{ route('dosen.penilaian.beri-nilai', $mhs->nim) }}"
+                                class="btn btn-sm btn-primary">
+                                Beri Nilai
+                            </a>
+                        </td>
+                    </tr>
                     @empty
-                        <tr>
-                            <td colspan="5" class="text-center">Pilih kelas untuk melihat mahasiswa.</td>
-                        </tr>
+                    <tr>
+                        <td colspan="5" class="text-center">Pilih kelas untuk melihat mahasiswa.</td>
+                    </tr>
                     @endforelse
                 </tbody>
             </table>
