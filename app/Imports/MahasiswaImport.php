@@ -22,7 +22,7 @@ class MahasiswaImport implements ToModel,  WithHeadingRow
         foreach ($requiredKeys as $key) {
             if (!array_key_exists($key, $row)) {
                 throw ValidationException::withMessages([
-                    'file' => ["Kolom \"$key\" tidak ditemukan. Pastikan file Excel memiliki header yang sesuai."]
+                    'file' => ["Kolom \"$key\" tidak ditemukan. Pastikan file Excel memiliki header (nim, nama, program_studi, kelas)"]
                 ]);
             }
         }

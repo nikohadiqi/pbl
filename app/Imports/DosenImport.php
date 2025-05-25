@@ -22,7 +22,7 @@ class DosenImport implements ToModel, WithHeadingRow
         foreach ($requiredKeys as $key) {
             if (!array_key_exists($key, $row)) {
                 throw ValidationException::withMessages([
-                    'file' => ["Kolom \"$key\" tidak ditemukan. Pastikan file Excel memiliki header yang benar."]
+                    'file' => ["Kolom \"$key\" tidak ditemukan. Pastikan file Excel memiliki header (nip, nama, no_telp, email, prodi, jurusan) yang benar."]
                 ]);
             }
         }

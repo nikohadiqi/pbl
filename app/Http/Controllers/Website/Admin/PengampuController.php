@@ -82,22 +82,34 @@ class PengampuController extends Controller
         $periodeId = $request->input('periode_id');
         $data = $request->input('data'); // format: ['matkul_id' => ['dosen_id' => ..., 'status' => ...]]
 
-        // Ambil semua pengampu yang sudah ada untuk periode dan kelas tersebut
-        $existing = Pengampu::where('kelas_id', $kelasId)
-            ->where('periode_id', $periodeId)
-            ->get();
-
-        // Validasi: satu dosen hanya bisa mengampu satu matkul di kelas dan periode yang sama
+        // Validasi: satu dosen hanya boleh mengampu satu matkul di kelas dan periode yang sama
         $dosenDipakai = [];
+        $jumlahManpro = 0;
+
         foreach ($data as $matkulId => $pengampuData) {
             $dosenId = $pengampuData['dosen_id'];
+            $status = $pengampuData['status'];
+
             if (in_array($dosenId, $dosenDipakai)) {
                 Alert::error('Gagal', 'Satu dosen hanya boleh mengampu satu mata kuliah untuk kelas dan periode yang sama.');
-                session()->flash('filter_kelas', $kelasId);
-                session()->flash('filter_periode', $periodeId);
+                session(['filter_kelas' => $kelasId]);
+                session(['filter_periode' => $periodeId]);
                 return redirect()->back()->withInput();
             }
+
             $dosenDipakai[] = $dosenId;
+
+            if ($status === 'Manajer Proyek') {
+                $jumlahManpro++;
+            }
+        }
+
+        // Validasi hanya boleh ada satu Manajer Proyek
+        if ($jumlahManpro > 1) {
+            Alert::error('Gagal', 'Dalam satu kelas hanya boleh ada satu Manajer Proyek.');
+            session(['filter_kelas' => $kelasId]);
+            session(['filter_periode' => $periodeId]);
+            return redirect()->back()->withInput();
         }
 
         // Simpan/update data
