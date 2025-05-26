@@ -31,8 +31,8 @@
                         <img src="{{ asset('assets/img/logo-poliwangi.png') }}" alt="User Avatar"
                             class="rounded-circle me-2 border border-2 border-light p-1" width="40" height="40">
                         <span class="d-flex flex-column text-white">
-                            <span class="fw-bold">Admin</span>
-                            <span class="fw-bold">{{ Auth::user()-> nim }}</span>
+                            <span class="fw-bold">{{ Auth::user()->nama }}</span>
+                            <span class="fw-bold">{{ Auth::user()->nim }}</span>
                         </span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start" aria-labelledby="userDropdown">

@@ -30,10 +30,10 @@
                     <div class="col-sm-auto col-8 my-auto">
                         <div class="h-100">
                             <h5 class="mb-1 font-weight-bolder">
-                                Admin
+                                {{ Auth::user()->nama }}
                             </h5>
                             <p class="mb-0 font-weight-bold text-sm">
-                                {{ Auth::user()-> nim }}
+                                {{ Auth::user()->nim }}
                             </p>
                         </div>
                     </div>
@@ -61,7 +61,11 @@
                 <div class="card-body pt-0">
                     <div class="form-group">
                         <label for="nim" class="form-control-label">NIP/NIK/NIPPPK</label>
-                        <input class="form-control" name="nim" type="number" value="{{ Auth::user()->nim }}" readonly>
+                        <input class="form-control" name="nim" type="text" value="{{ Auth::user()->nim }}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="nama" class="form-control-label">Nama</label>
+                        <input class="form-control" name="nama" type="text" value="{{ Auth::user()->nama }}" readonly>
                     </div>
                     <div class="form-group">
                         <label for="role" class="form-control-label">Role</label>

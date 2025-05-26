@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Models\Kelas;
 use App\Models\Mahasiswa;
 use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Concerns\ToModel;
@@ -16,7 +17,6 @@ class MahasiswaImport implements ToModel,  WithHeadingRow
      */
     public function model(array $row)
     {
-        // Daftar header yang wajib ada
         $requiredKeys = ['nim', 'nama', 'program_studi', 'kelas'];
 
         foreach ($requiredKeys as $key) {
@@ -27,12 +27,25 @@ class MahasiswaImport implements ToModel,  WithHeadingRow
             }
         }
 
+        // Validasi format nama kelas
+        if (!preg_match('/^[1-4][A-Z]$/', $row['kelas'])) {
+            throw ValidationException::withMessages([
+                'file' => ["Format nama kelas tidak valid untuk \"{$row['kelas']}\". Hanya diperbolehkan format seperti: 1A, 2A, 3A, 4A"]
+            ]);
+        }
+
+        // Buat entri kelas jika belum ada
+        Kelas::firstOrCreate([
+            'kelas' => $row['kelas'],
+        ]);
+
+        // Simpan atau update data mahasiswa
         return Mahasiswa::updateOrCreate(
             ['nim' => $row['nim']],
             [
                 'nama'          => $row['nama'],
                 'program_studi' => $row['program_studi'],
-                'dosen_wali'    => $row['dosen_wali'],
+                'dosen_wali'    => $row['dosen_wali'] ?? null,
                 'status'        => $row['status'] ?? null,
                 'jenis_kelamin' => $row['jenis_kelamin'] ?? null,
                 'kelas'         => $row['kelas'],

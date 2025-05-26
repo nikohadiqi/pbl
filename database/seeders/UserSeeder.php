@@ -17,13 +17,23 @@ class UserSeeder extends Seeder
         // Admin
         User::create([
             'nim' => '111111',
+            'nama' => 'Admin TRPL',
             'password' => Hash::make('11111'),
+            'role' => 'admin',
+        ]);
+
+        // Admin 2
+        User::create([
+            'nim' => 'adminsimpbl',
+            'nama' => 'Admin SIMPBL',
+            'password' => Hash::make('admin123!@#'),
             'role' => 'admin',
         ]);
 
         // Admin Bu Dian
         User::create([
             'nim' => '198711032021212001',
+            'nama' => 'Dian Mujiani, SE',
             'password' => Hash::make('198711032021212001'),
             'role' => 'admin',
         ]);
@@ -31,6 +41,7 @@ class UserSeeder extends Seeder
         // Admin Pak Arya
         User::create([
             'nim' => '198103232014041001',
+            'nama' => 'Arya Pramudita, SE',
             'password' => Hash::make('198103232014041001'),
             'role' => 'admin',
         ]);
