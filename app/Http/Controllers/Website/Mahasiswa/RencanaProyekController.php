@@ -251,49 +251,64 @@ class RencanaProyekController extends Controller
     $templateProcessor->setValue('rancangan_sistem', $rencanaProyek->rancangan_sistem ?? '-');
     $templateProcessor->setValue('luaran' , $rencanaProyek->luaran ?? '-');
 
-    // Buat string tabel untuk Tahapan Pelaksanaan
-    $tahapanString = "";
-    foreach ($tahapan as $item) {
-        $tahapanString .= "Minggu {$item->minggu} : {$item->tahapan}, PIC: {$item->pic}";
-        if ($item->keterangan) {
-            $tahapanString .= ", Keterangan: {$item->keterangan}";
-        }
-        $tahapanString .= "\n";
+// ✅ TAHAPAN PELAKSANAAN
+    $jumlahTahapan = count($tahapan);
+    $templateProcessor->cloneRow('minggu', $jumlahTahapan);
+    foreach ($tahapan as $index => $item) {
+        $i = $index + 1;
+        $templateProcessor->setValue("minggu#{$i}", $item['minggu'] ?? '-');
+        $templateProcessor->setValue("tahapan#{$i}", $item['tahapan'] ?? '-');
+        $templateProcessor->setValue("pic#{$i}", $item['pic'] ?? '-');
+        $templateProcessor->setValue("keterangan#{$i}", $item['keterangan'] ?? '-');
     }
-    $templateProcessor->setValue('tahapan_pelaksanaan', $tahapanString ?: '-');
 
-    // Buat string tabel untuk Kebutuhan Peralatan
-    $peralatanString = "";
-    foreach ($peralatan as $item) {
-        $peralatanString .= "Nomor {$item->nomor}, Fase: {$item->fase}, Peralatan: {$item->peralatan}, Bahan: {$item->bahan}\n";
+    // ✅ KEBUTUHAN PERALATAN
+    $jumlahPeralatan = count($peralatan);
+    $templateProcessor->cloneRow('nomor_peralatan', $jumlahPeralatan);
+    foreach ($peralatan as $index => $item) {
+        $i = $index + 1;
+        $templateProcessor->setValue("nomor_peralatan#{$i}", $item['nomor'] ?? '-');
+        $templateProcessor->setValue("fase_peralatan#{$i}", $item['fase'] ?? '-');
+        $templateProcessor->setValue("peralatan#{$i}", $item['peralatan'] ?? '-');
+        $templateProcessor->setValue("bahan#{$i}", $item['bahan'] ?? '-');
     }
-    $templateProcessor->setValue('kebutuhan_peralatan', $peralatanString ?: '-');
 
-    // Buat string tabel untuk Tantangan dan Isu
-    $tantanganString = "";
-    foreach ($tantangan as $item) {
-        $tantanganString .= "Nomor {$item->nomor}, Proses: {$item->proses}, Isu: {$item->isu}, Level Resiko: {$item->level_resiko}, Catatan: {$item->catatan}\n";
+    // ✅ TANTANGAN & ISU
+    $jumlahTantangan = count($tantangan);
+    $templateProcessor->cloneRow('nomor_tantangan', $jumlahTantangan);
+    foreach ($tantangan as $index => $item) {
+        $i = $index + 1;
+        $templateProcessor->setValue("nomor_tantangan#{$i}", $item['nomor'] ?? '-');
+        $templateProcessor->setValue("proses#{$i}", $item['proses'] ?? '-');
+        $templateProcessor->setValue("isu#{$i}", $item['isu'] ?? '-');
+        $templateProcessor->setValue("level_resiko#{$i}", $item['level_resiko'] ?? '-');
+        $templateProcessor->setValue("catatan_tantangan#{$i}", $item['catatan'] ?? '-');
     }
-    $templateProcessor->setValue('tantangan', $tantanganString ?: '-');
 
-    // Buat string tabel untuk Estimasi Waktu Pekerjaan
-    $estimasiString = "";
-    foreach ($estimasi as $item) {
-        $estimasiString .= "Fase {$item->fase}, Uraian: {$item->uraian_pekerjaan}, Estimasi Waktu: {$item->estimasi_waktu}, Catatan: {$item->catatan}\n";
+    // ✅ ESTIMASI WAKTU
+    $jumlahEstimasi = count($estimasi);
+    $templateProcessor->cloneRow('fase_estimasi', $jumlahEstimasi);
+    foreach ($estimasi as $index => $item) {
+        $i = $index + 1;
+        $templateProcessor->setValue("fase_estimasi#{$i}", $item['fase'] ?? '-');
+        $templateProcessor->setValue("uraian_pekerjaan#{$i}", $item['uraian_pekerjaan'] ?? '-');
+        $templateProcessor->setValue("estimasi_waktu#{$i}", $item['estimasi_waktu'] ?? '-');
+        $templateProcessor->setValue("catatan_estimasi#{$i}", $item['catatan'] ?? '-');
     }
-    $templateProcessor->setValue('estimasi_waktu', $estimasiString ?: '-');
 
-    // Buat string tabel untuk Biaya Proyek
-    $biayaString = "";
-    foreach ($biaya as $item) {
-        $biayaString .= "Fase {$item->fase}, Uraian Pekerjaan: {$item->uraian_pekerjaan}, Perkiraan Biaya: {$item->perkiraan_biaya}, Catatan: {$item->catatan}\n";
+    // ✅ BIAYA PROYEK
+    $jumlahBiaya = count($biaya);
+    $templateProcessor->cloneRow('fase_biaya', $jumlahBiaya);
+    foreach ($biaya as $index => $item) {
+        $i = $index + 1;
+        $templateProcessor->setValue("fase_biaya#{$i}", $item['fase'] ?? '-');
+        $templateProcessor->setValue("uraian_biaya#{$i}", $item['uraian_pekerjaan'] ?? '-');
+        $templateProcessor->setValue("perkiraan_biaya#{$i}", $item['perkiraan_biaya'] ?? '-');
+        $templateProcessor->setValue("catatan_biaya#{$i}", $item['catatan'] ?? '-');
     }
-    $templateProcessor->setValue('biaya_proyek', $biayaString ?: '-');
 
-    // Generate file
+    // ✅ Simpan dan kirim file Word
     $fileName = "Rencana_Proyek_" . $kodeTim . ".docx";
-
-    // Simpan sementara file
     $tempFile = tempnam(sys_get_temp_dir(), 'word');
     $templateProcessor->saveAs($tempFile);
 
