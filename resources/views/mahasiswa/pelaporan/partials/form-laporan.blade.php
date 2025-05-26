@@ -42,7 +42,7 @@
         </div>
 
         <button type="submit" class="btn {{ $buttonClass ?? 'btn-primary' }} fw-semibold mt-2">
-            <i class="bi bi-save2 me-1"></i> Simpan Pelaporan
+            <i class="bi bi-floppy me-1"></i> Simpan Pelaporan
         </button>
     </form>
 </div>

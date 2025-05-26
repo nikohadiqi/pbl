@@ -55,7 +55,12 @@
 
         <div class="d-flex justify-content-between">
             <button type="button" class="btn btn-secondary btn-prev" data-prev="#step5">Previous</button>
-            <button type="submit" class="btn btn-success">Simpan</button>
+            <div>
+                <button type="submit" class="btn btn-success me-3"><i class="bi bi-floppy me-1"></i> Simpan</button>
+                <a href="{{ route('mahasiswa.rpp.rencana-proyek.export') }}" class="btn btn-primary">
+                    <i class="fas fa-file-word"></i> Ekspor RPP
+                </a>
+            </div>
         </div>
     </form>
 </div>

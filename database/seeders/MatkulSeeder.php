@@ -17,18 +17,21 @@ class MatkulSeeder extends Seeder
             'kode' => 'RPL401',
             'matakuliah' => 'Proyek Aplikasi Lanjut',
             'program_studi' => 'Teknologi Rekayasa Perangkat Lunak',
+            'sks' => '2',
         ]);
 
         MataKuliah::create([
             'kode' => 'RPL402',
             'matakuliah' => 'Desain Pengalaman Pengguna',
             'program_studi' => 'Teknologi Rekayasa Perangkat Lunak',
+            'sks' => '2',
         ]);
 
         MataKuliah::create([
             'kode' => 'RPL403',
             'matakuliah' => 'Keamanan Perangkat Lunak',
             'program_studi' => 'Teknologi Rekayasa Perangkat Lunak',
+            'sks' => '2',
         ]);
     }
 }

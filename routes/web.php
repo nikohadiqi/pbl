@@ -214,10 +214,9 @@ Route::middleware(['auth:dosen'])->group(function () {
         Route::get('/', [PenilaianController::class, 'index'])->name('dosen.penilaian');
         Route::get('/rubrik-penilaian/{nim}', [PenilaianController::class, 'show'])->name('dosen.penilaian.beri-nilai');
         Route::post('/rubrik-penilaian/{nim}', [PenilaianController::class, 'store'])->name('dosen.penilaian.simpan-nilai');
+        Route::get('/export', [PenilaianController::class, 'exportExcel'])->name('penilaian.export');
     });
-  Route::get('/dosen/penilaian/export', [PenilaianController::class, 'export'])->name('penilaian.export');
 
 });
 
-    
-    
+

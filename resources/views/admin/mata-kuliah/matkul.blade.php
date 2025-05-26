@@ -28,6 +28,7 @@
                         <th>Nomor</th>
                         <th>Kode Matkul</th>
                         <th>Mata Kuliah</th>
+                        <th>SKS</th>
                         <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -37,6 +38,7 @@
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $mataKuliah->kode }}</td>
                         <td>{{ $mataKuliah->matakuliah }}</td>
+                        <td>{{ $mataKuliah->sks }}</td>
                         <td class="text-center">
                             <div class="d-flex justify-content-center gap-2">
                                 <a href="{{ route('admin.matkul.edit', $mataKuliah->id) }}">

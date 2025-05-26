@@ -13,9 +13,11 @@ use App\Models\Estimasi;
 use App\Models\Biaya;
 use App\Models\Anggota_Tim_Pbl;
 use App\Models\PeriodePBL;
+use App\Models\TimPbl;
 use RealRashid\SweetAlert\Facades\Alert;
 use PhpOffice\PhpWord\TemplateProcessor;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Str;
 
 class RencanaProyekController extends Controller
 {
@@ -58,9 +60,9 @@ class RencanaProyekController extends Controller
             'biaya' => 'nullable|string',
             'klien' => 'nullable|string',
             'waktu' => 'nullable|string',
-            'ruang_lingkup' => 'nullable|string',
-            'rancangan_sistem' => 'nullable|string',
-            'evaluasi' => 'nullable|string',
+            'ruang_lingkup' => 'nullable',
+            'rancangan_sistem' => 'nullable',
+            'evaluasi' => 'nullable',
         ]);
 
         $kodeTim = getKodeTimByAuth();
@@ -68,7 +70,7 @@ class RencanaProyekController extends Controller
 
         $rencanaProyek = RencanaProyek::firstOrNew(['kode_tim' => $kodeTim]);
         // Ambil data tim dan nama manajer proyek dari relasi
-        $tim = \App\Models\TimPbl::with('manproFK')->where('kode_tim', $kodeTim)->first();
+        $tim = TimPbl::with('manproFK')->where('kode_tim', $kodeTim)->first();
         $namaManpro = $tim && $tim->manproFK ? $tim->manproFK->nama : null;
 
         $rencanaProyek->fill($validated);
@@ -169,7 +171,7 @@ class RencanaProyekController extends Controller
     public function storeBiaya(Request $request)
     {
         $validated = $request->validate([
-            'fase.*' => 'required|integer',
+            'fase.*' => 'required|string',
             'uraian_pekerjaan.*' => 'nullable|string',
             'perkiraan_biaya.*' => 'nullable|string',
             'catatan.*' => 'nullable|string',
@@ -197,7 +199,7 @@ class RencanaProyekController extends Controller
     public function storeEstimasi(Request $request)
     {
         $validated = $request->validate([
-            'fase.*' => 'required|integer',
+            'fase.*' => 'required|string',
             'uraian_pekerjaan.*' => 'nullable|string',
             'estimasi_waktu.*' => 'nullable|string',
             'catatan.*' => 'nullable|string',
@@ -221,99 +223,101 @@ class RencanaProyekController extends Controller
         Alert::success('Berhasil!', 'Estimasi Waktu Pekerjaan Berhasil Disimpan!');
         return redirect()->route('mahasiswa.rpp.rencana-proyek.create')->with('active_step', 'step6');
     }
+
     public function exportWord()
-{
-    $kodeTim = getKodeTimByAuth();
-    if (!$kodeTim) return back()->with('error', 'Tim tidak ditemukan!');
+    {
+        $kodeTim = getKodeTimByAuth();
+        if (!$kodeTim) return back()->with('error', 'Tim tidak ditemukan!');
 
-    $rencanaProyek = RencanaProyek::where('kode_tim', $kodeTim)->first();
-    $tahapan = TahapanPelaksanaan::where('kode_tim', $kodeTim)->get();
-    $peralatan = KebutuhanPeralatan::where('kode_tim', $kodeTim)->get();
-    $tantangan = Tantangan::where('kode_tim', $kodeTim)->get();
-    $estimasi = Estimasi::where('kode_tim', $kodeTim)->get();
-    $biaya = Biaya::where('kode_tim', $kodeTim)->get();
+        $rencanaProyek = RencanaProyek::where('kode_tim', $kodeTim)->first();
+        $tahapan     = TahapanPelaksanaan::where('kode_tim', $kodeTim)->get()->toArray();
+        $peralatan   = KebutuhanPeralatan::where('kode_tim', $kodeTim)->get()->toArray();
+        $tantangan   = Tantangan::where('kode_tim', $kodeTim)->get()->toArray();
+        $estimasi    = Estimasi::where('kode_tim', $kodeTim)->get()->toArray();
+        $biaya       = Biaya::where('kode_tim', $kodeTim)->get()->toArray();
 
-    // Path ke template word dengan placeholders
-    $templatePath = storage_path('app/templates/rencana_proyek_template.docx');
-    $templateProcessor = new TemplateProcessor($templatePath);
+        $templatePath = storage_path('app/templates/rencana_proyek_template.docx');
+        $templateProcessor = new TemplateProcessor($templatePath);
 
-    // Set single value placeholders
-    $templateProcessor->setValue('kode_tim', $kodeTim ?? '-'); 
-    $templateProcessor->setValue('judul_proyek', $rencanaProyek->judul_proyek ?? '-');
-    $templateProcessor->setValue('manajer_proyek', $rencanaProyek->manajer_proyek ?? '-');
-    $templateProcessor->setValue('pengusul_proyek', $rencanaProyek->pengusul_proyek ?? '-');
-    $templateProcessor->setValue('waktu', $rencanaProyek->waktu ?? '-');
-    $templateProcessor->setValue('ruang_lingkup', $rencanaProyek->ruang_lingkup ?? '-');
-    $templateProcessor->setValue('evaluasi', $rencanaProyek->evaluasi ?? '-');
-    $templateProcessor->setValue('sponsor', $rencanaProyek->sponsor ?? '-');
-    $templateProcessor->setValue('biaya', $rencanaProyek->biaya ?? '-');
-    $templateProcessor->setValue('klien', $rencanaProyek->klien ?? '-');
-    $templateProcessor->setValue('rancangan_sistem', $rencanaProyek->rancangan_sistem ?? '-');
-    $templateProcessor->setValue('luaran' , $rencanaProyek->luaran ?? '-');
+        function htmlToText($html)
+        {
+            return preg_replace('/\s+/', ' ', strip_tags(str_replace(['<br>', '<br/>', '<p>', '</p>'], "\n", $html)));
+        }
 
-// ✅ TAHAPAN PELAKSANAAN
-    $jumlahTahapan = count($tahapan);
-    $templateProcessor->cloneRow('minggu', $jumlahTahapan);
-    foreach ($tahapan as $index => $item) {
-        $i = $index + 1;
-        $templateProcessor->setValue("minggu#{$i}", $item['minggu'] ?? '-');
-        $templateProcessor->setValue("tahapan#{$i}", $item['tahapan'] ?? '-');
-        $templateProcessor->setValue("pic#{$i}", $item['pic'] ?? '-');
-        $templateProcessor->setValue("keterangan#{$i}", $item['keterangan'] ?? '-');
+        // Set single value placeholders, gunakan null coalescing
+        $templateProcessor->setValue('kode_tim', $kodeTim);
+        $templateProcessor->setValue('judul_proyek', $rencanaProyek->judul_proyek ?? '-');
+        $templateProcessor->setValue('manajer_proyek', $rencanaProyek->manajer_proyek ?? '-');
+        $templateProcessor->setValue('pengusul_proyek', $rencanaProyek->pengusul_proyek ?? '-');
+        $templateProcessor->setValue('waktu', $rencanaProyek->waktu ?? '-');
+        $templateProcessor->setValue('sponsor', $rencanaProyek->sponsor ?? '-');
+        $templateProcessor->setValue('biaya', $rencanaProyek->biaya ?? '-');
+        $templateProcessor->setValue('klien', $rencanaProyek->klien ?? '-');
+        $templateProcessor->setValue('luaran', $rencanaProyek->luaran ?? '-');
+        $templateProcessor->setValue('ruang_lingkup', htmlToText($rencanaProyek->ruang_lingkup ?? '-'));
+        $templateProcessor->setValue('evaluasi', htmlToText($rencanaProyek->evaluasi ?? '-'));
+        $templateProcessor->setValue('rancangan_sistem', htmlToText($rencanaProyek->rancangan_sistem ?? '-'));
+
+        // Fungsi bantu clone row dengan minimal 1 row
+        $cloneRowSafely = function ($placeholder, $data, $callback) use ($templateProcessor) {
+            $count = count($data);
+            if ($count < 1) {
+                $count = 1;
+                $data = [['empty' => true]];
+            }
+            $templateProcessor->cloneRow($placeholder, $count);
+
+            foreach ($data as $i => $item) {
+                $index = $i + 1;
+                $callback($templateProcessor, $index, $item);
+            }
+        };
+
+        // TAHAPAN PELAKSANAAN
+        $cloneRowSafely('minggu', $tahapan, function ($tpl, $i, $item) {
+            $tpl->setValue("minggu#{$i}", $item['minggu'] ?? '-');
+            $tpl->setValue("tahapan#{$i}", $item['tahapan'] ?? '-');
+            $tpl->setValue("pic#{$i}", $item['pic'] ?? '-');
+            $tpl->setValue("keterangan#{$i}", $item['keterangan'] ?? '-');
+        });
+
+        // KEBUTUHAN PERALATAN
+        $cloneRowSafely('nomor_peralatan', $peralatan, function ($tpl, $i, $item) {
+            $tpl->setValue("nomor_peralatan#{$i}", $item['nomor'] ?? '-');
+            $tpl->setValue("fase_peralatan#{$i}", $item['fase'] ?? '-');
+            $tpl->setValue("peralatan#{$i}", $item['peralatan'] ?? '-');
+            $tpl->setValue("bahan#{$i}", $item['bahan'] ?? '-');
+        });
+
+        // TANTANGAN & ISU
+        $cloneRowSafely('nomor_tantangan', $tantangan, function ($tpl, $i, $item) {
+            $tpl->setValue("nomor_tantangan#{$i}", $item['nomor'] ?? '-');
+            $tpl->setValue("proses#{$i}", $item['proses'] ?? '-');
+            $tpl->setValue("isu#{$i}", $item['isu'] ?? '-');
+            $tpl->setValue("level_resiko#{$i}", $item['level_resiko'] ?? '-');
+            $tpl->setValue("catatan_tantangan#{$i}", $item['catatan'] ?? '-');
+        });
+
+        // ESTIMASI WAKTU
+        $cloneRowSafely('fase_estimasi', $estimasi, function ($tpl, $i, $item) {
+            $tpl->setValue("fase_estimasi#{$i}", $item['fase'] ?? '-');
+            $tpl->setValue("uraian_pekerjaan#{$i}", $item['uraian_pekerjaan'] ?? '-');
+            $tpl->setValue("estimasi_waktu#{$i}", $item['estimasi_waktu'] ?? '-');
+            $tpl->setValue("catatan_estimasi#{$i}", $item['catatan'] ?? '-');
+        });
+
+        // BIAYA PROYEK
+        $cloneRowSafely('fase_biaya', $biaya, function ($tpl, $i, $item) {
+            $tpl->setValue("fase_biaya#{$i}", $item['fase'] ?? '-');
+            $tpl->setValue("uraian_biaya#{$i}", $item['uraian_pekerjaan'] ?? '-');
+            $tpl->setValue("perkiraan_biaya#{$i}", $item['perkiraan_biaya'] ?? '-');
+            $tpl->setValue("catatan_biaya#{$i}", $item['catatan'] ?? '-');
+        });
+
+        $fileName = "Rencana_Pelaksanaan_Proyek_" . $kodeTim . ".docx";
+        $tempFile = tempnam(sys_get_temp_dir(), 'word');
+        $templateProcessor->saveAs($tempFile);
+
+        return response()->download($tempFile, $fileName)->deleteFileAfterSend(true);
     }
-
-    // ✅ KEBUTUHAN PERALATAN
-    $jumlahPeralatan = count($peralatan);
-    $templateProcessor->cloneRow('nomor_peralatan', $jumlahPeralatan);
-    foreach ($peralatan as $index => $item) {
-        $i = $index + 1;
-        $templateProcessor->setValue("nomor_peralatan#{$i}", $item['nomor'] ?? '-');
-        $templateProcessor->setValue("fase_peralatan#{$i}", $item['fase'] ?? '-');
-        $templateProcessor->setValue("peralatan#{$i}", $item['peralatan'] ?? '-');
-        $templateProcessor->setValue("bahan#{$i}", $item['bahan'] ?? '-');
-    }
-
-    // ✅ TANTANGAN & ISU
-    $jumlahTantangan = count($tantangan);
-    $templateProcessor->cloneRow('nomor_tantangan', $jumlahTantangan);
-    foreach ($tantangan as $index => $item) {
-        $i = $index + 1;
-        $templateProcessor->setValue("nomor_tantangan#{$i}", $item['nomor'] ?? '-');
-        $templateProcessor->setValue("proses#{$i}", $item['proses'] ?? '-');
-        $templateProcessor->setValue("isu#{$i}", $item['isu'] ?? '-');
-        $templateProcessor->setValue("level_resiko#{$i}", $item['level_resiko'] ?? '-');
-        $templateProcessor->setValue("catatan_tantangan#{$i}", $item['catatan'] ?? '-');
-    }
-
-    // ✅ ESTIMASI WAKTU
-    $jumlahEstimasi = count($estimasi);
-    $templateProcessor->cloneRow('fase_estimasi', $jumlahEstimasi);
-    foreach ($estimasi as $index => $item) {
-        $i = $index + 1;
-        $templateProcessor->setValue("fase_estimasi#{$i}", $item['fase'] ?? '-');
-        $templateProcessor->setValue("uraian_pekerjaan#{$i}", $item['uraian_pekerjaan'] ?? '-');
-        $templateProcessor->setValue("estimasi_waktu#{$i}", $item['estimasi_waktu'] ?? '-');
-        $templateProcessor->setValue("catatan_estimasi#{$i}", $item['catatan'] ?? '-');
-    }
-
-    // ✅ BIAYA PROYEK
-    $jumlahBiaya = count($biaya);
-    $templateProcessor->cloneRow('fase_biaya', $jumlahBiaya);
-    foreach ($biaya as $index => $item) {
-        $i = $index + 1;
-        $templateProcessor->setValue("fase_biaya#{$i}", $item['fase'] ?? '-');
-        $templateProcessor->setValue("uraian_biaya#{$i}", $item['uraian_pekerjaan'] ?? '-');
-        $templateProcessor->setValue("perkiraan_biaya#{$i}", $item['perkiraan_biaya'] ?? '-');
-        $templateProcessor->setValue("catatan_biaya#{$i}", $item['catatan'] ?? '-');
-    }
-
-    // ✅ Simpan dan kirim file Word
-    $fileName = "Rencana_Proyek_" . $kodeTim . ".docx";
-    $tempFile = tempnam(sys_get_temp_dir(), 'word');
-    $templateProcessor->saveAs($tempFile);
-
-    // Kirim file sebagai download response
-    return response()->download($tempFile, $fileName)->deleteFileAfterSend(true);
-}
-
 }

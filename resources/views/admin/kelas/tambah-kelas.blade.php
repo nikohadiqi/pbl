@@ -36,7 +36,7 @@
                 <input id="kelas" class="form-control" name="kelas" placeholder="Masukkan Nama Kelas" type="text" required value="{{ old('kelas') }}">
             </div>
             <div class="form-group mt-4">
-                <button type="submit" class="btn btn-primary me-2">Simpan</button>
+                <button type="submit" class="btn btn-primary me-2"><i class="bi bi-floppy me-1"></i> Simpan</button>
                 <button type="reset" class="btn btn-danger">Reset</button>
             </div>
         </form>

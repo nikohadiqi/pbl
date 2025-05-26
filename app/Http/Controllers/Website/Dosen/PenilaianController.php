@@ -11,6 +11,8 @@ use App\Models\Pengampu;
 use RealRashid\SweetAlert\Facades\Alert;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Illuminate\Support\Str;
 
 class PenilaianController extends Controller
 {
@@ -271,59 +273,111 @@ class PenilaianController extends Controller
 
         return $nilaiDosenMatkul;
     }
- public function exportExcel(Request $request)
-{
-    $selectedKelas = $request->query('kelas'); // Ambil kelas dari query param
 
-    // Path template Excel
-    $templatePath = storage_path('app/templates/rubrik_penilaian_pbl.xls');
-    $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($templatePath);
-    $sheet = $spreadsheet->getActiveSheet();
+    public function exportExcel(Request $request)
+    {
+        $selectedKelas = $request->query('kelas');
 
-    // Ambil data NilaiMahasiswa dengan relasi mahasiswa, filter kelas
-    $nilaiMahasiswa = NilaiMahasiswa::with('mahasiswa')
-        ->whereHas('mahasiswa', function ($query) use ($selectedKelas) {
-            $query->where('kelas', $selectedKelas);
-        })
-        ->get();
+        if (!$selectedKelas) {
+            abort(400, 'Kelas belum dipilih.');
+        }
 
-    $startRow = 19; // mulai isi data dari baris 19 sesuai template
-    $rowNum = $startRow;
+        $auth = Auth::guard('dosen')->user();
 
-    foreach ($nilaiMahasiswa as $nilai) {
-        $sheet->setCellValue('B' . $rowNum, $nilai->nim);
-        $sheet->setCellValue('C' . $rowNum, $nilai->mahasiswa->nama ?? '');
-        $sheet->setCellValue('D' . $rowNum, $nilai->critical_thinking);
-        $sheet->setCellValue('E' . $rowNum, $nilai->kolaborasi);
-        $sheet->setCellValue('F' . $rowNum, $nilai->kreativitas);
-        $sheet->setCellValue('G' . $rowNum, $nilai->komunikasi);
-        $sheet->setCellValue('H' . $rowNum, $nilai->fleksibilitas);
-        $sheet->setCellValue('I' . $rowNum, $nilai->kepemimpinan);
-        $sheet->setCellValue('J' . $rowNum, $nilai->produktifitas);
-        $sheet->setCellValue('K' . $rowNum, $nilai->social_skill);
-        $sheet->setCellValue('L' . $rowNum, $nilai->konten_presentasi);
-        $sheet->setCellValue('M' . $rowNum, $nilai->tampilan_visual_presentasi);
-        $sheet->setCellValue('N' . $rowNum, $nilai->kosakata);
-        $sheet->setCellValue('O' . $rowNum, $nilai->tanya_jawab);
-        $sheet->setCellValue('P' . $rowNum, $nilai->mata_gerak_tubuh);
-        $sheet->setCellValue('Q' . $rowNum, $nilai->penulisan_laporan);
-        $sheet->setCellValue('R' . $rowNum, $nilai->pilihan_kata);
-        $sheet->setCellValue('S' . $rowNum, $nilai->konten_laporan);
-        $sheet->setCellValue('T' . $rowNum, $nilai->sikap_kerja);
-        $sheet->setCellValue('U' . $rowNum, $nilai->proses);
-        $sheet->setCellValue('V' . $rowNum, $nilai->kualitas);
-        $rowNum++;
+        // Cek apakah dosen mengampu kelas ini
+        $pengampu = Pengampu::where('dosen_id', $auth->nim)
+            ->where('kelas_id', $selectedKelas)
+            ->first();
+
+        if (!$pengampu) {
+            abort(403, 'Anda tidak mengampu kelas ini.');
+        }
+
+        $templatePath = storage_path('app/templates/rubrik_penilaian_template.xlsx');
+        if (!file_exists($templatePath)) {
+            abort(500, 'Template Excel tidak ditemukan.');
+        }
+
+        $spreadsheet = IOFactory::load($templatePath);
+
+        // Ambil data dari relasi
+        $namaMatkul = $pengampu->matkulFk->matakuliah ?? '-';
+        $sksMatkul = $pengampu->matkulFk->sks ?? '-';
+        $semesterTahun = $pengampu->periodeFK->semester . '/' . $pengampu->periodeFK->tahun;
+        $namaDosen  = $pengampu->dosenFk->nama ?? '-';
+
+        // Daftar sheet yang ingin diisi datanya
+        $targetSheets = ['Rubrik Penilaian', 'Tabel Penilaian'];
+
+        foreach ($targetSheets as $sheetName) {
+            $sheetPengampu = $spreadsheet->getSheetByName($sheetName);
+
+            if (!$sheetPengampu) {
+                $available = implode(', ', $spreadsheet->getSheetNames());
+                abort(500, 'Sheet "' . $sheetName . '" tidak ditemukan. Sheet yang tersedia: ' . $available);
+            }
+
+            // Masukkan data ke sel yang sesuai
+            $sheetPengampu->setCellValue('C7', sprintf(': %s', $namaMatkul));    // Nama Mata Kuliah
+            $sheetPengampu->setCellValue('C8', sprintf(': %s', $sksMatkul));      // SKS
+            $sheetPengampu->setCellValue('C9', sprintf(': %s', $semesterTahun));  // Semester/Tahun
+            $sheetPengampu->setCellValue('C11', sprintf(': %s', $namaDosen));     // Nama Dosen Pengampu
+        }
+
+        // Set sheet "Nilai"
+        $sheet = $spreadsheet->getSheetByName('Nilai');
+        if (!$sheet) {
+            $available = implode(', ', $spreadsheet->getSheetNames());
+            abort(500, 'Sheet "Nilai" tidak ditemukan. Sheet yang tersedia: ' . $available);
+        }
+
+        $nilaiMahasiswa = NilaiMahasiswa::with('mahasiswa')
+            ->where('pengampu_id', $pengampu->id)
+            ->get();
+
+        $startRow = 19;
+        $rowNum = $startRow;
+        $no = 1;
+
+        foreach ($nilaiMahasiswa as $nilai) {
+            $sheet->setCellValue('B' . $rowNum, $no++);
+            $sheet->setCellValue('C' . $rowNum, $nilai->nim);
+            $sheet->setCellValue('D' . $rowNum, $nilai->mahasiswa->nama ?? '');
+            $sheet->setCellValue('E' . $rowNum, $nilai->critical_thinking);
+            $sheet->setCellValue('F' . $rowNum, $nilai->kolaborasi);
+            $sheet->setCellValue('G' . $rowNum, $nilai->kreativitas);
+            $sheet->setCellValue('H' . $rowNum, $nilai->komunikasi);
+            $sheet->setCellValue('I' . $rowNum, $nilai->fleksibilitas);
+            $sheet->setCellValue('J' . $rowNum, $nilai->kepemimpinan);
+            $sheet->setCellValue('K' . $rowNum, $nilai->produktifitas);
+            $sheet->setCellValue('L' . $rowNum, $nilai->social_skill);
+            $sheet->setCellValue('M' . $rowNum, $nilai->konten_presentasi);
+            $sheet->setCellValue('N' . $rowNum, $nilai->tampilan_visual_presentasi);
+            $sheet->setCellValue('O' . $rowNum, $nilai->kosakata);
+            $sheet->setCellValue('P' . $rowNum, $nilai->tanya_jawab);
+            $sheet->setCellValue('Q' . $rowNum, $nilai->mata_gerak_tubuh);
+            $sheet->setCellValue('R' . $rowNum, $nilai->penulisan_laporan);
+            $sheet->setCellValue('S' . $rowNum, $nilai->pilihan_kata);
+            $sheet->setCellValue('T' . $rowNum, $nilai->konten_laporan);
+            $sheet->setCellValue('U' . $rowNum, $nilai->sikap_kerja);
+            $sheet->setCellValue('V' . $rowNum, $nilai->proses);
+            $sheet->setCellValue('W' . $rowNum, $nilai->kualitas);
+            $rowNum++;
+        }
+
+        $namaMatkul = $pengampu->matkulFK->matakuliah ?? 'Nama Mata Kuliah';
+        $slug = Str::slug($namaMatkul, ' '); // basis data lanjut
+        $namaMatkulTitle = Str::title($slug); // Basis Data Lanjut
+
+        $fileName = "Rubrik Penilaian PBL_Kelas {$selectedKelas}_{$namaMatkulTitle}_" . now()->format('Ymd_His') . ".xlsx";
+
+        return new StreamedResponse(function () use ($spreadsheet) {
+            $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+            $writer->save('php://output');
+        }, 200, [
+            'Content-Type' => 'application/vnd.ms-excel',
+            'Content-Disposition' => "attachment; filename=\"{$fileName}\"",
+            'Cache-Control' => 'max-age=0',
+        ]);
     }
-
-    $fileName = "Rubrik_Penilaian_Kelas_{$selectedKelas}_" . date('Ymd_His') . ".xls";
-
-    // Header untuk download file
-    header('Content-Type: application/vnd.ms-excel');
-    header("Content-Disposition: attachment; filename=\"{$fileName}\"");
-    header('Cache-Control: max-age=0');
-
-    $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xls');
-    $writer->save('php://output');
-    exit;
-}
 }

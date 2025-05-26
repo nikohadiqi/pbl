@@ -1,11 +1,11 @@
 <div class="tab-pane fade {{ session('active_step', 'step1') == 'step1' ? 'show active' : '' }}" id="step1"
     role="tabpanel">
-    <form method="POST" action="{{ route('mahasiswa.rpp.rencana-proyek.store') }}">
-        
+    <form method="POST" action="{{ route('mahasiswa.rpp.rencana-proyek.store') }}" id="rencanaForm">
+
         @csrf
         <h4 class="mb-4">Deskripsi Proyek</h4>
 
-       <div class="row">
+        <div class="row">
             <div class="form-group col-md-6">
                 <label for="kode_tim">Kode Tim</label>
                 <input type="text" class="form-control" id="kode_tim"
@@ -41,12 +41,12 @@
                     value="{{ old('sponsor', $rencanaProyek->sponsor ?? '') }}">
             </div>
 
-           <div class="form-group col-md-6">
+            <div class="form-group col-md-6">
                 <label for="biaya" class="font-weight-bold">Biaya</label>
                 <div class="input-group">
                     <span class="input-group-text">Rp.</span>
-                    <input type="text" name="biaya" id="biaya" class="form-control border-left-0" placeholder="1.000.000"
-                        value="{{ old('biaya', $rencanaProyek->biaya ?? '') }}">
+                    <input type="text" name="biaya" id="biaya" class="form-control border-left-0"
+                        placeholder="1.000.000" value="{{ old('biaya', $rencanaProyek->biaya ?? '') }}">
                 </div>
             </div>
         </div>
@@ -54,43 +54,50 @@
         <div class="row">
             <div class="form-group col-md-6">
                 <label>Klien</label>
-                <input type="text" name="klien" class="form-control" value="{{ old('klien', $rencanaProyek->klien ?? '') }}">
+                <input type="text" name="klien" class="form-control"
+                    value="{{ old('klien', $rencanaProyek->klien ?? '') }}">
             </div>
 
             <div class="form-group col-md-6">
                 <label>Estimasi Waktu</label>
-                <input type="text" name="waktu" class="form-control" value="{{ old('waktu', $rencanaProyek->waktu ?? '') }}">
+                <input type="text" name="waktu" class="form-control"
+                    value="{{ old('waktu', $rencanaProyek->waktu ?? '') }}">
             </div>
         </div>
 
         <div class="form-group mb-3">
             <label>Luaran</label>
-            <textarea name="luaran" class="form-control" rows="3" >{{ old('luaran', $rencanaProyek->luaran ?? '') }}</textarea>
+            <textarea name="luaran" class="form-control"
+                rows="3">{{ old('luaran', $rencanaProyek->luaran ?? '') }}</textarea>
         </div>
 
         <div class="form-group mb-3">
             <label>Ruang Lingkup</label>
-            <textarea name="ruang_lingkup"
-                class="form-control" rows="3">{{ old('ruang_lingkup', $rencanaProyek->ruang_lingkup ?? '') }}</textarea>
+            <input type="hidden" name="ruang_lingkup" id="ruang_lingkup_input">
+            <div id="ruang_lingkup_editor" style="height: 200px;"
+                data-content="{!! htmlspecialchars(old('ruang_lingkup', $rencanaProyek->ruang_lingkup ?? '')) !!}">
+            </div>
         </div>
 
         <div class="form-group mb-3">
             <label>Rancangan Sistem</label>
-            <textarea name="rancangan_sistem"
-                class="form-control" rows="3">{{ old('rancangan_sistem', $rencanaProyek->rancangan_sistem ?? '') }}</textarea>
+            <input type="hidden" name="rancangan_sistem" id="rancangan_sistem_input">
+            <div id="rancangan_sistem_editor" style="height: 200px;"
+                data-content="{!! htmlspecialchars(old('rancangan_sistem', $rencanaProyek->rancangan_sistem ?? '')) !!}">
+            </div>
         </div>
+
         <div class="form-group mb-3">
             <label>Evaluasi</label>
-            <textarea name="rancangan_sistem"
-                class="form-control" rows="3">{{ old('evaluasi', $rencanaProyek->evaluasi ?? '') }}</textarea>
+            <input type="hidden" name="evaluasi" id="evaluasi_input">
+            <div id="evaluasi_editor" style="height: 200px;"
+                data-content="{!! htmlspecialchars(old('evaluasi', $rencanaProyek->evaluasi ?? '')) !!}">
+            </div>
         </div>
-        <div class="d-flex justify-content-between">
-            <button type="submit" class="btn btn-success">Simpan</button>
-            <button type="button" class="btn btn-primary btn-next" data-next="#step2">Next</button>
-            <a href="{{ route('mahasiswa.rpp.rencana-proyek.export') }}" class="btn btn-primary mb-3">
-    <i class="fas fa-file-word"></i> Export ke Word
-</a>
 
+        <div class="d-flex justify-content-between">
+            <button type="submit" class="btn btn-success"><i class="bi bi-floppy me-1"></i> Simpan</button>
+            <button type="button" class="btn btn-primary btn-next" data-next="#step2">Next</button>
         </div>
     </form>
 </div>

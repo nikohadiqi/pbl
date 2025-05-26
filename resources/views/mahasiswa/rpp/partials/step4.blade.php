@@ -83,7 +83,7 @@
         <div class="d-flex justify-content-between">
             <button type="button" class="btn btn-secondary btn-prev" data-prev="#step3">Previous</button>
             <div>
-                <button type="submit" class="btn btn-success me-3">Simpan</button>
+                <button type="submit" class="btn btn-success me-3"><i class="bi bi-floppy me-1"></i> Simpan</button>
                 <button type="button" class="btn btn-primary btn-next" data-next="#step5">Next</button>
             </div>
         </div>

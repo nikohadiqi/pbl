@@ -112,6 +112,22 @@
     document.addEventListener('DOMContentLoaded', function () {
         const steps = document.querySelectorAll('.step');
 
+        const ruangLingkupQuill = new Quill('#ruang_lingkup_editor', { theme: 'snow' });
+        const rancanganSistemQuill = new Quill('#rancangan_sistem_editor', { theme: 'snow' });
+        const evaluasiQuill = new Quill('#evaluasi_editor', { theme: 'snow' });
+
+        // Set initial data dari server
+        ruangLingkupQuill.clipboard.dangerouslyPasteHTML(`{!! old('ruang_lingkup', $rencanaProyek->ruang_lingkup ?? '') !!}`);
+        rancanganSistemQuill.clipboard.dangerouslyPasteHTML(`{!! old('rancangan_sistem', $rencanaProyek->rancangan_sistem ?? '') !!}`);
+        evaluasiQuill.clipboard.dangerouslyPasteHTML(`{!! old('evaluasi', $rencanaProyek->evaluasi ?? '') !!}`);
+
+        // Sync ke input saat submit
+        document.getElementById('rencanaForm').addEventListener('submit', function () {
+            document.getElementById('ruang_lingkup_input').value = ruangLingkupQuill.root.innerHTML;
+            document.getElementById('rancangan_sistem_input').value = rancanganSistemQuill.root.innerHTML;
+            document.getElementById('evaluasi_input').value = evaluasiQuill.root.innerHTML;
+        });
+
         function activateStep(targetId) {
             // Remove active from all
             steps.forEach(s => s.classList.remove('active'));
@@ -196,12 +212,19 @@ function addTahapanRow() {
         const table = document.querySelector('#tantangan-table tbody');
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td><input type="number" name="nomor[]" class="form-control"></td>
-            <td><input type="text" name="proses[]" class="form-control"></td>
-            <td><input type="text" name="isu[]" class="form-control"></td>
-            <td><input type="text" name="level_resiko[]" class="form-control"></td>
-            <td><input type="text" name="catatan[]" class="form-control"></td>
-            <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Hapus</button></td>
+        <td><input type="number" name="nomor[]" class="form-control"></td>
+        <td><input type="text" name="proses[]" class="form-control"></td>
+        <td><input type="text" name="isu[]" class="form-control"></td>
+        <td>
+            <select name="level_resiko[]" class="form-control">
+                <option value="" selected disabled>-- Pilih Level --</option>
+                <option value="H">H</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+            </select>
+        </td>
+        <td><input type="text" name="catatan[]" class="form-control"></td>
+        <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Hapus</button></td>
         `;
         table.appendChild(row);
     }

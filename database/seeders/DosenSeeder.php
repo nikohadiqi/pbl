@@ -34,5 +34,16 @@ class DosenSeeder extends Seeder
             'jenis_kelamin' => 'P',
             'status_dosen' => 'Aktif',
         ]);
+
+        Dosen::create([
+            'nip' => '197601222021211001',
+            'nama' => 'Mohamad Dimyati Ayatullah, S.T., M.Kom.',
+            'no_telp' => '08123399184',
+            'email' => 'dimyati@poliwangi.ac.id',
+            'prodi' => 'Teknologi Rekayasa Perangkat Lunak',
+            'jurusan' => 'Bisnis dan Informatika',
+            'jenis_kelamin' => 'L',
+            'status_dosen' => 'Aktif',
+        ]);
     }
 }

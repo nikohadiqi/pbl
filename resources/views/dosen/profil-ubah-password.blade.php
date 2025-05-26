@@ -38,7 +38,7 @@
                         <label>Konfirmasi Password Baru</label>
                         <input type="password" name="confirm_password" class="form-control" required>
                     </div>
-                    <button type="submit" class="btn btn-primary mt-3">Simpan</button>
+                    <button type="submit" class="btn btn-primary mt-3"><i class="bi bi-floppy me-1"></i> Simpan</button>
                 </form>
             </div>
         </div>

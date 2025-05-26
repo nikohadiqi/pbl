@@ -29,6 +29,14 @@
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
+            <div class="form-group mb-3">
+                <label for="sks">SKS</label>
+                <input type="number" name="sks" min="1" max="10" class="form-control @error('sks') is-invalid @enderror"
+                       value="{{ old('sks') }}" required>
+                @error('sks')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
             <div class="form-group">
                 <label for="program_studi">Program Studi</label>
                 <select class="form-control" id="program_studi" name="program_studi">
@@ -37,7 +45,7 @@
                 </select>
             </div>
             <div class="form-group mt-4">
-                <button type="submit" class="btn btn-primary me-2">Simpan</button>
+                <button type="submit" class="btn btn-primary me-2"><i class="bi bi-floppy me-1"></i> Simpan</button>
                 <button type="reset" class="btn btn-danger">Reset</button>
             </div>
         </form>

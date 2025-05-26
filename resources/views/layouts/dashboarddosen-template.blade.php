@@ -25,6 +25,29 @@
     <!-- CSS Files -->
     <link id="pagestyle" href="{{ asset('assets/css/argon-dashboard.css') }}" rel="stylesheet" />
 
+    {{-- Nav Style --}}
+    <style>
+        .navbar .dropdown-toggle {
+            color: white !important;
+            background-color: transparent;
+            border: none;
+            padding: 0.5rem 0.1rem;
+            border-radius: 0.75rem;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Hover effect opsional */
+        .navbar .dropdown-toggle:hover,
+        .navbar .dropdown-toggle:focus {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .dropdown-menu .dropdown-item.text-danger:hover {
+            background-color: #ffcccc;
+            color: #a00;
+        }
+    </style>
+
     @stack('css')
 </head>
 

@@ -64,7 +64,7 @@
 
         <div class="form-group mt-4">
             <button type="submit" class="btn btn-success">
-                <i class="bi bi-save me-1"></i>Simpan Logbook
+                <i class="bi bi-floppy me-1"></i> Simpan Logbook
             </button>
         </div>
     </form>

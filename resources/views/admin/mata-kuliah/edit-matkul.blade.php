@@ -30,6 +30,15 @@
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
+            <!-- SKS -->
+            <div class="form-group mb-3">
+                <label for="sks">SKS</label>
+                <input type="text" name="sks" min="1" max="10" class="form-control @error('sks') is-invalid @enderror"
+                    value="{{ old('sks', $matkul->sks) }}" required>
+                @error('sks')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
             <!-- Prodi -->
             <div class="form-group">
                 <label for="program_studi">Program Studi</label>
@@ -42,7 +51,7 @@
                 </select>
             </div>
             <div class="form-group mt-4">
-                <button type="submit" class="btn btn-primary">Simpan</button>
+                <button type="submit" class="btn btn-primary"><i class="bi bi-floppy me-1"></i> Simpan</button>
                 <button type="reset" class="btn btn-danger">Reset</button>
             </div>
         </form>

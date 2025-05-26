@@ -18,11 +18,11 @@ return new class extends Migration {
             $table->string('biaya')->nullable();
             $table->string('klien')->nullable();
             $table->string('waktu')->nullable();
-            $table->string('ruang_lingkup')->nullable();
-            $table->string('rancangan_sistem')->nullable();
-            $table->string('evaluasi')->nullable();
+            $table->longText('ruang_lingkup')->nullable();
+            $table->longText('rancangan_sistem')->nullable();
+            $table->longText('evaluasi')->nullable();
             $table->timestamps();
             $table->foreign('kode_tim')->references('kode_tim')->on('tim_pbl')->onDelete('cascade');
         });
-    } 
+    }
 };

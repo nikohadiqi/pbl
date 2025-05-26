@@ -68,7 +68,7 @@
                     <p class="text-muted">Belum mengampu kelas apapun.</p>
                     @endforelse
                     <a href="{{ route('dosen.profil.ubah-password') }}"
-                        class="btn btn-primary text-white fw-bold float-end mt-3 mb-1">Ubah Password Disini</a>
+                        class="btn btn-primary text-white fw-bold float-end mt-3 mb-1"><i class="bi-pencil-square me-1"></i> Ubah Password Disini</a>
                 </div>
             </div>
         </div>

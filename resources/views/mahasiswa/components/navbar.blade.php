@@ -26,16 +26,17 @@
             <ul class="navbar-nav ms-auto justify-content-end">
                 <!-- User Profile Dropdown -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link d-flex align-items-center" href="#" id="userDropdown" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center text-white px-3 py-2" href="#"
+                        id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"
+                        style="background-color: rgba(255,255,255,0.1); border-radius: 1rem;">
                         <img src="{{ asset('assets/img/logo-poliwangi.png') }}" alt="User Avatar"
-                            class="rounded-circle me-2 border border-2 border-light p-1" width="40" height="40">
-                        <span class="d-flex flex-column text-white">
-                            <span class="fw-bold">{{ Auth::guard('mahasiswa')->check() && Auth::guard('mahasiswa')->user()->mahasiswa ? Auth::guard('mahasiswa')->user()->mahasiswa->nama : '-' }}</span>
-                            <span class="fw-bold">
-                                {{ Auth::guard('mahasiswa')->check() && Auth::guard('mahasiswa')->user()->mahasiswa ? Auth::guard('mahasiswa')->user()->mahasiswa->nim : '-' }}
-                            </span>
-                        </span>
+                            class="rounded-circle me-2 border border-white border-2 p-1" width="40" height="40">
+                        <div class="d-flex flex-grow-1 align-items-center justify-content-between">
+                            <div class="d-flex flex-column me-2">
+                                <span class="fw-semibold text-white" style="line-height: 1.2">{{ Auth::guard('mahasiswa')->check() && Auth::guard('mahasiswa')->user()->mahasiswa ? Auth::guard('mahasiswa')->user()->mahasiswa->nama : '-' }}</span>
+                                <span class="text-white-60 text-sm">{{ Auth::guard('mahasiswa')->check() && Auth::guard('mahasiswa')->user()->mahasiswa ? Auth::guard('mahasiswa')->user()->mahasiswa->nim : '-' }}</span>
+                            </div>
+                        </div>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item" href="{{ route('mahasiswa.profil') }}"><i class="fas fa-user me-2"></i> Profil</a></li>

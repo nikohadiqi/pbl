@@ -28,11 +28,10 @@
                 Penilaian Mahasiswa Kelas {{ $selectedKelas }}
             </h4>
             <!-- Ekspor -->
-            <!-- Tombol Trigger -->
-            <button type="button" class="btn btn-primary fw-bold mb-3" onclick=" " {{ !$selectedKelas ? 'disabled' : ''
-                }}>
-                <i class="bi bi-download me-2"></i>Ekspor Nilai
-            </button>
+            <form action="{{ route('penilaian.export') }}" method="GET">
+                <input type="hidden" name="kelas" value="{{ $selectedKelas }}">
+                <button type="submit" class="btn btn-primary fw-bold mt-3"><i class="bi bi-file-earmark-excel"></i> Ekspor Nilai Kelas</button>
+            </form>
         </div>
         <!-- Tampilkan mata kuliah dari pengampu -->
         @foreach ($pengampu as $p)
