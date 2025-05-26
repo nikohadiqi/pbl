@@ -9,6 +9,8 @@ use App\Models\Mahasiswa;
 use App\Models\NilaiMahasiswa;
 use App\Models\Pengampu;
 use RealRashid\SweetAlert\Facades\Alert;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class PenilaianController extends Controller
 {
@@ -269,4 +271,59 @@ class PenilaianController extends Controller
 
         return $nilaiDosenMatkul;
     }
+ public function exportExcel(Request $request)
+{
+    $selectedKelas = $request->query('kelas'); // Ambil kelas dari query param
+
+    // Path template Excel
+    $templatePath = storage_path('app/templates/rubrik_penilaian_pbl.xls');
+    $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($templatePath);
+    $sheet = $spreadsheet->getActiveSheet();
+
+    // Ambil data NilaiMahasiswa dengan relasi mahasiswa, filter kelas
+    $nilaiMahasiswa = NilaiMahasiswa::with('mahasiswa')
+        ->whereHas('mahasiswa', function ($query) use ($selectedKelas) {
+            $query->where('kelas', $selectedKelas);
+        })
+        ->get();
+
+    $startRow = 19; // mulai isi data dari baris 19 sesuai template
+    $rowNum = $startRow;
+
+    foreach ($nilaiMahasiswa as $nilai) {
+        $sheet->setCellValue('B' . $rowNum, $nilai->nim);
+        $sheet->setCellValue('C' . $rowNum, $nilai->mahasiswa->nama ?? '');
+        $sheet->setCellValue('D' . $rowNum, $nilai->critical_thinking);
+        $sheet->setCellValue('E' . $rowNum, $nilai->kolaborasi);
+        $sheet->setCellValue('F' . $rowNum, $nilai->kreativitas);
+        $sheet->setCellValue('G' . $rowNum, $nilai->komunikasi);
+        $sheet->setCellValue('H' . $rowNum, $nilai->fleksibilitas);
+        $sheet->setCellValue('I' . $rowNum, $nilai->kepemimpinan);
+        $sheet->setCellValue('J' . $rowNum, $nilai->produktifitas);
+        $sheet->setCellValue('K' . $rowNum, $nilai->social_skill);
+        $sheet->setCellValue('L' . $rowNum, $nilai->konten_presentasi);
+        $sheet->setCellValue('M' . $rowNum, $nilai->tampilan_visual_presentasi);
+        $sheet->setCellValue('N' . $rowNum, $nilai->kosakata);
+        $sheet->setCellValue('O' . $rowNum, $nilai->tanya_jawab);
+        $sheet->setCellValue('P' . $rowNum, $nilai->mata_gerak_tubuh);
+        $sheet->setCellValue('Q' . $rowNum, $nilai->penulisan_laporan);
+        $sheet->setCellValue('R' . $rowNum, $nilai->pilihan_kata);
+        $sheet->setCellValue('S' . $rowNum, $nilai->konten_laporan);
+        $sheet->setCellValue('T' . $rowNum, $nilai->sikap_kerja);
+        $sheet->setCellValue('U' . $rowNum, $nilai->proses);
+        $sheet->setCellValue('V' . $rowNum, $nilai->kualitas);
+        $rowNum++;
+    }
+
+    $fileName = "Rubrik_Penilaian_Kelas_{$selectedKelas}_" . date('Ymd_His') . ".xls";
+
+    // Header untuk download file
+    header('Content-Type: application/vnd.ms-excel');
+    header("Content-Disposition: attachment; filename=\"{$fileName}\"");
+    header('Cache-Control: max-age=0');
+
+    $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xls');
+    $writer->save('php://output');
+    exit;
+}
 }
