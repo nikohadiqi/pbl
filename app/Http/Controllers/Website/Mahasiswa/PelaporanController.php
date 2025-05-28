@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Website\Mahasiswa;
 
 use App\Http\Controllers\Controller;
-use App\Models\Anggota_Tim_Pbl;
+use App\Models\AnggotaTimPbl;
 use App\Models\PelaporanUTS;
 use App\Models\PelaporanUAS;
 use App\Models\PeriodePBL;

@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Anggota_Tim_Pbl;
+use App\Models\AnggotaTimPbl;
 use App\Models\PeriodePbl;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,7 +14,7 @@ if (!function_exists('getKodeTimByAuth')) {
             return null;
         }
 
-        $kodeTim = Anggota_Tim_Pbl::where('nim', $nim)
+        $kodeTim = AnggotaTimPbl::where('nim', $nim)
             ->whereHas('tim', function ($q) use ($periodeAktif) {
                 $q->where('periode', $periodeAktif->id);
             })

@@ -37,7 +37,7 @@ class Mahasiswa extends Model
 
     public function tim_pbl()
     {
-        return $this->hasMany(Anggota_Tim_Pbl::class, 'nim', 'nim');
+        return $this->hasMany(AnggotaTimPbl::class, 'nim', 'nim');
     }
      // Tambahkan relasi nilai mahasiswa
     public function nilaiMahasiswa()

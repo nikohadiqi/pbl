@@ -7,9 +7,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\AkunMahasiswa;
 use App\Models\PelaporanUTS;
 use App\Models\PelaporanUAS;
-use App\Models\Anggota_Tim_Pbl; // Tambahkan model Anggota_Tim_Pbl
+use App\Models\AnggotaTimPbl; // Tambahkan model AnggotaTimPbl
 use App\Models\PeriodePBL;
-use App\Models\TimPbl;
+use App\Models\TimPBL;
 use Illuminate\Http\Request;
 
 class DashboardMahasiswaController extends Controller
@@ -26,7 +26,7 @@ class DashboardMahasiswaController extends Controller
         $laporanTerakhir = null;
 
         if ($kode_tim && $periodeAktif) {
-            $tim = TimPbl::with(['anggota.mahasiswaFK', 'manproFK', 'rencanaProyek', 'logbooks'])
+            $tim = TimPBL::with(['anggota.mahasiswaFK', 'manproFK', 'rencanaProyek', 'logbooks'])
                 ->where('kode_tim', $kode_tim)
                 ->where('periode', $periodeAktif->id)
                 ->first();

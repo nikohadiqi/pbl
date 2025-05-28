@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterTimRequest;
 use App\Models\AkunMahasiswa;
-use App\Models\Anggota_Tim_Pbl;
+use App\Models\AnggotaTimPbl;
 use App\Models\Mahasiswa;
 use App\Models\PeriodePBL;
 use App\Models\regMahasiswa;
@@ -45,7 +45,7 @@ class MahasiswaRegisterController extends Controller
                 ]);
 
                 // Hapus anggota dan akun lama
-                Anggota_Tim_Pbl::where('kode_tim', $kode_tim)->delete();
+                AnggotaTimPbl::where('kode_tim', $kode_tim)->delete();
                 AkunMahasiswa::where('kode_tim', $kode_tim)->delete();
             }
             // Jika status bukan rejected, tim sudah pasti approved atau pending,
@@ -73,7 +73,7 @@ class MahasiswaRegisterController extends Controller
                 ]
             );
 
-            Anggota_Tim_Pbl::create([
+            AnggotaTimPbl::create([
                 'kode_tim' => $kode_tim,
                 'nim' => $nim,
             ]);

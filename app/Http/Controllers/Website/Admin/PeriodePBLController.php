@@ -20,7 +20,7 @@ class PeriodePBLController extends Controller
                 ELSE 3
             END
         ")
-        ->orderBy('tahun', 'desc') // urutan tambahan jika diperlukan
+        ->orderBy('tahun', 'asc') // urutan tambahan jika diperlukan
         ->orderBy('semester', 'desc') // opsional
         ->get();
 

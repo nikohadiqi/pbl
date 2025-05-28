@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Website\Mahasiswa;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Logbook;
-use App\Models\Anggota_Tim_Pbl;
+use App\Models\AnggotaTimPbl;
 use App\Models\PeriodePBL;
 use App\Models\TahapanPelaksanaanProyek;
-use App\Models\TimPbl;
+use App\Models\TimPBL;
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -25,7 +25,7 @@ class LogbookController extends Controller
 
         $logbooks = Logbook::where('kode_tim', $kodeTim)->get();
 
-        $timPbl = TimPbl::where('kode_tim', $kodeTim)->first();
+        $timPbl = TimPBL::where('kode_tim', $kodeTim)->first();
 
         $tahapans = TahapanPelaksanaanProyek::where('periode_id', $timPbl->periode)
             ->orderBy('id')

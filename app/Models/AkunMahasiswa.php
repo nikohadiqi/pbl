@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\Models\TimPbl;
+use App\Models\TimPBL;
 
 class AkunMahasiswa extends Authenticatable
 {
@@ -49,7 +49,7 @@ class AkunMahasiswa extends Authenticatable
     // Relasi dengan tim_pbl
     public function timPbl()
     {
-        return $this->belongsTo(TimPbl::class, 'kode_tim', 'kode_tim');
+        return $this->belongsTo(TimPBL::class, 'kode_tim', 'kode_tim');
     }
 
     public function mahasiswa()

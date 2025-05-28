@@ -11,9 +11,9 @@ use App\Models\KebutuhanPeralatan;
 use App\Models\Tantangan;
 use App\Models\Estimasi;
 use App\Models\Biaya;
-use App\Models\Anggota_Tim_Pbl;
+use App\Models\AnggotaTimPbl;
 use App\Models\PeriodePBL;
-use App\Models\TimPbl;
+use App\Models\TimPBL;
 use RealRashid\SweetAlert\Facades\Alert;
 use PhpOffice\PhpWord\TemplateProcessor;
 use Illuminate\Support\Facades\Response;
@@ -32,7 +32,7 @@ class RencanaProyekController extends Controller
         $biaya = $kodeTim ? Biaya::where('kode_tim', $kodeTim)->get() : collect();
         $estimasi = $kodeTim ? Estimasi::where('kode_tim', $kodeTim)->get() : collect();
 
-        $tim = $kodeTim ? \App\Models\TimPbl::with('manproFK')->where('kode_tim', $kodeTim)->first() : null;
+        $tim = $kodeTim ? \App\Models\TimPBL::with('manproFK')->where('kode_tim', $kodeTim)->first() : null;
         $manajerProyek = $tim && $tim->manproFK ? [
             'nip' => $tim->manpro,
             'nama' => $tim->manproFK->nama,
@@ -70,7 +70,7 @@ class RencanaProyekController extends Controller
 
         $rencanaProyek = RencanaProyek::firstOrNew(['kode_tim' => $kodeTim]);
         // Ambil data tim dan nama manajer proyek dari relasi
-        $tim = TimPbl::with('manproFK')->where('kode_tim', $kodeTim)->first();
+        $tim = TimPBL::with('manproFK')->where('kode_tim', $kodeTim)->first();
         $namaManpro = $tim && $tim->manproFK ? $tim->manproFK->nama : null;
 
         $rencanaProyek->fill($validated);

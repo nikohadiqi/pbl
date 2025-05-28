@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API\Mahasiswa;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\BiayaProyek;
+use App\Models\Biaya;
 use App\Models\TimPBL;
 
 class BiayaProyekController extends Controller
@@ -31,7 +31,7 @@ class BiayaProyekController extends Controller
             return response()->json(['message' => 'Tim PBL tidak ditemukan untuk mahasiswa ini'], 404);
         }
 
-        $data = BiayaProyek::where('timpbl_id', $team->id)->get();
+        $data = Biaya::where('timpbl_id', $team->id)->get();
         return response()->json($data);
     }
 
@@ -54,7 +54,7 @@ class BiayaProyekController extends Controller
         $validated['timpbl_id'] = $team->id;
         $validated['mahasiswa_id'] = $request->user()->id;
 
-        $data = BiayaProyek::create($validated);
+        $data = Biaya::create($validated);
 
         return response()->json([
             'message' => 'Biaya proyek berhasil ditambahkan',
@@ -70,7 +70,7 @@ class BiayaProyekController extends Controller
             return response()->json(['message' => 'Tim PBL tidak ditemukan untuk mahasiswa ini'], 404);
         }
 
-        $data = BiayaProyek::where('id', $id)
+        $data = Biaya::where('id', $id)
                     ->where('timpbl_id', $team->id)
                     ->first();
 
@@ -88,7 +88,7 @@ class BiayaProyekController extends Controller
             return response()->json(['message' => 'Tim PBL tidak ditemukan untuk mahasiswa ini'], 404);
         }
 
-        $data = BiayaProyek::where('id', $id)
+        $data = Biaya::where('id', $id)
                     ->where('timpbl_id', $team->id)
                     ->first();
         if (!$data) {
@@ -117,7 +117,7 @@ class BiayaProyekController extends Controller
             return response()->json(['message' => 'Tim PBL tidak ditemukan untuk mahasiswa ini'], 404);
         }
 
-        $data = BiayaProyek::where('id', $id)
+        $data = Biaya::where('id', $id)
                     ->where('timpbl_id', $team->id)
                     ->first();
         if (!$data) {
@@ -142,7 +142,7 @@ class BiayaProyekController extends Controller
         ]);
 
         // Hapus hanya data yang milik tim mahasiswa yang login
-        BiayaProyek::whereIn('id', $validated['ids'])
+        Biaya::whereIn('id', $validated['ids'])
             ->where('timpbl_id', $team->id)
             ->delete();
 

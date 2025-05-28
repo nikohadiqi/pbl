@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\Anggota_Tim_Pbl;
+use App\Models\AnggotaTimPbl;
 use App\Models\regMahasiswa;
 use App\Models\PeriodePBL;
 
@@ -68,7 +68,7 @@ class RegisterTimRequest extends FormRequest
                 ->pluck('kode_tim');
 
             // Cari semua NIM yang terdaftar di tim-tim tersebut
-            $nimSudahTerdaftar = Anggota_Tim_Pbl::whereIn('kode_tim', $timAktif)->pluck('nim')->toArray();
+            $nimSudahTerdaftar = AnggotaTimPbl::whereIn('kode_tim', $timAktif)->pluck('nim')->toArray();
 
             // Cek jika ada nim dari request yang bentrok
             $nimBentrok = array_intersect($anggota, $nimSudahTerdaftar);

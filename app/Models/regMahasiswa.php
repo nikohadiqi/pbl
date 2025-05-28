@@ -27,7 +27,7 @@ class regMahasiswa extends Model
     // Relasi: Tim memiliki banyak anggota
     public function anggotaTim()
     {
-        return $this->hasMany(Anggota_Tim_Pbl::class, 'kode_tim', 'kode_tim');
+        return $this->hasMany(AnggotaTimPbl::class, 'kode_tim', 'kode_tim');
     }
 
     public function akunMahasiswa(): HasMany

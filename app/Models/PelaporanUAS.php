@@ -23,6 +23,6 @@ class PelaporanUAS extends Model
     // Relasi ke TimPbl
     public function timPbl()
     {
-        return $this->belongsTo(TimPbl::class, 'kode_tim', 'kode_tim');
+        return $this->belongsTo(TimPBL::class, 'kode_tim', 'kode_tim');
     }
 }

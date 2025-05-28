@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\TimPbl;
+use App\Models\TimPBL;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Anggota_Tim_Pbl extends Model
+class AnggotaTimPbl extends Model
 {
     use HasFactory;
 
@@ -23,7 +23,7 @@ class Anggota_Tim_Pbl extends Model
 
     public function tim()
     {
-        return $this->belongsTo(TimPbl::class, 'kode_tim', 'kode_tim');
+        return $this->belongsTo(TimPBL::class, 'kode_tim', 'kode_tim');
     }
 
     public function mahasiswaFK()

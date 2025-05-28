@@ -11,12 +11,12 @@ class tantangan extends Model
     protected $table = 'tantangan';
 
     protected $fillable = [
-              'kode_tim','nomor', 'proses', 'isu', 
+              'kode_tim','nomor', 'proses', 'isu',
         'level_resiko', 'catatan'
     ];
     // Relasi dengan tim_pbl
    public function timPbl()
    {
-       return $this->belongsTo(TimPbl::class, 'kode_tim', 'kode_tim');
+       return $this->belongsTo(TimPBL::class, 'kode_tim', 'kode_tim');
    }
 }

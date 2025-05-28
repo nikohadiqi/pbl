@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Website\Mahasiswa;
 use App\Http\Controllers\Controller;
 use App\Models\AkunMahasiswa;
 use App\Models\PeriodePBL;
-use App\Models\TimPbl;
+use App\Models\TimPBL;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -27,7 +27,7 @@ class ProfilController extends Controller
         $timPbl = null;
 
         if ($kode_tim && $periodeAktif) {
-            $timPbl = TimPbl::with(['manproFK'])
+            $timPbl = TimPBL::with(['manproFK'])
                 ->where('kode_tim', $kode_tim)
                 ->where('periode', $periodeAktif->id)
                 ->first();

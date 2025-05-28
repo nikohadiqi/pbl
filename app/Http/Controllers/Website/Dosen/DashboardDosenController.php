@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Website\Dosen;
 
 use App\Http\Controllers\Controller;
-use App\Models\Anggota_Tim_Pbl;
+use App\Models\AnggotaTimPbl;
 use App\Models\Logbook;
 use App\Models\NilaiMahasiswa;
 use App\Models\PelaporanUAS;
 use App\Models\PelaporanUTS;
 use App\Models\Pengampu;
-use App\Models\TimPbl;
+use App\Models\TimPBL;
 
 class DashboardDosenController extends Controller
 {
@@ -40,12 +40,12 @@ class DashboardDosenController extends Controller
 
     private function getTimCodes($kelasIds)
     {
-        return TimPbl::whereIn('kelas', $kelasIds)->pluck('kode_tim')->toArray();
+        return TimPBL::whereIn('kelas', $kelasIds)->pluck('kode_tim')->toArray();
     }
 
     private function getJumlahMahasiswaUnik($timCodes)
     {
-        return Anggota_Tim_Pbl::whereIn('kode_tim', $timCodes)->distinct('nim')->count('nim');
+        return AnggotaTimPbl::whereIn('kode_tim', $timCodes)->distinct('nim')->count('nim');
     }
 
     private function getLineChartData($timCodes)
@@ -84,7 +84,7 @@ class DashboardDosenController extends Controller
 
     private function getPieChartData($timCodes, $dosenNim)
     {
-        $anggotaMahasiswa = Anggota_Tim_Pbl::whereIn('kode_tim', $timCodes)->pluck('nim')->unique();
+        $anggotaMahasiswa = AnggotaTimPbl::whereIn('kode_tim', $timCodes)->pluck('nim')->unique();
         $pengampuIds = Pengampu::where('dosen_id', $dosenNim)->pluck('id');
 
         $mahasiswaSudahDinilai = NilaiMahasiswa::whereIn('nim', $anggotaMahasiswa)

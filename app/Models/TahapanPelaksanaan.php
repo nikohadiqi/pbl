@@ -15,6 +15,6 @@ class TahapanPelaksanaan extends Model
     // Relasi dengan tim_pbl
    public function timPbl()
    {
-       return $this->belongsTo(TimPbl::class, 'kode_tim', 'kode_tim');
+       return $this->belongsTo(TimPBL::class, 'kode_tim', 'kode_tim');
    }
 }

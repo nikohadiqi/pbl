@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Website\Dosen;
 
 use App\Http\Controllers\Controller;
-use App\Models\Anggota_Tim_Pbl;
+use App\Models\AnggotaTimPbl;
 use App\Models\PeriodePBL;
-use App\Models\TimPbl;
+use App\Models\TimPBL;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -16,7 +16,7 @@ class ValidasiController extends Controller
     {
         $nip = Auth::guard('dosen')->user()->nim;
 
-        $timPBL = TimPbl::with(['anggota.mahasiswaFK', 'manproFK', 'periodeFK'])
+        $timPBL = TimPBL::with(['anggota.mahasiswaFK', 'manproFK', 'periodeFK'])
             ->where('manpro', $nip)
             ->whereHas('periodeFK', function ($query) {
                 $query->where('status', 'Aktif');
@@ -31,7 +31,7 @@ class ValidasiController extends Controller
     {
         $nip = Auth::guard('dosen')->user()->nim;
 
-        $tim = TimPbl::where('kode_tim', $kode_tim)
+        $tim = TimPBL::where('kode_tim', $kode_tim)
             ->where('manpro', $nip) // pastikan dosen adalah manpro
             ->first();
 
@@ -55,7 +55,7 @@ class ValidasiController extends Controller
             'alasan_reject' => 'required|string|max:1000',
         ]);
 
-        $tim = TimPbl::where('kode_tim', $kode_tim)
+        $tim = TimPBL::where('kode_tim', $kode_tim)
             ->where('manpro', $nip)
             ->first();
 
@@ -69,7 +69,7 @@ class ValidasiController extends Controller
             'alasan_reject' => $request->alasan_reject,
         ]);
 
-        Anggota_Tim_Pbl::where('kode_tim', $kode_tim)->delete();
+        AnggotaTimPbl::where('kode_tim', $kode_tim)->delete();
 
         Alert::success('Berhasil!', 'Tim PBL telah ditolak.');
         return redirect()->route('dosen.validasi-tim');
@@ -84,7 +84,7 @@ class ValidasiController extends Controller
         $periodeId = $request->get('periode_id') ?? null;
 
         if ($periodeId) {
-            $timPBL = TimPbl::with(['anggota.mahasiswaFK', 'manproFK', 'periodeFK'])
+            $timPBL = TimPBL::with(['anggota.mahasiswaFK', 'manproFK', 'periodeFK'])
                 ->where('manpro', $nip)
                 ->where('periode', $periodeId)
                 ->orderByDesc('created_at')

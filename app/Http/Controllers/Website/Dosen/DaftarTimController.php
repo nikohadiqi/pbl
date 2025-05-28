@@ -9,7 +9,7 @@ use App\Models\PelaporanUAS;
 use App\Models\PelaporanUTS;
 use App\Models\PeriodePBL;
 use App\Models\TahapanPelaksanaanProyek;
-use App\Models\TimPbl;
+use App\Models\TimPBL;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -38,7 +38,7 @@ class DaftarTimController extends Controller
 
         // Jika dosen adalah manpro
         if ($user && $user->is_manajer_proyek) {
-            $query = TimPbl::with(['anggota.mahasiswaFK', 'manproFK', 'periodeFK', 'rencanaProyek'])
+            $query = TimPBL::with(['anggota.mahasiswaFK', 'manproFK', 'periodeFK', 'rencanaProyek'])
                 ->where('status', 'approved')
                 ->whereHas('periodeFK', function ($q) {
                     $q->where('status', 'aktif');
@@ -61,7 +61,7 @@ class DaftarTimController extends Controller
 
         // Jika bukan manpro tapi filter lengkap
         elseif (!empty($kelas) && !empty($tahun)) {
-            $timPBL = TimPbl::with(['anggota.mahasiswaFK', 'manproFK', 'periodeFK', 'rencanaProyek'])
+            $timPBL = TimPBL::with(['anggota.mahasiswaFK', 'manproFK', 'periodeFK', 'rencanaProyek'])
                 ->where('status', 'approved')
                 ->where('kelas', $kelas)
                 ->where('periode', $tahun)

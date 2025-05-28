@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class TimPbl extends Model
+class TimPBL extends Model
 {
     use HasFactory;
 
@@ -27,7 +27,7 @@ class TimPbl extends Model
 
     public function anggota(): HasMany
     {
-        return $this->hasMany(Anggota_Tim_Pbl::class, 'kode_tim', 'kode_tim');
+        return $this->hasMany(AnggotaTimPbl::class, 'kode_tim', 'kode_tim');
     }
 
     public function logbooks()

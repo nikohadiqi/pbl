@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\AkunMahasiswa;
-use App\Models\Anggota_Tim_Pbl;
+use App\Models\AnggotaTimPbl;
 use App\Models\regMahasiswa;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -56,8 +56,8 @@ class MahasiswaRegisterController extends Controller
 
             Log::info('Akun berhasil dibuat:', $akun->toArray());
 
-            // Setelah akun dibuat, simpan anggota tim ke tabel anggota_tim_pbl
-            Anggota_Tim_Pbl::create([
+            // Setelah akun dibuat, simpan anggota tim ke tabel AnggotaTimPbl
+            AnggotaTimPbl::create([
                 'kode_tim' => $kode_tim,
                 'nim' => $nim,
                 'nama' => null, // Status bisa diset null jika tidak diisi

@@ -9,9 +9,9 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\AkunMahasiswa;
 use App\Models\AkunDosen;
-use App\Models\Anggota_Tim_Pbl;
+use App\Models\AnggotaTimPbl;
 use App\Models\regMahasiswa;
-use App\Models\TimPbl;
+use App\Models\TimPBL;
 use Illuminate\Support\Facades\Session;
 
 class LoginController extends Controller
@@ -51,8 +51,8 @@ class LoginController extends Controller
         $user = User::where('nim', $validated['nim'])->first();
 
         if ($user && Hash::check($validated['password'], $user->password) && $user->role == 'admin') {
-            $token = $user->createToken('YourAppName')->plainTextToken;
-            $request->session()->put('token', $token);
+            // $token = $user->createToken('YourAppName')->plainTextToken;
+            // $request->session()->put('token', $token);
 
             Auth::guard('web')->login($user, $remember); // Pakai remember
 
@@ -72,7 +72,7 @@ class LoginController extends Controller
         if ($mahasiswa && Hash::check($validated['password'], $mahasiswa->password) && $mahasiswa->role === 'mahasiswa') {
 
             // Ambil semua kode_tim dari mahasiswa
-            $kodeTimList = Anggota_Tim_Pbl::where('nim', $validated['nim'])->pluck('kode_tim');
+            $kodeTimList = AnggotaTimPbl::where('nim', $validated['nim'])->pluck('kode_tim');
 
             // Cari tim aktif yang sesuai
             $timAktif = regMahasiswa::whereIn('kode_tim', $kodeTimList)
