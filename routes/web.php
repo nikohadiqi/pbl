@@ -82,12 +82,14 @@ Route::middleware(['auth:web', 'role:web,admin'])->group(function () {
 
     // Mata Kuliah
     Route::prefix('menu/master-data/mata-kuliah')->middleware(['auth:sanctum', 'admin'])->group(function () {
-        Route::get('/', [MataKuliahController::class, 'index'])->name('admin.matkul');
-        Route::get('/tambah', [MataKuliahController::class, 'create'])->name('admin.matkul.tambah');
-        Route::post('/simpan', [MataKuliahController::class, 'store'])->name('admin.matkul.store');
-        Route::get('/edit/{id}', [MataKuliahController::class, 'edit'])->name('admin.matkul.edit');
-        Route::PUT('/update/{id}', [MataKuliahController::class, 'update'])->name('admin.matkul.update');
-        Route::delete('/hapus/{id}', [MataKuliahController::class, 'destroy'])->name('admin.matkul.delete');
+        Route::get('/', [MataKuliahController::class, 'manage'])->name('admin.matkul');
+        Route::post('/manage-store', [MataKuliahController::class, 'manageStore'])->name('admin.matkul.manage.store');
+        // Route::get('/', [MataKuliahController::class, 'index'])->name('admin.matkul');
+        // Route::get('/tambah', [MataKuliahController::class, 'create'])->name('admin.matkul.tambah');
+        // Route::post('/simpan', [MataKuliahController::class, 'store'])->name('admin.matkul.store');
+        // Route::get('/edit/{id}', [MataKuliahController::class, 'edit'])->name('admin.matkul.edit');
+        // Route::PUT('/update/{id}', [MataKuliahController::class, 'update'])->name('admin.matkul.update');
+        // Route::delete('/hapus/{id}', [MataKuliahController::class, 'destroy'])->name('admin.matkul.delete');
     });
 
     // Data Kelas
@@ -204,10 +206,6 @@ Route::middleware(['auth:dosen'])->group(function () {
         Route::get('/', [DaftarTimController::class, 'index'])->name('dosen.daftar-tim');
         Route::get('/logbook/{tim}', [DaftarTimController::class, 'lihatLogbookTim'])->name('dosen.daftar-tim.logbook');
         Route::get('/laporan/{tim}', [DaftarTimController::class, 'lihatLaporanTim'])->name('dosen.daftar-tim.laporan');
-
-        Route::get('/penilaian-mahasiswa', function () {
-            return view('dosen.daftar-tim.penilaian-timpbl');
-        })->name('dosen.daftar-tim.penilaian');
     });
 
     Route::prefix('/dosen/penilaian-mahasiswa')->group(function () {

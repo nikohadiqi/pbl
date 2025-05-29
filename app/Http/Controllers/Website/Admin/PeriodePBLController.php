@@ -20,8 +20,7 @@ class PeriodePBLController extends Controller
                 ELSE 3
             END
         ")
-        ->orderBy('tahun', 'asc') // urutan tambahan jika diperlukan
-        ->orderBy('semester', 'desc') // opsional
+        ->orderBy('tanggal_mulai', 'asc') // urutan tambahan jika diperlukan
         ->get();
 
         return view('admin.periode-pbl.periodepbl', compact('periodePBL'));
@@ -29,7 +28,10 @@ class PeriodePBLController extends Controller
 
     public function create()
     {
-        return view('admin.periode-pbl.tambah-periodepbl');
+        return view('admin.periode-pbl.form-periodepbl', [
+            'isEdit' => false,
+            'periode' => null
+        ]);
     }
 
     public function store(Request $request)
@@ -69,7 +71,10 @@ class PeriodePBLController extends Controller
     public function edit($id)
     {
         $periode = PeriodePBL::findOrFail($id);
-        return view('admin.periode-pbl.edit-periodepbl', compact('periode'));
+        return view('admin.periode-pbl.form-periodepbl', [
+            'isEdit' => true,
+            'periode' => $periode
+        ]);
     }
 
     public function update(Request $request, $id)

@@ -80,7 +80,7 @@
                 </table>
             </div>
             <div class="text-end">
-                <button class="btn btn-success mt-3" type="submit"><i class="bi bi-floppy me-1"></i> Simpan Semua</button>
+                <button class="btn btn-primary mt-3" type="submit"><i class="bi bi-floppy me-1"></i> Simpan Semua</button>
             </div>
         </form>
         @endif

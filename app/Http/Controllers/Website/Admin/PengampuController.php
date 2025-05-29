@@ -17,33 +17,23 @@ class PengampuController extends Controller
     // Search Manpro
     public function searchManpro(Request $request)
     {
-        $search = $request->q;
+        $kelas = $request->kelas;
+        $periodeId = $request->periode_id;
 
-        // Ambil periode yang sedang aktif
-        $periodeAktif = PeriodePBL::where('status', 'Aktif')->first();
+        $pengampu = Pengampu::where('status', 'Manajer Proyek')
+            ->where('kelas_id', $kelas)
+            ->where('periode_id', $periodeId)
+            ->with('dosenFk')
+            ->first();
 
-        if (!$periodeAktif) {
-            return response()->json([]); // Tidak ada periode aktif, kembalikan kosong
+        if ($pengampu && $pengampu->dosenFk) {
+            return response()->json([
+                'nip' => $pengampu->dosenFk->nip,
+                'nama' => $pengampu->dosenFk->nama,
+            ]);
         }
 
-        // Cari dosen pengampu Manajer Proyek pada periode aktif
-        $data = Pengampu::where('status', 'Manajer Proyek')
-            ->where('periode_id', $periodeAktif->id)
-            ->whereHas('dosenFk', function ($query) use ($search) {
-                $query->where('nama', 'like', "%$search%")
-                    ->orWhere('nip', 'like', "%$search%");
-            })
-            ->with('dosenFk')
-            ->limit(10)
-            ->get();
-
-        // Format response JSON
-        return response()->json($data->map(function ($item) {
-            return [
-                'id' => $item->dosenFk->nip,
-                'text' => $item->dosenFk->nip . ' - ' . $item->dosenFk->nama
-            ];
-        }));
+        return response()->json([], 404);
     }
 
     public function manage(Request $request)
@@ -51,7 +41,6 @@ class PengampuController extends Controller
         $kelas = Kelas::all();
         $periodes = PeriodePBL::where('status', 'Aktif')->get();
         $dosen = Dosen::all();
-        $matkuls = MataKuliah::all();
 
         // Ambil dari session jika tidak ada request baru
         $selectedKelas = $request->input('kelas', session('filter_kelas'));
@@ -65,6 +54,13 @@ class PengampuController extends Controller
             session(['filter_periode' => $selectedPeriode]);
         }
 
+        // Filter matkul berdasarkan periode yang dipilih
+        $matkuls = collect();
+        if ($selectedPeriode) {
+            $matkuls = MataKuliah::where('periode_id', $selectedPeriode)->get();
+        }
+
+        // Ambil pengampu jika ada kelas dan periode dipilih
         $pengampus = collect();
         if ($selectedKelas && $selectedPeriode) {
             $pengampus = Pengampu::where('kelas_id', $selectedKelas)
@@ -73,7 +69,15 @@ class PengampuController extends Controller
                 ->keyBy('matkul_id');
         }
 
-        return view('admin.pengampu.pengampu', compact('kelas', 'periodes', 'dosen', 'matkuls', 'pengampus', 'selectedKelas', 'selectedPeriode'));
+        return view('admin.pengampu.pengampu', compact(
+            'kelas',
+            'periodes',
+            'dosen',
+            'matkuls',
+            'pengampus',
+            'selectedKelas',
+            'selectedPeriode'
+        ));
     }
 
     public function manageStore(Request $request)
@@ -99,8 +103,26 @@ class PengampuController extends Controller
 
             $dosenDipakai[] = $dosenId;
 
+            // CEK: apakah dosen ini sudah menjadi manpro di kelas lain pada periode yang sama
             if ($status === 'Manajer Proyek') {
                 $jumlahManpro++;
+
+                $pengampuLain = Pengampu::where('periode_id', $periodeId)
+                    ->where('status', 'Manajer Proyek')
+                    ->where('dosen_id', $dosenId)
+                    ->where('kelas_id', '!=', $kelasId)
+                    ->with('kelasFK') // load relasi kelas
+                    ->first();
+
+                if ($pengampuLain) {
+                    $namaDosen = Dosen::find($dosenId)->nama ?? 'Dosen';
+                    $namaKelas = $pengampuLain->kelasFK->kelas ?? 'kelas lain';
+
+                    Alert::error('Gagal', "Dosen $namaDosen sudah menjadi Manajer Proyek di Kelas $namaKelas pada periode ini.");
+                    session(['filter_kelas' => $kelasId]);
+                    session(['filter_periode' => $periodeId]);
+                    return redirect()->back()->withInput();
+                }
             }
         }
 

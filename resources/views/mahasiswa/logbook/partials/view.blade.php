@@ -6,13 +6,13 @@
         @if (!empty($logbook->foto_kegiatan))
         <div class="mt-2 mb-2">
             <p><strong>Foto:</strong><br>
-                <a href="{{ asset('storage/' . $logbook->foto_kegiatan) }}" download>
-                    <img src="{{ asset('storage/' . $logbook->foto_kegiatan) }}" class="rounded shadow-sm" width="120"
+                <a href="{{ url('storage/' . $logbook->foto_kegiatan) }}" download>
+                    <img src="{{ url('storage/' . $logbook->foto_kegiatan) }}" class="rounded shadow-sm" width="120"
                         title="Klik untuk mengunduh">
                 </a>
             </p>
             <div>
-                <a href="{{ asset('storage/' . $logbook->foto_kegiatan) }}" download
+                <a href="{{ url('storage/' . $logbook->foto_kegiatan) }}" download
                     class="text-decoration-none small text-muted">
                     <i class="bi bi-download me-1"></i>Unduh Foto
                 </a>

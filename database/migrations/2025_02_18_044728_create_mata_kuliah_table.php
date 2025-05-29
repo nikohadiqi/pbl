@@ -9,10 +9,12 @@ return new class extends Migration {
     {
         Schema::create('matakuliah', function (Blueprint $table) {
             $table->id();
-            $table->string('program_studi');
             $table->string('kode');
             $table->string('matakuliah');
             $table->text('sks')->nullable();
+            $table->string('program_studi');
+            // Relasi dengan periode
+            $table->foreignId('periode_id')->constrained('periodepbl')->onDelete('cascade');
             $table->text('id_feeder')->nullable();
             $table->timestamps();
         });

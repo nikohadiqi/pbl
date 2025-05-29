@@ -23,7 +23,7 @@
         <div class="form-group mt-2">
             <h6><i class="bi bi-file-earmark-pdf-fill me-1 text-danger"></i> Laporan PDF</h6>
             @if($pelaporan->laporan_pdf)
-            <a href="{{ asset('storage/'.$pelaporan->laporan_pdf) }}" target="_blank"
+            <a href="{{ url('storage/'.$pelaporan->laporan_pdf) }}" target="_blank"
                 class="btn {{ $btnColor ?? 'btn-outline-primary' }} btn-sm">
                 <i class="bi bi-file-earmark-pdf"></i> Lihat PDF
             </a>

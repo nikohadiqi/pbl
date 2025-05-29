@@ -10,7 +10,7 @@
                 <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column mx-lg-0 mx-auto">
                     <div class="card card-plain">
                         <div class="card-header pb-0 text-start">
-                            <img src="{{ asset('assets/img/login-logo.png') }}" alt="logo" width="50%" class="mb-3">
+                            <img src="{{ url('assets/img/login-logo.png') }}" alt="logo" width="50%" class="mb-3">
                             <h4 class="font-weight-bolder">Login</h4>
                             <p class="mb-0">Masukan NIM/NIP dan Password untuk Login!</p>
                         </div>
@@ -65,7 +65,7 @@
                 <div class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 text-center justify-content-center flex-column">
                     <div class="position-relative bg-gradient-primary h-100 m-3 px-7 pt-5 border-radius-lg d-flex flex-column justify-content-start overflow-hidden"
                         style="
-                            background-image: url('{{ asset('assets/img/login-image.png') }}');
+                            background-image: url('{{ url('assets/img/login-image.png') }}');
                             background-repeat: no-repeat;
                             background-position: center;
                             background-size: contain;

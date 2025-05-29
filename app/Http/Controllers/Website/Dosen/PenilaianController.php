@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Mahasiswa;
 use App\Models\NilaiMahasiswa;
 use App\Models\Pengampu;
+use App\Models\PeriodePBL;
 use RealRashid\SweetAlert\Facades\Alert;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -25,7 +26,24 @@ class PenilaianController extends Controller
             session(['selected_kelas' => $selectedKelas]);
         }
 
+        // Ambil periode aktif
+        $periodeAktif = PeriodePBL::where('status', 'Aktif')->first();
+
+        // Jika tidak ada periode aktif, tampilkan kosong
+        if (!$periodeAktif) {
+            return view('dosen.penilaian.penilaian', [
+                'mahasiswa' => collect(),
+                'auth' => $auth,
+                'kelasList' => collect(),
+                'selectedKelas' => null,
+                'pengampu' => collect(),
+                'nilaiMahasiswa' => collect()
+            ]);
+        }
+
+        // Ambil daftar kelas berdasarkan pengampu dosen dan periode aktif
         $kelasList = Pengampu::where('dosen_id', $auth->nim)
+            ->where('periode_id', $periodeAktif->id)
             ->with('kelasFk')
             ->get()
             ->pluck('kelasFk.kelas', 'kelasFk.kelas')
@@ -33,10 +51,27 @@ class PenilaianController extends Controller
 
         $mahasiswa = $pengampu = $nilaiMahasiswa = collect();
 
+        // Tambahan: Ambil pengampu manpro untuk kelas dan periode yang sama
+        $pengampuManpro = Pengampu::where('kelas_id', $selectedKelas)
+            ->where('periode_id', $periodeAktif->id)
+            ->where('status', 'Manajer Proyek')
+            ->first();
+
+        // Ambil semua nilai yang diberikan oleh dosen manpro (jika ada)
+        $nilaiManpro = collect();
+        
         if ($selectedKelas) {
+            $pengampu = Pengampu::where('dosen_id', $auth->nim)
+                ->where('kelas_id', $selectedKelas)
+                ->where('periode_id', $periodeAktif->id)
+                ->get();
+
             $mahasiswa = Mahasiswa::where('kelas', $selectedKelas)->get();
-            $pengampu = Pengampu::where('dosen_id', $auth->nim)->where('kelas_id', $selectedKelas)->get();
             $nilaiMahasiswa = NilaiMahasiswa::whereIn('pengampu_id', $pengampu->pluck('id'))->get();
+
+            if ($pengampuManpro) {
+                $nilaiManpro = NilaiMahasiswa::where('pengampu_id', $pengampuManpro->id)->get();
+            }
         }
 
         return view('dosen.penilaian.penilaian', compact(
@@ -45,7 +80,9 @@ class PenilaianController extends Controller
             'kelasList',
             'selectedKelas',
             'pengampu',
-            'nilaiMahasiswa'
+            'nilaiMahasiswa',
+            'nilaiManpro',
+            'pengampuManpro'
         ));
     }
 

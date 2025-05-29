@@ -13,7 +13,7 @@
                         <div class="avatar avatar-xl position-relative">
                             <div>
                                 <span class="h-12 w-12 rounded-full overflow-hidden bg-gray-100">
-                                    <img src="{{ asset('assets/img/logo-poliwangi.png') }}" alt="logo"
+                                    <img src="{{ url('assets/img/logo-poliwangi.png') }}" alt="logo"
                                         class="w-100 border-radius-lg shadow-sm">
                                 </span>
                             </div>

@@ -30,7 +30,8 @@
             <!-- Ekspor -->
             <form action="{{ route('penilaian.export') }}" method="GET">
                 <input type="hidden" name="kelas" value="{{ $selectedKelas }}">
-                <button type="submit" class="btn btn-primary fw-bold mt-3"><i class="bi bi-file-earmark-excel"></i> Ekspor Nilai Kelas</button>
+                <button type="submit" class="btn btn-primary fw-bold mt-3"><i class="bi bi-file-earmark-excel"></i>
+                    Ekspor Nilai Kelas</button>
             </form>
         </div>
         <!-- Tampilkan mata kuliah dari pengampu -->
@@ -89,11 +90,24 @@
                             @endif
                         </td>
                         <td class="text-center">
+                            @php
+                            $isDosenMatkul = $pengampu->first()?->status !== 'Manajer Proyek';
+
+                            // Cek apakah manpro sudah menilai mahasiswa ini
+                            $nilaiDariManpro = $nilaiManpro->firstWhere('nim', $mhs->nim);
+                            @endphp
+
+                            @if ($isDosenMatkul && !$nilaiDariManpro)
+                            <button class="btn btn-sm btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Menunggu penilaian dari Manajer Proyek" data-container="body" data-animation="true">
+                                <i class="bi bi-lock"></i> Beri Nilai
+                            </button>
+                            @else
                             <a href="{{ route('dosen.penilaian.beri-nilai', $mhs->nim) }}"
                                 class="btn btn-sm {{ $nilai ? 'btn-secondary' : 'btn-primary' }}">
                                 <i class="bi {{ $nilai ? 'bi-pencil' : 'bi-pencil-square' }}"></i>
                                 {{ $nilai ? 'Ubah Nilai' : 'Beri Nilai' }}
                             </a>
+                            @endif
                         </td>
                     </tr>
                     @empty

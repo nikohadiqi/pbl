@@ -17,6 +17,12 @@ class MataKuliah extends Model
         'matakuliah',
         'sks',
         'id_feeder',
+        'periode_id',
     ];
 
+    // Relasi Periode
+    public function periodeFK()
+    {
+        return $this->belongsTo(PeriodePBL::class, 'periode_id');
+    }
 }

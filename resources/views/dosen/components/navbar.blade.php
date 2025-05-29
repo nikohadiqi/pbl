@@ -30,7 +30,7 @@
                     <a class="nav-link dropdown-toggle d-flex align-items-center text-white px-3 py-2" href="#"
                         id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"
                         style="background-color: rgba(255,255,255,0.1); border-radius: 1rem;">
-                        <img src="{{ asset('assets/img/logo-poliwangi.png') }}" alt="User Avatar"
+                        <img src="{{ url('assets/img/logo-poliwangi.png') }}" alt="User Avatar"
                             class="rounded-circle me-2 border border-white border-2 p-1" width="40" height="40">
                         <div class="d-flex flex-grow-1 align-items-center justify-content-between">
                             <div class="d-flex flex-column me-2">

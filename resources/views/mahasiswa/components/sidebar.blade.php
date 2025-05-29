@@ -2,7 +2,7 @@
     <div class="sidenav-header d-md-flex align-items-center px-2">
         <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-3 d-none d-xl-none"
             aria-hidden="true" id="iconSidenav"></i>
-        <img src="{{ asset('assets/img/logo-poliwangi.png') }}" width="30" height="30"
+        <img src="{{ url('assets/img/logo-poliwangi.png') }}" width="30" height="30"
             class="navbar-brand-img h-100 me-2" alt="Logo">
         <div style="line-height: 1;">
             <span class="font-weight-bolder d-block" style="font-size: 12px; width: 280px">Sistem Informasi dan

@@ -14,8 +14,15 @@ class TahapanPelaksanaanProyekController extends Controller
 {
     public function index(Request $request)
     {
-        $periodes = PeriodePBL::orderBy('tahun', 'desc')->get();
-        $selectedPeriode = $request->periode_id;
+        $periodes = PeriodePBL::where('status', 'Aktif')->get();
+
+        // Ambil dari session jika tidak ada request baru
+        $selectedPeriode = $request->input('periode_id', session('filter_periode'));
+
+        // Simpan ke session jika ada input baru
+        if ($request->filled('periode_id')) {
+            session(['filter_periode' => $selectedPeriode]);
+        }
 
         $tahapan = collect();
         $periodepbl = null;

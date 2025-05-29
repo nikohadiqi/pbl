@@ -10,6 +10,9 @@ use App\Models\User;
 use App\Models\AkunMahasiswa;
 use App\Models\AkunDosen;
 use App\Models\AnggotaTimPbl;
+use App\Models\Dosen;
+use App\Models\Pengampu;
+use App\Models\PeriodePBL;
 use App\Models\regMahasiswa;
 use App\Models\TimPBL;
 use Illuminate\Support\Facades\Session;
@@ -105,14 +108,37 @@ class LoginController extends Controller
     {
         $remember = $request->has('remember');
 
-        $dosen = AkunDosen::where('nim', $validated['nim'])->first();
+        $akunDosen = AkunDosen::where('nim', $validated['nim'])->first();
 
-        if ($dosen && Hash::check($validated['password'], $dosen->password) && $dosen->role == 'dosen') {
+        if ($akunDosen && Hash::check($validated['password'], $akunDosen->password) && $akunDosen->role == 'dosen') {
+            // Ambil periode aktif
+            $periodeAktif = PeriodePBL::where('status', 'aktif')->first();
+
+            if (!$periodeAktif) {
+                return back()->withErrors(['nim' => 'Tidak ada periode aktif.']);
+            }
+
+            // Ambil data dosen dari nip (yang disimpan di akunDosen.id)
+            $dosen = Dosen::where('nip', $akunDosen->nim)->first();
+
+            if (!$dosen) {
+                return back()->withErrors(['nim' => 'Data dosen tidak ditemukan.']);
+            }
+
+            // Cek apakah dosen adalah pengampu di periode aktif
+            $isPengampu = Pengampu::where('dosen_id', $dosen->nip)
+                ->where('periode_id', $periodeAktif->id)
+                ->exists();
+
+            if (!$isPengampu) {
+                return back()->withErrors(['nim' => 'Anda bukan pengampu pada periode aktif.']);
+            }
+
             // Logout guard lain sebelum login dosen
             Auth::guard('web')->logout();
             Auth::guard('mahasiswa')->logout();
 
-            Auth::guard('dosen')->login($dosen, $remember);
+            Auth::guard('dosen')->login($akunDosen, $remember);
 
             return redirect()->route('dosen.dashboard');
         }

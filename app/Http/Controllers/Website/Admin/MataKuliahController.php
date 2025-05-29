@@ -5,76 +5,72 @@ namespace App\Http\Controllers\Website\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\MataKuliah;
+use App\Models\PeriodePBL;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class MataKuliahController extends Controller
 {
-    // **Tampilkan Semua Data Mata Kuliah**
-    public function index()
+    public function manage(Request $request)
     {
-        $matkul = MataKuliah::all();
-        return view('admin.mata-kuliah.matkul', compact('matkul'));
+        $periodes = PeriodePBL::where('status', 'Aktif')->get();
+        // Ambil dari session jika tidak ada request baru
+        $selectedPeriodeId = $request->input('periode_id', session('filter_periode'));
+
+        // Simpan ke session jika ada input baru
+        if ($request->filled('periode_id')) {
+            session(['filter_periode' => $selectedPeriodeId]);
+        }
+        $mataKuliahList = [];
+
+        if ($selectedPeriodeId) {
+            $mataKuliahList = MataKuliah::where('periode_id', $selectedPeriodeId)->get();
+        }
+
+        return view('admin.mata-kuliah.matkul', compact('periodes', 'selectedPeriodeId', 'mataKuliahList'));
     }
 
-    // **Tampilkan Form Tambah Mata Kuliah**
-    public function create()
-    {
-        return view('admin.mata-kuliah.tambah-matkul');
-    }
-
-    // **Simpan Mata Kuliah Baru**
-    public function store(Request $request)
+    public function manageStore(Request $request)
     {
         $request->validate([
-            'program_studi' => 'required|string',
-            'kode' => 'required|string|unique:matakuliah,kode',
-            'matakuliah' => 'required|string',
-            'sks' => 'nullable|integer',
-            'id_feeder' => 'nullable|string',
+            'periode_id' => 'required|exists:periodepbl,id',
+            'id.*' => 'nullable|integer|exists:matakuliah,id',
+            'kode.*' => 'required|string|size:8',
+            'matakuliah.*' => 'required|string',
+            'sks.*' => 'nullable|integer',
         ]);
 
-        MataKuliah::create($request->all());
+        $periodeId = $request->periode_id;
+        $programStudi = 'Teknologi Rekayasa Perangkat Lunak';
 
-        // Menampilkan SweetAlert
-        Alert::success('Berhasil!', 'Data Mata Kuliah berhasil Ditambahkan!');
-        return redirect()->route('admin.matkul');
-    }
+        // Ambil semua ID mata kuliah lama untuk periode ini
+        $existingIds = MataKuliah::where('periode_id', $periodeId)->pluck('id')->toArray();
 
-    // **Tampilkan Form Edit**
-    public function edit($id)
-    {
-        $matkul = MataKuliah::findOrFail($id);
-        return view('admin.mata-kuliah.edit-matkul', compact('matkul'));
-    }
+        $idsFromForm = array_filter($request->id); // ambil yg ada id-nya
 
-    // **Update Mata Kuliah**
-    public function update(Request $request, $id)
-    {
-        $matkul = MataKuliah::findOrFail($id);
+        // Hapus mata kuliah yang tidak ada di form
+        $toDelete = array_diff($existingIds, $idsFromForm);
+        if (!empty($toDelete)) {
+            MataKuliah::whereIn('id', $toDelete)->delete();
+        }
 
-        $request->validate([
-            'program_studi' => 'required|string',
-            'kode' => 'required|string|unique:matakuliah,kode,' . $id,
-            'matakuliah' => 'required|string',
-            'sks' => 'nullable|integer',
-            'id_feeder' => 'nullable|string',
-        ]);
+        foreach ($request->kode as $index => $kode) {
+            $data = [
+                'kode' => trim($kode),
+                'matakuliah' => $request->matakuliah[$index],
+                'sks' => $request->sks[$index] ?? null,
+                'program_studi' => $programStudi,
+                'periode_id' => $periodeId,
+            ];
 
-        $matkul->update($request->all());
+            $id = $request->id[$index] ?? null;
+            if ($id && in_array($id, $existingIds)) {
+                MataKuliah::where('id', $id)->update($data);
+            } else {
+                MataKuliah::create($data);
+            }
+        }
 
-        // Menampilkan SweetAlert
-        Alert::success('Berhasil!', 'Data Mata Kuliah berhasil Diperbarui!');
-        return redirect()->route('admin.matkul');
-    }
-
-    // **Hapus Mata Kuliah**
-    public function destroy($id)
-    {
-        $matkul = MataKuliah::findOrFail($id);
-        $matkul->delete();
-
-        // Menampilkan SweetAlert
-        Alert::success('Berhasil!', 'Data Mata Kuliah berhasil Dihapus!');
-        return redirect()->route('admin.matkul');
+        Alert::success('Berhasil!', 'Data Mata Kuliah berhasil disimpan!');
+        return redirect()->route('admin.matkul', ['periode_id' => $periodeId]);
     }
 }

@@ -14,24 +14,27 @@ class MatkulSeeder extends Seeder
     public function run(): void
     {
         MataKuliah::create([
-            'kode' => 'RPL401',
+            'kode' => 'RPL04001',
             'matakuliah' => 'Proyek Aplikasi Lanjut',
             'program_studi' => 'Teknologi Rekayasa Perangkat Lunak',
             'sks' => '2',
+            'periode_id' => 1
         ]);
 
         MataKuliah::create([
-            'kode' => 'RPL402',
+            'kode' => 'RPL04002',
             'matakuliah' => 'Desain Pengalaman Pengguna',
             'program_studi' => 'Teknologi Rekayasa Perangkat Lunak',
             'sks' => '2',
+            'periode_id' => 1
         ]);
 
         MataKuliah::create([
-            'kode' => 'RPL403',
+            'kode' => 'RPL04003',
             'matakuliah' => 'Keamanan Perangkat Lunak',
             'program_studi' => 'Teknologi Rekayasa Perangkat Lunak',
             'sks' => '2',
+            'periode_id' => 1
         ]);
     }
 }

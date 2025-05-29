@@ -18,6 +18,9 @@ use RealRashid\SweetAlert\Facades\Alert;
 use PhpOffice\PhpWord\TemplateProcessor;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Str;
+use PhpOffice\PhpWord\Element\TextRun;
+use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\Shared\Html;
 
 class RencanaProyekController extends Controller
 {
@@ -239,11 +242,6 @@ class RencanaProyekController extends Controller
         $templatePath = storage_path('app/templates/rencana_proyek_template.docx');
         $templateProcessor = new TemplateProcessor($templatePath);
 
-        function htmlToText($html)
-        {
-            return preg_replace('/\s+/', ' ', strip_tags(str_replace(['<br>', '<br/>', '<p>', '</p>'], "\n", $html)));
-        }
-
         // Set single value placeholders, gunakan null coalescing
         $templateProcessor->setValue('kode_tim', $kodeTim);
         $templateProcessor->setValue('judul_proyek', $rencanaProyek->judul_proyek ?? '-');
@@ -254,9 +252,30 @@ class RencanaProyekController extends Controller
         $templateProcessor->setValue('biaya', $rencanaProyek->biaya ?? '-');
         $templateProcessor->setValue('klien', $rencanaProyek->klien ?? '-');
         $templateProcessor->setValue('luaran', $rencanaProyek->luaran ?? '-');
-        $templateProcessor->setValue('ruang_lingkup', htmlToText($rencanaProyek->ruang_lingkup ?? '-'));
-        $templateProcessor->setValue('evaluasi', htmlToText($rencanaProyek->evaluasi ?? '-'));
-        $templateProcessor->setValue('rancangan_sistem', htmlToText($rencanaProyek->rancangan_sistem ?? '-'));
+        // Fungsi bantu: render HTML ke TextRun untuk complexBlock
+        function htmlToRichText($html): TextRun
+        {
+            $phpWord = new PhpWord();
+            $section = $phpWord->addSection();
+            Html::addHtml($section, $html, false, false);
+
+            // Ambil elemen pertama dari section untuk dimasukkan ke complexBlock
+            $elements = $section->getElements();
+            foreach ($elements as $element) {
+                if ($element instanceof TextRun) {
+                    return $element;
+                }
+            }
+
+            // Jika gagal, fallback ke teks biasa
+            $textRun = new TextRun();
+            $textRun->addText(strip_tags($html));
+            return $textRun;
+        }
+        // Gunakan setComplexBlock untuk konten HTML
+        $templateProcessor->setComplexBlock('ruang_lingkup', htmlToRichText($rencanaProyek->ruang_lingkup ?? '-'));
+        $templateProcessor->setComplexBlock('evaluasi', htmlToRichText($rencanaProyek->evaluasi ?? '-'));
+        $templateProcessor->setComplexBlock('rancangan_sistem', htmlToRichText($rencanaProyek->rancangan_sistem ?? '-'));
 
         // Fungsi bantu clone row dengan minimal 1 row
         $cloneRowSafely = function ($placeholder, $data, $callback) use ($templateProcessor) {

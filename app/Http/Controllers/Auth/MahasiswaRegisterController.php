@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterTimRequest;
 use App\Models\AkunMahasiswa;
 use App\Models\AnggotaTimPbl;
+use App\Models\Kelas;
 use App\Models\Mahasiswa;
 use App\Models\PeriodePBL;
 use App\Models\regMahasiswa;
@@ -16,14 +17,14 @@ class MahasiswaRegisterController extends Controller
 {
     public function showRegisterForm()
     {
-        $kelas = \App\Models\Kelas::all();
-        $periode = PeriodePBL::where('status', 'Aktif')->get();
+        $kelas = Kelas::all();
+        $periodeAktif = PeriodePBL::where('status', 'Aktif')->first();
 
         $timPendingRejected = regMahasiswa::whereIn('status', ['pending', 'rejected'])
             ->select('kelas', 'kelompok', 'status')
             ->get();
 
-        return view('auth.register', compact('kelas', 'periode', 'timPendingRejected'));
+        return view('auth.register', compact('kelas', 'periodeAktif', 'timPendingRejected'));
     }
 
     public function register(RegisterTimRequest $request)

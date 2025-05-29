@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('tahapan_pelaksanaan_proyeks', function (Blueprint $table) {
             $table->id();
-            $table->string('periode_id');
+            // Relasi dengan periode
+            $table->foreignId('periode_id')->constrained('periodepbl')->onDelete('cascade');
             $table->string('tahapan');
             $table->integer('score');
             $table->timestamps();

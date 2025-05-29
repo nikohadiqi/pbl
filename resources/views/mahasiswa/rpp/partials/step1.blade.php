@@ -67,8 +67,11 @@
 
         <div class="form-group mb-3">
             <label>Luaran</label>
-            <textarea name="luaran" class="form-control"
-                rows="3">{{ old('luaran', $rencanaProyek->luaran ?? '') }}</textarea>
+            <textarea name="luaran" class="form-control" rows="5">{{ old('luaran', $rencanaProyek->luaran ?? "Aplikasi yang telah diuji
+Dokumentasi Scrum Board (Product Backlog, Sprint Backlog)
+Dokumen SKPL yang telah terupdate
+Dokumen Test Plan + Test Case
+Laporan Pengujian") }}</textarea>
         </div>
 
         <div class="form-group mb-3">

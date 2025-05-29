@@ -14,11 +14,6 @@
                             <p class="mb-0 text-sm">
                                 Masukan data yang diperlukan untuk pendaftaran tim dan tunggu akun divalidasi oleh
                                 Manajer Proyek untuk Login.
-                                {{-- @if($timPendingRejected->count())
-                                <!-- trigger modal -->
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#statusTimModal" class="text-primary text-decoration-underline">
-                                    Lihat status pendaftaran tim disini.
-                                </a> --}}
                             </p>
                         </div>
                         <div class="card-body pb-3">
@@ -57,27 +52,17 @@
                                 </div>
 
                                 <div class="form-group mb-3">
-                                    <label for="manpro" class="form-control-label">Manajer Proyek</label>
-                                    <select id="manpro" name="manpro" class="form-select form-control select2"
-                                        required></select>
+                                    <label for="periode" class="form-control-label">Periode</label>
+                                    <input type="hidden" name="periode" value="{{ $periodeAktif->id }}">
+                                    <input type="text" class="form-control"
+                                        value="Semester {{ $periodeAktif->semester }} - {{ $periodeAktif->tahun }}"
+                                        readonly>
                                 </div>
 
                                 <div class="form-group mb-3">
-                                    <label for="periode" class="form-control-label">Periode</label>
-                                    <select id="periode" name="periode"
-                                        class="form-control @error('periode') is-invalid @enderror" required>
-                                        <option value="" disabled {{ old('periode') ? '' : 'selected' }}>Pilih
-                                            Periode</option>
-                                        @foreach ($periode as $item)
-                                        <option value="{{ $item->id }}" {{ old('periode')==$item->id ? 'selected' : ''
-                                            }}>
-                                            Semester {{ $item->semester }} - {{ $item->tahun }}
-                                        </option>
-                                        @endforeach
-                                    </select>
-                                    @error('periode')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                    <label for="manpro">Manajer Proyek</label>
+                                    <input type="text" class="form-control" id="manpro_nama" value="" readonly>
+                                    <input type="hidden" name="manpro" id="manpro_nip">
                                 </div>
 
                                 <label for="anggota">Anggota (NIM)</label>
@@ -105,10 +90,11 @@
                     </div>
                 </div>
                 {{-- Side Picture --}}
-                <div class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 text-center justify-content-center flex-column">
+                <div
+                    class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 text-center justify-content-center flex-column">
                     <div class="position-relative bg-gradient-primary h-100 m-3 px-7 pt-5 border-radius-lg d-flex flex-column justify-content-start overflow-hidden"
                         style="
-                            background-image: url('{{ asset('assets/img/login-image.png') }}');
+                            background-image: url('{{ url('assets/img/login-image.png') }}');
                             background-repeat: no-repeat;
                             background-position: center;
                             background-size: contain;
@@ -117,65 +103,15 @@
                         <span class="mask bg-gradient-primary opacity-6"></span>
                         <h3 class="mt-5 text-white font-weight-bolder position-relative bold">Sistem Informasi dan
                             Monitoring</h2>
-                        <h3 class="text-white font-weight-bolder position-relative bold">Project Based Learning</h2>
-                        <p class="text-white position-relative">Program Studi Teknologi Rekayasa Perangkat Lunak</p>
+                            <h3 class="text-white font-weight-bolder position-relative bold">Project Based Learning</h2>
+                                <p class="text-white position-relative">Program Studi Teknologi Rekayasa Perangkat Lunak
+                                </p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<!-- Modal -->
-{{-- <div class="modal fade" id="statusTimModal" tabindex="-1" aria-labelledby="statusTimModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="statusTimModalLabel">Status Pendaftaran Tim</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
-            </div>
-            <div class="modal-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered align-middle text-sm">
-                        <thead class="text-center">
-                            <tr>
-                                <th>Kelas</th>
-                                <th>Kelompok</th>
-                                <th>Status</th>
-                                <th>Keterangan</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($timPendingRejected as $tim)
-                            <tr>
-                                <td class="text-center">{{ $tim->kelas }}</td>
-                                <td class="text-center">{{ $tim->kelompok }}</td>
-                                <td>
-                                    @if($tim->status == 'pending')
-                                        <span class="badge bg-warning">Menunggu Validasi</span>
-                                    @elseif($tim->status == 'rejected')
-                                        <span class="badge bg-danger">Ditolak</span>
-                                            @if($tim->alasan_reject)
-                                                <br><div class="text-danger text-sm text-wrap mt-2">Alasan:<br>{{ $tim->alasan_reject }}</div>
-                                            @endif
-                                    @endif
-                                </td>
-                                <td>
-                                    @if($tim->status == 'rejected')
-                                        <em class="text-muted">Silakan registrasi kembali.</em>
-                                    @elseif($tim->status == 'pending')
-                                        <em class="text-muted">Tim ini masih menunggu validasi Manajer Proyek.</em>
-                                    @endif
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-@endif --}}
 @endsection
 
 @push('css')
@@ -248,25 +184,51 @@
             }
         });
 
-        $('.select2').select2();
+        $('#kelas').on('change', function () {
+            const kelas = $(this).val();
+            const periodeId = $('input[name="periode"]').val();
 
-        $('#manpro').select2({
-            theme: 'bootstrap-5',
-            placeholder: 'Cari Manajer Proyek',
-            ajax: {
-                url: '{{ url("register/search/manpro") }}',
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return { q: params.term };
-                },
-                processResults: function (data) {
-                    return { results: data };
-                }
+            if (kelas) {
+                $.ajax({
+                    url: '{{ url("register/search/manpro") }}',
+                    method: 'GET',
+                    data: { kelas: kelas, periode_id: periodeId },
+                    success: function (res) {
+                        if (res && res.nip && res.nama) {
+                            $('#manpro_nama').val(res.nama + ' (' + res.nip + ')');
+                            $('#manpro_nip').val(res.nip);
+                        } else {
+                            $('#manpro_nama').val('Tidak ditemukan');
+                            $('#manpro_nip').val('');
+                        }
+                    },
+                    error: function () {
+                        $('#manpro_nama').val('Manpro kelas ini belum ada.');
+                        $('#manpro_nip').val('');
+                    }
+                });
+            } else {
+                $('#manpro_nama').val('');
+                $('#manpro_nip').val('');
             }
         });
 
-        function initSelect2Anggota(element) {
+        // Anggota
+        $('#kelas').on('change', function () {
+            const kelas = $(this).val();
+
+            // Reset anggota
+            $('#anggota-container').html(`
+                <div class="mb-3 d-flex">
+                    <select name="anggota[]" class="form-select form-control anggota-select" required></select>
+                    <button type="button" class="btn btn-sm btn-success add-anggota ms-2"><i class="bi bi-plus-lg"></i></button>
+                </div>
+            `);
+
+            initSelect2Anggota('select[name="anggota[]"]', kelas);
+        });
+
+        function initSelect2Anggota(element, kelas) {
             $(element).select2({
                 theme: 'bootstrap-5',
                 placeholder: 'Cari NIM Mahasiswa',
@@ -275,7 +237,10 @@
                     dataType: 'json',
                     delay: 250,
                     data: function (params) {
-                        return { q: params.term };
+                        return {
+                            q: params.term,
+                            kelas: kelas
+                        };
                     },
                     processResults: function (data) {
                         return { results: data };
@@ -284,26 +249,23 @@
             });
         }
 
-        // Initial anggota input
-        initSelect2Anggota('select[name="anggota[]"]');
+        // Tambahkan anggota baru
+        $('#anggota-container').on('click', '.add-anggota', function () {
+            const kelas = $('#kelas').val();
+            const jumlahAnggota = $('#anggota-container select[name="anggota[]"]').length;
 
-        const maxAnggota = 7; // batas maksimal anggota
-
-        $('.add-anggota').on('click', function () {
-            let jumlahAnggota = $('#anggota-container select[name="anggota[]"]').length;
-
-            if (jumlahAnggota >= maxAnggota) {
+            if (jumlahAnggota >= 7) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Batas Maksimal Terpenuhi',
                     text: 'Maksimal 7 anggota per tim!',
-                    timer: 3000, // hilang sendiri dalam 3 detik
+                    timer: 3000,
                     timerProgressBar: true,
-                    showConfirmButton: true, // tetap tampilkan tombol OK
+                    showConfirmButton: true,
                     confirmButtonColor: '#f7cd07',
                     confirmButtonText: 'OK'
                 });
-                return false; // cegah penambahan anggota baru
+                return false;
             }
 
             const inputGroup = $(`
@@ -313,9 +275,10 @@
                 </div>
             `);
             $('#anggota-container').append(inputGroup);
-            initSelect2Anggota(inputGroup.find('select'));
+            initSelect2Anggota(inputGroup.find('select'), kelas);
         });
 
+        // Hapus anggota
         $('#anggota-container').on('click', '.remove-anggota', function () {
             $(this).parent().remove();
         });

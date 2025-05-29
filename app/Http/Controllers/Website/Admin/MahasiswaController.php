@@ -21,7 +21,7 @@ class MahasiswaController extends Controller
                       ->get();
 
         $kelas = Kelas::all();
-        
+
         return view('admin.mahasiswa.mahasiswa', compact('mahasiswa', 'kelas'));
     }
 
@@ -121,8 +121,13 @@ class MahasiswaController extends Controller
     public function searchMahasiswa(Request $request)
     {
         $search = $request->q;
-        $data = Mahasiswa::where('nim', 'like', "%$search%")
-            ->orWhere('nama', 'like', "%$search%")
+        $kelas = $request->kelas;
+
+        $data = Mahasiswa::where('kelas', $kelas)
+            ->where(function ($query) use ($search) {
+                $query->where('nim', 'like', "%$search%")
+                    ->orWhere('nama', 'like', "%$search%");
+            })
             ->limit(10)
             ->get();
 
@@ -130,4 +135,5 @@ class MahasiswaController extends Controller
             return ['id' => $item->nim, 'text' => $item->nim . ' - ' . $item->nama];
         }));
     }
+
 }

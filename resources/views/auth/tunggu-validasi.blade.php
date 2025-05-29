@@ -8,7 +8,7 @@
         <div class="container">
             <div class="row justify-content-center align-items-center">
                 <div class="col-md-6 text-center">
-                    <img src="{{ asset('assets/img/waiting-animation.gif') }}" alt="Menunggu Validasi"
+                    <img src="{{ url('assets/img/waiting-animation.gif') }}" alt="Menunggu Validasi"
                         class="img-fluid mb-4" style="max-height: 1000px;">
                     <h3 class="text-success fw-bold mt-3">
                         <i class="bi bi-check-circle-fill me-1"></i>
