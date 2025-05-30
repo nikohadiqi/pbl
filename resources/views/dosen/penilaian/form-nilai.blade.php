@@ -74,7 +74,7 @@
                             <td class="align-middle" rowspan="{{ count($kelompok2Soft) }}">
                                 <span>
                                     Produktivitas Kinerja<br>
-                                    <small><i>Life Skills (20%)</i></small>
+                                    <small><i>Life Skills (25%)</i></small>
                                 </span>
                             </td>
                             @endif
@@ -120,24 +120,24 @@
                             @if($index === 0)
                             <td class="align-middle" rowspan="{{ count($kelompok1Akademik) }}">
                                 <span>
-                                    Presentasi<br>
-                                    <small><i>(30%)</i></small>
+                                    Peringkat Kinerja<br>
+                                    <small><i>Presentasi (10%)</i></small>
                                 </span>
                             </td>
                             {{-- Kelompok 2 --}}
                             @elseif($index === count($kelompok1Akademik))
                             <td class="align-middle" rowspan="{{ count($kelompok2Akademik) }}">
                                 <span>
-                                    Laporan<br>
-                                    <small><i>(30%)</i></small>
+                                    Ulasan Produk / Laporan Kinerja<br>
+                                    <small><i>Laporan (7%)</i></small>
                                 </span>
                             </td>
                             {{-- Kelompok 3 --}}
                             @elseif($index === count($kelompok1Akademik) + count($kelompok2Akademik))
                             <td class="align-middle" rowspan="{{ count($kelompok3Akademik) }}">
                                 <span>
-                                    Proyek<br>
-                                    <small><i>(30%)</i></small>
+                                    Unjuk Kinerja<br>
+                                    <small><i>Sikap dan Keterampilan Kerja (38%)</i></small>
                                 </span>
                             </td>
                             @endif

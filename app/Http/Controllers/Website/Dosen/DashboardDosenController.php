@@ -9,6 +9,7 @@ use App\Models\NilaiMahasiswa;
 use App\Models\PelaporanUAS;
 use App\Models\PelaporanUTS;
 use App\Models\Pengampu;
+use App\Models\PeriodePBL;
 use App\Models\TimPBL;
 
 class DashboardDosenController extends Controller
@@ -16,15 +17,32 @@ class DashboardDosenController extends Controller
     public function index()
     {
         $dosen = auth('dosen')->user();
+        $periodeAktif = PeriodePBL::where('status', 'Aktif')->first();
 
-        $kelasDosen = $this->getKelasDosen($dosen->nim);
-        $timCodes = $this->getTimCodes($kelasDosen);
+        if (!$periodeAktif) {
+            return view('dosen.dashboard-dosen', [
+                'timCount' => 0,
+                'mahasiswaCount' => 0,
+                'totalTim' => 0,
+                'labels' => [],
+                'data' => [],
+                'jumlahSudahUts' => 0,
+                'jumlahBelumUts' => 0,
+                'jumlahSudahUas' => 0,
+                'jumlahBelumUas' => 0,
+                'mahasiswaSudahDinilai' => 0,
+                'mahasiswaBelumDinilai' => 0,
+            ]);
+        }
+
+        $kelasDosen = $this->getKelasDosen($dosen->nim, $periodeAktif->id);
+        $timCodes = $this->getTimCodes($kelasDosen, $periodeAktif->id);
         $timCount = count($timCodes);
 
         $mahasiswaCount = $this->getJumlahMahasiswaUnik($timCodes);
         $lineChart = $this->getLineChartData($timCodes);
         $barChart = $this->getBarChartData($timCodes);
-        $pieChart = $this->getPieChartData($timCodes, $dosen->nim);
+        $pieChart = $this->getPieChartData($timCodes, $dosen->nim, $periodeAktif->id);
 
         return view('dosen.dashboard-dosen', array_merge([
             'timCount' => $timCount,
@@ -33,19 +51,26 @@ class DashboardDosenController extends Controller
         ], $lineChart, $barChart, $pieChart));
     }
 
-    private function getKelasDosen($dosenNim)
+    private function getKelasDosen($dosenNim, $periodeId)
     {
-        return Pengampu::where('dosen_id', $dosenNim)->pluck('kelas_id');
+        return Pengampu::where('dosen_id', $dosenNim)
+            ->where('periode_id', $periodeId)
+            ->pluck('kelas_id');
     }
 
-    private function getTimCodes($kelasIds)
+    private function getTimCodes($kelasIds, $periodeId)
     {
-        return TimPBL::whereIn('kelas', $kelasIds)->pluck('kode_tim')->toArray();
+        return TimPBL::whereIn('kelas', $kelasIds)
+            ->where('periode', $periodeId)
+            ->pluck('kode_tim')
+            ->toArray();
     }
 
     private function getJumlahMahasiswaUnik($timCodes)
     {
-        return AnggotaTimPbl::whereIn('kode_tim', $timCodes)->distinct('nim')->count('nim');
+        return AnggotaTimPbl::whereIn('kode_tim', $timCodes)
+            ->distinct('nim')
+            ->count('nim');
     }
 
     private function getLineChartData($timCodes)
@@ -82,10 +107,15 @@ class DashboardDosenController extends Controller
         ];
     }
 
-    private function getPieChartData($timCodes, $dosenNim)
+    private function getPieChartData($timCodes, $dosenNim, $periodeId)
     {
-        $anggotaMahasiswa = AnggotaTimPbl::whereIn('kode_tim', $timCodes)->pluck('nim')->unique();
-        $pengampuIds = Pengampu::where('dosen_id', $dosenNim)->pluck('id');
+        $anggotaMahasiswa = AnggotaTimPbl::whereIn('kode_tim', $timCodes)
+            ->pluck('nim')
+            ->unique();
+
+        $pengampuIds = Pengampu::where('dosen_id', $dosenNim)
+            ->where('periode_id', $periodeId)
+            ->pluck('id');
 
         $mahasiswaSudahDinilai = NilaiMahasiswa::whereIn('nim', $anggotaMahasiswa)
             ->whereIn('pengampu_id', $pengampuIds)
