@@ -45,7 +45,7 @@
                         <td>{{ $periode->tanggal_mulai->format('d-m-Y') }}</td>
                         <td>{{ $periode->tanggal_selesai->format('d-m-Y') }}</td>
                         <td>
-                            <span class="badge 
+                            <span class="badge
                                 @if($periode->status == 'Aktif') bg-gradient-success
                                 @elseif($periode->status == 'Selesai') bg-gradient-danger
                                 @else bg-gradient-secondary @endif">
@@ -54,7 +54,7 @@
                             @if($periode->status === 'Selesai')
                             <div class="mt-1 small text-muted">
                                 Riwayat:<br>
-                                Ditutup oleh: {{ $periode->penutup->nim ?? 'Tidak diketahui' }}<br>
+                                Ditutup oleh: {{ $periode->penutup->nama ?? 'Tidak diketahui' }}<br>
                                 Pada: {{ $periode->closed_at ? $periode->closed_at->format('d M Y H:i') : '-' }}
                             </div>
                             @endif
