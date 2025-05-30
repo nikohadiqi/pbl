@@ -239,7 +239,7 @@ class RencanaProyekController extends Controller
         $estimasi    = Estimasi::where('kode_tim', $kodeTim)->get()->toArray();
         $biaya       = Biaya::where('kode_tim', $kodeTim)->get()->toArray();
 
-        $templatePath = storage_path('app/templates/rencana_proyek_template.docx');
+        $templatePath = resource_path('templates/rencana_proyek_template.docx');
         $templateProcessor = new TemplateProcessor($templatePath);
 
         // Set single value placeholders, gunakan null coalescing

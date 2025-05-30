@@ -59,7 +59,7 @@ class PenilaianController extends Controller
 
         // Ambil semua nilai yang diberikan oleh dosen manpro (jika ada)
         $nilaiManpro = collect();
-        
+
         if ($selectedKelas) {
             $pengampu = Pengampu::where('dosen_id', $auth->nim)
                 ->where('kelas_id', $selectedKelas)
@@ -330,7 +330,7 @@ class PenilaianController extends Controller
             abort(403, 'Anda tidak mengampu kelas ini.');
         }
 
-        $templatePath = storage_path('app/templates/rubrik_penilaian_template.xlsx');
+        $templatePath = resource_path('templates/rubrik_penilaian_template.xlsx');
         if (!file_exists($templatePath)) {
             abort(500, 'Template Excel tidak ditemukan.');
         }
