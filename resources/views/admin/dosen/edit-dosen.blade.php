@@ -48,12 +48,8 @@
 
             <div class="form-group">
                 <label for="prodi">Program Studi</label>
-                <select class="form-control" id="prodi" name="prodi">
-                    <option value="" disabled hidden>Pilih Program Studi</option>
-                    <option value="Teknologi Rekayasa Perangkat Lunak" {{ old('prodi', $dosen->prodi) == 'Teknologi Rekayasa Perangkat Lunak' ? 'selected' : '' }}>
-                        Teknologi Rekayasa Perangkat Lunak
-                    </option>
-                </select>
+                <input class="form-control" value="{{ old('prodi', $dosen->prodi) }}" type="text" disabled>
+                <input type="hidden" name="prodi" value="Teknologi Rekayasa Perangkat Lunak">
             </div>
 
             <div class="form-group">

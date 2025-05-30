@@ -58,7 +58,7 @@
                                 <input type="hidden" name="program_studi[]" value="Teknologi Rekayasa Perangkat Lunak">
                             </td>
                             <td class="text-center">
-                                <button type="button" class="btn btn-danger btn-sm remove-row"><i class="bi bi-trash"></i></button>
+                                <button type="button" class="btn btn-danger btn-sm remove-row" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus" data-container="body" data-animation="true"><i class="bi bi-trash"></i></button>
                             </td>
                         </tr>
                         @empty
@@ -75,7 +75,7 @@
                                 <input type="hidden" name="program_studi[]" value="Teknologi Rekayasa Perangkat Lunak">
                             </td>
                             <td class="text-center">
-                                <button type="button" class="btn btn-danger btn-sm remove-row"><i class="bi bi-trash"></i></button>
+                                <button type="button" class="btn btn-danger btn-sm remove-row" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus" data-container="body" data-animation="true"><i class="bi bi-trash"></i></button>
                             </td>
                         </tr>
                         @endforelse
@@ -110,7 +110,7 @@
                 <input type="hidden" name="program_studi[]" value="Teknologi Rekayasa Perangkat Lunak">
             </td>
             <td class="text-center">
-                <button type="button" class="btn btn-danger btn-sm remove-row"><i class="bi bi-trash"></i></button>
+                <button type="button" class="btn btn-danger btn-sm remove-row" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus" data-container="body" data-animation="true"><i class="bi bi-trash"></i></button>
             </td>
         `;
         tableBody.appendChild(row);

@@ -54,10 +54,8 @@
 
             <div class="form-group">
                 <label for="program_studi">Program Studi</label>
-                <select class="form-control" id="program_studi" name="program_studi">
-                    <option value="" disabled selected hidden>Pilih Program Studi</option>
-                    <option value="Teknologi Rekayasa Perangkat Lunak">Teknologi Rekayasa Perangkat Lunak</option>
-                </select>
+                <input class="form-control" value="Teknologi Rekayasa Perangkat Lunak" type="text" disabled>
+                <input type="hidden" name="program_studi" value="Teknologi Rekayasa Perangkat Lunak">
             </div>
 
             <div class="form-group mt-4">

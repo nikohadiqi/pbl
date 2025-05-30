@@ -48,13 +48,8 @@
 
             <div class="form-group">
                 <label for="program_studi">Program Studi</label>
-                <select class="form-control" id="program_studi" name="program_studi" required>
-                    <option value="" disabled hidden>Pilih Program Studi</option>
-                    <option value="Teknologi Rekayasa Perangkat Lunak"
-                        {{ old('program_studi', $mahasiswa->program_studi ?? '') == 'Teknologi Rekayasa Perangkat Lunak' ? 'selected' : '' }}>
-                        Teknologi Rekayasa Perangkat Lunak
-                    </option>
-                </select>
+                <input class="form-control" value="{{ old('program_studi', $mahasiswa->program_studi) }}" type="text" disabled>
+                <input type="hidden" name="program_studi" value="Teknologi Rekayasa Perangkat Lunak">
             </div>
 
             <div class="form-group mt-4">

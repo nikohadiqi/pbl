@@ -50,7 +50,7 @@
                 <table class="table align-middle table-hover table-borderless border border-light shadow-sm rounded-3 overflow-hidden">
                     <thead class="text-sm fw-semibold text-white bg-primary">
                         <tr>
-                            <th style="width: 5%">No.</th>
+                            <th style="width: 5%">Minggu Ke-</th>
                             <th>Nama Tahapan</th>
                             <th style="width: 10%">Score (%)</th>
                         </tr>

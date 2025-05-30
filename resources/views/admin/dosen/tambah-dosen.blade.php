@@ -49,10 +49,8 @@
             </div>
             <div class="form-group">
                 <label for="prodi">Program Studi</label>
-                <select class="form-control" id="prodi" name="prodi">
-                    <option value="" disabled selected hidden>Pilih Program Studi</option>
-                    <option value="Teknologi Rekayasa Perangkat Lunak">Teknologi Rekayasa Perangkat Lunak</option>
-                </select>
+                <input class="form-control" value="Teknologi Rekayasa Perangkat Lunak" type="text" disabled>
+                <input type="hidden" name="prodi" value="Teknologi Rekayasa Perangkat Lunak">
             </div>
             <div class="form-group">
                 <label for="jurusan">Jurusan</label>
