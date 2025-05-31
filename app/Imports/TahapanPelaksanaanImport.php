@@ -28,6 +28,16 @@ class TahapanPelaksanaanImport implements ToCollection
             throw new \Exception("Format file tidak sesuai. Pastikan kolom pertama adalah 'tahapan' dan kedua adalah 'score'.");
         }
 
+        // Validasi jumlah baris (minimal 1 data, tidak termasuk header)
+        if ($rows->count() - 1 < 1) {
+            throw new \Exception("File harus memiliki minimal 1 baris data setelah header.");
+        }
+
+        // Validasi jumlah baris (maksimal 16 data, tidak termasuk header)
+        if ($rows->count() - 1 > 16) {
+            throw new \Exception("Maksimal hanya boleh 16 baris data. Ditemukan: " . ($rows->count() - 1));
+        }
+
         $totalScore = 0;
         $dataToInsert = [];
 
