@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Website\Mahasiswa;
+namespace App\Http\Controllers\API\Mahasiswa;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -144,7 +144,7 @@ class LogbookController extends Controller
             'anggota3' => $request->anggota3,
             'anggota4' => $request->anggota4,
             'anggota5' => $request->anggota5,
-            'minggu' => $request->minggu, 
+            'minggu' => $request->minggu,
         ]);
 
         // Menyimpan foto kegiatan jika ada
