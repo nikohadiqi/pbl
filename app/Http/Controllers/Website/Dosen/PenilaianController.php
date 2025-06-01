@@ -403,8 +403,8 @@ class PenilaianController extends Controller
         }
 
         $namaMatkul = $pengampu->matkulFK->matakuliah ?? 'Nama Mata Kuliah';
-        $slug = Str::slug($namaMatkul, ' '); // basis data lanjut
-        $namaMatkulTitle = Str::title($slug); // Basis Data Lanjut
+        $slug = Str::slug($namaMatkul, ' '); // ex: basis data lanjut
+        $namaMatkulTitle = Str::title($slug); // ex: Basis Data Lanjut
 
         $fileName = "Rubrik Penilaian PBL_Kelas {$selectedKelas}_{$namaMatkulTitle}_" . now()->format('Ymd_His') . ".xlsx";
 
