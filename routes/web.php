@@ -152,17 +152,14 @@ Route::middleware(['auth:mahasiswa'])->group(function () {
 
     // RPP
     Route::prefix('mahasiswa/rpp')->group(function () {
-        Route::prefix('rencana-proyek')->group(function () {
-            Route::get('/', [RencanaProyekController::class, 'create'])->name('mahasiswa.rpp.rencana-proyek.create');
-            Route::post('/simpan', [RencanaProyekController::class, 'store'])->name('mahasiswa.rpp.rencana-proyek.store');
-            Route::post('/tahapan', [RencanaProyekController::class, 'storeTahapanPelaksanaan'])->name('mahasiswa.rpp.tahapan-pelaksanaan.store');
-            Route::post('/kebutuhan', [RencanaProyekController::class, 'storeKebutuhanPeralatan'])->name('mahasiswa.rpp.kebutuhan-peralatan.store');
-            Route::post('/tantangan', [RencanaProyekController::class, 'storeTantangan'])->name('mahasiswa.rpp.tantangan.store');
-            Route::post('/biaya', [RencanaProyekController::class, 'storeBiaya'])->name('mahasiswa.rpp.biaya.store');
-            Route::post('/estimasi', [RencanaProyekController::class, 'storeEstimasi'])->name('mahasiswa.rpp.estimasi.store');
-            Route::get('/rencana-proyek/export', [RencanaProyekController::class, 'exportWord'])->name('mahasiswa.rpp.rencana-proyek.export');
-
-        });
+        Route::get('/', [RencanaProyekController::class, 'create'])->name('mahasiswa.rpp.rencana-proyek.create');
+        Route::post('/simpan', [RencanaProyekController::class, 'store'])->name('mahasiswa.rpp.rencana-proyek.store');
+        Route::post('/tahapan', [RencanaProyekController::class, 'storeTahapanPelaksanaan'])->name('mahasiswa.rpp.tahapan-pelaksanaan.store');
+        Route::post('/kebutuhan', [RencanaProyekController::class, 'storeKebutuhanPeralatan'])->name('mahasiswa.rpp.kebutuhan-peralatan.store');
+        Route::post('/tantangan', [RencanaProyekController::class, 'storeTantangan'])->name('mahasiswa.rpp.tantangan.store');
+        Route::post('/biaya', [RencanaProyekController::class, 'storeBiaya'])->name('mahasiswa.rpp.biaya.store');
+        Route::post('/estimasi', [RencanaProyekController::class, 'storeEstimasi'])->name('mahasiswa.rpp.estimasi.store');
+        Route::get('/rencana-proyek/export', [RencanaProyekController::class, 'exportWord'])->name('mahasiswa.rpp.rencana-proyek.export');
     });
 
     // Logbook Mahasiswa
