@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\AnggotaTimPbl;
-use App\Models\PeriodePbl;
+use App\Models\PeriodePBL;
 use Illuminate\Support\Facades\Auth;
 
 if (!function_exists('getKodeTimByAuth')) {
