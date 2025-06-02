@@ -22,6 +22,22 @@
         </form>
 
         @if ($selectedPeriodeId)
+        <!-- Notifikasi -->
+       @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        @endif
+        @if($errors->any())
+        <div class="alert alert-danger">
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
         <div class="d-flex justify-content-between align-items-center">
             <h4 class="fw-bold">Mata Kuliah PBL</h4>
         </div>

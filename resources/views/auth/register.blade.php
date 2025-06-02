@@ -177,20 +177,13 @@
 {{-- AJAX --}}
 <script>
     $(document).ready(function () {
-        // Set CSRF token ke header AJAX agar Laravel bisa validasi
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            }
-        });
-
         $('#kelas').on('change', function () {
             const kelas = $(this).val();
             const periodeId = $('input[name="periode"]').val();
 
             if (kelas) {
                 $.ajax({
-                    url: '{{ url("register/search/manpro") }}',
+                    url: '{{ route("cari-manpro") }}',
                     method: 'GET',
                     data: { kelas: kelas, periode_id: periodeId },
                     success: function (res) {
@@ -233,7 +226,7 @@
                 theme: 'bootstrap-5',
                 placeholder: 'Cari NIM Mahasiswa',
                 ajax: {
-                    url: '{{ url("register/search/mahasiswa") }}',
+                    url: '{{ route("cari-mahasiswa") }}',
                     dataType: 'json',
                     delay: 250,
                     data: function (params) {

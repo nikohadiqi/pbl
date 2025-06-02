@@ -34,9 +34,11 @@ class MataKuliahController extends Controller
         $request->validate([
             'periode_id' => 'required|exists:periodepbl,id',
             'id.*' => 'nullable|integer|exists:matakuliah,id',
-            'kode.*' => 'required|string|size:8',
+            'kode.*' => 'required|string|size:8|unique:matakuliah,kode',
             'matakuliah.*' => 'required|string',
             'sks.*' => 'nullable|integer',
+        ], [
+            'kode.*' => 'Kode Mata Kuliah tidak boleh sama.',
         ]);
 
         $periodeId = $request->periode_id;
