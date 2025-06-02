@@ -33,7 +33,7 @@ class RencanaProyekController extends Controller
         $kebutuhanPeralatan = $kodeTim ? KebutuhanPeralatan::where('kode_tim', $kodeTim)->get() : collect();
         $tantangan = $kodeTim ? tantangan::where('kode_tim', $kodeTim)->get() : collect();
         $biaya = $kodeTim ? Biaya::where('kode_tim', $kodeTim)->get() : collect();
-        $estimasi = $kodeTim ? Estimasi::where('kode_tim', $kodeTim)->get() : collect();
+        $estimasi = $kodeTim ? estimasi::where('kode_tim', $kodeTim)->get() : collect();
 
         $tim = $kodeTim ? TimPBL::with('manproFK')->where('kode_tim', $kodeTim)->first() : null;
         $manajerProyek = $tim && $tim->manproFK ? [
