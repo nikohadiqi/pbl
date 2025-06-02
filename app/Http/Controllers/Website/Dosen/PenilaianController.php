@@ -338,9 +338,9 @@ class PenilaianController extends Controller
         $spreadsheet = IOFactory::load($templatePath);
 
         // Ambil data dari relasi
-        $namaMatkul = $pengampu->matkulFk->matakuliah ?? '-';
+        $namaMatkul = $pengampu->matkulFk->kode . ' - ' . $pengampu->matkulFk->matakuliah ?? '-';
         $sksMatkul = $pengampu->matkulFk->sks ?? '-';
-        $semesterTahun = $pengampu->periodeFK->semester . '/' . $pengampu->periodeFK->tahun;
+        $semesterTahun = $pengampu->periodeFK->semester . '/' . $pengampu->periodeFK->tahun ?? '-';
         $namaDosen  = $pengampu->dosenFk->nama ?? '-';
 
         // Daftar sheet yang ingin diisi datanya

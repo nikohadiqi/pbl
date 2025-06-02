@@ -183,7 +183,7 @@
 
             if (kelas) {
                 $.ajax({
-                    url: '{{ route("cari-manpro") }}',
+                    url: '/register/search/manpro',
                     method: 'GET',
                     data: { kelas: kelas, periode_id: periodeId },
                     success: function (res) {
@@ -226,7 +226,7 @@
                 theme: 'bootstrap-5',
                 placeholder: 'Cari NIM Mahasiswa',
                 ajax: {
-                    url: '{{ route("cari-mahasiswa") }}',
+                    url: '/register/search/mahasiswa',
                     dataType: 'json',
                     delay: 250,
                     data: function (params) {
