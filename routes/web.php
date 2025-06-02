@@ -152,7 +152,7 @@ Route::middleware(['auth:mahasiswa'])->group(function () {
 
     // RPP
     Route::prefix('mahasiswa/rpp')->group(function () {
-        Route::get('/', [RencanaProyekController::class, 'create'])->name('mahasiswa.rpp.rencana-proyek.create');
+        Route::get('/rencana-proyek', [RencanaProyekController::class, 'create'])->name('mahasiswa.rpp.rencana-proyek.create');
         Route::post('/simpan', [RencanaProyekController::class, 'store'])->name('mahasiswa.rpp.rencana-proyek.store');
         Route::post('/tahapan', [RencanaProyekController::class, 'storeTahapanPelaksanaan'])->name('mahasiswa.rpp.tahapan-pelaksanaan.store');
         Route::post('/kebutuhan', [RencanaProyekController::class, 'storeKebutuhanPeralatan'])->name('mahasiswa.rpp.kebutuhan-peralatan.store');
