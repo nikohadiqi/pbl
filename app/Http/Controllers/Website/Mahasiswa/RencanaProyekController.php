@@ -35,7 +35,7 @@ class RencanaProyekController extends Controller
         $biaya = $kodeTim ? Biaya::where('kode_tim', $kodeTim)->get() : collect();
         $estimasi = $kodeTim ? Estimasi::where('kode_tim', $kodeTim)->get() : collect();
 
-        $tim = $kodeTim ? \App\Models\TimPBL::with('manproFK')->where('kode_tim', $kodeTim)->first() : null;
+        $tim = $kodeTim ? TimPBL::with('manproFK')->where('kode_tim', $kodeTim)->first() : null;
         $manajerProyek = $tim && $tim->manproFK ? [
             'nip' => $tim->manpro,
             'nama' => $tim->manproFK->nama,
@@ -48,7 +48,7 @@ class RencanaProyekController extends Controller
             'tantangan',
             'biaya',
             'estimasi',
-            'manajerProyek' // kirim ke view
+            'manajerProyek'
         ));
     }
 
