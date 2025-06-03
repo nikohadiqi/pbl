@@ -9,12 +9,29 @@
 <div class="container-fluid py-4">
     <div class="card shadow">
         <div class="card-header bg-white">
-            <h4 class="mb-2">Rubrik Penilaian Mahasiswa</h4>
-            <small class="text-muted">Mahasiswa: <strong>{{ $mahasiswa->nama }} (NIM. {{ $mahasiswa->nim
-                    }})</strong></small><br>
-            <small class="text-muted">Mata Kuliah: <strong>{{ $pengampu->matkulFK->matakuliah }}</strong></small><br>
-            <small class="text-muted">Status Dosen Penilai: <strong class="text-primary">{{ $pengampu->status ?? '-'
-                    }}</strong></small>
+            <div class="row">
+                {{-- Kolom 1: Informasi Mahasiswa --}}
+                <div class="col-md-6">
+                    <h4 class="mb-2">Rubrik Penilaian Mahasiswa</h4>
+                    <small class="text-muted">Mahasiswa: <strong>{{ $mahasiswa->nama }} (NIM. {{ $mahasiswa->nim
+                            }})</strong></small><br>
+                    <small class="text-muted">Mata Kuliah: <strong>{{ $pengampu->matkulFK->matakuliah
+                            }}</strong></small><br>
+                    <small class="text-muted">Status Dosen Penilai: <strong class="text-primary">{{ $pengampu->status ??
+                            '-' }}</strong></small>
+                </div>
+
+                {{-- Kolom 2: Skala Penilaian --}}
+                <div class="col-md-6 border-start">
+                    <h6 class="text-muted mb-1 ms-3">Skala Penilaian:</h6>
+                    <ul class="mb-0 ps-3 ms-3">
+                        <li><strong>1</strong> : Kurang</li>
+                        <li><strong>2</strong> : Cukup</li>
+                        <li><strong>3</strong> : Baik</li>
+                        <li><strong>4</strong> : Baik Sekali</li>
+                    </ul>
+                </div>
+            </div>
         </div>
 
         <div class="card-body">
@@ -154,18 +171,18 @@
                                         ? 'checked' : '' }} required>
                                     {{ $nilai }}
                                     </label>
-                                @endfor
-                                @elseif($isDosenMatkul)
+                                    @endfor
+                                    @elseif($isDosenMatkul)
                                     @for($nilai = 1; $nilai <= 4; $nilai++) <label
-                                    class="me-4 d-inline-flex align-items-center" style="font-size: 0.9rem;">
-                                    <input type="radio" name="nilai_{{ $namaAspek }}" value="{{ $nilai }}"
-                                        onclick="hitungTotal()" style="transform: scale(1.25); margin-right: 4px;" {{
-                                        old("nilai_$namaAspek", $nilaiDosenMatkul[$namaAspek] ?? null)==$nilai
-                                        ? 'checked' : '' }} required>
-                                    {{ $nilai }}
-                                    </label>
-                                @endfor
-                                @endif
+                                        class="me-4 d-inline-flex align-items-center" style="font-size: 0.9rem;">
+                                        <input type="radio" name="nilai_{{ $namaAspek }}" value="{{ $nilai }}"
+                                            onclick="hitungTotal()" style="transform: scale(1.25); margin-right: 4px;"
+                                            {{ old("nilai_$namaAspek", $nilaiDosenMatkul[$namaAspek] ?? null)==$nilai
+                                            ? 'checked' : '' }} required>
+                                        {{ $nilai }}
+                                        </label>
+                                        @endfor
+                                        @endif
                             </td>
                         </tr>
                         @endforeach
