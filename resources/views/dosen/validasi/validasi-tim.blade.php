@@ -53,9 +53,8 @@
                         </td>
                         <td>
                             @if ($tim->status == 'pending')
-                            <form id="approve-form-{{ $tim->kode_tim }}"
-                                action="{{ route('dosen.validasi-tim.approve', $tim->kode_tim) }}" method="POST"
-                                class="d-inline">
+                            <form id="approve-form-{{ $tim->kode_tim }}" action="{{ route('dosen.validasi-tim.approve', $tim->kode_tim) }}"
+                                method="POST" class="d-inline">
                                 @csrf
                                 <button type="button" class="btn btn-success btn-sm"
                                     onclick="confirmApprove('{{ $tim->kode_tim }}')">
@@ -95,13 +94,23 @@
 <script>
     function confirmApprove(kodeTim) {
         Swal.fire({
-            title: 'Validasi Tim ini?',
-            text: "Tim akan disetujui dan mahasiswa dapat menggunakan akun mereka.",
+            title: 'Validasi Tim: ' + kodeTim,
+            html: `
+                <p>Untuk memvalidasi tim ini, ketik <strong>"validasi"</strong> pada form berikut:</p>
+                <input type="text" id="confirmInput" class="swal2-input" placeholder="Ketik: validasi">
+            `,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#198754',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya, Validasi!'
+            confirmButtonText: 'Validasi',
+            preConfirm: () => {
+                const input = Swal.getPopup().querySelector('#confirmInput').value;
+                if (input.toLowerCase() !== 'validasi') {
+                    Swal.showValidationMessage('Ketik "validasi" untuk mengkonfirmasi.');
+                }
+                return true;
+            }
         }).then((result) => {
             if (result.isConfirmed) {
                 document.getElementById('approve-form-' + kodeTim).submit();
