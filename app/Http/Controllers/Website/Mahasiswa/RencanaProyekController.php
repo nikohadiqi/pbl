@@ -255,11 +255,25 @@ class RencanaProyekController extends Controller
         // Fungsi bantu: render HTML ke TextRun untuk complexBlock
         function htmlToRichText($html): TextRun
         {
+            // Normalisasi HTML: ubah <br> menjadi <br />, dsb.
+            $html = str_replace('<br>', '<br />', $html);
+            $html = str_replace('&nbsp;', ' ', $html);
+
+            // Bungkus dengan tag HTML lengkap agar valid untuk DOMDocument
+            $html = '<html><body>' . $html . '</body></html>';
+
             $phpWord = new PhpWord();
             $section = $phpWord->addSection();
-            Html::addHtml($section, $html, false, false);
 
-            // Ambil elemen pertama dari section untuk dimasukkan ke complexBlock
+            try {
+                Html::addHtml($section, $html, false, false);
+            } catch (\Exception $e) {
+                // Jika gagal render, fallback
+                $textRun = new TextRun();
+                $textRun->addText(strip_tags($html));
+                return $textRun;
+            }
+
             $elements = $section->getElements();
             foreach ($elements as $element) {
                 if ($element instanceof TextRun) {
@@ -267,7 +281,7 @@ class RencanaProyekController extends Controller
                 }
             }
 
-            // Jika gagal, fallback ke teks biasa
+            // Fallback terakhir jika tidak ada TextRun
             $textRun = new TextRun();
             $textRun->addText(strip_tags($html));
             return $textRun;
