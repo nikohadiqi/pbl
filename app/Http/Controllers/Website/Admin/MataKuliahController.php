@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\MataKuliah;
 use App\Models\PeriodePBL;
+use Illuminate\Support\Facades\Validator;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class MataKuliahController extends Controller
@@ -31,25 +32,41 @@ class MataKuliahController extends Controller
 
     public function manageStore(Request $request)
     {
-        $request->validate([
+        $rules = [
             'periode_id' => 'required|exists:periodepbl,id',
             'id.*' => 'nullable|integer|exists:matakuliah,id',
-            'kode.*' => 'required|string|size:8|unique:matakuliah,kode',
+            'kode.*' => 'required|string|size:8',
             'matakuliah.*' => 'required|string',
             'sks.*' => 'nullable|integer',
-        ], [
-            'kode.*' => 'Kode Mata Kuliah tidak boleh sama.',
-        ]);
+        ];
 
+        $messages = [
+            'kode.*.required' => 'Kode Mata Kuliah harus diisi.',
+            'kode.*.size' => 'Kode Mata Kuliah harus terdiri dari 8 karakter.',
+            'matakuliah.*.required' => 'Nama Mata Kuliah harus diisi.',
+        ];
+
+        Validator::make($request->all(), $rules, $messages)->validate();
+
+        // Validasi kode unik manual, abaikan jika id sama
+        foreach ($request->kode as $i => $kode) {
+            $existing = MataKuliah::where('kode', $kode);
+
+            if (!empty($request->id[$i])) {
+                $existing->where('id', '!=', $request->id[$i]); // abaikan jika kode milik record yg sama
+            }
+
+            if ($existing->exists()) {
+                return back()->withErrors(['kode.' . $i => 'Kode Mata Kuliah tidak boleh sama.'])->withInput();
+            }
+        }
+
+        // Simpan data
         $periodeId = $request->periode_id;
         $programStudi = 'Teknologi Rekayasa Perangkat Lunak';
 
-        // Ambil semua ID mata kuliah lama untuk periode ini
         $existingIds = MataKuliah::where('periode_id', $periodeId)->pluck('id')->toArray();
-
-        $idsFromForm = array_filter($request->id); // ambil yg ada id-nya
-
-        // Hapus mata kuliah yang tidak ada di form
+        $idsFromForm = array_filter($request->id);
         $toDelete = array_diff($existingIds, $idsFromForm);
         if (!empty($toDelete)) {
             MataKuliah::whereIn('id', $toDelete)->delete();
