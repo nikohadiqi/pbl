@@ -235,15 +235,12 @@
     const bobot = @json($bobot);
 
     const konversiHuruf = (nilai) => {
-        if (nilai >= 85) return 'A';
-        if (nilai >= 80) return 'A-';
-        if (nilai >= 75) return 'B+';
-        if (nilai >= 70) return 'B';
-        if (nilai >= 65) return 'B-';
-        if (nilai >= 60) return 'C+';
-        if (nilai >= 55) return 'C';
-        if (nilai >= 50) return 'C-';
-        if (nilai >= 40) return 'D';
+        if (nilai >= 81) return 'A';
+        if (nilai >= 76) return 'AB';
+        if (nilai >= 66) return 'B';
+        if (nilai >= 61) return 'BC';
+        if (nilai >= 56) return 'C';
+        if (nilai >= 41) return 'D';
         return 'E';
     }
 

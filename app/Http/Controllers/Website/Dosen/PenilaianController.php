@@ -216,15 +216,12 @@ class PenilaianController extends Controller
     private function konversiHuruf($angka)
     {
         return match (true) {
-            $angka >= 85 => 'A',
-            $angka >= 80 => 'A-',
-            $angka >= 75 => 'B+',
-            $angka >= 70 => 'B',
-            $angka >= 65 => 'B-',
-            $angka >= 60 => 'C+',
-            $angka >= 55 => 'C',
-            $angka >= 50 => 'C-',
-            $angka >= 40 => 'D',
+            $angka >= 81 => 'A',
+            $angka >= 76 => 'AB',
+            $angka >= 66 => 'B',
+            $angka >= 61 => 'BC',
+            $angka >= 56 => 'C',
+            $angka >= 41 => 'D',
             default => 'E'
         };
     }

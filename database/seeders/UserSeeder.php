@@ -12,17 +12,7 @@ class UserSeeder extends Seeder
 {
     public function run()
     {
-
-        $mahasiswa = AkunMahasiswa::first();
-        // Admin
-        User::create([
-            'nim' => '111111',
-            'nama' => 'Admin TRPL',
-            'password' => Hash::make('11111'),
-            'role' => 'admin',
-        ]);
-
-        // Admin 2
+        // Admin 1
         User::create([
             'nim' => 'adminsimpbl',
             'nama' => 'Admin SIMPBL',
@@ -45,23 +35,5 @@ class UserSeeder extends Seeder
             'password' => Hash::make('198103232014041001'),
             'role' => 'admin',
         ]);
-
-        // Mahasiswa - Use AkunMahasiswa model if needed
-        $mahasiswa = AkunMahasiswa::create([
-            'nim' => '22222',
-            'password' => Hash::make('22222'),
-            'role' => 'mahasiswa',
-        ]);
-        // $mahasiswaToken = $mahasiswa->createToken('mahasiswa-token')->plainTextToken;
-        // echo "Mahasiswa Token: {$mahasiswaToken}\n";
-
-        // Dosen
-        $dosen = AkunDosen::create([
-            'nim' => '33333',
-            'password' => Hash::make('33333'),
-            'role' => 'dosen',
-        ]);
-        // $dosenToken = $dosen->createToken('dosen-token')->plainTextToken;
-        // echo "Dosen Token: {$dosenToken}\n";
     }
 }

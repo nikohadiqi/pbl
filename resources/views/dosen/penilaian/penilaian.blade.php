@@ -71,12 +71,12 @@
                             $huruf = $nilai->huruf_nilai;
 
                             // Warna berdasarkan angka (opsional, bisa digabung dengan huruf)
-                            $warnaAngka = $angka >= 75 ? 'text-success' :
-                            ($angka >= 60 ? 'text-warning' : 'text-danger');
+                            $warnaAngka = $angka >= 76 ? 'text-success' :
+                            ($angka >= 61 ? 'text-warning' : 'text-danger');
 
                             // Warna berdasarkan huruf nilai (lebih akurat sesuai konversiHuruf js)
-                            $warnaHuruf = in_array($huruf, ['A', 'A-', 'B+']) ? 'text-success' :
-                            (in_array($huruf, ['B', 'B-', 'C+']) ? 'text-warning' : 'text-danger');
+                            $warnaHuruf = in_array($huruf, ['A', 'AB']) ? 'text-success' :
+                            (in_array($huruf, ['B', 'BC']) ? 'text-warning' : 'text-danger');
                             @endphp
 
                             <span class="text-sm">Angka Nilai:
