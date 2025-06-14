@@ -12,6 +12,7 @@ use App\Http\Controllers\Website\Admin\KelasController;
 use App\Http\Controllers\Website\Admin\MahasiswaController;
 use App\Http\Controllers\Website\Admin\DosenController;
 use App\Http\Controllers\Website\Admin\PengampuController;
+use App\Http\Controllers\Website\Admin\RubrikPenilaianController;
 use App\Http\Controllers\Website\Admin\TahapanPelaksanaanProyekController;
 
 use App\Http\Controllers\Website\Mahasiswa\DashboardMahasiswaController;
@@ -88,12 +89,6 @@ Route::middleware(['auth:web', 'role:web,admin'])->group(function () {
     Route::prefix('menu/master-data/mata-kuliah')->middleware(['auth:sanctum', 'admin'])->group(function () {
         Route::get('/', [MataKuliahController::class, 'manage'])->name('admin.matkul');
         Route::post('/manage-store', [MataKuliahController::class, 'manageStore'])->name('admin.matkul.manage.store');
-        // Route::get('/', [MataKuliahController::class, 'index'])->name('admin.matkul');
-        // Route::get('/tambah', [MataKuliahController::class, 'create'])->name('admin.matkul.tambah');
-        // Route::post('/simpan', [MataKuliahController::class, 'store'])->name('admin.matkul.store');
-        // Route::get('/edit/{id}', [MataKuliahController::class, 'edit'])->name('admin.matkul.edit');
-        // Route::PUT('/update/{id}', [MataKuliahController::class, 'update'])->name('admin.matkul.update');
-        // Route::delete('/hapus/{id}', [MataKuliahController::class, 'destroy'])->name('admin.matkul.delete');
     });
 
     // Data Kelas
@@ -132,6 +127,13 @@ Route::middleware(['auth:web', 'role:web,admin'])->group(function () {
     Route::prefix('menu/master-data/pengampu')->middleware(['auth:sanctum', 'admin'])->group(function () {
         Route::get('/', [PengampuController::class, 'manage'])->name('admin.pengampu');
         Route::post('/manage', [PengampuController::class, 'manageStore'])->name('admin.pengampu.manage.store');
+    });
+
+    // Rubrik Penilaian
+    Route::prefix('admin/rubrik-penilaian')->middleware(['auth:sanctum', 'admin'])->group(function () {
+        Route::get('/', [RubrikPenilaianController::class, 'manage'])->name('admin.rubrik');
+        Route::post('/simpan', [RubrikPenilaianController::class, 'manageStore'])->name('admin.rubrik.store');
+        Route::post('/import', [RubrikPenilaianController::class, 'import'])->name('admin.rubrik.import');
     });
 });
 

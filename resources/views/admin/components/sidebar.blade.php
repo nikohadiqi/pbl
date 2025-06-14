@@ -98,6 +98,17 @@
                     <span class="nav-link-text ms-1">Tahapan Pelaksanaan Proyek</span>
                 </a>
             </li>
+            {{-- Rubrik Penilaian --}}
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('admin.rubrik*') ? 'active' : '' }}"
+                    href="{{ route('admin.rubrik') }}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="bi bi-file-earmark-spreadsheet-fill text-success text-sm opacity-10"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Rubrik Penilaian</span>
+                </a>
+            </li>
         </ul>
     </div>
 </aside>

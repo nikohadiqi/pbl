@@ -14,11 +14,10 @@ class RubrikPenilaian extends Model
     protected $table = 'rubrik_penilaian';
 
     protected $fillable = [
-        'metode_asesmen',
         'aspek_penilaian',
-        'bobot'
+        'jenis',
+        'bobot',
     ];
-
 
     public function nilaiMahasiswa()
     {

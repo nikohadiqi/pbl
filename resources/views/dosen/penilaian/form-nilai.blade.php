@@ -57,7 +57,6 @@
                     class="table align-middle table-bordered border border-light shadow-sm rounded-3 overflow-hidden text-center">
                     <thead class="text-sm fw-semibold text-white bg-primary">
                         <tr>
-                            <th>Metode Asesmen</th>
                             <th>Aspek Penilaian</th>
                             <th>Bobot (%)</th>
                             <th>Nilai (1-4)</th>
@@ -71,47 +70,28 @@
                                 Manajer Proyek
                             </td>
                         </tr>
-                        @php
-                        $kelompok1Soft = ['critical_thinking', 'kolaborasi', 'kreativitas', 'komunikasi'];
-                        $kelompok2Soft = ['fleksibilitas', 'kepemimpinan', 'produktifitas', 'social_skill'];
-                        @endphp
 
                         @foreach($aspekSoftSkill as $index => $namaAspek)
+                        @php
+                        $slug = Str::slug($namaAspek, '_');
+                        @endphp
                         <tr>
-                            {{-- Label untuk kelompok 1 --}}
-                            @if($index === 0)
-                            <td class="align-middle" rowspan="{{ count($kelompok1Soft) }}">
-                                <span>
-                                    Observasi<br>
-                                    <small><i>Learning Skills (20%)</i></small>
-                                </span>
-                            </td>
-                            {{-- Label untuk kelompok 2 --}}
-                            @elseif($index === count($kelompok1Soft))
-                            <td class="align-middle" rowspan="{{ count($kelompok2Soft) }}">
-                                <span>
-                                    Produktivitas Kinerja<br>
-                                    <small><i>Life Skills (25%)</i></small>
-                                </span>
-                            </td>
-                            @endif
-
-                            <td class="text-start ps-3">{{ ucwords(str_replace('_', ' ', $namaAspek)) }}</td>
+                            <td class="text-start ps-3">{{ $namaAspek }}</td>
                             <td><span class="text-primary">{{ $bobot[$namaAspek] }}%</span></td>
                             <td>
                                 @if($isManajer)
                                 @for($nilai = 1; $nilai <= 4; $nilai++) <label
                                     class="me-4 d-inline-flex align-items-center" style="font-size: 0.9rem;">
-                                    <input type="radio" name="nilai_{{ $namaAspek }}" value="{{ $nilai }}"
+                                    <input type="radio" name="nilai_{{ $slug }}" value="{{ $nilai }}"
                                         onclick="hitungTotal()" style="transform: scale(1.25); margin-right: 4px;" {{
-                                        old("nilai_$namaAspek", $nilaiAspekGabungan[$namaAspek] ?? null)==$nilai
-                                        ? 'checked' : '' }} required>
+                                        old("nilai_$slug", $nilaiAspekGabungan[$namaAspek] ?? null)==$nilai ? 'checked'
+                                        : '' }} required>
                                     {{ $nilai }}
                                     </label>
                                     @endfor
                                     @elseif($isDosenMatkul)
                                     <strong>{{ $nilaiAspekGabungan[$namaAspek] ?? '-' }}</strong>
-                                    <input type="hidden" name="nilai_{{ $namaAspek }}"
+                                    <input type="hidden" name="nilai_{{ $slug }}"
                                         value="{{ $nilaiAspekGabungan[$namaAspek] ?? 0 }}">
                                     @endif
                             </td>
@@ -124,65 +104,36 @@
                                 class="bg-light fw-bold text-start text-dark ps-3 border border-light rounded-1">Nilai
                                 Dosen Mata Kuliah</td>
                         </tr>
-                        @php
-                        $kelompok1Akademik = ['konten_presentasi', 'tampilan_visual_presentasi', 'kosakata',
-                        'tanya_jawab', 'mata_gerak_tubuh'];
-                        $kelompok2Akademik = ['penulisan_laporan', 'pilihan_kata', 'konten_laporan'];
-                        $kelompok3Akademik = ['sikap_kerja', 'proses', 'kualitas'];
-                        @endphp
 
                         @foreach($aspekAkademik as $index => $namaAspek)
+                        @php
+                        $slug = Str::slug($namaAspek, '_');
+                        @endphp
                         <tr>
-                            {{-- Kelompok 1 --}}
-                            @if($index === 0)
-                            <td class="align-middle" rowspan="{{ count($kelompok1Akademik) }}">
-                                <span>
-                                    Peringkat Kinerja<br>
-                                    <small><i>Presentasi (10%)</i></small>
-                                </span>
-                            </td>
-                            {{-- Kelompok 2 --}}
-                            @elseif($index === count($kelompok1Akademik))
-                            <td class="align-middle" rowspan="{{ count($kelompok2Akademik) }}">
-                                <span>
-                                    Ulasan Produk / Laporan Kinerja<br>
-                                    <small><i>Laporan (7%)</i></small>
-                                </span>
-                            </td>
-                            {{-- Kelompok 3 --}}
-                            @elseif($index === count($kelompok1Akademik) + count($kelompok2Akademik))
-                            <td class="align-middle" rowspan="{{ count($kelompok3Akademik) }}">
-                                <span>
-                                    Unjuk Kinerja<br>
-                                    <small><i>Sikap dan Keterampilan Kerja (38%)</i></small>
-                                </span>
-                            </td>
-                            @endif
-
-                            <td class="text-start ps-3">{{ ucwords(str_replace('_', ' ', $namaAspek)) }}</td>
+                            <td class="text-start ps-3">{{ $namaAspek }}</td>
                             <td><span class="text-primary">{{ $bobot[$namaAspek] }}%</span></td>
                             <td>
                                 @if($isManajer)
-                                @for($nilai = 1; $nilai <= 4; $nilai++) <label
-                                    class="me-4 d-inline-flex align-items-center" style="font-size: 0.9rem;">
-                                    <input type="radio" name="nilai_{{ $namaAspek }}" value="{{ $nilai }}"
-                                        onclick="hitungTotal()" style="transform: scale(1.25); margin-right: 4px;" {{
-                                        old("nilai_$namaAspek", $nilaiAspekGabungan[$namaAspek] ?? null)==$nilai
-                                        ? 'checked' : '' }} required>
-                                    {{ $nilai }}
-                                    </label>
-                                    @endfor
-                                    @elseif($isDosenMatkul)
                                     @for($nilai = 1; $nilai <= 4; $nilai++) <label
                                         class="me-4 d-inline-flex align-items-center" style="font-size: 0.9rem;">
-                                        <input type="radio" name="nilai_{{ $namaAspek }}" value="{{ $nilai }}"
+                                        <input type="radio" name="nilai_{{ $slug }}" value="{{ $nilai }}"
+                                            onclick="hitungTotal()" style="transform: scale(1.25); margin-right: 4px;" {{
+                                            old("nilai_$slug", $nilaiAspekGabungan[$namaAspek] ?? null)==$nilai ? 'checked'
+                                            : '' }} required>
+                                        {{ $nilai }}
+                                        </label>
+                                    @endfor
+                                @elseif($isDosenMatkul)
+                                    @for($nilai = 1; $nilai <= 4; $nilai++) <label
+                                        class="me-4 d-inline-flex align-items-center" style="font-size: 0.9rem;">
+                                        <input type="radio" name="nilai_{{ $slug }}" value="{{ $nilai }}"
                                             onclick="hitungTotal()" style="transform: scale(1.25); margin-right: 4px;"
-                                            {{ old("nilai_$namaAspek", $nilaiDosenMatkul[$namaAspek] ?? null)==$nilai
+                                            {{ old("nilai_$slug", $nilaiDosenMatkul[$namaAspek] ?? null)==$nilai
                                             ? 'checked' : '' }} required>
                                         {{ $nilai }}
                                         </label>
-                                        @endfor
-                                        @endif
+                                    @endfor
+                                 @endif
                             </td>
                         </tr>
                         @endforeach
@@ -230,8 +181,8 @@
 
 @push('script')
 <script>
-    const aspekSoftSkill = @json($aspekSoftSkill);
-    const aspekAkademik = @json($aspekAkademik);
+    const aspekSoftSkill = @json($aspekSoftSkillSlug);
+    const aspekAkademik = @json($aspekAkademikSlug);
     const bobot = @json($bobot);
 
     const konversiHuruf = (nilai) => {
@@ -245,32 +196,38 @@
     }
 
     function hitungTotal() {
-        let total = 0;
-        let totalBobot = 0;
+    let total = 0;
+    let totalBobot = 0;
 
-        [...aspekSoftSkill, ...aspekAkademik].forEach((aspek) => {
-            const elems = document.getElementsByName(`nilai_${aspek}`);
-            let nilai = 0;
-            for (const el of elems) {
-                if (el.type === 'radio' && el.checked) {
-                    nilai = parseInt(el.value);
-                    break;
-                }
-                if (el.type === 'hidden') {
-                    nilai = parseInt(el.value);
-                }
+    [...Object.entries(aspekSoftSkill), ...Object.entries(aspekAkademik)].forEach(([label, slug]) => {
+        const elems = document.getElementsByName(`nilai_${slug}`);
+        let nilai = 0;
+        for (const el of elems) {
+            if (el.type === 'radio' && el.checked) {
+                nilai = parseInt(el.value);
+                break;
             }
-            total += (bobot[aspek] || 0) * nilai;
-            totalBobot += (bobot[aspek] || 0);
-        });
+            if (el.type === 'hidden') {
+                nilai = parseInt(el.value);
+            }
+        }
 
-        const skor = totalBobot > 0 ? total / totalBobot : 0;
-        const angka = skor * 25;
-        document.getElementById('totalNilai').innerText = skor.toFixed(2);
-        document.getElementById('angkaNilai').innerText = angka.toFixed(2);
-        document.getElementById('hurufNilai').innerText = konversiHuruf(angka);
+        const persen = bobot[label] ?? 0;
+        total += nilai * persen;
+        totalBobot += persen;
+    });
+
+    const nilaiAkhir = totalBobot ? (total / totalBobot) : 0;
+    const angka = nilaiAkhir * 25;
+    const huruf = konversiHuruf(angka);
+
+    document.getElementById('totalNilai').textContent = nilaiAkhir.toFixed(2);
+    document.getElementById('angkaNilai').textContent = angka.toFixed(2);
+    document.getElementById('hurufNilai').textContent = huruf;
     }
 
-    window.onload = hitungTotal;
+    document.addEventListener('DOMContentLoaded', function () {
+        hitungTotal();
+    });
 </script>
 @endpush
