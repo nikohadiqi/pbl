@@ -9,84 +9,97 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class KelasController extends Controller
 {
-    // Menampilkan daftar kelas
+    // Menampilkan semua kelas
     public function index()
     {
         $kelas = Kelas::all();
-        // Ubah setiap nama kelas menjadi base64 aman untuk digunakan di HTML ID
         foreach ($kelas as $item) {
             $item->kelas_encoded = base64_encode($item->kelas);
         }
         return view('admin.kelas.kelas', compact('kelas'));
     }
 
-    // Menampilkan form tambah kelas
+    // Form tambah kelas
     public function create()
     {
-        return view('admin.kelas.tambah-kelas');
+        return view('admin.kelas.form-kelas', [
+            'action' => route('admin.kelas.store'),
+            'isEdit' => false,
+        ]);
     }
 
-    // Menyimpan data kelas baru
+    // Simpan kelas baru
     public function store(Request $request)
     {
         $request->validate([
-            'kelas' => [
-                'required',
-                'regex:/^[0-9]{1}[A-Za-z]{1}$/',
-                'unique:kelas,kelas' . ($kelas->kelas ?? ''),
-            ],
-        ], [
-            'kelas.regex' => 'Format kelas harus 1 angka diikuti 1 huruf, misalnya 2A.',
-            'kelas.unique' => 'Kelas ini sudah terdaftar.',
+            'tingkat' => 'required|integer|min:1|max:3',
+            'huruf' => 'required|alpha|size:1',
         ]);
 
-        Kelas::create($request->all());
+        $tingkat = $request->tingkat;
+        $huruf = strtoupper($request->huruf);
+        $kelas = $tingkat . $huruf;
 
-        // Menampilkan SweetAlert
-        Alert::success('Berhasil!', 'Data kelas berhasil Ditambahkan!');
+        if (Kelas::where('kelas', $kelas)->exists()) {
+            return redirect()->back()->withErrors(['kelas' => 'Kelas ini sudah terdaftar.']);
+        }
 
+        Kelas::create([
+            'kelas' => $kelas,
+            'tingkat' => $tingkat,
+        ]);
+
+        Alert::success('Berhasil!', 'Data kelas berhasil ditambahkan!');
         return redirect()->route('admin.kelas');
     }
 
-    // Menampilkan form edit kelas
+    // Form edit kelas
     public function edit($kelas)
     {
         $kelas = Kelas::findOrFail($kelas);
-        return view('admin.kelas.edit-kelas', compact('kelas'));
+        return view('admin.kelas.form-kelas', [
+            'kelas' => $kelas,
+            'action' => route('admin.kelas.update', $kelas->kelas),
+            'isEdit' => true,
+        ]);
     }
 
-    // Memperbarui data kelas
+    // Update kelas
     public function update(Request $request, $kelas)
     {
-        $kelas = Kelas::findOrFail($kelas);
-
         $request->validate([
-            'kelas' => [
-                'required',
-                'regex:/^[0-9]{1}[A-Za-z]{1}$/',
-                'unique:kelas,kelas,' . $kelas->kelas . ',kelas',
-            ],
-        ], [
-            'kelas.regex' => 'Format kelas harus 1 angka diikuti 1 huruf, misalnya 2A.',
-            'kelas.unique' => 'Kelas ini sudah terdaftar.',
+            'tingkat' => 'required|integer|min:1|max:3',
+            'huruf' => 'required|alpha|size:1',
         ]);
 
-        $kelas->update($request->all());
+        $tingkat = $request->tingkat;
+        $huruf = strtoupper($request->huruf);
+        $kelasBaru = $tingkat . $huruf;
 
-        // Menampilkan SweetAlert
+        // Cek jika nama kelas baru sudah ada (kecuali jika tidak berubah)
+        if ($kelas !== $kelasBaru && Kelas::where('kelas', $kelasBaru)->exists()) {
+            return redirect()->back()->withErrors(['kelas' => 'Kelas ini sudah terdaftar.']);
+        }
+
+        $kelasModel = Kelas::findOrFail($kelas);
+        $kelasModel->delete(); // karena primary key berubah, hapus dulu lama
+
+        Kelas::create([
+            'kelas' => $kelasBaru,
+            'tingkat' => $tingkat,
+        ]);
+
         Alert::success('Berhasil!', 'Data kelas berhasil diperbarui!');
-
         return redirect()->route('admin.kelas');
     }
 
+    // Hapus kelas
     public function destroy($kelas)
     {
         $kelas = Kelas::findOrFail($kelas);
         $kelas->delete();
 
-        // Menampilkan SweetAlert
-        Alert::success('Berhasil!', 'Data kelas berhasil Dihapus!');
-
+        Alert::success('Berhasil!', 'Data kelas berhasil dihapus!');
         return redirect()->route('admin.kelas');
     }
 }

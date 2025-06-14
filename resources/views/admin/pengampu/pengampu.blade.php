@@ -23,7 +23,7 @@
                         <option value="" hidden>Pilih Periode</option>
                         @foreach($periodes as $p)
                         <option value="{{ $p->id }}" {{ $selectedPeriode==$p->id ? 'selected' : '' }}>
-                            Semester {{ $p->semester }} - {{ $p->tahun }}
+                            Semester {{ $p->kategori_semester }} - {{ $p->tahun }}
                         </option>
                         @endforeach
                     </select>
@@ -115,14 +115,14 @@
 
     /* Efek focus */
     .select2-container--bootstrap-5.select2-container--focus .select2-selection {
-        border-color: #F7CD07 !important;
+        border-color: #dfa02c !important;
         box-shadow: 0 0 0 2px rgba(247, 205, 7, 0.1);
         outline: none;
     }
 
     /* Dropdown dengan rounded full, selalu sama */
     .select2-container--bootstrap-5 .select2-dropdown {
-        border: 1px solid #F7CD07 !important;
+        border: 1px solid #dfa02c !important;
         border-radius: 0.5rem !important;
         box-shadow: 0 4px 10px rgba(247, 205, 7, 0.1);
         margin-top: 2px;

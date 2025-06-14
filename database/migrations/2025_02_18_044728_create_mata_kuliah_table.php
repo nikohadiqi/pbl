@@ -11,11 +11,12 @@ return new class extends Migration {
             $table->id();
             $table->string('kode');
             $table->string('matakuliah');
-            $table->text('sks')->nullable();
+            $table->string('sks')->nullable();
             $table->string('program_studi');
+            $table->unsignedTinyInteger('semester');
             // Relasi dengan periode
             $table->foreignId('periode_id')->constrained('periodepbl')->onDelete('cascade');
-            $table->text('id_feeder')->nullable();
+            $table->string('id_feeder')->nullable();
             $table->timestamps();
         });
     }

@@ -37,26 +37,26 @@ class PeriodePBLController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'semester' => 'required|in:1,2,3,4,5,6',
+            'kategori_semester' => 'required|in:Ganjil,Genap',
             'tahun' => 'required|digits:4',
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
         ]);
 
         // Cek apakah semester & tahun sudah ada
-        $existing = PeriodePBL::where('semester', $request->semester)
+        $existing = PeriodePBL::where('kategori_semester', $request->kategori_semester)
             ->where('tahun', $request->tahun)
             ->first();
 
         if ($existing) {
             return back()
                 ->withInput()
-                ->withErrors(['semester' => 'Semester dan tahun ini sudah terdaftar.']);
+                ->withErrors(['kategori_semester' => 'Kategori Semester pada tahun ini sudah terdaftar.']);
         }
 
         // Simpan data dengan status default 'Tidak Aktif'
         PeriodePBL::create([
-            'semester' => $request->semester,
+            'kategori_semester' => $request->kategori_semester,
             'tahun' => $request->tahun,
             'tanggal_mulai' => $request->tanggal_mulai,
             'tanggal_selesai' => $request->tanggal_selesai,
@@ -80,14 +80,14 @@ class PeriodePBLController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'semester' => 'required|in:1,2,3,4,5,6',
+            'kategori_semester' => 'required|in:Ganjil,Genap',
             'tahun' => 'required|digits:4',
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
         ]);
 
         // Cek duplikasi jika semester & tahun diubah
-        $existing = PeriodePBL::where('semester', $request->semester)
+        $existing = PeriodePBL::where('kategori_semester', $request->kategori_semester)
             ->where('tahun', $request->tahun)
             ->where('id', '!=', $id)
             ->first();
@@ -95,13 +95,13 @@ class PeriodePBLController extends Controller
         if ($existing) {
             return back()
                 ->withInput()
-                ->withErrors(['semester' => 'Semester dan tahun ini sudah terdaftar.']);
+                ->withErrors(['kategori_semester' => 'Kategori Semester pada tahun ini sudah terdaftar.']);
         }
 
         $periode = PeriodePBL::findOrFail($id);
 
         $periode->update([
-            'semester' => $request->semester,
+            'kategori_semester' => $request->kategori_semester,
             'tahun' => $request->tahun,
             'tanggal_mulai' => $request->tanggal_mulai,
             'tanggal_selesai' => $request->tanggal_selesai,

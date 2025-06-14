@@ -18,6 +18,7 @@ class MatkulSeeder extends Seeder
             'matakuliah' => 'Proyek Aplikasi Lanjut',
             'program_studi' => 'Teknologi Rekayasa Perangkat Lunak',
             'sks' => '2',
+            'semester' => 3,
             'periode_id' => 1
         ]);
 
@@ -26,6 +27,7 @@ class MatkulSeeder extends Seeder
             'matakuliah' => 'Desain Pengalaman Pengguna',
             'program_studi' => 'Teknologi Rekayasa Perangkat Lunak',
             'sks' => '2',
+            'semester' => 3,
             'periode_id' => 1
         ]);
 
@@ -34,6 +36,7 @@ class MatkulSeeder extends Seeder
             'matakuliah' => 'Keamanan Perangkat Lunak',
             'program_studi' => 'Teknologi Rekayasa Perangkat Lunak',
             'sks' => '2',
+            'semester' => 3,
             'periode_id' => 1
         ]);
     }

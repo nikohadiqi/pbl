@@ -23,7 +23,7 @@
   --bs-gray-700: #495057;
   --bs-gray-800: #343a40;
   --bs-gray-900: #212529;
-  --bs-primary: #fb6340;
+  --bs-primary: #dfa02c;
   --bs-secondary: #8392ab;
   --bs-success: #2dce89;
   --bs-info: #11cdef;
@@ -2439,7 +2439,7 @@ progress {
 }
 
 .table-primary {
-  --bs-table-bg: #F7CD07;
+  --bs-table-bg: #dfa02c;
   --bs-table-striped-bg: #f1d5ce;
   --bs-table-striped-color: #000;
   --bs-table-active-bg: #e5cac3;
@@ -2635,7 +2635,7 @@ progress {
 .form-control:focus {
   color: #495057;
   background-color: #fff;
-  border-color: #F7CD07;
+  border-color: #dfa02c;
   outline: 0;
   box-shadow: 0 3px 9px rgba(50, 50, 9, 0), 3px 4px 8px rgba(94, 114, 228, 0.1);
 }
@@ -2850,7 +2850,7 @@ textarea.form-control-lg {
   }
 }
 .form-select:focus {
-  border-color: #F7CD07;
+  border-color: #dfa02c;
   outline: 0;
   box-shadow: 0 3px 9px rgba(50, 50, 9, 0), 3px 4px 8px rgba(94, 114, 228, 0.1);
 }
@@ -3455,8 +3455,8 @@ textarea.form-control-lg {
 
 .btn-primary {
     color: #000;
-    background-color: #F7CD07;
-    border-color: #F7CD07;
+    background-color: #dfa02c;
+    border-color: #dfa02c;
   }
 .btn-primary:hover {
     color: #000;
@@ -3736,8 +3736,8 @@ textarea.form-control-lg {
 }
 
 .btn-outline-primary {
-  color: #F7CD07;
-  border-color: #F7CD07;
+  color: #dfa02c;
+  border-color: #dfa02c;
 }
 .btn-outline-primary:hover {
   color: #000;
@@ -7600,7 +7600,7 @@ textarea.form-control-lg {
 }
 
 .border-primary {
-  border-color: #F7CD07 !important;
+  border-color: #dfa02c !important;
 }
 
 .border-secondary {
@@ -9389,7 +9389,7 @@ textarea.form-control-lg {
 
 /* rtl:end:remove */
 .text-primary {
-  color: #F7CD07 !important;
+  color: #dfa02c !important;
 }
 
 .text-secondary {
@@ -9461,7 +9461,7 @@ textarea.form-control-lg {
 }
 
 .bg-primary {
-    background-color: #F7CD07 !important;
+    background-color: #dfa02c !important;
 }
 
 .bg-secondary {
@@ -20368,7 +20368,7 @@ label,
 }
 
 .bg-gradient-primary {
-    background-image: linear-gradient(310deg, #C49A00 25%, #F7CD07 100%);
+    background-image: linear-gradient(310deg, #C49A00 25%, #dfa02c 100%);
 }
 
 .bg-gradient-secondary {

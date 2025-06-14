@@ -6,14 +6,15 @@
 <div class="container-fluid py-4">
     <div class="card p-4">
         {{-- Filter --}}
-        <form method="GET" action="{{ route('admin.matkul') }}" class="mb-3">
-            <label for="periode_id" class="form-label">Pilih Periode</label>
+        <form method="GET" action="{{ route('admin.matkul') }}">
+            <input type="hidden" name="periode_id" value="{{ $periode->id }}">
+            <label for="semester" class="form-label">Pilih Semester</label>
             <div class="input-group">
-                <select name="periode_id" class="form-select" onchange="this.form.submit()">
-                    <option value="">-- Pilih Periode --</option>
-                    @foreach ($periodes as $periode)
-                    <option value="{{ $periode->id }}" {{ $selectedPeriodeId == $periode->id ? 'selected' : '' }}>
-                        Semester {{ $periode->semester }} - {{ $periode->tahun }}
+                <select name="semester" class="form-select" onchange="this.form.submit()">
+                    <option value="">-- Pilih Semester --</option>
+                    @foreach ($semesterList as $smt)
+                    <option value="{{ $smt }}" {{ $selectedSemester==$smt ? 'selected' : '' }}>
+                        Semester {{ $smt }}
                     </option>
                     @endforeach
                 </select>
@@ -21,7 +22,7 @@
             <hr class="horizontal dark mt-4">
         </form>
 
-        @if ($selectedPeriodeId)
+        @if ($selectedSemester)
         <!-- Notifikasi -->
        @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
@@ -39,14 +40,15 @@
         </div>
         @endif
         <div class="d-flex justify-content-between align-items-center">
-            <h4 class="fw-bold">Mata Kuliah PBL</h4>
+            <h4 class="fw-bold">Mata Kuliah PBL - Semester {{ $selectedSemester }}</h4>
         </div>
         <p class="text-sm">Daftar Mata Kuliah yang menjadi Mata Kuliah PBL periode ini.</p>
 
         {{-- FORM INPUT MATA KULIAH --}}
         <form method="POST" action="{{ route('admin.matkul.manage.store') }}">
             @csrf
-            <input type="hidden" name="periode_id" value="{{ $selectedPeriodeId }}">
+            <input type="hidden" name="periode_id" value="{{ $periode->id }}">
+            <input type="hidden" name="semester" value="{{ $selectedSemester }}">
 
             <div class="table-responsive">
                 <table class="table align-middle table-hover table-borderless border border-light shadow-sm rounded-3 overflow-hidden" id="matkul-table">
@@ -60,7 +62,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($mataKuliahList as $matkul)
+                        @forelse($matakuliahs as $matkul)
                         <tr>
                             <td>
                                 <input type="hidden" name="id[]" value="{{ $matkul->id }}">

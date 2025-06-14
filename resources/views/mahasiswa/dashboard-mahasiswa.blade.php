@@ -24,7 +24,7 @@
                 <div class="position-relative">
                     <svg width="120" height="120">
                         <circle cx="60" cy="60" r="50" stroke="#eee" stroke-width="10" fill="none" />
-                        <circle cx="60" cy="60" r="50" stroke="#F7CD07" stroke-width="10" fill="none"
+                        <circle cx="60" cy="60" r="50" stroke="#dfa02c" stroke-width="10" fill="none"
                             stroke-dasharray="{{ 2 * 3.14 * 50 }}"
                             stroke-dashoffset="{{ 2 * 3.14 * 50 * (1 - $tim->progress_percent / 100) }}"
                             stroke-linecap="round" transform="rotate(-90 60 60)" />

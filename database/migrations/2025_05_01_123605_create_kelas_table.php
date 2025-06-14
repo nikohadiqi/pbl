@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('kelas', function (Blueprint $table) {
             $table->string('kelas')->primary();
+            $table->unsignedTinyInteger('tingkat');
             $table->timestamps();
         });
     }
