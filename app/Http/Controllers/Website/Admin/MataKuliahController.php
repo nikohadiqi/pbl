@@ -13,7 +13,7 @@ class MataKuliahController extends Controller
 {
     public function manage(Request $request)
     {
-        $periode = PeriodePBL::where('status', 'aktif')->firstOrFail(); // Periode aktif otomatis
+        $periode = PeriodePBL::where('status', 'Aktif')->firstOrFail(); // Periode aktif otomatis
 
         $semesterList = semesterDariKategori($periode->kategori_semester);
         $selectedSemester = $request->semester ?? $semesterList[0]; // default semester pertama dari list

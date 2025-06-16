@@ -38,53 +38,74 @@ class PengampuController extends Controller
 
     public function manage(Request $request)
     {
-        $kelas = Kelas::all();
-        $periodes = PeriodePBL::where('status', 'Aktif')->get();
+        $periodes = PeriodePBL::where('status', 'Aktif')->firstOrFail();
         $dosen = Dosen::all();
 
-        // Ambil dari session jika tidak ada request baru
+        $semesterList = semesterDariKategori($periodes->kategori_semester);
+
+        // Hanya ambil semester dan kelas jika dikirim lewat request
+        $selectedSemester = $request->input('semester', session('filter_semester'));
         $selectedKelas = $request->input('kelas', session('filter_kelas'));
-        $selectedPeriode = $request->input('periode_id', session('filter_periode'));
 
         // Simpan ke session jika ada input baru
+        if ($request->filled('semester')) {
+            session(['filter_semester' => $selectedSemester]);
+        }
         if ($request->filled('kelas')) {
             session(['filter_kelas' => $selectedKelas]);
         }
-        if ($request->filled('periode_id')) {
-            session(['filter_periode' => $selectedPeriode]);
+
+        $filteredKelas = collect();
+
+        if ($selectedSemester) {
+            $tingkat = ceil($selectedSemester / 2);
+            $filteredKelas = Kelas::where('tingkat', $tingkat)->get();
         }
 
-        // Filter matkul berdasarkan periode yang dipilih
         $matkuls = collect();
-        if ($selectedPeriode) {
-            $matkuls = MataKuliah::where('periode_id', $selectedPeriode)->get();
-        }
-
-        // Ambil pengampu jika ada kelas dan periode dipilih
         $pengampus = collect();
-        if ($selectedKelas && $selectedPeriode) {
+
+        if ($selectedKelas && $selectedSemester) {
+            $matkuls = MataKuliah::where('semester', $selectedSemester)
+                ->where('periode_id', $periodes->id)
+                ->get();
+
             $pengampus = Pengampu::where('kelas_id', $selectedKelas)
-                ->where('periode_id', $selectedPeriode)
+                ->where('semester', $selectedSemester)
                 ->get()
                 ->keyBy('matkul_id');
         }
 
         return view('admin.pengampu.pengampu', compact(
-            'kelas',
             'periodes',
             'dosen',
+            'semesterList',
+            'selectedKelas',
+            'selectedSemester',
+            'filteredKelas',
             'matkuls',
             'pengampus',
-            'selectedKelas',
-            'selectedPeriode'
         ));
     }
 
+
     public function manageStore(Request $request)
     {
+        $semester = $request->input('semester');
         $kelasId = $request->input('kelas_id');
         $periodeId = $request->input('periode_id');
         $data = $request->input('data'); // format: ['matkul_id' => ['dosen_id' => ..., 'status' => ...]]
+
+        // Validasi: kelas yang dipilih harus sesuai dengan semester (berdasarkan tingkat)
+        $kelas = Kelas::find($kelasId);
+        $expectedTingkat = ceil($semester / 2); // misalnya semester 3 → tingkat 2
+
+        if (!$kelas || $kelas->tingkat != $expectedTingkat) {
+            Alert::error('Gagal', 'Kelas yang dipilih tidak sesuai dengan semester.');
+            session(['filter_semester' => $semester]);
+            session(['filter_kelas' => $kelasId]);
+            return redirect()->back()->withInput();
+        }
 
         // Validasi: satu dosen hanya boleh mengampu satu matkul di kelas dan periode yang sama
         $dosenDipakai = [];
@@ -96,8 +117,8 @@ class PengampuController extends Controller
 
             if (in_array($dosenId, $dosenDipakai)) {
                 Alert::error('Gagal', 'Satu dosen hanya boleh mengampu satu mata kuliah untuk kelas dan periode yang sama.');
+                session(['filter_semester' => $semester]);
                 session(['filter_kelas' => $kelasId]);
-                session(['filter_periode' => $periodeId]);
                 return redirect()->back()->withInput();
             }
 
@@ -110,6 +131,7 @@ class PengampuController extends Controller
                 $pengampuLain = Pengampu::where('periode_id', $periodeId)
                     ->where('status', 'Manajer Proyek')
                     ->where('dosen_id', $dosenId)
+                    ->where('semester', $semester)
                     ->where('kelas_id', '!=', $kelasId)
                     ->with('kelasFK') // load relasi kelas
                     ->first();
@@ -119,8 +141,8 @@ class PengampuController extends Controller
                     $namaKelas = $pengampuLain->kelasFK->kelas ?? 'kelas lain';
 
                     Alert::error('Gagal', "Dosen $namaDosen sudah menjadi Manajer Proyek di Kelas $namaKelas pada periode ini.");
+                    session(['filter_semester' => $semester]);
                     session(['filter_kelas' => $kelasId]);
-                    session(['filter_periode' => $periodeId]);
                     return redirect()->back()->withInput();
                 }
             }
@@ -129,15 +151,16 @@ class PengampuController extends Controller
         // Validasi hanya boleh ada satu Manajer Proyek
         if ($jumlahManpro > 1) {
             Alert::error('Gagal', 'Dalam satu kelas hanya boleh ada satu Manajer Proyek.');
+            session(['filter_semester' => $semester]);
             session(['filter_kelas' => $kelasId]);
-            session(['filter_periode' => $periodeId]);
             return redirect()->back()->withInput();
         }
 
         // Simpan/update data
         foreach ($data as $matkulId => $pengampuData) {
-            $pengampu = Pengampu::updateOrCreate(
+            Pengampu::updateOrCreate(
                 [
+                    'semester' => $semester,
                     'kelas_id' => $kelasId,
                     'periode_id' => $periodeId,
                     'matkul_id' => $matkulId,

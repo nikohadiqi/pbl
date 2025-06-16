@@ -64,7 +64,7 @@ Route::middleware(['auth:web', 'role:web,admin'])->group(function () {
     });
 
     // Periode PBL
-    Route::prefix('menu/master-data/periode-pbl')->middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::prefix('admin/menu/master-data/periode-pbl')->middleware(['auth:sanctum', 'admin'])->group(function () {
         Route::get('/', [PeriodePBLController::class, 'index'])->name('admin.periodepbl');
         Route::get('/tambah', [PeriodePBLController::class, 'create'])->name('admin.periodepbl.tambah');
         Route::post('/simpan', [PeriodePBLController::class, 'store'])->name('admin.periodepbl.store');
@@ -76,23 +76,14 @@ Route::middleware(['auth:web', 'role:web,admin'])->group(function () {
         Route::patch('/aktifkan/{id}', [PeriodePBLController::class, 'aktifkan'])->name('admin.periodepbl.aktifkan');
     });
 
-    // Tahapan Pelaksanaan Proyek
-    Route::prefix('admin/tahapan-pelaksanaan-proyek')->middleware(['auth:sanctum', 'admin'])->group(function () {
-        Route::get('/', [TahapanPelaksanaanProyekController::class, 'index'])->name('admin.tpp');
-        Route::post('/simpan', [TahapanPelaksanaanProyekController::class, 'store'])->name('admin.tpp.store');
-        Route::delete('/reset', [TahapanPelaksanaanProyekController::class, 'reset'])->name('admin.tpp.reset');
-        Route::post('/import', [TahapanPelaksanaanProyekController::class, 'import'])->name('admin.tpp.import');
-    });
-
-
     // Mata Kuliah
-    Route::prefix('menu/master-data/mata-kuliah')->middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::prefix('admin/menu/master-data/mata-kuliah')->middleware(['auth:sanctum', 'admin'])->group(function () {
         Route::get('/', [MataKuliahController::class, 'manage'])->name('admin.matkul');
         Route::post('/manage-store', [MataKuliahController::class, 'manageStore'])->name('admin.matkul.manage.store');
     });
 
     // Data Kelas
-    Route::prefix('menu/master-data/kelas')->middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::prefix('admin/menu/master-data/kelas')->middleware(['auth:sanctum', 'admin'])->group(function () {
         Route::get('/', [KelasController::class, 'index'])->name('admin.kelas');
         Route::get('/tambah', [KelasController::class, 'create'])->name('admin.kelas.tambah');
         Route::post('/simpan', [KelasController::class, 'store'])->name('admin.kelas.store');
@@ -101,19 +92,8 @@ Route::middleware(['auth:web', 'role:web,admin'])->group(function () {
         Route::delete('/hapus/{kelas}', [KelasController::class, 'destroy'])->name('admin.kelas.delete');
     });
 
-    // Data Mahasiswa
-    Route::prefix('menu/master-data/data-mahasiswa')->middleware(['auth:sanctum', 'admin'])->group(function () {
-        Route::get('/', [MahasiswaController::class, 'index'])->name('admin.mahasiswa');
-        Route::get('/tambah', [MahasiswaController::class, 'create'])->name('admin.mahasiswa.tambah');
-        Route::post('/simpan', [MahasiswaController::class, 'store'])->name('admin.mahasiswa.store');  // ✅ Route untuk simpan
-        Route::get('/edit/{nim}', [MahasiswaController::class, 'edit'])->name('admin.mahasiswa.edit');
-        Route::PUT('/update/{nim}', [MahasiswaController::class, 'update'])->name('admin.mahasiswa.update');
-        Route::delete('/hapus/{nim}', [MahasiswaController::class, 'destroy'])->name('admin.mahasiswa.delete');
-        Route::post('/import-mahasiswa', [MahasiswaController::class, 'import'])->name('admin.mahasiswa.import'); //impor
-    });
-
     // Data Dosen
-    Route::prefix('menu/master-data/data-dosen')->middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::prefix('admin/menu/master-data/data-dosen')->middleware(['auth:sanctum', 'admin'])->group(function () {
         Route::get('/', [DosenController::class, 'index'])->name('admin.dosen'); // Tampilkan daftar dosen
         Route::get('/tambah', [DosenController::class, 'create'])->name('admin.dosen.tambah'); // Form tambah dosen
         Route::post('/store', [DosenController::class, 'store'])->name('admin.dosen.store'); // Simpan data dosen
@@ -123,18 +103,38 @@ Route::middleware(['auth:web', 'role:web,admin'])->group(function () {
         Route::post('/import-dosen', [DosenController::class, 'import'])->name('admin.dosen.import'); // Impor
     });
 
-    // Pengampu MK / Manpro
-    Route::prefix('menu/master-data/pengampu')->middleware(['auth:sanctum', 'admin'])->group(function () {
-        Route::get('/', [PengampuController::class, 'manage'])->name('admin.pengampu');
-        Route::post('/manage', [PengampuController::class, 'manageStore'])->name('admin.pengampu.manage.store');
+    // Data Mahasiswa
+    Route::prefix('admin/menu/master-data/data-mahasiswa')->middleware(['auth:sanctum', 'admin'])->group(function () {
+        Route::get('/', [MahasiswaController::class, 'index'])->name('admin.mahasiswa');
+        Route::get('/tambah', [MahasiswaController::class, 'create'])->name('admin.mahasiswa.tambah');
+        Route::post('/simpan', [MahasiswaController::class, 'store'])->name('admin.mahasiswa.store');  // ✅ Route untuk simpan
+        Route::get('/edit/{nim}', [MahasiswaController::class, 'edit'])->name('admin.mahasiswa.edit');
+        Route::PUT('/update/{nim}', [MahasiswaController::class, 'update'])->name('admin.mahasiswa.update');
+        Route::delete('/hapus/{nim}', [MahasiswaController::class, 'destroy'])->name('admin.mahasiswa.delete');
+        Route::post('/import-mahasiswa', [MahasiswaController::class, 'import'])->name('admin.mahasiswa.import'); //impor
     });
 
     // Rubrik Penilaian
-    Route::prefix('admin/rubrik-penilaian')->middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::prefix('admin/menu/master-data/rubrik-penilaian')->middleware(['auth:sanctum', 'admin'])->group(function () {
         Route::get('/', [RubrikPenilaianController::class, 'manage'])->name('admin.rubrik');
         Route::post('/simpan', [RubrikPenilaianController::class, 'manageStore'])->name('admin.rubrik.store');
         Route::post('/import', [RubrikPenilaianController::class, 'import'])->name('admin.rubrik.import');
     });
+
+    // Pengampu MK / Manpro
+    Route::prefix('admin/menu/kelola-dosen-pengampu')->middleware(['auth:sanctum', 'admin'])->group(function () {
+        Route::get('/', [PengampuController::class, 'manage'])->name('admin.pengampu');
+        Route::post('/manage', [PengampuController::class, 'manageStore'])->name('admin.pengampu.manage.store');
+    });
+
+    // Tahapan Pelaksanaan Proyek
+    Route::prefix('admin/menu/tahapan-pelaksanaan-proyek')->middleware(['auth:sanctum', 'admin'])->group(function () {
+        Route::get('/', [TahapanPelaksanaanProyekController::class, 'index'])->name('admin.tpp');
+        Route::post('/simpan', [TahapanPelaksanaanProyekController::class, 'store'])->name('admin.tpp.store');
+        Route::delete('/reset', [TahapanPelaksanaanProyekController::class, 'reset'])->name('admin.tpp.reset');
+        Route::post('/import', [TahapanPelaksanaanProyekController::class, 'import'])->name('admin.tpp.import');
+    });
+
 });
 
 // ============================

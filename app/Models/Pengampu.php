@@ -11,7 +11,8 @@ class Pengampu extends Model
 
     protected $table = 'pengampu';
 
-    protected $fillable = [
+    protected $fillable = [ 
+        'semester',
         'kelas_id',
         'dosen_id',
         'status',

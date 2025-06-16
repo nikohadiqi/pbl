@@ -58,7 +58,9 @@
                     </tfoot>
                 </table>
             </div>
-            <button type="submit" class="btn btn-primary"><i class="bi bi-save me-1"></i> Simpan Rubrik</button>
+            <div class="text-end mt-3">
+                <button type="submit" class="btn btn-primary"><i class="bi bi-save me-1"></i> Simpan Rubrik</button>
+            </div>
         </form>
     </div>
 </div>

@@ -10,28 +10,29 @@ class RubrikPenilaianSeeder extends Seeder
     public function run(): void
     {
         $rubrik = [
-            // Softskill (8 aspek)
-            ['aspek_penilaian' => 'Kedisiplinan', 'jenis' => 'softskill', 'bobot' => 6],
-            ['aspek_penilaian' => 'Kerjasama Tim', 'jenis' => 'softskill', 'bobot' => 6],
-            ['aspek_penilaian' => 'Komunikasi', 'jenis' => 'softskill', 'bobot' => 6],
-            ['aspek_penilaian' => 'Tanggung Jawab', 'jenis' => 'softskill', 'bobot' => 5],
-            ['aspek_penilaian' => 'Etika dan Sikap Profesional', 'jenis' => 'softskill', 'bobot' => 5],
+            // Rubrik Penilaian Default
+            // Manpro 45 % => Aspek Softskill (8 aspek)
+            ['aspek_penilaian' => 'Critical Thinking', 'jenis' => 'softskill', 'bobot' => 5],
+            ['aspek_penilaian' => 'Kolaborasi', 'jenis' => 'softskill', 'bobot' => 5],
             ['aspek_penilaian' => 'Kreativitas dan Inovasi', 'jenis' => 'softskill', 'bobot' => 5],
-            ['aspek_penilaian' => 'Inisiatif', 'jenis' => 'softskill', 'bobot' => 6],
-            ['aspek_penilaian' => 'Manajemen Waktu', 'jenis' => 'softskill', 'bobot' => 6],
+            ['aspek_penilaian' => 'Komunikasi', 'jenis' => 'softskill', 'bobot' => 5],
+            ['aspek_penilaian' => 'Fleksibilitas', 'jenis' => 'softskill', 'bobot' => 5],
+            ['aspek_penilaian' => 'Kepemimpinan', 'jenis' => 'softskill', 'bobot' => 5],
+            ['aspek_penilaian' => 'Produktivitas', 'jenis' => 'softskill', 'bobot' => 10],
+            ['aspek_penilaian' => ' Social Skill', 'jenis' => 'softskill', 'bobot' => 5],
 
-            // Akademik (11 aspek)
-            ['aspek_penilaian' => 'Pemahaman Konsep', 'jenis' => 'akademik', 'bobot' => 5],
-            ['aspek_penilaian' => 'Analisis Masalah', 'jenis' => 'akademik', 'bobot' => 5],
-            ['aspek_penilaian' => 'Desain Solusi', 'jenis' => 'akademik', 'bobot' => 5],
-            ['aspek_penilaian' => 'Implementasi Program', 'jenis' => 'akademik', 'bobot' => 5],
-            ['aspek_penilaian' => 'Pengujian dan Debugging', 'jenis' => 'akademik', 'bobot' => 5],
-            ['aspek_penilaian' => 'Dokumentasi Teknis', 'jenis' => 'akademik', 'bobot' => 5],
-            ['aspek_penilaian' => 'Penggunaan Tools/Framework', 'jenis' => 'akademik', 'bobot' => 5],
-            ['aspek_penilaian' => 'Standar Kode', 'jenis' => 'akademik', 'bobot' => 5],
-            ['aspek_penilaian' => 'Penyampaian Presentasi', 'jenis' => 'akademik', 'bobot' => 5],
-            ['aspek_penilaian' => 'Ketepatan Waktu Penyelesaian', 'jenis' => 'akademik', 'bobot' => 5],
-            ['aspek_penilaian' => 'Penerapan Prinsip TRPL', 'jenis' => 'akademik', 'bobot' => 5],
+            // Dosen MK 55% => Aspek Akademik (11 aspek)
+            ['aspek_penilaian' => ' Konten Presentasi', 'jenis' => 'akademik', 'bobot' => 2],
+            ['aspek_penilaian' => 'Tampilan Visual Presentasi', 'jenis' => 'akademik', 'bobot' => 2],
+            ['aspek_penilaian' => ' Pemilihan Kosakata dalam Penyampaian Materi', 'jenis' => 'akademik', 'bobot' => 2],
+            ['aspek_penilaian' => 'Tanya Jawab dengan Peserta', 'jenis' => 'akademik', 'bobot' => 2],
+            ['aspek_penilaian' => 'Mata dan Gerak Tubuh', 'jenis' => 'akademik', 'bobot' => 2],
+            ['aspek_penilaian' => 'Penulisan Laporan', 'jenis' => 'akademik', 'bobot' => 3],
+            ['aspek_penilaian' => 'Pilihan Kata yang Digunakan', 'jenis' => 'akademik', 'bobot' => 2],
+            ['aspek_penilaian' => 'Konten Laporan', 'jenis' => 'akademik', 'bobot' => 2],
+            ['aspek_penilaian' => ' Sikap Kerja', 'jenis' => 'akademik', 'bobot' => 8],
+            ['aspek_penilaian' => 'Proses Kerja', 'jenis' => 'akademik', 'bobot' => 15],
+            ['aspek_penilaian' => 'Kualitas Kerja', 'jenis' => 'akademik', 'bobot' => 15],
         ];
 
         RubrikPenilaian::truncate(); // Kosongkan dulu

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('pengampu', function (Blueprint $table) {
             $table->id();
+            $table->unsignedTinyInteger('semester');
             $table->string('kelas_id');
             $table->string('dosen_id');
             $table->enum('status', ['Manajer Proyek', 'Dosen Mata Kuliah']);
