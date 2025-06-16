@@ -13,38 +13,38 @@
                 </tr>
             </thead>
             <tbody>
-                @php $oldCount = count(old('nomor', [])); @endphp
-                @if($oldCount > 0)
-                @for($i = 0; $i < $oldCount; $i++) <tr>
-                    <td><input type="number" name="nomor[]" class="form-control" value="{{ old('nomor.' . $i) }}"></td>
-                    <td><input type="text" name="fase[]" class="form-control" value="{{ old('fase.' . $i) }}"></td>
-                    <td><input type="text" name="peralatan[]" class="form-control" value="{{ old('peralatan.' . $i) }}">
-                    </td>
-                    <td><input type="text" name="bahan[]" class="form-control" value="{{ old('bahan.' . $i) }}"></td>
-                    <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Hapus</button></td>
-                    </tr>
-                    @endfor
-                    @elseif(isset($kebutuhanPeralatan) && $kebutuhanPeralatan->count())
-                    @foreach($kebutuhanPeralatan as $item)
-                    <tr>
-                        <td><input type="number" name="nomor[]" class="form-control" value="{{ $item->nomor }}"></td>
-                        <td><input type="text" name="fase[]" class="form-control" value="{{ $item->fase }}"></td>
-                        <td><input type="text" name="peralatan[]" class="form-control" value="{{ $item->peralatan }}">
-                        </td>
-                        <td><input type="text" name="bahan[]" class="form-control" value="{{ $item->bahan }}"></td>
-                        <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Hapus</button></td>
-                    </tr>
-                    @endforeach
-                    @else
-                    <tr>
-                        <td><input type="number" name="nomor[]" class="form-control"></td>
-                        <td><input type="text" name="fase[]" class="form-control"></td>
-                        <td><input type="text" name="peralatan[]" class="form-control"></td>
-                        <td><input type="text" name="bahan[]" class="form-control"></td>
-                        <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Hapus</button></td>
-                    </tr>
-                    @endif
-            </tbody>
+    @php $oldCount = count(old('nomor', [])); @endphp
+    @if($oldCount > 0)
+        @for($i = 0; $i < $oldCount; $i++)
+        <tr>
+            <td><input type="number" name="nomor[]" class="form-control" value="{{ old('nomor.' . $i) }}"></td>
+            <td><textarea name="fase[]" class="form-control" rows="2">{{ old('fase.' . $i) }}</textarea></td>
+            <td><textarea name="peralatan[]" class="form-control" rows="2">{{ old('peralatan.' . $i) }}</textarea></td>
+            <td><textarea name="bahan[]" class="form-control" rows="2">{{ old('bahan.' . $i) }}</textarea></td>
+            <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Hapus</button></td>
+        </tr>
+        @endfor
+    @elseif(isset($kebutuhanPeralatan) && $kebutuhanPeralatan->count())
+        @foreach($kebutuhanPeralatan as $item)
+        <tr>
+            <td><input type="number" name="nomor[]" class="form-control" value="{{ $item->nomor }}"></td>
+            <td><textarea name="fase[]" class="form-control" rows="2">{{ $item->fase }}</textarea></td>
+            <td><textarea name="peralatan[]" class="form-control" rows="2">{{ $item->peralatan }}</textarea></td>
+            <td><textarea name="bahan[]" class="form-control" rows="2">{{ $item->bahan }}</textarea></td>
+            <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Hapus</button></td>
+        </tr>
+        @endforeach
+    @else
+        <tr>
+            <td><input type="number" name="nomor[]" class="form-control"></td>
+            <td><textarea name="fase[]" class="form-control" rows="2"></textarea></td>
+            <td><textarea name="peralatan[]" class="form-control" rows="2"></textarea></td>
+            <td><textarea name="bahan[]" class="form-control" rows="2"></textarea></td>
+            <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Hapus</button></td>
+        </tr>
+    @endif
+</tbody>
+
         </table>
 
         <button type="button" class="btn btn-sm btn-success mb-4" onclick="addPeralatanRow()">+ Tambah

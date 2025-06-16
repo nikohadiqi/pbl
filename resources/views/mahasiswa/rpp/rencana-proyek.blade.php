@@ -180,11 +180,11 @@ function addTahapanRow() {
     const table = document.querySelector("#tahapan-table tbody");
     const row = document.createElement("tr");
     row.innerHTML = `
-        <td><input type="number" name="minggu[]" class="form-control"></td>
-        <td><input type="text" name="tahapan[]" class="form-control"></td>
-        <td><input type="text" name="pic[]" class="form-control"></td>
-        <td><input type="text" name="keterangan[]" class="form-control"></td>
-        <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Hapus</button></td>
+                    <td><input type="number" name="minggu[]" class="form-control"></td>
+                    <td><textarea name="tahapan[]" class="form-control" rows="2"></textarea></td>
+                    <td><input type="text" name="pic[]" class="form-control"></td>
+                    <td><textarea name="keterangan[]" class="form-control" rows="2"></textarea></td>
+                    <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Hapus</button></td>
     `;
     table.appendChild(row);
 }
@@ -197,9 +197,9 @@ function addTahapanRow() {
         const row = document.createElement('tr');
         row.innerHTML = `
             <td><input type="number" name="nomor[]" class="form-control"></td>
-            <td><input type="text" name="fase[]" class="form-control"></td>
-            <td><input type="text" name="peralatan[]" class="form-control"></td>
-            <td><input type="text" name="bahan[]" class="form-control"></td>
+            <td><textarea name="fase[]" class="form-control" rows="2"></textarea></td>
+            <td><textarea name="peralatan[]" class="form-control" rows="2"></textarea></td>
+            <td><textarea name="bahan[]" class="form-control" rows="2"></textarea></td>
             <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Hapus</button></td>
         `;
         table.appendChild(row);
@@ -212,19 +212,19 @@ function addTahapanRow() {
         const table = document.querySelector('#tantangan-table tbody');
         const row = document.createElement('tr');
         row.innerHTML = `
-        <td><input type="number" name="nomor[]" class="form-control"></td>
-        <td><input type="text" name="proses[]" class="form-control"></td>
-        <td><input type="text" name="isu[]" class="form-control"></td>
-        <td>
-            <select name="level_resiko[]" class="form-control">
-                <option value="" selected disabled>-- Pilih Level --</option>
-                <option value="H">H</option>
-                <option value="M">M</option>
-                <option value="L">L</option>
-            </select>
-        </td>
-        <td><input type="text" name="catatan[]" class="form-control"></td>
-        <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Hapus</button></td>
+            <td><input type="number" name="nomor[]" class="form-control"></td>
+            <td><textarea name="proses[]" class="form-control" rows="2"></textarea></td>
+            <td><textarea name="isu[]" class="form-control" rows="2"></textarea></td>
+            <td>
+                <select name="level_resiko[]" class="form-control">
+                    <option value="" selected disabled>-- Pilih Level --</option>
+                    <option value="H">H</option>
+                    <option value="M">M</option>
+                    <option value="L">L</option>
+                </select>
+            </td>
+            <td><textarea name="catatan[]" class="form-control" rows="2"></textarea></td>
+            <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Hapus</button></td>
         `;
         table.appendChild(row);
     }
@@ -236,10 +236,10 @@ function addTahapanRow() {
         const table = document.querySelector('#biaya-table tbody');
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td><input type="text" name="fase[]" class="form-control"></td>
-            <td><input type="text" name="uraian_pekerjaan[]" class="form-control"></td>
-            <td><input type="text" name="perkiraan_biaya[]" class="form-control"></td>
-            <td><input type="text" name="catatan[]" class="form-control"></td>
+            <td><textarea name="fase[]" class="form-control" rows="2"></textarea></td>
+            <td><textarea name="uraian_pekerjaan[]" class="form-control" rows="2"></textarea></td>
+            <td><textarea name="perkiraan_biaya[]" class="form-control" rows="2"></textarea></td>
+            <td><textarea name="catatan[]" class="form-control" rows="2"></textarea></td>
             <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Hapus</button></td>
         `;
         table.appendChild(row);
@@ -252,10 +252,10 @@ function addTahapanRow() {
         const table = document.querySelector('#estimasi-table tbody');
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td><input type="text" name="fase[]" class="form-control"></td>
-            <td><input type="text" name="uraian_pekerjaan[]" class="form-control"></td>
-            <td><input type="text" name="estimasi_waktu[]" class="form-control"></td>
-            <td><input type="text" name="catatan[]" class="form-control"></td>
+            <td><textarea name="fase[]" class="form-control" rows="2"></textarea></td>
+            <td><textarea name="uraian_pekerjaan[]" class="form-control" rows="2"></textarea></td>
+            <td><textarea name="estimasi_waktu[]" class="form-control" rows="2"></textarea></td>
+            <td><textarea name="catatan[]" class="form-control" rows="2"></textarea></td>
             <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Hapus</button></td>
         `;
         table.appendChild(row);

@@ -51,32 +51,46 @@
                             <span class="badge bg-gradient-warning">Menunggu</span>
                             @endif
                         </td>
-                        <td>
-                            @if ($tim->status == 'pending')
-                            <form id="approve-form-{{ $tim->kode_tim }}" action="{{ route('dosen.validasi-tim.approve', $tim->kode_tim) }}"
-                                method="POST" class="d-inline">
-                                @csrf
-                                <button type="button" class="btn btn-success btn-sm"
-                                    onclick="confirmApprove('{{ $tim->kode_tim }}')">
-                                    Validasi
-                                </button>
-                            </form>
-                            <br>
-                            <form id="reject-form-{{ $tim->kode_tim }}"
-                                action="{{ route('dosen.validasi-tim.reject', $tim->kode_tim) }}" method="POST"
-                                class="d-inline">
-                                @csrf
-                                <button type="button" class="btn btn-danger btn-sm"
-                                    onclick="confirmReject('{{ $tim->kode_tim }}')">
-                                    Tolak
-                                </button>
-                            </form>
-                            @elseif ($tim->status == 'approved')
-                            <button class="btn btn-secondary btn-sm" disabled>Divalidasi</button>
-                            @elseif ($tim->status == 'rejected')
-                            <button class="btn btn-dark btn-sm" disabled>Ditolak</button>
-                            @endif
-                        </td>
+<td class="text-center">
+    {{-- Tombol Validasi / Tolak --}}
+    @if ($tim->status == 'pending')
+        <div class="d-flex flex-column align-items-center gap-1">
+            <form id="approve-form-{{ $tim->kode_tim }}" action="{{ route('dosen.validasi-tim.approve', $tim->kode_tim) }}" method="POST">
+                @csrf
+                <button type="button" class="btn btn-success btn-sm" onclick="confirmApprove('{{ $tim->kode_tim }}')">
+                    Validasi
+                </button>
+            </form>
+
+            <form id="reject-form-{{ $tim->kode_tim }}" action="{{ route('dosen.validasi-tim.reject', $tim->kode_tim) }}" method="POST">
+                @csrf
+                <button type="button" class="btn btn-danger btn-sm" onclick="confirmReject('{{ $tim->kode_tim }}')">
+                    Tolak
+                </button>
+            </form>
+
+            {{-- Tombol Kelola Tim --}}
+            <a href="{{ route('dosen.validasi-tim.kelola', $tim->kode_tim) }}" class="btn btn-info btn-sm mt-1">
+                <i class="bi bi-person-gear"></i> Kelola Tim
+            </a>
+        </div>
+
+    @elseif ($tim->status == 'approved')
+        <div class="d-flex flex-column align-items-center gap-1">
+            <button class="btn btn-secondary btn-sm" disabled>Divalidasi</button>
+            <a href="{{ route('dosen.validasi-tim.kelola', $tim->kode_tim) }}" class="btn btn-info btn-sm">
+                <i class="bi bi-person-gear"></i> Kelola Tim
+            </a>
+        </div>
+    @elseif ($tim->status == 'rejected')
+        <div class="d-flex flex-column align-items-center gap-1">
+            <button class="btn btn-dark btn-sm" disabled>Ditolak</button>
+            <a href="{{ route('dosen.validasi-tim.kelola', $tim->kode_tim) }}" class="btn btn-info btn-sm">
+                <i class="bi bi-person-gear"></i> Kelola Tim
+            </a>
+        </div>
+    @endif
+</td>
                     </tr>
                     @empty
                     <tr>

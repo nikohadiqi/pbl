@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Website\Dosen;
 
 use App\Http\Controllers\Controller;
+use App\Models\AkunMahasiswa;
+use App\Models\Mahasiswa;
 use App\Models\AnggotaTimPbl;
 use App\Models\PeriodePBL;
 use App\Models\TimPBL;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class ValidasiController extends Controller
@@ -95,5 +98,67 @@ class ValidasiController extends Controller
 
         return view('dosen.validasi.history-tim-pbl', compact('timPBL', 'periodes', 'periodeId'));
     }
+    public function kelolaTim($kode_tim)
+    {
+        $tim = TimPBL::with(['anggota.mahasiswaFK'])->where('kode_tim', $kode_tim)->firstOrFail();
+        return view('dosen.validasi.kelola-tim', compact('tim'));
+    }
 
+    public function tambahAnggota(Request $request, $kode_tim)
+    {
+        $request->validate([
+            'nim' => [
+            'required',
+            'unique:akun_mahasiswa,nim',
+            'exists:data_mahasiswa,nim'
+        ],
+            'password' => 'required|min:6',
+        ], [
+            'nim.required' => 'NIM wajib diisi.',
+            'nim.unique' => 'NIM ini sudah digunakan oleh akun lain.',
+            'nim.exists' => 'NIM ini tidak terdaftar sebagai mahasiswa.',
+            'password.required' => 'Password wajib diisi.',
+        ]);
+
+        // Buat akun mahasiswa
+        AkunMahasiswa::create([
+            'nim' => $request->nim,
+            'password' => Hash::make($request->password),
+            'kode_tim' => $kode_tim,
+            'role' => 'mahasiswa',
+        ]);
+
+        // Tambahkan ke anggota_tim_pbl
+        AnggotaTimPbl::create([
+            'kode_tim' => $kode_tim,
+            'nim' => $request->nim,
+        ]);
+
+        Alert::success('Berhasil!', 'Anggota berhasil ditambahkan.');
+        return redirect()->route('dosen.validasi-tim.kelola', $kode_tim);
+    }
+    public function hapusAnggota($kode_tim, $nim)
+    {
+        // Hapus dari akun_mahasiswa
+        AkunMahasiswa::where('nim', $nim)->where('kode_tim', $kode_tim)->delete();
+
+        // Hapus dari anggota_tim_pbl
+        AnggotaTimPbl::where('nim', $nim)->where('kode_tim', $kode_tim)->delete();
+
+        Alert::success('Berhasil!', 'Anggota berhasil dihapus.');
+        return redirect()->route('dosen.validasi-tim.kelola', $kode_tim);
+    }
+
+    public function resetPassword(Request $request, $kode_tim, $nim)
+    {
+        $request->validate([
+            'password' => 'required|min:6'
+        ]);
+
+        AkunMahasiswa::where('nim', $nim)->where('kode_tim', $kode_tim)
+            ->update(['password' => Hash::make($request->password)]);
+
+        Alert::success('Berhasil!', 'Password berhasil diubah.');
+        return redirect()->route('dosen.validasi-tim.kelola', $kode_tim);
+    }
 }

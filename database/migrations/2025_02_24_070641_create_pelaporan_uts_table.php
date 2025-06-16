@@ -11,7 +11,7 @@ return new class extends Migration {
             $table->id();
             $table->string('kode_tim')->nullable();
             $table->text('keterangan')->nullable();
-            $table->string('link_drive')->nullable();
+            $table->string('hasil')->nullable();
             $table->string('link_youtube')->nullable();
             $table->string('laporan_pdf')->nullable();
             $table->timestamps();

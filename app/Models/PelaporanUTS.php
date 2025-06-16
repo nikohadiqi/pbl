@@ -14,7 +14,7 @@ class PelaporanUTS extends Model
     protected $fillable = [
         'kode_tim',
         'keterangan',
-        'link_drive',
+        'hasil',
         'link_youtube',
         'laporan_pdf',
         'updated_by'

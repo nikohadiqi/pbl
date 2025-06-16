@@ -19,33 +19,28 @@
                 @for($i = 0; $i < $oldCount; $i++) <tr>
                     <td><input type="number" name="minggu[]" class="form-control" value="{{ old('minggu.' . $i) }}">
                     </td>
-                    <td><input type="text" name="tahapan[]" class="form-control" value="{{ old('tahapan.' . $i) }}">
-                    </td>
+                    <td><textarea name="tahapan[]" class="form-control" rows="2">{{ old('tahapan.' . $i) }}</textarea></td>
                     <td><input type="text" name="pic[]" class="form-control" value="{{ old('pic.' . $i) }}"></td>
-                    <td><input type="text" name="keterangan[]" class="form-control"
-                            value="{{ old('keterangan.' . $i) }}"></td>
+                    <td><textarea name="keterangan[]" class="form-control" rows="2">{{ old('keterangan.' . $i) }}</textarea></td>
                     <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Hapus</button></td>
                     </tr>
                     @endfor
                     @elseif(isset($tahapanPelaksanaan) && $tahapanPelaksanaan->count())
                     @foreach($tahapanPelaksanaan as $tahapan)
                     <tr>
-                        <td><input type="number" name="minggu[]" class="form-control" value="{{ $tahapan->minggu }}">
-                        </td>
-                        <td><input type="text" name="tahapan[]" class="form-control" value="{{ $tahapan->tahapan }}">
-                        </td>
-                        <td><input type="text" name="pic[]" class="form-control" value="{{ $tahapan->pic }}"></td>
-                        <td><input type="text" name="keterangan[]" class="form-control"
-                                value="{{ $tahapan->keterangan }}"></td>
+                    <td><input type="number" name="minggu[]" class="form-control" value="{{ $tahapan->minggu }}"></td>
+                    <td><textarea name="tahapan[]" class="form-control" rows="2">{{ $tahapan->tahapan }}</textarea></td>
+                    <td><input type="text" name="pic[]" class="form-control" value="{{ $tahapan->pic }}"></td>
+                    <td><textarea name="keterangan[]" class="form-control" rows="2">{{ $tahapan->keterangan }}</textarea></td>
                         <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Hapus</button></td>
                     </tr>
                     @endforeach
                     @else
                     <tr>
-                        <td><input type="number" name="minggu[]" class="form-control"></td>
-                        <td><input type="text" name="tahapan[]" class="form-control"></td>
-                        <td><input type="text" name="pic[]" class="form-control"></td>
-                        <td><input type="text" name="keterangan[]" class="form-control"></td>
+                    <td><input type="number" name="minggu[]" class="form-control"></td>
+                    <td><textarea name="tahapan[]" class="form-control" rows="2"></textarea></td>
+                    <td><input type="text" name="pic[]" class="form-control"></td>
+                    <td><textarea name="keterangan[]" class="form-control" rows="2"></textarea></td>
                         <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Hapus</button></td>
                     </tr>
                     @endif

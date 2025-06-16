@@ -20,9 +20,13 @@
         </div>
 
         <div class="form-group">
-            <label for="link_drive_{{ $prefix }}" class="form-label fw-semibold">Link Drive Laporan <span class="text-danger" title="Wajib Diisi">*</span></label>
-            <input class="form-control" name="link_drive" id="link_drive_{{ $prefix }}" type="url"
-                placeholder="Masukkan Link Drive" value="{{ old('link_drive', $pelaporan->link_drive ?? '') }}">
+            <label for="hasil_{{ $prefix }}" class="form-label fw-semibold">Hasil / Bukti Pengerjaan (dokumentasi,link github, dll dijadikan satu pada file pdf) <i
+                    class="bi bi-file-earmark-pdf-fill text-danger">(Maks. 10 MB)</i></label>
+            <input class="form-control @error('laporan_pdf') is-invalid @enderror" name="hasil"
+                id="hasil_{{ $prefix }}" type="file" accept="application/pdf">
+            @error('hasil')
+            <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </div>
 
         <div class="form-group">
