@@ -101,42 +101,40 @@ class ValidasiController extends Controller
     public function kelolaTim($kode_tim)
     {
         $tim = TimPBL::with(['anggota.mahasiswaFK'])->where('kode_tim', $kode_tim)->firstOrFail();
-        return view('dosen.validasi.kelola-tim', compact('tim'));
+        $usedNim = AkunMahasiswa::pluck('nim')->toArray();
+        $mahasiswa = Mahasiswa::whereNotIn('nim', $usedNim)->get();
+        return view('dosen.validasi.kelola-tim', compact('tim', 'mahasiswa'));
     }
 
     public function tambahAnggota(Request $request, $kode_tim)
-    {
-        $request->validate([
-            'nim' => [
-            'required',
-            'unique:akun_mahasiswa,nim',
-            'exists:data_mahasiswa,nim'
-        ],
-            'password' => 'required|min:6',
-        ], [
-            'nim.required' => 'NIM wajib diisi.',
-            'nim.unique' => 'NIM ini sudah digunakan oleh akun lain.',
-            'nim.exists' => 'NIM ini tidak terdaftar sebagai mahasiswa.',
-            'password.required' => 'Password wajib diisi.',
-        ]);
+{
+    $request->validate([
+    'nim' => [
+        'required',
+        'unique:akun_mahasiswa,nim',
+        'exists:data_mahasiswa,nim'
+    ],
+    ], [
+        'nim.required' => 'NIM wajib diisi.',
+        'nim.unique' => 'NIM ini sudah digunakan oleh akun lain.',
+        'nim.exists' => 'NIM ini tidak terdaftar sebagai mahasiswa.',
+    ]);
+    AkunMahasiswa::create([
+    'nim' => $request->nim,
+    'password' => Hash::make($request->nim), // Password = NIM
+    'kode_tim' => $kode_tim,
+    'role' => 'mahasiswa',
+    ]);
 
-        // Buat akun mahasiswa
-        AkunMahasiswa::create([
-            'nim' => $request->nim,
-            'password' => Hash::make($request->password),
-            'kode_tim' => $kode_tim,
-            'role' => 'mahasiswa',
-        ]);
+    AnggotaTimPbl::create([
+        'kode_tim' => $kode_tim,
+        'nim' => $request->nim,
+    ]);
 
-        // Tambahkan ke anggota_tim_pbl
-        AnggotaTimPbl::create([
-            'kode_tim' => $kode_tim,
-            'nim' => $request->nim,
-        ]);
+    Alert::success('Berhasil!', 'Anggota berhasil ditambahkan.');
+    return redirect()->route('dosen.validasi-tim.kelola', $kode_tim);
+}
 
-        Alert::success('Berhasil!', 'Anggota berhasil ditambahkan.');
-        return redirect()->route('dosen.validasi-tim.kelola', $kode_tim);
-    }
     public function hapusAnggota($kode_tim, $nim)
     {
         // Hapus dari akun_mahasiswa
@@ -149,16 +147,16 @@ class ValidasiController extends Controller
         return redirect()->route('dosen.validasi-tim.kelola', $kode_tim);
     }
 
-    public function resetPassword(Request $request, $kode_tim, $nim)
+    public function resetPassword($kode_tim, $nim)
     {
-        $request->validate([
-            'password' => 'required|min:6'
-        ]);
+        AkunMahasiswa::where('nim', $nim)
+            ->where('kode_tim', $kode_tim)
+            ->update([
+                'password' => Hash::make($nim) // Password = NIM
+            ]);
 
-        AkunMahasiswa::where('nim', $nim)->where('kode_tim', $kode_tim)
-            ->update(['password' => Hash::make($request->password)]);
-
-        Alert::success('Berhasil!', 'Password berhasil diubah.');
+        Alert::success('Berhasil!', 'Password berhasil direset menjadi NIM.');
         return redirect()->route('dosen.validasi-tim.kelola', $kode_tim);
     }
+
 }

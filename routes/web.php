@@ -202,10 +202,11 @@ Route::middleware(['auth:dosen'])->group(function () {
         Route::get('/riwayat-tim-pbl', [ValidasiController::class, 'history'])->name('dosen.validasi-tim.riwayat-tim-pbl');
 
         //Kelolatim
-        Route::get('/kelola/{kode_tim}', [ValidasiController::class, 'kelolaTim'])->name('dosen.validasi-tim.kelola');
-        Route::post('/validasi-tim-pbl/{kode_tim}/tambah-anggota', [ValidasiController::class, 'tambahAnggota'])->name('dosen.validasi-tim.tambah-anggota');
-        Route::post('/validasi-tim-pbl/{kode_tim}/{nim}/reset-password', [ValidasiController::class, 'resetPassword'])->name('dosen.validasi-tim.reset-password');
-        Route::delete('/validasi-tim-pbl/{kode_tim}/{nim}/hapus-anggota', [ValidasiController::class, 'hapusAnggota'])->name('dosen.validasi-tim.hapus-anggota');
+        Route::get('/kelola-tim/{kode_tim}', [ValidasiController::class, 'kelolaTim'])->name('dosen.validasi-tim.kelola');
+        Route::post('/kelola-tim/{kode_tim}/tambah-anggota', [ValidasiController::class, 'tambahAnggota'])->name('dosen.validasi-tim.tambah-anggota');
+        Route::post('/kelola-tim/{kode_tim}/{nim}/reset-password', [ValidasiController::class, 'resetPassword'])->name('dosen.validasi-tim.reset-password');
+        Route::delete('/kelola-tim/{kode_tim}/{nim}/hapus-anggota', [ValidasiController::class, 'hapusAnggota'])->name('dosen.validasi-tim.hapus-anggota');
+        Route::get('kelola-tim/search/mahasiswa', [ValidasiController::class, 'searchMahasiswa'])->name('cari-mahasiswa');
     });
 
     // Daftar Tim PBL
