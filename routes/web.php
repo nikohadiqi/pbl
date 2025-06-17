@@ -30,7 +30,9 @@ use App\Http\Controllers\Website\Dosen\PenilaianController;
 // ============================
 // Route
 // ============================
+// Login
 Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
+Route::get('/login-dosen', [LoginController::class, 'showLoginDosenForm'])->name('login.dosen');
 Route::post('login', [LoginController::class, 'login'])->name('login.post'); // Route untuk proses login
 Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
 // Register

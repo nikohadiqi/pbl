@@ -11,9 +11,8 @@
                     <div class="card card-plain">
                         <div class="card-header pb-0 text-start">
                             <img src="{{ url('assets/img/login-logo.png') }}" alt="logo" width="50%" class="mb-3">
-                            <h4 class="font-weight-bolder">Login Mahasiswa</h4>
-                            <p class="mb-0 text-sm">Masukan NIM dan Password untuk Login!
-                            </p>
+                            <h4 class="font-weight-bolder">Login Dosen / Admin</h4>
+                            <p class="mb-0">Masukan NIP/NIK/NIPPPK dan Password untuk Login!</p>
                             @if (session('error'))
                             <div class="alert alert-danger">
                                 {{ session('error') }}
@@ -23,8 +22,16 @@
                         <div class="card-body">
                             <form role="form" method="POST" action="{{ route('login.post') }}">
                                 @csrf
-                                <div class="position-relative">
-                                    <input type="hidden" name="role" value="mahasiswa">
+                                <div class="mb-3 position-relative">
+                                    <select id="role" name="role"
+                                        class="form-control form-control-lg @error('role') is-invalid @enderror"
+                                        required>
+                                        <option value="" disabled selected>Pilih Jenis User</option>
+                                        <option value="dosen" {{ old('role')=='dosen' ? 'selected' : '' }}>Dosen
+                                        </option>
+                                        <option value="admin" {{ old('role')=='admin' ? 'selected' : '' }}>Admin
+                                        </option>
+                                    </select>
                                     @error('role')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -34,7 +41,7 @@
                                 <div class="mb-3">
                                     <input id="nim" type="text"
                                         class="form-control form-control-lg @error('nim') is-invalid @enderror"
-                                        name="nim" value="{{ old('nim') }}" placeholder="NIM" aria-label="Nim"
+                                        name="nim" value="{{ old('nim') }}" placeholder="NIP/NIK/NIPPPK" aria-label="Nim"
                                         required autofocus>
                                     @error('nim')
                                     <span class="invalid-feedback" role="alert">
@@ -61,10 +68,8 @@
                                 </div>
                             </form>
                             <p class="mt-3 mb-3 text-sm mx-auto">
-                                Mahasiswa belum memiliki Tim PBL?
-                                <a href="{{ route('register') }}" class="text-primary font-weight-bold">Daftar Disini</a><br>
-                                Masuk sebagai Dosen?
-                                <a href="{{ route('login.dosen') }}" class="text-primary font-weight-bold">Masuk Disini</a>
+                                Masuk sebagai Mahasiswa?
+                                <a href="{{ route('login') }}" class="text-primary font-weight-bold">Masuk Disini</a>
                             </p>
                         </div>
                     </div>
