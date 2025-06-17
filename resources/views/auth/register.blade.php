@@ -55,7 +55,7 @@
                                     <label for="periode" class="form-control-label">Periode</label>
                                     <input type="hidden" name="periode" value="{{ $periodeAktif->id }}">
                                     <input type="text" class="form-control"
-                                        value="Semester {{ $periodeAktif->semester }} - {{ $periodeAktif->tahun }}"
+                                        value="Semester {{ $periodeAktif->kategori_semester }} - {{ $periodeAktif->tahun }}"
                                         readonly>
                                 </div>
 

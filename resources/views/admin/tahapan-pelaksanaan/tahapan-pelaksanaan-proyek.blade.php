@@ -5,39 +5,21 @@
 @section('content')
 <div class="container-fluid py-4">
     <div class="card p-4">
-        {{-- Filter --}}
-        <form method="GET" action="{{ route('admin.tpp') }}" class="mb-3">
-            <label for="periode_id" class="form-label">Pilih Periode</label>
-            <div class="input-group">
-                <select name="periode_id" class="form-select" onchange="this.form.submit()">
-                    <option value="">-- Pilih Periode --</option>
-                    @foreach ($periodes as $periode)
-                    <option value="{{ $periode->id }}" {{ $selectedPeriode==$periode->id ? 'selected' : '' }}>
-                        Semester {{ $periode->semester }} - {{ $periode->tahun }}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
-            <hr class="horizontal dark mt-4">
-        </form>
-
-        @if ($selectedPeriode && $periodepbl)
         <div class="d-flex justify-content-between align-items-center">
             <h4 class="fw-bold">
                 Tahapan Pelaksanaan Proyek
-                <span>Semester {{ $periodepbl->semester }}/Tahun {{ $periodepbl->tahun }}</span>
+                <span>Semester {{ $periodeAktif->kategori_semester }}/Tahun {{ $periodeAktif->tahun }}</span>
             </h4>
             <!-- Form Import -->
-            <form id="import-tahapan-form" action="{{ route('admin.tpp.import') }}" method="POST" enctype="multipart/form-data"
-                style="display: none;">
+            <form id="import-tahapan-form" action="{{ route('admin.tpp.import') }}" method="POST"
+                enctype="multipart/form-data" style="display: none;">
                 @csrf
-                <input type="hidden" name="periode_id" value="{{ $selectedPeriode }}">
                 <input type="file" id="import-tahapan-file" name="file" accept=".xlsx,.xls,.csv"
                     onchange="document.getElementById('import-tahapan-form').submit();">
             </form>
             <!-- Tombol Trigger -->
             <button type="button" class="btn btn-primary fw-bold mb-3"
-                onclick="document.getElementById('import-tahapan-file').click();" {{ !$selectedPeriode ? 'disabled' : '' }}>
+                onclick="document.getElementById('import-tahapan-file').click();">
                 <i class="bi bi-upload me-2"></i>Impor Tahapan
             </button>
         </div>
@@ -45,9 +27,9 @@
         {{-- Form Tahapan --}}
         <form method="POST" action="{{ route('admin.tpp.store') }}" class="mt-3">
             @csrf
-            <input type="hidden" name="periode_id" value="{{ $selectedPeriode }}">
             <div class="table-responsive">
-                <table class="table align-middle table-hover table-borderless border border-light shadow-sm rounded-3 overflow-hidden">
+                <table
+                    class="table align-middle table-hover table-borderless border border-light shadow-sm rounded-3 overflow-hidden">
                     <thead class="text-sm fw-semibold text-white bg-primary">
                         <tr>
                             <th style="width: 5%">Minggu Ke-</th>
@@ -80,10 +62,10 @@
                 </table>
             </div>
             <div class="text-end">
-                <button class="btn btn-primary mt-3" type="submit"><i class="bi bi-floppy me-1"></i> Simpan Semua</button>
+                <button class="btn btn-primary mt-3" type="submit"><i class="bi bi-floppy me-1"></i> Simpan
+                    Semua</button>
             </div>
         </form>
-        @endif
     </div>
 </div>
 @endsection

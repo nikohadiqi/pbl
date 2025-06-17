@@ -58,7 +58,7 @@
                                 @endforeach
                             </ul>
                         </td>
-                        <td>Semester {{ $tim->periodeFK->semester }}<br>Tahun {{ $tim->periodeFK->tahun }}</td>
+                        <td>Semester {{ $tim->periodeFK->kategori_semester }}<br>Tahun {{ $tim->periodeFK->tahun }}</td>
                         <td>
                             @if ($tim->status === 'approved')
                             <span class="badge bg-success">Disetujui</span>

@@ -12,36 +12,28 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class TahapanPelaksanaanProyekController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $periodes = PeriodePBL::where('status', 'Aktif')->get();
+        $periodeAktif = PeriodePBL::where('status', 'Aktif')->first();
 
-        // Ambil dari session jika tidak ada request baru
-        $selectedPeriode = $request->input('periode_id', session('filter_periode'));
-
-        // Simpan ke session jika ada input baru
-        if ($request->filled('periode_id')) {
-            session(['filter_periode' => $selectedPeriode]);
+        if (!$periodeAktif) {
+            Alert::warning('Tidak Ada Periode Aktif', 'Silakan aktifkan satu periode PBL terlebih dahulu.');
+            return back();
         }
 
-        $tahapan = collect();
-        $periodepbl = null;
+        $tahapan = TahapanPelaksanaanProyek::where('periode_id', $periodeAktif->id)->get();
 
-        if ($selectedPeriode) {
-            $periodepbl = PeriodePBL::find($selectedPeriode);
-            $tahapan = TahapanPelaksanaanProyek::where('periode_id', $selectedPeriode)->get();
-        }
-
-        return view('admin.tahapan-pelaksanaan.tahapan-pelaksanaan-proyek', compact('periodes', 'selectedPeriode', 'tahapan', 'periodepbl'));
+        return view('admin.tahapan-pelaksanaan.tahapan-pelaksanaan-proyek', compact('tahapan', 'periodeAktif'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'periode_id' => 'required|exists:periodepbl,id',
             'tahapan.*' => 'nullable|string|max:255',
             'score.*' => 'nullable|numeric|min:5|max:10',
         ]);
+
+        $periodeAktif = PeriodePBL::where('status', 'Aktif')->firstOrFail();
 
         $totalScore = collect($request->score)->filter()->sum();
         if ($totalScore > 100) {
@@ -49,12 +41,12 @@ class TahapanPelaksanaanProyekController extends Controller
             return back()->withInput();
         }
 
-        TahapanPelaksanaanProyek::where('periode_id', $request->periode_id)->delete();
+        TahapanPelaksanaanProyek::where('periode_id', $periodeAktif->id)->delete();
 
         foreach ($request->tahapan as $index => $tahapan) {
             if ($tahapan && $request->score[$index]) {
                 TahapanPelaksanaanProyek::create([
-                    'periode_id' => $request->periode_id,
+                    'periode_id' => $periodeAktif->id,
                     'tahapan' => $tahapan,
                     'score' => $request->score[$index],
                 ]);
@@ -62,35 +54,34 @@ class TahapanPelaksanaanProyekController extends Controller
         }
 
         Alert::success('Berhasil', 'Data tahapan berhasil disimpan.');
-        return redirect()->route('admin.tpp', ['periode_id' => $request->periode_id]);
+        return redirect()->route('admin.tpp');
     }
 
-    public function reset(Request $request)
+    public function reset()
     {
-        $request->validate([
-            'periode_id' => 'required|exists:periodepbl,id',
-        ]);
+        $periodeAktif = PeriodePBL::where('status', 'Aktif')->firstOrFail();
 
-        TahapanPelaksanaanProyek::where('periode_id', $request->periode_id)->delete();
+        TahapanPelaksanaanProyek::where('periode_id', $periodeAktif->id)->delete();
 
-        Alert::success('Berhasil', 'Semua tahapan untuk periode berhasil di-reset.');
-        return redirect()->route('admin.tpp', ['periode_id' => $request->periode_id]);
+        Alert::success('Berhasil', 'Semua tahapan untuk periode aktif berhasil di-reset.');
+        return redirect()->route('admin.tpp');
     }
 
     public function import(Request $request)
     {
         $request->validate([
-            'periode_id' => 'required|exists:periodepbl,id',
             'file' => 'required|mimes:xlsx,xls'
         ]);
 
+        $periodeAktif = PeriodePBL::where('status', 'Aktif')->firstOrFail();
+
         try {
-            Excel::import(new TahapanPelaksanaanImport($request->periode_id), $request->file('file'));
+            Excel::import(new TahapanPelaksanaanImport($periodeAktif->id), $request->file('file'));
             Alert::success('Berhasil', 'Tahapan berhasil diimpor!');
         } catch (\Exception $e) {
             Alert::error('Gagal', $e->getMessage());
         }
 
-        return redirect()->route('admin.tpp', ['periode_id' => $request->periode_id]);
+        return redirect()->route('admin.tpp');
     }
 }

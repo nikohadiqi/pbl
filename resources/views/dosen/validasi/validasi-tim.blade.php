@@ -30,7 +30,7 @@
                     @forelse($timPBL as $tim)
                     <tr>
                         <td>{{ $tim->kode_tim }}</td>
-                        <td>
+                        <td class="text-wrap">
                             <ul class="mb-0 ps-3">
                                 @foreach ($tim->anggota as $anggota)
                                 <li>{{ $anggota->nim }} - {{ $anggota->mahasiswaFK->nama ?? '-' }}</li>
@@ -38,7 +38,7 @@
                             </ul>
                         </td>
                         <td>{{ $tim->manproFK->nama }}</td>
-                        <td>Semester {{ $tim->periodeFK->semester }}<br>Tahun {{ $tim->periodeFK->tahun }}</td>
+                        <td>Semester {{ $tim->periodeFK->kategori_semester }}<br>Tahun {{ $tim->periodeFK->tahun }}</td>
                         <td>
                             @if ($tim->status === 'approved')
                             <span class="badge bg-gradient-success">Disetujui</span>
