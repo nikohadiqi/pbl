@@ -24,6 +24,11 @@ class LoginController extends Controller
         return view('auth.login');
     }
 
+    public function showLoginDosenForm()
+    {
+        return view('auth.login-dosen');
+    }
+
     public function login(Request $request)
     {
         $validated = $request->validate([
@@ -144,22 +149,6 @@ class LoginController extends Controller
         }
 
         return back()->withErrors(['nim' => 'NIP atau password salah.']);
-    }
-
-
-    public function adminDashboard()
-    {
-        return view('admin.dashboard-admin');
-    }
-
-    public function mahasiswaDashboard()
-    {
-        return view('dashboard.mahasiswa');
-    }
-
-    public function dosenDashboard()
-    {
-        return view('dosen.dashboard-dosen');
     }
 
     public function logout(Request $request)
