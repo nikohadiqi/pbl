@@ -2,7 +2,19 @@
 <div class="collapse mt-3" id="logbookView{{ $minggu }}">
     <div class="border p-3 rounded rounded-3 bg-light">
         <p><strong>Aktivitas:</strong> {{ $logbook->aktivitas ?? '-' }}</p>
-        <p><strong>Hasil:</strong> {{ $logbook->hasil ?? '-' }}</p>
+        <div class="form-group mt-2">
+        <h6><i class="bi bi-file-earmark-pdf-fill me-1 text-danger"></i>HASIL/BUKTI</h6>
+        @if($logbook && $logbook->hasil)
+            <a href="{{ asset('storage/' . $logbook->hasil) }}" target="_blank"
+                class="btn {{ $btnColor ?? 'btn-outline-primary' }} btn-sm">
+                <i class="bi bi-file-earmark-pdf"></i> Lihat Hasil
+            </a>
+        @else
+            <p class="text-muted fst-italic">Tidak ada hasil/bukti PDF yang diupload.</p>
+        @endif
+
+    </div>
+
         @if (!empty($logbook->foto_kegiatan))
         <div class="mt-2 mb-2">
             <p><strong>Foto:</strong><br>

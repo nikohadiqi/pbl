@@ -12,7 +12,7 @@ return new class extends Migration {
             $table->string('minggu')->nullable();
             $table->string('kode_tim')->nullable();
             $table->text('aktivitas')->nullable();
-            $table->text('hasil')->nullable();
+            $table->string('hasil')->nullable();
             $table->string('foto_kegiatan')->nullable();
             $table->text('anggota1')->nullable();
             $table->text('anggota2')->nullable();

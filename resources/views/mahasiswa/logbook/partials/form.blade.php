@@ -12,10 +12,32 @@
             <input type="text" name="aktivitas" class="form-control" value="{{ old('aktivitas', $logbook->aktivitas ?? '') }}">
         </div>
 
-        <div class="form-group">
-            <label class="form-label fw-semibold">Hasil / Bukti Pengerjaan (Github/Drive) <span class="text-danger" title="Wajib Diisi">*</span></label>
-            <input type="text" name="hasil" class="form-control" value="{{ old('hasil', $logbook->hasil ?? '') }}">
-        </div>
+      <div class="form-group">
+        <label for="hasil_{{ $prefix ?? 'logbook' }}" class="form-label fw-semibold">
+            Hasil / Bukti Pengerjaan (dokumentasi, link github, dll dijadikan satu pada file PDF)
+            <i class="bi bi-file-earmark-pdf-fill text-danger">(Maks. 10 MB)</i>
+        </label>
+        <input class="form-control @error('hasil') is-invalid @enderror"
+            name="hasil"
+            id="hasil_{{ $prefix ?? 'logbook' }}"
+            type="file"
+            accept="application/pdf">
+        @error('hasil')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+
+        {{-- ✅ Jika sudah ada PDF yang disimpan sebelumnya, tampilkan tombol lihat --}}
+        @if (!empty($logbook->hasil))
+            <div class="mt-2">
+                <a href="{{ asset('storage/' . $logbook->hasil) }}" target="_blank"
+                    class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-file-earmark-pdf"></i> Lihat Hasil PDF Sebelumnya
+                </a>
+            </div>
+        @endif
+    </div>
+
+
 
         <div class="form-group">
             <label class="form-label fw-semibold">Foto Kegiatan <i class="bi bi-image-fill text-info"> (Maks. 2 MB)</i></label>

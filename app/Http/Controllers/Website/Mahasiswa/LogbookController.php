@@ -47,64 +47,75 @@ class LogbookController extends Controller
         return view('mahasiswa.logbook.logbook', compact('logbooks', 'selectedLogbook', 'tahapans', 'scores'));
     }
 
-    public function store(Request $request)
-    {
-        $mahasiswa = Auth::guard('mahasiswa')->user();
+ public function store(Request $request)
+{
+    $mahasiswa = Auth::guard('mahasiswa')->user();
 
-        $validated = $request->validate([
-            'minggu' => 'nullable|integer|min:1|max:16',
-            'aktivitas' => 'required|string|max:255',
-            'hasil' => 'required|string|max:255',
-            'progress' => 'required|integer|between:0,100',
-            'foto_kegiatan' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'anggota1' => 'nullable|string|max:255',
-            'anggota2' => 'nullable|string|max:255',
-            'anggota3' => 'nullable|string|max:255',
-            'anggota4' => 'nullable|string|max:255',
-            'anggota5' => 'nullable|string|max:255',
-        ]);
+    $validated = $request->validate([
+        'minggu' => 'nullable|integer|min:1|max:16',
+        'aktivitas' => 'required|string|max:255',
+        'hasil' => 'nullable|file|mimes:pdf|max:10240',
+        'progress' => 'required|integer|between:0,100',
+        'foto_kegiatan' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'anggota1' => 'nullable|string|max:255',
+        'anggota2' => 'nullable|string|max:255',
+        'anggota3' => 'nullable|string|max:255',
+        'anggota4' => 'nullable|string|max:255',
+        'anggota5' => 'nullable|string|max:255',
+    ]);
 
-        $kodeTim = getKodeTimByAuth();
-        if (!$kodeTim) {
-            return redirect()->back()->with('error', 'Data tim periode aktif tidak ditemukan.');
-        }
-
-        $tahapan = TahapanPelaksanaanProyek::find($request->tahapan_id);
-        if (!$tahapan) {
-            return redirect()->back()->withErrors(['tahapan_id' => 'Tahapan tidak ditemukan']);
-        }
-
-        $maxProgress = intval($tahapan->score);
-
-        if ($validated['progress'] > $maxProgress) {
-            return redirect()->back()
-                ->withInput()
-                ->withErrors(['progress' => "Progress tidak boleh lebih dari {$maxProgress}% sesuai score tahapan."]);
-        }
-
-        $logbook = Logbook::updateOrCreate(
-            ['kode_tim' => $kodeTim, 'minggu' => $validated['minggu']],
-            [
-                'aktivitas' => $validated['aktivitas'],
-                'hasil' => $validated['hasil'],
-                'progress' => $validated['progress'],
-                'anggota1' => $validated['anggota1'] ?? null,
-                'anggota2' => $validated['anggota2'] ?? null,
-                'anggota3' => $validated['anggota3'] ?? null,
-                'anggota4' => $validated['anggota4'] ?? null,
-                'anggota5' => $validated['anggota5'] ?? null,
-                'updated_by' => $mahasiswa->mahasiswa->nama,
-            ]
-        );
-
-        if ($request->hasFile('foto_kegiatan')) {
-            $file = $request->file('foto_kegiatan');
-            $filePath = $file->store('foto_kegiatan', 'public');
-            $logbook->foto_kegiatan = $filePath;
-            $logbook->save();
-        }
-
-        Alert::success('Berhasil!', 'Logbook berhasil disimpan!');
-        return redirect()->route('mahasiswa.logbook');
+    $kodeTim = getKodeTimByAuth();
+    if (!$kodeTim) {
+        return redirect()->back()->with('error', 'Data tim periode aktif tidak ditemukan.');
     }
+
+    $tahapan = TahapanPelaksanaanProyek::find($request->tahapan_id);
+    if (!$tahapan) {
+        return redirect()->back()->withErrors(['tahapan_id' => 'Tahapan tidak ditemukan']);
+    }
+
+    $maxProgress = intval($tahapan->score);
+    if ($validated['progress'] > $maxProgress) {
+        return redirect()->back()
+            ->withInput()
+            ->withErrors(['progress' => "Progress tidak boleh lebih dari {$maxProgress}% sesuai score tahapan."]);
+    }
+
+    // Tangani upload file PDF
+    $hasilPath = null;
+    if ($request->hasFile('hasil')) {
+        $hasilFile = $request->file('hasil');
+        $hasilPath = $hasilFile->store('logbook_pdf', 'public');
+    }
+
+    // Buat atau perbarui logbook
+    $logbook = Logbook::updateOrCreate(
+        ['kode_tim' => $kodeTim, 'minggu' => $validated['minggu']],
+        [
+            'aktivitas' => $validated['aktivitas'],
+            'hasil' => $hasilPath, // Simpan path PDF
+            'progress' => $validated['progress'],
+            'anggota1' => $validated['anggota1'] ?? null,
+            'anggota2' => $validated['anggota2'] ?? null,
+            'anggota3' => $validated['anggota3'] ?? null,
+            'anggota4' => $validated['anggota4'] ?? null,
+            'anggota5' => $validated['anggota5'] ?? null,
+            'updated_by' => $mahasiswa->mahasiswa->nama,
+        ]
+    );
+
+    // Tangani upload foto kegiatan
+    if ($request->hasFile('foto_kegiatan')) {
+        $foto = $request->file('foto_kegiatan');
+        $fotoPath = $foto->store('foto_kegiatan', 'public');
+        $logbook->foto_kegiatan = $fotoPath;
+    }
+
+    // Simpan perubahan
+    $logbook->save();
+
+    Alert::success('Berhasil!', 'Logbook berhasil disimpan!');
+    return redirect()->route('mahasiswa.logbook');
+}
+
 }

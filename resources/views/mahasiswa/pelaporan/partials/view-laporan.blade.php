@@ -15,14 +15,15 @@
             </a>
         </div>
          @else
+         <p class="text-muted fst-italic">Tidak ada laporan PDF yang diupload.</p>
+        @endif
+        
         <div class="form-group mt-2">
             <h6><i class="bi bi-youtube me-1 text-danger"></i> Link Youtube Proyek PBL</h6>
             <a href="{{ $pelaporan->link_youtube }}" target="_blank" class="text-decoration-none text-info">
                 {{ $pelaporan->link_youtube ?? 'Belum ada link Youtube yang di unggah' }}
             </a>
         </div>
-        <p class="text-muted fst-italic">Tidak ada laporan PDF yang diupload.</p>
-        @endif
         
         <div class="form-group mt-2">
             <h6><i class="bi bi-file-earmark-pdf-fill me-1 text-danger"></i> Laporan PDF</h6>
