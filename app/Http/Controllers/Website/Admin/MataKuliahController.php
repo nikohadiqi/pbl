@@ -13,27 +13,28 @@ class MataKuliahController extends Controller
 {
     public function manage(Request $request)
     {
-        $periodes = PeriodePBL::where('status', 'Aktif')->get();
-        // Ambil dari session jika tidak ada request baru
-        $selectedPeriodeId = $request->input('periode_id', session('filter_periode'));
+        $periode = PeriodePBL::where('status', 'Aktif')->firstOrFail(); // Periode aktif otomatis
 
-        // Simpan ke session jika ada input baru
-        if ($request->filled('periode_id')) {
-            session(['filter_periode' => $selectedPeriodeId]);
-        }
-        $mataKuliahList = [];
+        $semesterList = semesterDariKategori($periode->kategori_semester);
+        $selectedSemester = $request->semester ?? $semesterList[0]; // default semester pertama dari list
 
-        if ($selectedPeriodeId) {
-            $mataKuliahList = MataKuliah::where('periode_id', $selectedPeriodeId)->get();
-        }
+        $matakuliahs = MataKuliah::where('periode_id', $periode->id)
+            ->where('semester', $selectedSemester)
+            ->get();
 
-        return view('admin.mata-kuliah.matkul', compact('periodes', 'selectedPeriodeId', 'mataKuliahList'));
+        return view('admin.mata-kuliah.matkul', compact(
+            'periode',
+            'semesterList',
+            'selectedSemester',
+            'matakuliahs'
+        ));
     }
 
     public function manageStore(Request $request)
     {
         $rules = [
             'periode_id' => 'required|exists:periodepbl,id',
+            'semester' => 'required|in:1,2,3,4,5,6',
             'id.*' => 'nullable|integer|exists:matakuliah,id',
             'kode.*' => 'required|string|size:8',
             'matakuliah.*' => 'required|string',
@@ -63,9 +64,13 @@ class MataKuliahController extends Controller
 
         // Simpan data
         $periodeId = $request->periode_id;
+        $semester = $request->semester;
         $programStudi = 'Teknologi Rekayasa Perangkat Lunak';
 
-        $existingIds = MataKuliah::where('periode_id', $periodeId)->pluck('id')->toArray();
+        $existingIds = MataKuliah::where('periode_id', $periodeId)
+                    ->where('semester', $semester)
+                    ->pluck('id')->toArray();
+
         $idsFromForm = array_filter($request->id);
         $toDelete = array_diff($existingIds, $idsFromForm);
         if (!empty($toDelete)) {
@@ -78,6 +83,7 @@ class MataKuliahController extends Controller
                 'matakuliah' => $request->matakuliah[$index],
                 'sks' => $request->sks[$index] ?? null,
                 'program_studi' => $programStudi,
+                'semester' => $semester,
                 'periode_id' => $periodeId,
             ];
 
@@ -90,6 +96,9 @@ class MataKuliahController extends Controller
         }
 
         Alert::success('Berhasil!', 'Data Mata Kuliah berhasil disimpan!');
-        return redirect()->route('admin.matkul', ['periode_id' => $periodeId]);
+        return redirect()->route('admin.matkul', [
+            'periode_id' => $periodeId,
+            'semester' => $semester
+        ]);
     }
 }

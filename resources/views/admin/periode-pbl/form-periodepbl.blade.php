@@ -37,15 +37,20 @@
 
             <div class="row">
                 <div class="form-group col-md-6">
-                    <label for="semester">Semester</label>
-                    <input type="number" name="semester" class="form-control @error('semester') is-invalid @enderror"
-                        min="1" max="6" value="{{ old('semester', $periode->semester ?? '') }}" required>
-                    @error('semester') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    <label for="kategori_semester">Kategori Semester</label>
+                    <select name="kategori_semester" id="kategori_semester" class="form-control" required>
+                        <option value="">-- Pilih --</option>
+                        <option value="Ganjil" {{ old('kategori_semester', $periode->kategori_semester ?? '') == 'Ganjil' ?
+                            'selected' : '' }}>Semester Ganjil (1, 3, 5)</option>
+                        <option value="Genap" {{ old('kategori_semester', $periode->kategori_semester ?? '') == 'Genap' ? 'selected'
+                            : '' }}>Semester Genap (2, 4, 6)</option>
+                    </select>
                 </div>
 
                 <div class="form-group col-md-6">
                     <label for="tahun_display">Tahun</label>
-                    <input type="text" id="tahun_display" class="form-control" value="{{ old('tahun', $periode->tahun ?? '') }}" readonly>
+                    <input type="text" id="tahun_display" class="form-control" value="{{ old('tahun', $periode->tahun ?? '') }}"
+                        readonly>
                     <input type="hidden" name="tahun" id="tahun_hidden" value="{{ old('tahun', $periode->tahun ?? '') }}">
                     @error('tahun') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
                 </div>

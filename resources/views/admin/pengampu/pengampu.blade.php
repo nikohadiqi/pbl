@@ -1,5 +1,5 @@
 @extends('layouts.dashboardadmin-template')
-@section('title', 'Kelola Pengampu')
+@section('title', 'Kelola Dosen Pengampu')
 @section('page-title', 'Kelola Dosen Pengampu')
 
 @section('content')
@@ -9,9 +9,19 @@
         <form method="GET" action="{{ route('admin.pengampu') }}" class="mb-4">
             <div class="row">
                 <div class="col-md-4 mb-2">
-                    <select name="kelas" class="form-select" required>
-                        <option value="" hidden>Pilih Kelas</option>
-                        @foreach($kelas as $k)
+                    <select name="semester" id="semester" class="form-select" onchange="this.form.submit()" required>
+                        <option value="" hidden>-- Pilih Semester --</option>
+                        @foreach ($semesterList as $smt)
+                        <option value="{{ $smt }}" {{ $selectedSemester==$smt ? 'selected' : '' }}>
+                            Semester {{ $smt }}
+                        </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-4 mb-2">
+                    <select name="kelas" id="kelas" class="form-select" onchange="this.form.submit()" required>
+                        <option value="" hidden>-- Pilih Kelas --</option>
+                        @foreach($filteredKelas as $k)
                         <option value="{{ $k->kelas }}" {{ $selectedKelas==$k->kelas ? 'selected' : '' }}>
                             {{ $k->kelas }}
                         </option>
@@ -19,35 +29,29 @@
                     </select>
                 </div>
                 <div class="col-md-4 mb-2">
-                    <select name="periode_id" class="form-select" required>
-                        <option value="" hidden>Pilih Periode</option>
-                        @foreach($periodes as $p)
-                        <option value="{{ $p->id }}" {{ $selectedPeriode==$p->id ? 'selected' : '' }}>
-                            Semester {{ $p->semester }} - {{ $p->tahun }}
-                        </option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-md-4 mb-2">
-                    <button type="submit" class="btn btn-primary w-100">Tampilkan</button>
+                    <input type="text" class="form-control"
+                        value="Semester {{ $periodes->kategori_semester }} - {{ $periodes->tahun }}" readonly>
                 </div>
             </div>
             <hr class="horizontal dark mt-3">
         </form>
 
         {{-- FORM INPUT PENGAMPU --}}
-        @if($selectedKelas && $selectedPeriode)
+        @if ($selectedSemester && $selectedKelas)
         <div class="d-flex justify-content-between align-items-center">
-            <h4 class="fw-bold">Manajemen Dosen Pengampu Mata Kuliah atau Manajer Proyek</h4>
+            <h4 class="fw-bold">Manajemen Dosen Pengampu Mata Kuliah atau Manajer Proyek pada Kelas {{ $selectedKelas }}
+            </h4>
         </div>
         <p class="text-sm">Sistem Informasi dan Monitoring Project Based Learning - TRPL Poliwangi</p>
-        <form method="POST" action="{{ route('admin.pengampu.manage.store') }}">
+        <form method="POST" action="{{ route('admin.pengampu.manage.store') }}" id="form-pengampu">
             @csrf
+            <input type="hidden" name="semester" value="{{ $selectedSemester }}">
             <input type="hidden" name="kelas_id" value="{{ $selectedKelas }}">
-            <input type="hidden" name="periode_id" value="{{ $selectedPeriode }}">
+            <input type="hidden" name="periode_id" value="{{ $periodes->id }}">
 
             <div class="table-responsive mt-2">
-                <table class="table align-middle table-hover table-borderless border border-light shadow-sm rounded-3 overflow-hidden">
+                <table
+                    class="table align-middle table-hover table-borderless border border-light shadow-sm rounded-3 overflow-hidden">
                     <thead class="text-sm fw-semibold text-white bg-primary">
                         <tr>
                             <th class="px-3 py-2">Mata Kuliah</th>
@@ -60,9 +64,8 @@
                         <tr>
                             <td class="px-3 py-3">{{ $m->kode }} - {{ $m->matakuliah }}</td>
                             <td class="px-3 py-3">
-                                <select name="data[{{ $m->id }}][dosen_id]" class="select2"
-                                    required>
-                                    <option value="" disabled selected hidden>Pilih Dosen</option>
+                                <select name="data[{{ $m->id }}][dosen_id]" class="select2" required>
+                                    <option value="" disabled selected hidden>-- Pilih Dosen --</option>
                                     @foreach($dosen as $d)
                                     <option value="{{ $d->nip }}" {{ ($pengampus[$m->id]->dosen_id ?? '') == $d->nip ?
                                         'selected' : '' }}>
@@ -73,22 +76,25 @@
                             </td>
                             <td class="px-3 py-3">
                                 <select name="data[{{ $m->id }}][status]" class="form-select" required>
-                                    <option value="" disabled selected hidden>Pilih Status</option>
+                                    <option value="" disabled selected hidden>-- Pilih Status --</option>
                                     <option value="Dosen Mata Kuliah" {{ ($pengampus[$m->id]->status ?? '') == 'Dosen Mata Kuliah' ? 'selected' : ''
                                         }}>
-                                        Dosen Mata Kuliah</option>
+                                        Dosen Mata Kuliah
+                                    </option>
                                     <option value="Manajer Proyek" {{ ($pengampus[$m->id]->status ?? '') == 'Manajer Proyek' ? 'selected' : '' }}>
-                                        Manajer Proyek</option>
+                                        Manajer Proyek
+                                    </option>
                                 </select>
                             </td>
-                        </tr>
+                            </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
 
             <div class="text-end">
-                <button class="btn btn-primary mt-3" type="submit"><i class="bi bi-floppy me-1"></i> Simpan Semua</button>
+                <button class="btn btn-primary mt-3" type="submit"><i class="bi bi-floppy me-1"></i> Simpan
+                    Semua</button>
             </div>
         </form>
         @endif
@@ -115,14 +121,14 @@
 
     /* Efek focus */
     .select2-container--bootstrap-5.select2-container--focus .select2-selection {
-        border-color: #F7CD07 !important;
+        border-color: #dfa02c !important;
         box-shadow: 0 0 0 2px rgba(247, 205, 7, 0.1);
         outline: none;
     }
 
     /* Dropdown dengan rounded full, selalu sama */
     .select2-container--bootstrap-5 .select2-dropdown {
-        border: 1px solid #F7CD07 !important;
+        border: 1px solid #dfa02c !important;
         border-radius: 0.5rem !important;
         box-shadow: 0 4px 10px rgba(247, 205, 7, 0.1);
         margin-top: 2px;
@@ -158,6 +164,28 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
     $(document).ready(function () {
+        // Saat semester diganti, sembunyikan form input
+        $('#semester').on('change', function () {
+            $('#form-pengampu').hide(); // Ganti dengan ID/kelas form Anda
+            $('#kelas').val(''); // Reset kelas
+            $('#kelas').trigger('change'); // Pastikan event kelas tetap dijalankan
+        });
+
+        // Saat kelas dipilih, tampilkan kembali form
+        $('#kelas').on('change', function () {
+            if ($(this).val()) {
+                $('#form-pengampu').show();
+            } else {
+                $('#form-pengampu').hide();
+            }
+        });
+
+        // Jalankan sekali saat load awal
+        if (!$('#kelas').val()) {
+            $('#form-pengampu').hide();
+        }
+
+        // Select2 Dosen
         $('.select2').select2({
             theme: 'bootstrap-5',
             placeholder: 'Pilih Dosen',

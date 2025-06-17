@@ -17,6 +17,7 @@ class MataKuliah extends Model
         'matakuliah',
         'sks',
         'id_feeder',
+        'semester',
         'periode_id',
     ];
 
@@ -24,5 +25,10 @@ class MataKuliah extends Model
     public function periodeFK()
     {
         return $this->belongsTo(PeriodePBL::class, 'periode_id');
+    }
+
+    function semesterToKategori($semesterAngka)
+    {
+        return $semesterAngka % 2 == 0 ? 'Genap' : 'Ganjil';
     }
 }

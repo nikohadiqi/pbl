@@ -112,7 +112,7 @@ class LoginController extends Controller
 
         if ($akunDosen && Hash::check($validated['password'], $akunDosen->password) && $akunDosen->role == 'dosen') {
             // Ambil periode aktif
-            $periodeAktif = PeriodePBL::where('status', 'aktif')->first();
+            $periodeAktif = PeriodePBL::where('status', 'Aktif')->first();
 
             if (!$periodeAktif) {
                 return back()->withErrors(['nim' => 'Tidak ada periode aktif.']);

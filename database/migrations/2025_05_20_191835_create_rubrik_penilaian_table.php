@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pengampu', function (Blueprint $table) {
+        Schema::create('rubrik_penilaian', function (Blueprint $table) {
             $table->id();
-            $table->unsignedTinyInteger('semester');
-            $table->string('kelas_id');
-            $table->string('dosen_id');
-            $table->enum('status', ['Manajer Proyek', 'Dosen Mata Kuliah']);
-            $table->string('matkul_id');
-            $table->string('periode_id');
+            $table->string('aspek_penilaian');
+            $table->enum('jenis', ['softskill', 'akademik']);
+            $table->integer('bobot'); // dalam persen
             $table->timestamps();
         });
     }
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pengampu');
+        Schema::dropIfExists('rubrik_penilaian');
     }
 };

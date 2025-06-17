@@ -9,11 +9,13 @@ use App\Models\Mahasiswa;
 use App\Models\NilaiMahasiswa;
 use App\Models\Pengampu;
 use App\Models\PeriodePBL;
+use App\Models\RubrikPenilaian;
 use RealRashid\SweetAlert\Facades\Alert;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Illuminate\Support\Str;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 
 class PenilaianController extends Controller
 {
@@ -98,9 +100,9 @@ class PenilaianController extends Controller
         $isManajer = $pengampu->status === 'Manajer Proyek';
         $isDosenMatkul = $pengampu->status === 'Dosen Mata Kuliah';
 
-        $aspekSoftSkill = $this->getAspekSoftSkill();
-        $aspekAkademik = $this->getAspekAkademik();
-        $bobot = $this->getBobotNilai();
+        $aspekSoftSkill = $this->getRubrikSoftskill();
+        $aspekAkademik = $this->getRubrikAkademik();
+        $bobot = $this->getBobotRubrik();
 
         $nilaiMahasiswa = NilaiMahasiswa::where('nim', $nim)
             ->where('pengampu_id', $pengampu->id)
@@ -108,13 +110,22 @@ class PenilaianController extends Controller
 
         $nilaiSoftSkillManpro = $nilaiDosenMatkul = $nilaiAspekGabungan = [];
 
-        if ($isDosenMatkul) {
-            $nilaiSoftSkillManpro = $this->getNilaiSoftSkillDariManpro($mahasiswa->kelas, $nim);
-            $nilaiDosenMatkul = $this->getNilaiAkademikDosen($nilaiMahasiswa, $aspekAkademik);
-            $nilaiAspekGabungan = array_merge($nilaiSoftSkillManpro, $nilaiDosenMatkul);
-        } elseif ($isManajer && $nilaiMahasiswa) {
-            $nilaiAspekGabungan = json_decode($nilaiMahasiswa->nilai_aspek_json, true);
+        switch ($pengampu->status) {
+            case 'Dosen Mata Kuliah':
+                $nilaiSoftSkillManpro = $this->getNilaiSoftSkillDariManpro($mahasiswa->kelas, $nim);
+                $nilaiDosenMatkul = $this->getNilaiAkademikDosen($nilaiMahasiswa, $aspekAkademik);
+                $nilaiAspekGabungan = array_merge($nilaiSoftSkillManpro, $nilaiDosenMatkul);
+                break;
+
+            case 'Manajer Proyek':
+                if ($nilaiMahasiswa) {
+                    $nilaiAspekGabungan = json_decode($nilaiMahasiswa->nilai_aspek_json, true);
+                }
+                break;
         }
+
+        $aspekSoftSkillSlug = array_map(fn($v) => Str::slug($v, '_'), $aspekSoftSkill);
+        $aspekAkademikSlug = array_map(fn($v) => Str::slug($v, '_'), $aspekAkademik);
 
         return view('dosen.penilaian.form-nilai', compact(
             'mahasiswa',
@@ -128,7 +139,9 @@ class PenilaianController extends Controller
             'isManajer',
             'isDosenMatkul',
             'nilaiDosenMatkul',
-            'pengampu'
+            'pengampu',
+            'aspekSoftSkillSlug',
+            'aspekAkademikSlug',
         ));
     }
 
@@ -141,9 +154,9 @@ class PenilaianController extends Controller
         $isManajer = $pengampu->status === 'Manajer Proyek';
         $isDosenMatkul = $pengampu->status === 'Dosen Mata Kuliah';
 
-        $aspekSoftSkill = $this->getAspekSoftSkill();
-        $aspekAkademik = $this->getAspekAkademik();
-        $bobot = $this->getBobotNilai();
+        $aspekSoftSkill = $this->getRubrikSoftskill();
+        $aspekAkademik = $this->getRubrikAkademik();
+        $bobot = $this->getBobotRubrik();
 
         //  ℹ️ validasi input
         $rules = [];
@@ -156,9 +169,10 @@ class PenilaianController extends Controller
         }
 
         foreach ($aspek as $a) {
-            $rules["nilai_$a"] = 'required|in:1,2,3,4';
-            $messages["nilai_$a.required"] = "Nilai untuk aspek $a wajib diisi.";
-            $messages["nilai_$a.in"] = "Nilai untuk aspek $a harus berupa angka 1 sampai 4.";
+            $slug = Str::slug($a, '_');
+            $rules["nilai_$slug"] = 'required|in:1,2,3,4';
+            $messages["nilai_$slug.required"] = "Nilai untuk aspek $a wajib diisi.";
+            $messages["nilai_$slug.in"] = "Nilai untuk aspek $a harus berupa angka 1 sampai 4.";
         }
 
         $request->validate($rules, $messages);
@@ -168,7 +182,8 @@ class PenilaianController extends Controller
 
         if ($isManajer) {
             foreach (array_merge($aspekSoftSkill, $aspekAkademik) as $aspek) {
-                $nilai = intval($request->input("nilai_$aspek", 0));
+                $slug = Str::slug($aspek, '_');
+                $nilai = intval($request->input("nilai_$slug", 0));
                 $nilaiPerAspek[$aspek] = $nilai;
                 $total += ($bobot[$aspek] ?? 0) * $nilai;
                 $totalBobot += $bobot[$aspek] ?? 0;
@@ -176,7 +191,8 @@ class PenilaianController extends Controller
         } elseif ($isDosenMatkul) {
             $nilaiSoftSkillManpro = $this->getNilaiSoftSkillDariManpro($mahasiswa->kelas, $nim);
             foreach ($aspekAkademik as $aspek) {
-                $nilai = intval($request->input("nilai_$aspek", 0));
+                $slug = Str::slug($aspek, '_');
+                $nilai = intval($request->input("nilai_$slug", 0));
                 $nilaiPerAspek[$aspek] = $nilai;
                 $total += ($bobot[$aspek] ?? 0) * $nilai;
                 $totalBobot += $bobot[$aspek] ?? 0;
@@ -196,13 +212,13 @@ class PenilaianController extends Controller
         $angka = $skorSkala * 25;
         $huruf = $this->konversiHuruf($angka);
 
-        $data = array_merge([
+        $data = [
             'nilai_aspek_json' => json_encode($nilaiPerAspek),
             'total_nilai' => $skorSkala,
             'angka_nilai' => $angka,
             'huruf_nilai' => $huruf,
-            'dosen_id' => $auth->nip,
-        ], $nilaiPerAspek);
+            'dosen_id' => $auth->nim,
+        ];
 
         NilaiMahasiswa::updateOrCreate([
             'nim' => $nim,
@@ -226,60 +242,19 @@ class PenilaianController extends Controller
         };
     }
 
-    private function getAspekSoftSkill()
+    private function getRubrikSoftskill()
     {
-        return [
-            'critical_thinking',
-            'kolaborasi',
-            'kreativitas',
-            'komunikasi',
-            'fleksibilitas',
-            'kepemimpinan',
-            'produktifitas',
-            'social_skill'
-        ];
+        return RubrikPenilaian::where('jenis', 'softskill')->pluck('aspek_penilaian', 'aspek_penilaian')->toArray();
     }
 
-    private function getAspekAkademik()
+    private function getRubrikAkademik()
     {
-        return [
-            'konten_presentasi',
-            'tampilan_visual_presentasi',
-            'kosakata',
-            'tanya_jawab',
-            'mata_gerak_tubuh',
-            'penulisan_laporan',
-            'pilihan_kata',
-            'konten_laporan',
-            'sikap_kerja',
-            'proses',
-            'kualitas'
-        ];
+        return RubrikPenilaian::where('jenis', 'akademik')->pluck('aspek_penilaian', 'aspek_penilaian')->toArray();
     }
 
-    private function getBobotNilai()
+    private function getBobotRubrik()
     {
-        return [
-            'critical_thinking' => 5,
-            'kolaborasi' => 5,
-            'kreativitas' => 5,
-            'komunikasi' => 5,
-            'fleksibilitas' => 5,
-            'kepemimpinan' => 5,
-            'produktifitas' => 10,
-            'social_skill' => 5,
-            'konten_presentasi' => 2,
-            'tampilan_visual_presentasi' => 2,
-            'kosakata' => 2,
-            'tanya_jawab' => 2,
-            'mata_gerak_tubuh' => 2,
-            'penulisan_laporan' => 3,
-            'pilihan_kata' => 2,
-            'konten_laporan' => 2,
-            'sikap_kerja' => 8,
-            'proses' => 15,
-            'kualitas' => 15
-        ];
+        return RubrikPenilaian::pluck('bobot', 'aspek_penilaian')->toArray();
     }
 
     private function getNilaiSoftSkillDariManpro($kelasId, $nim)
@@ -337,8 +312,9 @@ class PenilaianController extends Controller
         // Ambil data dari relasi
         $namaMatkul = $pengampu->matkulFk->kode . ' - ' . $pengampu->matkulFk->matakuliah ?? '-';
         $sksMatkul = $pengampu->matkulFk->sks ?? '-';
-        $semesterTahun = $pengampu->periodeFK->semester . '/' . $pengampu->periodeFK->tahun ?? '-';
+        $semesterTahun = $pengampu->periodeFK->kategori_semester . '-' . $pengampu->periodeFK->tahun ?? '-';
         $namaDosen  = $pengampu->dosenFk->nama ?? '-';
+        $aspekList = RubrikPenilaian::get();
 
         // Daftar sheet yang ingin diisi datanya
         $targetSheets = ['Rubrik Penilaian', 'Tabel Penilaian'];
@@ -358,6 +334,20 @@ class PenilaianController extends Controller
             $sheetPengampu->setCellValue('C11', sprintf(': %s', $namaDosen));     // Nama Dosen Pengampu
         }
 
+        // Isi Sheet "Tabel Penilaian" untuk daftar aspek dan bobot
+        $tabelSheet = $spreadsheet->getSheetByName('Tabel Penilaian');
+        if ($tabelSheet) {
+            $row = 14;
+            foreach ($aspekList as $aspek) {
+                $tabelSheet->setCellValue("E{$row}", $aspek->aspek_penilaian);
+                $tabelSheet->setCellValue("F{$row}", $aspek->bobot . '%');
+                $row++;
+            }
+        } else {
+            $available = implode(', ', $spreadsheet->getSheetNames());
+            abort(500, 'Sheet "Tabel Penilaian" tidak ditemukan. Sheet yang tersedia: ' . $available);
+        }
+
         // Set sheet "Nilai"
         $sheet = $spreadsheet->getSheetByName('Nilai');
         if (!$sheet) {
@@ -369,34 +359,33 @@ class PenilaianController extends Controller
             ->where('pengampu_id', $pengampu->id)
             ->get();
 
-        $startRow = 19;
-        $rowNum = $startRow;
-        $no = 1;
+        // header bobot di Kolom 'E'
+        $startCol = Coordinate::columnIndexFromString('E');
+        $mapKolom = [];
 
-        foreach ($nilaiMahasiswa as $nilai) {
-            $sheet->setCellValue('B' . $rowNum, $no++);
-            $sheet->setCellValue('C' . $rowNum, $nilai->nim);
-            $sheet->setCellValue('D' . $rowNum, $nilai->mahasiswa->nama ?? '');
-            $sheet->setCellValue('E' . $rowNum, $nilai->critical_thinking);
-            $sheet->setCellValue('F' . $rowNum, $nilai->kolaborasi);
-            $sheet->setCellValue('G' . $rowNum, $nilai->kreativitas);
-            $sheet->setCellValue('H' . $rowNum, $nilai->komunikasi);
-            $sheet->setCellValue('I' . $rowNum, $nilai->fleksibilitas);
-            $sheet->setCellValue('J' . $rowNum, $nilai->kepemimpinan);
-            $sheet->setCellValue('K' . $rowNum, $nilai->produktifitas);
-            $sheet->setCellValue('L' . $rowNum, $nilai->social_skill);
-            $sheet->setCellValue('M' . $rowNum, $nilai->konten_presentasi);
-            $sheet->setCellValue('N' . $rowNum, $nilai->tampilan_visual_presentasi);
-            $sheet->setCellValue('O' . $rowNum, $nilai->kosakata);
-            $sheet->setCellValue('P' . $rowNum, $nilai->tanya_jawab);
-            $sheet->setCellValue('Q' . $rowNum, $nilai->mata_gerak_tubuh);
-            $sheet->setCellValue('R' . $rowNum, $nilai->penulisan_laporan);
-            $sheet->setCellValue('S' . $rowNum, $nilai->pilihan_kata);
-            $sheet->setCellValue('T' . $rowNum, $nilai->konten_laporan);
-            $sheet->setCellValue('U' . $rowNum, $nilai->sikap_kerja);
-            $sheet->setCellValue('V' . $rowNum, $nilai->proses);
-            $sheet->setCellValue('W' . $rowNum, $nilai->kualitas);
-            $rowNum++;
+        foreach ($aspekList as $i => $aspek) {
+            $col = Coordinate::stringFromColumnIndex($startCol + $i);
+            $mapKolom[$aspek->aspek_penilaian] = $col;
+            $sheet->setCellValue($col . '18', $aspek->bobot . '%');
+        }
+
+        $row = 19;
+        $no = 1;
+        foreach ($nilaiMahasiswa as $rowData) {
+            $sheet->setCellValue("B{$row}", $no++);
+            $sheet->setCellValue("C{$row}", $rowData->nim);
+            $sheet->setCellValue("D{$row}", $rowData->mahasiswa->nama ?? '');
+
+            $json = json_decode($rowData->nilai_aspek_json, true) ?? [];
+
+            foreach ($mapKolom as $aspek => $col) {
+                $val = is_array($json[$aspek] ?? null)
+                    ? ($json[$aspek]['nilai'] ?? '')
+                    : ($json[$aspek] ?? '');
+                $sheet->setCellValue("{$col}{$row}", $val);
+            }
+
+            $row++;
         }
 
         $namaMatkul = $pengampu->matkulFK->matakuliah ?? 'Nama Mata Kuliah';

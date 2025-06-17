@@ -30,9 +30,9 @@
             </li>
             <!-- Master Data -->
             <li class="nav-item mt-2">
-                <a class="nav-link {{ request()->routeIs('admin.periodepbl*') || request()->routeIs('admin.matkul*') || request()->routeIs('admin.kelas*') || request()->routeIs('admin.dosen*') || request()->routeIs('admin.mahasiswa*') ? 'active' : '' }}"
+                <a class="nav-link {{ request()->routeIs('admin.periodepbl*') || request()->routeIs('admin.matkul*') || request()->routeIs('admin.kelas*') || request()->routeIs('admin.dosen*') || request()->routeIs('admin.mahasiswa*') || request()->routeIs('admin.rubrik*') ? 'active' : '' }}"
                     data-bs-toggle="collapse" href="#masterData" role="button"
-                    aria-expanded="{{ request()->routeIs('admin.periodepbl*') || request()->routeIs('admin.matkul*') || request()->routeIs('admin.kelas*') || request()->routeIs('admin.dosen*') || request()->routeIs('admin.mahasiswa*') ? 'true' : 'false' }}"
+                    aria-expanded="{{ request()->routeIs('admin.periodepbl*') || request()->routeIs('admin.matkul*') || request()->routeIs('admin.kelas*') || request()->routeIs('admin.dosen*') || request()->routeIs('admin.mahasiswa*') || request()->routeIs('admin.rubrik*') ? 'true' : 'false' }}"
                     aria-controls="masterData">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -40,7 +40,7 @@
                     </div>
                     <span class="nav-link-text ms-1">Master Data</span>
                 </a>
-                <div class="collapse {{ request()->routeIs('admin.periodepbl*') || request()->routeIs('admin.matkul*') || request()->routeIs('admin.kelas*') || request()->routeIs('admin.dosen*') || request()->routeIs('admin.mahasiswa*') ? 'show' : '' }}"
+                <div class="collapse {{ request()->routeIs('admin.periodepbl*') || request()->routeIs('admin.matkul*') || request()->routeIs('admin.kelas*') || request()->routeIs('admin.dosen*') || request()->routeIs('admin.mahasiswa*') || request()->routeIs('admin.rubrik*') ? 'show' : '' }}"
                     id="masterData">
                     <ul class="nav flex-column ms-4">
                         <li class="nav-item mt-2">
@@ -71,6 +71,12 @@
                             <a class="nav-link {{ request()->routeIs('admin.mahasiswa*') ? 'active' : '' }}"
                                 href="{{ route('admin.mahasiswa') }}">
                                 Data Mahasiswa
+                            </a>
+                        </li>
+                        <li class="nav-item mt-2">
+                            <a class="nav-link {{ request()->routeIs('admin.rubrik*') ? 'active' : '' }}"
+                                href="{{ route('admin.rubrik') }}">
+                                Rubrik Penilaian
                             </a>
                         </li>
                     </ul>

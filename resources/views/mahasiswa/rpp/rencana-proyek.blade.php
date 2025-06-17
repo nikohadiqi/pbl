@@ -78,7 +78,7 @@
     }
 
     .step.active .circle {
-        background-color: #F7CD07;
+        background-color: #dfa02c;
     }
 
     .step .label {

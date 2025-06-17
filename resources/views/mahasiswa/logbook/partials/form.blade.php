@@ -52,9 +52,9 @@
                         const val = Math.min(this.value, {{ $maxScore }});
                         document.getElementById('progress-value-{{ $minggu }}').textContent = val + '%';
                         const percent = (val / {{ $maxScore }}) * 100;
-                        this.style.background = 'linear-gradient(to right, #F7CD07 ' + percent + '%, #dee2e6 ' + percent + '%)';
+                        this.style.background = 'linear-gradient(to right, #dfa02c ' + percent + '%, #dee2e6 ' + percent + '%)';
                     "
-                    style="flex: 1; background: linear-gradient(to right, #F7CD07 {{ ($progressValue / $maxScore) * 100 }}%, #dee2e6 {{ ($progressValue / $maxScore) * 100 }}%)">
+                    style="flex: 1; background: linear-gradient(to right, #dfa02c {{ ($progressValue / $maxScore) * 100 }}%, #dee2e6 {{ ($progressValue / $maxScore) * 100 }}%)">
                 <span id="progress-value-{{ $minggu }}" style="width: 50px;">{{ $progressValue }}%</span>
             </div>
         </div>

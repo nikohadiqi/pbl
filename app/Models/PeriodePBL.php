@@ -21,7 +21,7 @@ class PeriodePBL extends Model
 
     // Tentukan kolom yang dapat diisi
     protected $fillable = [
-        'semester',
+        'kategori_semester',
         'tahun',
         'tanggal_mulai',
         'tanggal_selesai',
@@ -33,5 +33,10 @@ class PeriodePBL extends Model
     public function penutup()
     {
         return $this->belongsTo(User::class, 'closed_by');
+    }
+
+    public function matakuliahFK()
+    {
+        return $this->hasMany(MataKuliah::class, 'periode_id');
     }
 }

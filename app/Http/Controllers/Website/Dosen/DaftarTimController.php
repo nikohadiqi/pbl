@@ -22,7 +22,7 @@ class DaftarTimController extends Controller
 
         // Data dropdown
         $kelasList = Kelas::pluck('kelas');
-        $periodeList = PeriodePBL::where('status', 'aktif')->get();
+        $periodeList = PeriodePBL::where('status', 'Aktif')->get();
 
         // Ambil dari session jika tidak ada request baru
         $kelas = $request->input('kelas', session('filter_kelas'));
@@ -41,7 +41,7 @@ class DaftarTimController extends Controller
             $query = TimPBL::with(['anggota.mahasiswaFK', 'manproFK', 'periodeFK', 'rencanaProyek'])
                 ->where('status', 'approved')
                 ->whereHas('periodeFK', function ($q) {
-                    $q->where('status', 'aktif');
+                    $q->where('status', 'Aktif');
                 });
 
             if (!empty($kelas)) {
@@ -66,7 +66,7 @@ class DaftarTimController extends Controller
                 ->where('kelas', $kelas)
                 ->where('periode', $tahun)
                 ->whereHas('periodeFK', function ($q) {
-                    $q->where('status', 'aktif');
+                    $q->where('status', 'Aktif');
                 })
                 ->get();
         }

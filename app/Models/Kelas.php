@@ -17,11 +17,7 @@ class Kelas extends Model
     protected $keyType = 'string'; // <- jika nim berupa string
     // Tentukan kolom yang dapat diisi
     protected $fillable = [
-        'kelas',
+        'kelas', 'tingkat'
     ];
-    
-    public function dosen()
-    {
-        return $this->belongsTo(Dosen::class, 'id_dosen', 'nip');
-    }
+
 }

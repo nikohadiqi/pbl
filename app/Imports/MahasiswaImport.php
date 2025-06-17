@@ -27,17 +27,21 @@ class MahasiswaImport implements ToModel,  WithHeadingRow
             }
         }
 
-        // Validasi format nama kelas
-        if (!preg_match('/^[1-4][A-Z]$/', $row['kelas'])) {
+        // Validasi format nama kelas, contoh: 1A, 2B, 3C
+        if (!preg_match('/^([1-6])([A-Z])$/', $row['kelas'], $matches)) {
             throw ValidationException::withMessages([
-                'file' => ["Format nama kelas tidak valid untuk \"{$row['kelas']}\". Hanya diperbolehkan format seperti: 1A, 2A, 3A, 4A"]
+                'file' => ["Format nama kelas tidak valid untuk \"{$row['kelas']}\". Gunakan format seperti: 1A, 2B, dst."]
             ]);
         }
 
+        $kelasNama = $row['kelas'];
+        $tingkat = (int)$matches[1];
+
         // Buat entri kelas jika belum ada
-        Kelas::firstOrCreate([
-            'kelas' => $row['kelas'],
-        ]);
+        Kelas::firstOrCreate(
+            ['kelas' => $kelasNama],
+            ['tingkat' => $tingkat]
+        );
 
         // Simpan atau update data mahasiswa
         return Mahasiswa::updateOrCreate(
@@ -48,7 +52,7 @@ class MahasiswaImport implements ToModel,  WithHeadingRow
                 'dosen_wali'    => $row['dosen_wali'] ?? null,
                 'status'        => $row['status'] ?? null,
                 'jenis_kelamin' => $row['jenis_kelamin'] ?? null,
-                'kelas'         => $row['kelas'],
+                'kelas'         => $kelasNama,
                 'angkatan'      => $row['angkatan'] ?? null,
             ]
         );

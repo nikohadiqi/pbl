@@ -39,7 +39,7 @@
             <div class="position-absolute" style="top: 30px; right: 30px; width: 120px; height: 120px;">
                 <svg width="120" height="120">
                     <circle cx="60" cy="60" r="{{ $radius }}" stroke="#e9ecef" stroke-width="5" fill="none" />
-                    <circle cx="60" cy="60" r="{{ $radius }}" stroke="#F7CD07" stroke-width="5" fill="none"
+                    <circle cx="60" cy="60" r="{{ $radius }}" stroke="#dfa02c" stroke-width="5" fill="none"
                         stroke-dasharray="{{ $circumference }}" stroke-dashoffset="{{ $offset }}"
                         transform="rotate(-90 60 60)" />
                 </svg>
@@ -92,7 +92,7 @@
 <style>
     /* Border card warna kuning */
     .border-start.border-2 {
-        border-color: #F7CD07 !important;
+        border-color: #dfa02c !important;
         /* bootstrap yellow */
     }
 
@@ -112,7 +112,7 @@
         width: 20px;
         height: 20px;
         border-radius: 50%;
-        background: #F7CD07;
+        background: #dfa02c;
         /* kuning */
         cursor: pointer;
         border: none;
@@ -124,7 +124,7 @@
         width: 20px;
         height: 20px;
         border-radius: 50%;
-        background: #F7CD07;
+        background: #dfa02c;
         /* kuning */
         cursor: pointer;
         border: none;
@@ -132,14 +132,14 @@
 
     /* Progress circle stroke warna kuning */
     svg circle:nth-child(2) {
-        stroke: #F7CD07 !important;
+        stroke: #dfa02c !important;
         transition: stroke-dashoffset 0.5s ease;
     }
 
     /* Border form input dan view logbook warna kuning */
     form.border,
     .collapse.border {
-        border-color: #F7CD07 !important;
+        border-color: #dfa02c !important;
         background-color: #fff !important;
         /* background putih */
     }
@@ -152,7 +152,7 @@
     /* Container lihat logbook */
     .collapse .border {
         border-width: 2px;
-        border-color: #F7CD07 !important;
+        border-color: #dfa02c !important;
         background-color: #fff !important;
     }
 

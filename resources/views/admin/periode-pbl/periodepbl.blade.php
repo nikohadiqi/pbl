@@ -40,7 +40,7 @@
                     @foreach($periodePBL as $key => $periode)
                     <tr>
                         <td>{{ $key + 1 }}</td>
-                        <td>{{ $periode->semester }}</td>
+                        <td>{{ $periode->kategori_semester }}</td>
                         <td>{{ $periode->tahun }}</td>
                         <td>{{ $periode->tanggal_mulai->format('d-m-Y') }}</td>
                         <td>{{ $periode->tanggal_selesai->format('d-m-Y') }}</td>
