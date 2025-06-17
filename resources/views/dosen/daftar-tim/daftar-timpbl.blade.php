@@ -6,35 +6,41 @@
 <div class="container-fluid py-4">
     <div class="card p-4 shadow-sm rounded-3" style="background-color: #fff;">
         {{-- FORM FILTER --}}
-        <div class="mb-3">
-            <form method="GET" action="{{ route('dosen.daftar-tim') }}">
-                <div class="row">
-                    <div class="col-md-4 mb-2">
-                        <select name="kelas" class="form-select">
-                            <option value="">-- Pilih Kelas --</option>
-                            @foreach($kelasList as $k)
-                            <option value="{{ $k }}" {{ (old('kelas', $kelas ?? '' )==$k) ? 'selected' : '' }}>{{ $k }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-4 mb-2">
-                        <select name="tahun" class="form-select">
-                            <option value="">-- Pilih Periode --</option>
-                            @foreach($periodeList as $periode)
-                            <option value="{{ $periode->id }}" {{ (old('tahun', $tahun ?? '' )==$periode->id) ? 'selected' : '' }}>
-                                Semester {{ $periode->semester }} - {{ $periode->tahun }}
-                            </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-4 mb-2">
-                        <button type="submit" class="btn btn-primary w-100">Tampilkan</button>
-                    </div>
+        <form method="GET" action="{{ route('dosen.daftar-tim') }}" class="mb-4">
+            <div class="row">
+                {{-- SEMESTER --}}
+                <div class="col-md-4 mb-2">
+                    <select name="semester" class="form-select" onchange="this.form.submit()" required>
+                        <option value="" hidden>-- Pilih Semester --</option>
+                        @foreach ($semesterList as $smt)
+                        <option value="{{ $smt }}" {{ $selectedSemester==$smt ? 'selected' : '' }}>
+                            Semester {{ $smt }}
+                        </option>
+                        @endforeach
+                    </select>
                 </div>
-                </form>
 
-            <hr class="horizontal dark mt-2">
-        </div>
+                {{-- KELAS --}}
+                <div class="col-md-4 mb-2">
+                    <select name="kelas" class="form-select" onchange="this.form.submit()" required>
+                        <option value="" hidden>-- Pilih Kelas --</option>
+                        @foreach ($filteredKelas as $k)
+                        <option value="{{ $k->kelas }}" {{ $selectedKelas==$k->kelas ? 'selected' : '' }}>
+                            {{ $k->kelas }}
+                        </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                {{-- PERIODE AKTIF --}}
+                <div class="col-md-4 mb-2">
+                    <input type="text" class="form-control bg-light"
+                        value="Semester {{ $periodeAktif->kategori_semester }} - {{ $periodeAktif->tahun }}" readonly>
+                    <input type="hidden" name="tahun" value="{{ $periodeAktif->id }}">
+                </div>
+            </div>
+            <hr class="horizontal dark mt-3">
+        </form>
 
         {{-- Card Tim PBL --}}
         @forelse ($timPBL as $tim)

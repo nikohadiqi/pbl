@@ -18,60 +18,56 @@ class DaftarTimController extends Controller
     public function index(Request $request)
     {
         $user = Auth::guard('dosen')->user();
-        $timPBL = collect();    // default kosong
+        $timPBL = collect();
 
-        // Data dropdown
-        $kelasList = Kelas::pluck('kelas');
-        $periodeList = PeriodePBL::where('status', 'Aktif')->get();
+        $periodeAktif = PeriodePBL::where('status', 'Aktif')->firstOrFail();
+        $semesterList = semesterDariKategori($periodeAktif->kategori_semester);
 
-        // Ambil dari session jika tidak ada request baru
-        $kelas = $request->input('kelas', session('filter_kelas'));
-        $tahun = $request->input('tahun', session('filter_tahun'));
+        $selectedSemester = $request->input('semester', session('filter_semester'));
+        $selectedKelas = $request->input('kelas', session('filter_kelas'));
 
-        // Simpan ke session jika ada input baru
+        // Simpan session
+        if ($request->filled('semester')) {
+            session(['filter_semester' => $selectedSemester]);
+        }
         if ($request->filled('kelas')) {
-            session(['filter_kelas' => $kelas]);
-        }
-        if ($request->filled('tahun')) {
-            session(['filter_tahun' => $tahun]);
+            session(['filter_kelas' => $selectedKelas]);
         }
 
-        // Jika dosen adalah manpro
+        $filteredKelas = collect();
+        if ($selectedSemester) {
+            $tingkat = ceil($selectedSemester / 2);
+            $filteredKelas = Kelas::where('tingkat', $tingkat)->get();
+        }
+
         if ($user && $user->is_manajer_proyek) {
             $query = TimPBL::with(['anggota.mahasiswaFK', 'manproFK', 'periodeFK', 'rencanaProyek'])
                 ->where('status', 'approved')
-                ->whereHas('periodeFK', function ($q) {
-                    $q->where('status', 'Aktif');
-                });
+                ->whereHas('periodeFK', fn($q) => $q->where('status', 'Aktif'));
 
-            if (!empty($kelas)) {
-                $query->where('kelas', $kelas);
-            }
-
-            if (!empty($tahun)) {
-                $query->where('periode', $tahun);
-            }
-
-            if (empty($kelas) && empty($tahun)) {
+            if ($selectedKelas) {
+                $query->where('kelas', $selectedKelas);
+            } else {
                 $query->where('manpro', $user->nim);
             }
 
             $timPBL = $query->get();
-        }
-
-        // Jika bukan manpro tapi filter lengkap
-        elseif (!empty($kelas) && !empty($tahun)) {
+        } elseif ($selectedKelas) {
             $timPBL = TimPBL::with(['anggota.mahasiswaFK', 'manproFK', 'periodeFK', 'rencanaProyek'])
                 ->where('status', 'approved')
-                ->where('kelas', $kelas)
-                ->where('periode', $tahun)
-                ->whereHas('periodeFK', function ($q) {
-                    $q->where('status', 'Aktif');
-                })
+                ->where('kelas', $selectedKelas)
+                ->whereHas('periodeFK', fn($q) => $q->where('status', 'Aktif'))
                 ->get();
         }
 
-        return view('dosen.daftar-tim.daftar-timpbl', compact('timPBL', 'kelasList', 'periodeList', 'kelas', 'tahun'));
+        return view('dosen.daftar-tim.daftar-timpbl', compact(
+            'timPBL',
+            'periodeAktif',
+            'semesterList',
+            'selectedSemester',
+            'selectedKelas',
+            'filteredKelas'
+        ));
     }
 
 

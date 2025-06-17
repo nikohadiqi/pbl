@@ -1,20 +1,26 @@
 @extends('layouts.dashboarddosen-template')
 
-@section('title', 'Kelola Tim PBL')
-@section('page-title', 'Kelola Tim PBL: ' . $tim->kode_tim)
+@section('title','Kelola Tim PBL | Sistem Informasi dan Monitoring Project Based Learning')
+@section('page-title', 'Kelola Tim PBL')
+@section('page-title-1', 'Validasi Tim PBL')
+@section('page-title-1-url', route('dosen.validasi-tim'))
+@section('content')
 
 @section('content')
 <div class="container-fluid py-4">
     <div class="card p-4 shadow-sm">
-        <h5 class="fw-bold text-dark mb-3">Kelola Tim PBL</h5>
+        <div class="d-flex justify-content-between align-items-center">
+            <h4 class="fw-bold">Kelola Tim {{ $tim->kode_tim }}</h4>
+        </div>
+        <p class="text-sm">Mengelola Anggota dari Tim {{ $tim->kode_tim }} - Sistem Informasi dan Monitoring Project Based Learning</p>
 
-        <div class="table-responsive">
-            <table class="table align-middle table-hover table-borderless border border-light shadow-sm rounded-3 overflow-hidden">
+        <div class="table-responsive mt-3">
+            <table class="table align-middle table-hover table-bordered shadow-sm rounded-3 overflow-hidden">
                 <thead class="text-sm fw-semibold text-white bg-primary">
                     <tr>
-                        <th style="width: 20%">NIM</th>
-                        <th style="width: 30%">Nama</th>
-                        <th style="width: 50%">Aksi</th>
+                        <th style="width: 30%">NIM</th>
+                        <th>Nama</th>
+                        <th style="width: 30%">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -23,20 +29,25 @@
                         <td>{{ $anggota->nim }}</td>
                         <td>{{ $anggota->mahasiswaFK->nama ?? '-' }}</td>
                         <td>
-                            <div class="d-flex flex-wrap align-items-center">
+                            <div class="d-flex justify-content-center gap-2">
                                 {{-- Reset Password --}}
-                                <form method="POST" action="{{ route('dosen.validasi-tim.reset-password', [$tim->kode_tim, $anggota->nim]) }}" class="me-2 mb-2">
+                                <form id="form-reset-{{ $anggota->nim }}" method="POST"
+                                    action="{{ route('dosen.validasi-tim.reset-password', [$tim->kode_tim, $anggota->nim]) }}"
+                                    class="d-inline me-2 mb-2">
                                     @csrf
-                                    <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Reset password menjadi NIM?')">
+                                    <button type="button" class="btn btn-warning btn-sm btn-reset"
+                                        data-nim="{{ $anggota->nim }}">
                                         <i class="bi bi-key"></i> Reset Password
                                     </button>
                                 </form>
                                 {{-- Hapus Anggota --}}
-                                <form method="POST" action="{{ route('dosen.validasi-tim.hapus-anggota', [$tim->kode_tim, $anggota->nim]) }}" class="mb-2">
+                                <form id="form-delete-{{ $anggota->nim }}" method="POST"
+                                    action="{{ route('dosen.validasi-tim.hapus-anggota', [$tim->kode_tim, $anggota->nim]) }}"
+                                    class="d-inline mb-2">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm"
-                                        onclick="return confirm('Yakin ingin menghapus anggota ini?')">
+                                    <button type="button" class="btn btn-danger btn-sm btn-delete"
+                                        data-nim="{{ $anggota->nim }}">
                                         <i class="bi bi-trash"></i> Hapus
                                     </button>
                                 </form>
@@ -55,18 +66,17 @@
                             @csrf
                             <td>
                                 <select name="nim" class="form-select select2" required>
-                                <option value="" disabled selected hidden>Pilih Mahasiswa</option>
-                                @foreach($mahasiswa as $mhs)
+                                    <option value="" disabled selected hidden>Pilih Mahasiswa</option>
+                                    @foreach($mahasiswa as $mhs)
                                     <option value="{{ $mhs->nim }}">
                                         {{ $mhs->nim }} - {{ $mhs->nama }}
                                     </option>
-                                @endforeach
-                            </select>
+                                    @endforeach
+                                </select>
                             </td>
                             <td class="text-muted">
-                                Password : Default Seperti NIM
+                                Password sama dengan NIM
                             </td>
-
                             <td>
                                 <button type="submit" class="btn btn-success btn-sm">
                                     <i class="bi bi-plus-circle"></i> Tambah Anggota
@@ -84,7 +94,8 @@
 @push('css')
 <!-- Select2 CSS -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css"
+    rel="stylesheet" />
 <style>
     .select2-container--bootstrap-5 .select2-selection {
         border: 1px solid #dee2e6 !important;
@@ -96,26 +107,31 @@
         position: relative;
         z-index: 1050;
     }
+
     .select2-container--bootstrap-5.select2-container--focus .select2-selection {
-        border-color: #F7CD07 !important;
+        border-color: #dfa02c !important;
         box-shadow: 0 0 0 2px rgba(247, 205, 7, 0.1);
         outline: none;
     }
+
     .select2-container--bootstrap-5 .select2-dropdown {
-        border: 1px solid #F7CD07 !important;
+        border: 1px solid #dfa02c !important;
         border-radius: 0.5rem !important;
         box-shadow: 0 4px 10px rgba(247, 205, 7, 0.1);
         margin-top: 2px;
         overflow: hidden;
     }
+
     .select2-container--bootstrap-5.select2-container--above .select2-dropdown {
         margin-top: 0;
         margin-bottom: 2px;
     }
+
     .select2-container--bootstrap-5 .select2-selection__rendered {
         line-height: 1.5 !important;
         padding-left: 0 !important;
     }
+
     .select2-container--bootstrap-5 .select2-selection__arrow {
         top: 50% !important;
         transform: translateY(-50%);
@@ -138,4 +154,43 @@
         });
     });
 </script>
+
+<script>
+    document.querySelectorAll('.btn-reset').forEach(button => {
+        button.addEventListener('click', function () {
+            const nim = this.dataset.nim;
+            Swal.fire({
+                title: 'Reset Password?',
+                text: 'Password akan direset menjadi NIM.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Reset!',
+                cancelButtonText: 'Batal',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(`form-reset-${nim}`).submit();
+                }
+            });
+        });
+    });
+
+    document.querySelectorAll('.btn-delete').forEach(button => {
+        button.addEventListener('click', function () {
+            const nim = this.dataset.nim;
+            Swal.fire({
+                title: 'Hapus Anggota?',
+                text: 'Data anggota akan dihapus dari tim.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(`form-delete-${nim}`).submit();
+                }
+            });
+        });
+    });
+</script>
+
 @endpush
