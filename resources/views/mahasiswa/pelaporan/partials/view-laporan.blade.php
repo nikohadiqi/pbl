@@ -7,19 +7,23 @@
         </div>
 
         <div class="form-group mt-2">
-            <h6><i class="bi bi-link-45deg me-1 {{ $textColor ?? 'text-primary' }}"></i> Link Drive Laporan</h6>
-            <a href="{{ $pelaporan->link_drive }}" target="_blank" class="text-decoration-none text-info">
-                {{ $pelaporan->link_drive }}
+            <h6><i class="bi bi-file-earmark-pdf-fill me-1 text-danger"></i>HASIL/BUKTI</h6>
+            @if($pelaporan->hasil)
+            <a href="{{ url('storage/'.$pelaporan->hasil) }}" target="_blank"
+                class="btn {{ $btnColor ?? 'btn-outline-primary' }} btn-sm">
+                <i class="bi bi-file-earmark-pdf"></i> Lihat Hasil
             </a>
         </div>
-
+         @else
         <div class="form-group mt-2">
             <h6><i class="bi bi-youtube me-1 text-danger"></i> Link Youtube Proyek PBL</h6>
             <a href="{{ $pelaporan->link_youtube }}" target="_blank" class="text-decoration-none text-info">
                 {{ $pelaporan->link_youtube ?? 'Belum ada link Youtube yang di unggah' }}
             </a>
         </div>
-
+        <p class="text-muted fst-italic">Tidak ada laporan PDF yang diupload.</p>
+        @endif
+        
         <div class="form-group mt-2">
             <h6><i class="bi bi-file-earmark-pdf-fill me-1 text-danger"></i> Laporan PDF</h6>
             @if($pelaporan->laporan_pdf)
